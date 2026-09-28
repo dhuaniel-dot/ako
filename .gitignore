@@ -23,6 +23,12 @@
 **/*.keystore
 **/.navigation/
 
+# Claves de API y configuración con secretos (nunca se suben; skill seguridad)
+**/.env
+**/.env.*
+**/claude_desktop_config.json
+**/.mcp.json
+
 # Sistema
 .DS_Store
 Thumbs.db

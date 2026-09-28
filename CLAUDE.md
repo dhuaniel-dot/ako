@@ -54,6 +54,7 @@ Kotlin · Android nativo · XML con Activities y Fragments (**no** Compose) · R
 
 ## Lo que NO se hace nunca
 
+- Subir a GitHub una clave de API, un token, una contraseña, un keystore o un archivo con secretos (`.env`, `claude_desktop_config.json`, `.mcp.json`, `local.properties`). Antes de cada commit se aplica la skill `seguridad` (`.claude/skills/seguridad/SKILL.md`).
 - Guardar el PIN en claro. Se guarda sal + hash PBKDF2.
 - Borrar filas de `producto`, `categoria`, `modificador`, `etiqueta` o `idioma`: se marcan `activo = false`.
 - Borrar líneas de una comanda automáticamente al eliminar o desactivar un plato.
