@@ -6,20 +6,21 @@
 | **Sesión nº** | 01 |
 | **Objetivo de la sesión** | Proyecto y repositorio: proyecto vacío en Android Studio dentro de `C:\AKO\app-ako`, primer arranque en el emulador, Git y repositorio público en GitHub, primer commit sin atribución |
 | **Tiempo dedicado** | 19:48 – … (descontando pausas) |
-| **Nivel / pieza** | Nivel 1 · <pantalla o capa> (p. ej. *entidades Room*, *pantalla 6c*) |
+| **Nivel / pieza** | Bases del proyecto (no toca ningún RF) |
 | **Commit final** | `abc1234` — mensaje del commit |
 
 ## Qué se hizo
 
-- Lista de lo que existe al terminar y no existía al empezar (clases, pantallas, pruebas que pasan).
-- Qué se dejó a medias y en qué estado exacto (para retomarlo sin adivinar).
+- Día 1 (28 sep, 19:48 – ~22:30): asistente de Android Studio (Custom, SDK en `C:\Android\Sdk`) · proyecto `app-ako` creado por Daniel (Empty Views Activity, paquete `yunkang.ako` **P104**, nombre visible `AKO` **P105**, API 26) · «Hello World!» en el emulador · archivos de Gradle del `stack-verificado` copiados por Claude (**P106 → A**) y `AkoGlideModule.kt`: `assembleDebug` y `testDebugUnitTest` en verde, sincronizado y ejecutado en Android Studio · `git init` en `C:\AKO`, commit `9dbb69a` sin atribución (autor comprobado) · repositorio público https://github.com/dhuaniel-dot/ako creado y subido.
+- Daniel escribió al profesor para confirmar el uso de la IA; la sesión se para hasta su respuesta (ver `EN-CURSO.md`).
+- A medias: captura de GitHub, README (`S1: README`) y cierre.
 
 ## Problemas y soluciones
 
 | # | Qué falló | Cómo se resolvió | Justificación (por qué esta solución y no otra) | Fuente |
 |---|---|---|---|---|
-| 1 | El síntoma tal cual: mensaje de error copiado, o qué hacía la app en vez de lo esperado | Lo que se cambió, en concreto | Por qué era el arreglo correcto; qué otra opción había y por qué se descartó | Enlace y fecha, o "propio" |
-| 2 | | | | |
+| 1 | El asistente de Android Studio proponía el SDK en `C:\Users\dhuan\AppData\Local\Android\Sdk` (600 MB de descarga) | Instalación *Custom* y ruta cambiada a `C:\Android\Sdk` con el botón de carpeta: «An existing Android SDK was detected», 50,4 MB | Lo que se escribe en `AppData` desde la app de Claude acaba en otra carpeta (sesión 00, problema 2); el SDK ya estaba en `C:\Android\Sdk` | Propio; `sesion-01.md` apartado 1 |
+| 2 | Daniel eligió el paquete `yunkang.ako` y la documentación decía `es.daniel.ako`: al copiar `stack-verificado/` el `namespace` no habría coincidido con el código | Claude cambió el nombre en `CLAUDE.md`, spec, guías, `stack-verificado/` y `verificar` antes de copiar (P104) | Mejor cambiar la documentación que el proyecto recién creado: la decisión es de Daniel | Propio |
 
 ## Qué entendí y qué no
 
@@ -33,7 +34,9 @@
 
 ## Uso de IA en esta sesión
 
-- Qué pidió Daniel a Claude Code, qué generó, qué revisó o cambió Daniel a mano. Una línea por pieza. (Alimenta la frase de P37; **lo escrito coincide con lo hecho**.)
+- Daniel manejó Android Studio (asistente, proyecto, Sync, Run) guiado por Claude con capturas; decidió el paquete, el nombre visible y quién copiaba Gradle.
+- Claude copió por consola los archivos de Gradle del `stack-verificado` (P106 → A) y `AkoGlideModule.kt`, los explicó y compiló; hizo `git init`, el commit y la creación del repositorio (con el «sí» de Daniel).
+- Claude corrigió la documentación por P104/P105 y ayudó a redactar el correo al profesor sobre el uso de la IA (lo escribió y envió Daniel).
 
 ## Siguiente sesión
 
