@@ -1,0 +1,221 @@
+> **Guía de la sesión 9 — Cuenta (6a, 6b con Quitar y R7, 6c con `ReciboFragment`, cambio, Cobrar, Anular).** Escrita en la sesión 00 (noche del 24 al 25 sep 2026) [Claude] como plan de piezas, sin código: el código lo da Claude pieza a pieza en el chat (bloque arriba, explicación debajo, pregunta al final) y Daniel lo teclea en Android Studio. Objetivo del spec (apartado 11, S9): **Cuenta (6a, 6b con Quitar y R7, 6c con `ReciboFragment`, cambio, Cobrar, Anular); P-M-22 a P-M-28 pasan.** Entregable: desde 1a, *Cuenta* abre la rejilla sin PIN; una mesa roja enseña su comanda con el total calculado; se quitan líneas (la última con aviso R7), se anula, se da la cuenta, se calcula el cambio y se cobra, y la mesa vuelve a blanco. **Es el final del guion del vídeo** (spec 4: «entra en Cuenta, ve lo pedido y el total → quita una línea → "ha pagado con esto" y sale el cambio → cobra»).
+> **Manda:** la ficha 6 de `spec+doc-pantallas.md` (entera, pero **sin el verde ni el incremento 9**: al cobrar, la mesa queda **blanca**, como dice el spec 4.1; el verde es nivel 3 y `[Imprimir]`, `[+ Añadir platos]` y cambiar cantidades son el incremento 9) · los wireframes `06a-rejilla-mesas`, `06b-comanda`, `06c-recibo`, `dialogo-cobrar` (misma caja para Anular) y `dialogo-r7-ultima-linea` · spec 4.1 (fila *6 Cuenta*), 6 (R3, R5, R7, R10, R14) y 7 · textos del apartado 6 de `textos-ui.md` con **las claves de `docs/guias/strings-es-borrador.xml`** y los botones de P40.
+> **Prerrequisitos** (de S1 a S8, con los nombres que dejan): `ComandaRepository` con `mesasConEstado()`, `comandaPendiente(mesaId)`, `lineasDe(comandaId)`, `totalDe(comandaId)` (R10), `quitarLinea(lineaId): Boolean` (R7), `anular(comandaId)`, `cobrar(comandaId)` (R5: se niegan con una comanda cerrada) (S4); `Calculadora.cambio(totalCentimos, entregadoCentimos)` con P-C-04 en verde, `MesaEstado` y `MesaConTotal` (S3); `ConfirmacionDialog.nueva(titulo, texto, afirmativo, negativo, clave)` con resultado por `setFragmentResult`, el tema y el botón *Cuenta* de 1a abriendo **la caja provisional** con `pendiente_sesion_posterior` (S5); `ui/comun/Formato.kt` con `precio(centimos: Int): String` («18,50», sin «€», que pone `comun_precio`; admite negativos con el signo menos U+2212, S6 pieza 2) y el patrón «`viewModel.cargar()` en `onResume`» (S6); `Formato.centimosDesde(texto: String): Int?` que admite coma y punto, y la decisión del teclado decimal (S7); `RejillaMesasFragment` con `MesaAdapter` en modo *elegir* dentro de `SelectorActivity`, el mecanismo «el componente pinta lo que le dan y avisa de lo que se toca» y `LineaAdapter` con `LineaVista` en el modo del carrito, todo según lo decidido en el Plan Mode de la S8; y **comandas reales creadas desde Pedir** (S8). Si la guía de la S8 o su Plan Mode cambiaron algún nombre, manda lo que haya en el código.
+> **Horas estimadas: 9–11 h de piezas** (20 piezas de 20–40 min) más Plan Mode, pruebas y revisión: cuenta con **11–12 h en dos o tres jornadas**. **Dónde cortar (relevo):** al terminar la **pieza 10** (6b entera: Quitar, R7 y Anular) y, si hace falta otra vez, al terminar la **pieza 15** (Cobrar). Chat con **Opus 5.5, esfuerzo alto, y Plan Mode al abrir** (P25, P32). Es **una de las tres sesiones difíciles**.
+
+# Sesión 9 — guía
+
+## 0. Al abrir: Plan Mode (P25)
+
+`abrir-sesion` lee la ficha de la S8 (y sus hallazgos pendientes) y propone Plan Mode (`Mayús+Tab` hasta *plan mode on*). En Plan Mode Claude **lee el código real** de las sesiones anteriores —`ComandaRepository`, `Formato`, `RejillaMesasFragment`, `MesaAdapter`, `LineaAdapter`, `ConfirmacionDialog`, `SelectorFragment`— y escribe el plan de las 20 piezas de abajo **con los nombres reales** antes de tocar código. Daniel tiene abiertos los cinco PNG de la pantalla 6 y la ficha 6. En ese plan se cierran **nueve huecos** (todos [Claude], Daniel decide):
+
+1. **Cómo recibe los datos `ReciboFragment`, que vive en dos Activities** (6c en `CuentaActivity`; 2g en `ResumenIngresosActivity`, que lo reutiliza en la S10). A: **el mismo mecanismo que la rejilla de la S8** («pinta lo que le dan y avisa de lo que se toca»): por `arguments` solo recibe `comandaId`, `mesaNumero` y `soloLectura`; las líneas, el total y el cambio se los da la Activity que lo aloja (que los saca de *su* ViewModel), y el toque de *Cobrar* sale con `setFragmentResult` y lo resuelve la Activity. B: el Fragment mira `soloLectura` y pide él mismo `CuentaViewModel` o `ResumenIngresosViewModel`. C: todo por `arguments`, líneas y total incluidos (el `Bundle` no admite listas de objetos propios sin `Parcelable`, que pide un plugin fuera del spec). **Recomendada A:** un solo patrón para los dos componentes compartidos, y el recibo no sabe quién lo usa.
+2. **`LineaAdapter` en los modos *solo Quitar* (6b) y *solo lectura* (6c y 2g).** Si la S8 dejó solo el modo del carrito: A, un `enum` de modo con tres valores (carrito · solo Quitar · solo lectura) que esconde con `GONE` los botones que no tocan; B, un adaptador por pantalla; C, un adaptador con dos `Boolean`. **Recomendada A** (es lo que ya proponía el brief de la S8: una fila, tres usos). Quién convierte `LineaComanda` en `LineaVista`: el ViewModel (el importe con `Calculadora.importe`, R10), nunca el adaptador.
+3. **Cómo sabe 6b que va a quitar la última línea** (el aviso R7 va *antes* de quitar). A: el ViewModel mira la lista que se ve en pantalla (`lineas` con una sola fila); la `lineaId` pendiente se guarda en el ViewModel mientras el aviso está abierto (así sobrevive si Android recrea la pantalla). B: un método nuevo del repositorio que cuente las líneas con `contarLineas` antes de quitar. C: quitar y avisar después si `quitarLinea` devuelve `true` (no vale: la ficha pide avisar antes). **Recomendada A:** la lista se recarga tras cada Quitar y hay un solo móvil.
+4. **Qué enseña *Cambio* con el campo *Entregado* vacío o con texto que no es un importe** (P-M-27, paso 4: «con el campo vacío no hay cambio y Cobrar sigue activo»). A: el valor de *Cambio* se queda **en blanco**, y un texto inválido (una coma sola, dos comas) se trata igual que vacío, sin mensaje de error. B: una raya «—» (cadena nueva). C: esconder la fila de *Cambio*. **Recomendada A:** «no hay cambio» literal, ninguna cadena nueva, y *Cobrar* no depende nunca del campo.
+5. **Cómo se escribe el cambio negativo «−2,00 €».** **Lo dejó hecho la S6** (pieza 2 [Claude]): `Formato.precio` admite negativos y antepone el **signo menos U+2212** (el de P-M-27 y el de `comun_menos`), calculando siempre con el valor absoluto. Aquí solo se comprueba en el código real (pieza 13). Si el Plan Mode de la S6 lo dejó de otra forma: A, lo mismo que arriba; B, el guion ASCII «-» que sale solo en Kotlin; C, una función aparte `Formato.cambio(centimos)`. **Recomendada A:** una sola función de importes; el único importe negativo de la app es el cambio.
+6. **Cómo avisa el ViewModel de que hay que volver a 6a** tras R7, Anular o Cobrar. A: `quitarLinea`, `anular` y `cobrar` del ViewModel son `suspend` y la pantalla las llama desde `lifecycleScope`, igual que `comprobarPin` en la S5; al terminar, vuelve. B: `viewModelScope` y un `LiveData` de «evento» (hay que evitar que se dispare dos veces). C: la Activity observa que la comanda pasa a `null`. **Recomendada A:** es el patrón que Daniel ya conoce.
+7. **Qué parámetros recibe cada Fragment.** `ComandaFragment` vive solo en `CuentaActivity` y comparte su ViewModel: A, **sin `arguments`**, lee la comanda abierta de `CuentaViewModel`; B, con `comandaId` por `arguments`. **Recomendada A** para 6b; `ReciboFragment` sí lleva `arguments` (hueco 1) porque vive en dos Activities.
+8. **Hallazgos del `revisor` de la S4 que queden** en *Siguiente sesión* de las fichas S4–S8 y que toquen `quitarLinea`, `anular` o `cobrar` (esta es la primera sesión que los usa). A: se cierran **antes de la pieza 5**; en especial, **cómo se niega** un método con una comanda cerrada (R5): si lanza excepción, la pantalla no puede dejar que la app se cierre. B: todos a la S13. **Recomendada A.**
+9. **P-M-29 entera pide la app recién instalada** (paso 3: «Cuenta con 60 mesas… todas blancas»), y a estas alturas hay comandas. **Ojo con los datos que deja la S8:** la mesa 4 sigue con **60,50 € abiertos** (P-M-20 se hizo sin Cuenta) y las mesas 5 y 6 también rojas, así que P-M-20 (pieza 17) no encuentra «mesa 4 sin comanda» y P-M-22 a 28 no encuentran sus *Entradas*: **con cualquier opción, el bloque de pruebas empieza con instalación limpia** y el montaje de `docs/guias/juego-de-datos.md`. A: P-M-29 se pasa **la última** (pieza 19), con otro *Clear storage* después de las demás pruebas; el juego de datos se vuelve a montar en la S10 (P-M-12 pide comandas cobradas *hoy* de todas formas). B: lo que dice `juego-de-datos.md` para la S9 (apartado 3): instalación limpia al empezar las pruebas, **P-M-29 en su sitio** (paso 2, justo después de P-M-01) y el montaje completo hasta el paso 34; una sola instalación limpia. C: mirarla con los datos que haya, sin reinstalar (no es la prueba escrita). **Recomendada A** (duda abierta para Daniel frente a B, que es la de `juego-de-datos.md`).
+
+Con el plan aprobado se sale de Plan Mode (`Mayús+Tab`) y se empieza por la pieza 1.
+
+**Lo provisional que se retira en esta sesión:** la caja «Esta parte llega en una sesión posterior» detrás de *Cuenta* en 1a. La cadena `pendiente_sesion_posterior` **se queda** (la sigue usando `[Resumen de ingresos]` del Panel) y se borra en la S10.
+
+## 1. Piezas
+
+Cada pieza sigue la regla 12 de `CLAUDE.md`: explicación breve → código completo con su ruta → Daniel lo teclea → `/verificar` → pregunta de comprensión. **Rutas de Kotlin bajo `app-ako/app/src/main/java/yunkang/ako/`; recursos bajo `app-ako/app/src/main/res/`.** Ningún texto visible en el código ni en el XML de diseño: todo sale de `strings.xml` (RNF-19), también «€», «×» y «TOTAL».
+
+### Pieza 1 — `strings.xml` de Cuenta (20 min)
+
+- **Qué:** las cadenas de 6a, 6b, 6c y de los tres avisos nuevos.
+- **Archivo:** `res/values/strings.xml` — del borrador: `cuenta_titulo`, `cuenta_mesa_sin_comanda`, `comanda_btn_anular`, `comanda_btn_dar_cuenta`, `recibo_titulo`, `recibo_entregado`, `recibo_opcional`, `recibo_euro_sufijo`, `recibo_cambio`, `recibo_btn_cobrar`, `anular_titulo`, `anular_cuerpo`, `ultima_linea_titulo`, `ultima_linea_cuerpo`, `ultima_linea_btn_quitar_anular`, `cobrar_titulo`, `cobrar_cuerpo`. Las comunes ya existen (`comun_atras`, `comun_cancelar`, `comun_mesa`, `comun_precio`, `comun_total`, `comun_linea`, `comun_quitar`).
+- **Qué te explico antes:** los tres avisos con sus botones de P40 (el botón dice lo que hace): Anular = `comun_cancelar` / `comanda_btn_anular`; última línea = `comun_cancelar` / `ultima_linea_btn_quitar_anular`; Cobrar = `comun_cancelar` / `recibo_btn_cobrar`. Una misma cadena sirve de botón de la barra y de botón del aviso (*Anular*, *Cobrar*): no se duplica. El «No / Sí» de P-M-25 y P-M-28 se lee como «negativo / afirmativo» (P40). `\n` dentro de `cobrar_cuerpo` es el salto de línea del dibujo.
+- **Qué comprobamos después:** compila; los literales coinciden letra a letra con el borrador (Claude los compara); ninguna clave repetida.
+- **Pregunta:** ¿por qué el aviso de Anular no dice «Sí» en el botón afirmativo?
+
+### Pieza 2 — `CuentaActivity` y el botón *Cuenta* de 1a (30 min)
+
+- **Qué:** la pantalla 6 como Activity vacía con su contenedor, y *Cuenta* deja de ser provisional.
+- **Archivos:** `ui/cuenta/CuentaActivity.kt`, `res/layout/activity_cuenta.xml` (un `FragmentContainerView` a toda pantalla), `AndroidManifest.xml` (la `<activity>` con `portrait`), `ui/selector/SelectorFragment.kt` (*Cuenta* → `startActivity` de `CuentaActivity`, **sin PIN**; fuera la caja provisional).
+- **Qué te explico antes:** la estructura de la pantalla 6: **una Activity y tres vistas** (6a rejilla, 6b comanda, 6c recibo) que se cambian como Fragments dentro del mismo contenedor, igual que 1a y 1b en la S5; un ViewModel para toda la Activity (P108). Por qué Cuenta no pide PIN (ficha 1: la usa el camarero) y por qué el Resumen de ingresos **no vive aquí** (RNF-10: Cuenta está abierta a cualquiera).
+- **Qué comprobamos después:** 1a → *Cuenta* abre una pantalla en blanco sin pedir PIN; el Atrás del sistema vuelve a 1a. P-M-13 paso 2, a medias.
+- **Pregunta:** ¿por qué 6a, 6b y 6c son Fragments de una Activity y no tres Activities?
+
+### Pieza 3 — `CuentaViewModel` y la rejilla en modo *gestionar* (40 min)
+
+- **Qué:** las 60 mesas con su color y su total, reutilizando la rejilla de la S8.
+- **Archivos:** `ui/cuenta/CuentaViewModel.kt` — `class CuentaViewModel(app: Application) : AndroidViewModel(app)` como en la S5; `mesas: LiveData<List<MesaEstado>>` y `cargarMesas()` [Claude] (según lo decidido en la S6: la pantalla lo llama en `onResume`) con `comandaRepository.mesasConEstado()`. `CuentaActivity.kt` — pone `RejillaMesasFragment.nueva(ModoRejilla.GESTIONAR)` (el modo va en `arguments`) cuando `savedInstanceState == null` y le da la lista por el mecanismo de la S8; la barra con `comun_atras` y `cuenta_titulo` la pinta la propia rejilla según su modo (S8, pieza 5), no la Activity.
+- **Qué te explico antes:** **R3 en pantalla**: ninguna columna dice que la mesa 4 esté ocupada; el color sale de una consulta (`pendientesConTotal`) cada vez que se carga la rejilla. **Se reutiliza el componente, no la pantalla**: la misma rejilla y el mismo `MesaAdapter` que 1d; lo único que cambia es **qué significa tocar** (ficha 1, tabla de modos). Por qué la mesa roja lleva también el total escrito: ningún estado se comunica solo con color (RNF-13).
+- **Qué comprobamos después:** 4 × 15 con scroll, mesas rojas con su total a 12 sp, el resto blancas; el total de una mesa roja coincide con lo enviado desde Pedir. Atrás → 1a. P-M-22 paso 1.
+- **Pregunta:** si mañana se cobra la mesa 4, ¿qué fila de qué tabla cambia para que la celda se vuelva blanca?
+
+### Pieza 4 — Mesa blanca: el snackbar (25 min)
+
+- **Qué:** tocar una mesa blanca enseña «La mesa N no tiene comanda» y no hace nada más.
+- **Archivo:** `CuentaActivity.kt` — escucha el toque que avisa la rejilla (según la S8), busca el `MesaEstado` de esa mesa; si `comandaId` es `null` → `Snackbar.make(vista, getString(R.string.cuenta_mesa_sin_comanda, numero), Snackbar.LENGTH_SHORT)`. La mesa roja, de momento, no hace nada (pieza 6).
+- **Qué te explico antes:** qué es un **Snackbar** (*«un aviso que sube desde abajo, dura unos segundos y se va solo; no pregunta nada»*), por qué no un diálogo (no hay nada que decidir, P84) ni un `Toast` (el Snackbar es de Material, que ya está en el stack, y vive dentro de la pantalla); D17 y la ficha 6: en el nivel 1 un toque que no hace nada parece la app rota; **quien decide qué significa el toque es la Activity**, no la rejilla (así la misma rejilla sirve en 1d).
+- **Qué comprobamos después:** mesa 7 → snackbar «La mesa 7 no tiene comanda»; no se abre nada ni se crea ninguna comanda (el inspector de base de datos lo confirma). P-M-22 paso 4.
+- **Pregunta:** ¿por qué tocar una mesa blanca no crea una comanda vacía? (Pista: `CLAUDE.md` y R2.)
+
+### Pieza 5 — `CuentaViewModel`: abrir la comanda de una mesa (30 min)
+
+- **Qué:** cargar la comanda abierta de la mesa roja, sus líneas y su total.
+- **Archivo:** `ui/cuenta/CuentaViewModel.kt` — `abrirMesa(mesaId: Long)` (guarda también el número de mesa para los títulos [Claude]), `comanda: LiveData<Comanda?>`, `lineas: LiveData<List<LineaVista>>`, `total: LiveData<Int>`; usa `comandaPendiente`, `lineasDe` y `totalDe`.
+- **Qué te explico antes:** **los tres estados de una comanda**: PENDIENTE (abierta, la mesa está roja), PAGADA (cobrada, con `fechaCierre`) y ANULADA (anulada, con `fechaCierre`); una vez cerrada es **intocable** (R5). **Por qué no hay «borrar»**: una comanda cerrada es el histórico, y el Resumen de ingresos (S10) es solo una consulta sobre las PAGADAS; borrar sería perder la prueba de lo que pasó. R10: el total no se lee de ninguna columna, `totalDe` lo **calcula cada vez** con `Calculadora`. Aquí se cierran los hallazgos del hueco 8.
+- **Qué comprobamos después:** compila; el ViewModel no importa ningún DAO (solo `ComandaRepository`); `lineas` sale ya convertida para el adaptador.
+- **Pregunta:** ¿qué diferencia hay en la base de datos entre una comanda PAGADA y una ANULADA, y cuál de las dos cuenta en el Resumen de ingresos?
+
+### Pieza 6 — `ComandaFragment` (6b): diseño y la pila de Fragments (35 min)
+
+- **Qué:** la vista 6b como el wireframe, y la mesa roja la abre.
+- **Archivos:** `ui/cuenta/ComandaFragment.kt`, `res/layout/fragment_comanda.xml` — barra con `comun_atras`, título `comun_mesa` («Mesa 4») y `comanda_btn_anular` a la derecha; `RecyclerView` de líneas; fila `comun_total` con el importe en negrita; botón `comanda_btn_dar_cuenta` fijo abajo, relleno de acento. `CuentaActivity.kt` — mesa roja → `viewModel.abrirMesa(id)` y `replace` por `ComandaFragment` **con `addToBackStack`**.
+- **Qué te explico antes:** la **pila de Fragments** (*«cada vista nueva se pone encima como un plato; Atrás quita el de arriba»*): con `addToBackStack`, el Atrás del sistema y la flecha vuelven de 6b a 6a sin escribir nada más; `activityViewModels()` para que 6b use el mismo `CuentaViewModel` (hueco 7: 6b no necesita `arguments`). En el nivel 1 **no hay** `[+ Añadir platos]` ni `−`/`+` (incremento 9): solo *Quitar*.
+- **Qué comprobamos después:** mesa 4 → 6b con «Mesa 4», *Anular* arriba y *Dar la cuenta* abajo; Atrás → 6a. P-M-22 paso 2 y 3.
+- **Pregunta:** ¿qué hace exactamente el Atrás del sistema en 6b, y quién lo programa?
+
+### Pieza 7 — `LineaAdapter` en modo *solo Quitar* y el total (30 min)
+
+- **Qué:** las líneas de 6b («2 × Entrecot 37,00 €» y *Quitar* debajo) y el TOTAL.
+- **Archivos:** `ui/comun/LineaAdapter.kt` (el modo del hueco 2), su layout de fila de la S8, `ComandaFragment.kt` (observa `lineas` y `total` con `viewLifecycleOwner`).
+- **Qué te explico antes:** R10 y R14 en una fila: el nombre y el precio salen **de la línea**, congelados al enviar (no del plato de hoy); el importe es cantidad × precio congelado, calculado; el TOTAL es la suma calculada, no un campo; `comun_linea` («%1$d × %2$s») y `comun_precio` con `Formato.precio`. El botón *Quitar* tiene texto, 48 dp de alto como mínimo, y devuelve el `id` de su línea.
+- **Qué comprobamos después:** **P-M-23 pasa**: líneas con cantidad × nombre e importe, TOTAL 60,50 € igual a la suma, *Anular*, *Dar la cuenta* y *Quitar*; sin añadir ni cambiar cantidades.
+- **Pregunta:** si el Propietario sube el Entrecot a 20,00 € ahora, ¿qué cambia en esta pantalla y por qué nada?
+
+### Pieza 8 — Quitar una línea sin aviso (30 min)
+
+- **Qué:** *Quitar* en una comanda de varias líneas la quita al momento y el total baja.
+- **Archivos:** `CuentaViewModel.kt` — `suspend fun quitarLinea(lineaId: Long): Boolean` (hueco 6) que llama al repositorio y **vuelve a cargar** líneas, total y mesas; `ComandaFragment.kt` — el toque de *Quitar* lo llama desde `lifecycleScope`.
+- **Qué te explico antes:** lo único que se **borra** en toda la app: las líneas de una comanda **todavía abierta** (spec 5.1); si la línea llevara modificadores, se irían con ella (CASCADE, R11, nivel 2). Por qué, después de quitar, se **vuelve a preguntar** el total a la base de datos en vez de restar en pantalla (R10: una sola verdad).
+- **Qué comprobamos después:** P-M-24 pasos 1 y 2: quitar Helado → 55,50 €; quitar 1 × Entrecot → 37,00 €, sin aviso; el inspector ya no tiene esas dos filas en `linea_comanda`.
+- **Pregunta:** ¿por qué se puede borrar una línea de comanda pero nunca un plato?
+
+### Pieza 9 — La última línea: aviso R7 y vuelta a 6a (40 min)
+
+- **Qué:** quitar la única línea pregunta antes; al aceptar, la comanda queda ANULADA y se vuelve a la rejilla con la mesa blanca.
+- **Archivos:** `CuentaViewModel.kt` — `esUltimaLinea()` [Claude] y la `lineaPorQuitar` guardada (hueco 3); `ComandaFragment.kt` — si es la última, `ConfirmacionDialog.nueva` con `ultima_linea_titulo`, `ultima_linea_cuerpo` (con el número de mesa), `ultima_linea_btn_quitar_anular` y `comun_cancelar`, y escucha su resultado; `CuentaActivity.kt` — `volverARejilla()` [Claude] con `popBackStack(null, POP_BACK_STACK_INCLUSIVE)` y `cargarMesas()`.
+- **Qué te explico antes:** **R7**: una comanda sin líneas no se borra: queda **ANULADA con `fechaCierre` y cero líneas** en el histórico, y la mesa queda libre porque ya no hay PENDIENTE (R3); lo hace `quitarLinea` del repositorio y devuelve `true`. **`popBackStack`** (*«quitar todos los platos de encima hasta dejar solo la rejilla»*): tras anular no tiene sentido volver a una comanda que ya no está abierta. Por qué el aviso va **antes** de quitar y la `lineaId` espera en el ViewModel mientras el diálogo está abierto.
+- **Qué comprobamos después:** P-M-24 pasos 3 y 4: cancelar deja la línea; aceptar → 6a con la mesa 4 blanca; en el inspector la comanda está ANULADA, con `fecha_cierre` y **cero** filas en `linea_comanda`.
+- **Pregunta:** tras quitar la última línea, ¿qué hay de esa comanda en la base de datos y por qué la mesa sale blanca sin tocar la tabla `mesa`?
+
+### Pieza 10 — Anular (30 min)
+
+- **Qué:** *Anular* pregunta y, al confirmar, cierra la comanda sin cobrarla.
+- **Archivos:** `ComandaFragment.kt` — botón de la barra → `ConfirmacionDialog` con `anular_titulo` (número de mesa), `anular_cuerpo`, `comanda_btn_anular` y `comun_cancelar`; `CuentaViewModel.kt` — `suspend fun anular()`; al terminar, `volverARejilla()`.
+- **Qué te explico antes:** Anular = ANULADA + `fechaCierre`, **sin borrar las líneas** (quedan en el histórico; es la diferencia con R7, que llega a ANULADA con cero líneas); no tiene deshacer, por eso pregunta (ficha 6); una comanda ANULADA vuelve a blanco **directamente**, sin verde. El aviso es la **misma caja** que Cobrar (leyenda `dialogo-cobrar` #1): cuarto uso de `ConfirmacionDialog`.
+- **Qué comprobamos después:** P-M-25 pasos 1 y 2: *Cancelar* deja 6b igual; *Anular* → 6a con la mesa 5 blanca; en el inspector, ANULADA con `fecha_cierre` y **con** su línea de Flan.
+- **Pregunta:** ¿en qué se parecen y en qué se diferencian, en la base de datos, anular una comanda y quitarle la última línea?
+
+> **Buen sitio para el primer relevo:** 6b está entera. `relevo` guarda en `EN-CURSO.md` que la siguiente es la pieza 11.
+
+### Pieza 11 — `ReciboFragment` (6c): diseño y `arguments` (35 min)
+
+- **Qué:** la vista 6c como el wireframe, preparada para servir también a 2g en la S10.
+- **Archivos:** `ui/comun/ReciboFragment.kt` (en `comun/` porque lo comparten dos Activities, spec 3) con `companion fun nuevo(comandaId: Long, mesaNumero: Int, soloLectura: Boolean)` [Claude]; `res/layout/fragment_recibo.xml` — barra con `comun_atras` y `recibo_titulo` («Mesa 4 · Recibo»), `RecyclerView` de líneas, fila `comun_total`, separador, bloque de cambio (`recibo_entregado`, campo `TextInputLayout` con sufijo `recibo_euro_sufijo` y teclado decimal como en la S7, `recibo_opcional` debajo, `recibo_cambio` y su valor) y botón `recibo_btn_cobrar` fijo abajo; con `soloLectura = true` el bloque de cambio y *Cobrar* van `GONE`. `ComandaFragment.kt` — *Dar la cuenta* → `replace` por `ReciboFragment.nuevo(…, soloLectura = false)` con `addToBackStack`.
+- **Qué te explico antes:** **un Fragment con parámetros**: los datos entran por `arguments` (un `Bundle`), nunca por el constructor, porque si Android recrea el Fragment el constructor no se vuelve a llamar y los `arguments` sí se conservan (lo mismo que el `ConfirmacionDialog` de la S5); `soloLectura` es el interruptor que en la S10 quitará Cobrar y la calculadora; por qué 6c es **pantalla completa** y no un diálogo (P84: el recibo no tiene nada detrás que haga falta seguir viendo).
+- **Qué comprobamos después:** 6b → *Dar la cuenta* → 6c con su título, el campo *Entregado* vacío con «(opcional)» y *Cobrar*; Atrás → 6b. Las líneas, en la pieza 12.
+- **Pregunta:** ¿qué pasaría con `mesaNumero` si se pasara por el constructor del Fragment y Android recreara la pantalla?
+
+### Pieza 12 — El recibo con sus datos, en solo lectura (30 min)
+
+- **Qué:** 6c enseña las líneas congeladas y el TOTAL que le da la Activity.
+- **Archivos:** `ReciboFragment.kt` y `CuentaActivity.kt` — el mecanismo del hueco 1 (la Activity le da líneas y total desde `CuentaViewModel`); `LineaAdapter` en modo *solo lectura* (sin *Quitar*).
+- **Qué te explico antes:** **R14 en el recibo**: los nombres y precios son los de la línea, congelados al enviar y en español (ficha 6: el recibo lo lee el camarero); P-M-26 lo demuestra renombrando el plato **después** de enviar. «El componente pinta lo que le dan y avisa de lo que se toca»: el recibo no sabe si está en Cuenta o en el Resumen de ingresos, y por eso la S10 lo reutiliza sin tocarlo.
+- **Qué comprobamos después:** **P-M-26 pasa** (Entrecot renombrado a «Entrecot de ternera» en el Panel → el recibo sigue diciendo «Entrecot», precio congelado, TOTAL 42,00 €; Atrás → 6b; después se deja el nombre como estaba).
+- **Pregunta:** si el recibo leyera el nombre de la tabla `producto` en vez de la línea, ¿qué vería el cliente en P-M-26?
+
+### Pieza 13 — `Formato` y el importe negativo (20 min)
+
+- **Qué:** comprobar que `Formato.precio` escribe «−2,00» con el signo del hueco 5; la S6 (pieza 2) ya lo hizo así, y solo si el código real no lo hace se completa aquí.
+- **Archivo:** `ui/comun/Formato.kt` — `precio(centimos: Int): String` admite negativos (S6).
+- **Qué te explico antes:** la trampa de la división entera con negativos: −250 / 100 da −2 y −250 % 100 da −50, y sin cuidado sale «−2,−50»; por eso se formatea **el valor absoluto** y el signo se pone delante; U+2212 (el menos tipográfico, el mismo de `comun_menos`) frente al guion «-». Formatear **no es calcular**: vive en la interfaz, no en `dominio/`.
+- **Qué comprobamos después:** compila; Claude comprueba a mano 800, −200, −250 y 0 → «8,00», «−2,00», «−2,50», «0,00»; los precios de la carta y del Panel siguen igual.
+- **Pregunta:** ¿por qué el cálculo del cambio vive en `Calculadora` y su formato en `Formato`?
+
+### Pieza 14 — La calculadora de cambio en vivo (35 min)
+
+- **Qué:** al teclear en *Entregado*, *Cambio* se recalcula en el momento.
+- **Archivos:** `ReciboFragment.kt` — `doAfterTextChanged` en el campo → `Formato.centimosDesde(texto)` → si es `null`, *Cambio* en blanco (hueco 4); si no, el cambio que da `CuentaViewModel.cambio(entregadoCentimos: Int): Int` (que llama a `Calculadora.cambio` con el total) → `comun_precio`. `CuentaViewModel.kt` — `cambio`.
+- **Qué te explico antes:** **`TextWatcher`** (*«avísame cada vez que cambie el texto»*) y su forma corta `doAfterTextChanged` de core-ktx, ya usada en 1b; la **coma decimal**: el teclado español escribe «40,50» y `centimosDesde` admite coma y punto (S7); el cambio es una **función pura** (P-C-04 ya la prueba en el PC) y **no guarda nada** (spec 4.1): cerrar el recibo lo olvida; negativo significa «falta dinero» y **no bloquea** Cobrar.
+- **Qué comprobamos después:** **P-M-27 pasa**: 50 → 8,00 €; 40 → −2,00 €; 42 → 0,00 €; campo vacío → sin cambio y *Cobrar* activo; nada nuevo en la base de datos.
+- **Pregunta:** ¿por qué *Cobrar* no se apaga cuando el cambio es negativo o el campo está vacío?
+
+### Pieza 15 — Cobrar (35 min)
+
+- **Qué:** *Cobrar* pregunta con el total y, al confirmar, la comanda queda PAGADA y se vuelve a 6a.
+- **Archivos:** `ReciboFragment.kt` — *Cobrar* → `ConfirmacionDialog` con `cobrar_titulo` (número de mesa), `cobrar_cuerpo` (total con `Formato.precio` y `comun_precio`), `recibo_btn_cobrar` y `comun_cancelar`; el sí sale hacia la Activity con `setFragmentResult` (hueco 1); `CuentaActivity.kt` → `CuentaViewModel.cobrar()` (`suspend`) → `volverARejilla()`.
+- **Qué te explico antes:** cobrar = PAGADA + `fechaCierre = ahora`; **eso ya es el histórico** que leerá el Resumen de ingresos (ficha 6: «no hace falta nada nuevo»). **La mesa queda blanca**: el verde de la ficha y del wireframe es nivel 3 (spec 4.1). El **doble toque**: si el camarero pulsa dos veces, no pueden salir dos avisos (se comprueba si ya hay uno abierto por su etiqueta) y, aunque llegara un segundo cobro, el repositorio lo rechaza porque la comanda ya no está PENDIENTE (R5).
+- **Qué comprobamos después:** P-M-28 pasos 1 a 4: *Cancelar* sigue en 6c; *Cobrar* → 6a con la mesa 4 **blanca**; en el inspector, PAGADA con `fecha_cierre`; Pedir → mesa 4 → 1 × Helado → Enviar crea una comanda **nueva** (la anterior está cerrada, R1).
+- **Pregunta:** ¿quién decide que la mesa se ve blanca después de cobrar, si nadie escribe «blanca» en ninguna tabla?
+
+> **Segundo sitio posible para un relevo**, si la primera jornada fue corta.
+
+### Pieza 16 — Vuelta a 6a y refresco: las tres salidas en un sitio (25 min)
+
+- **Qué:** R7, Anular y Cobrar salen por el mismo camino, y la rejilla se refresca también al volver de otra pantalla.
+- **Archivo:** `CuentaActivity.kt` — un solo `volverARejilla()` para las tres salidas; `cargarMesas()` también en `onResume` (según lo decidido en la S6).
+- **Qué te explico antes:** repaso de la pila: Atrás 6c → 6b → 6a → 1a, y las tres salidas que **vacían** la pila; por qué el refresco en `onResume` hace falta aunque Cuenta no cambie nada (el camarero puede ir a Pedir, enviar y volver a Cuenta); **no** se guarda ningún estado de mesa en memoria (R3): la rejilla siempre es la consulta.
+- **Qué comprobamos después:** tras cada salida la rejilla está al día sin reiniciar la app; Cuenta → Atrás → Pedir → mesa 9 → un plato → Enviar → Salir (PIN) → Cuenta: la mesa 9 roja con su total.
+- **Pregunta:** si quitáramos `cargarMesas()` de `volverARejilla()`, ¿qué verías al cobrar la mesa 4?
+
+### Pieza 17 — Pasada: P-M-06, P-M-10 y P-M-20 enteras (35 min)
+
+- **Qué:** las tres pruebas de sesiones anteriores que miraban Cuenta y quedaron *Parcial*.
+- **Archivos:** ninguno de código; `docs/spec+doc-pruebas.md` al cerrar.
+- **Qué te explico antes:** P6: una prueba *Parcial* se repite **entera** cuando existe el prerrequisito. **Se empieza con instalación limpia** (hueco 9): con los datos que dejó la S8, la mesa 4 sigue con 60,50 € abiertos y P-M-20 no encuentra «mesa 4 sin comanda». Preparación según `docs/guias/juego-de-datos.md` (montaje del apartado 2, que sigue el orden recomendado del plan de pruebas): Postres activa con Flan y la mesa 5 con Flan enviado desde Pedir (P-M-06), la mesa 6 con Pollo asado (P-M-10), la mesa 4 sin comanda y el carrito de P-M-20. **P-M-06 y P-M-10 van antes de P-M-25**, que anula la comanda de la mesa 5.
+- **Qué comprobamos después:** **P-M-06 pasa** (6b de la mesa 5 conserva Flan; la carta no enseña Postres); **P-M-10 pasa** (6b de la mesa 6 conserva Pollo asado con su precio); **P-M-20 pasa** (pasos 2, 4 y 6 en Cuenta: 42,00 €, después 60,50 € con una línea nueva y una sola comanda, y precios congelados a 18,50).
+- **Pregunta:** en P-M-06, ¿por qué la línea de Flan sigue en 6b aunque Flan ya no se vea en la carta?
+
+### Pieza 18 — Pasada: P-M-22 a P-M-28 seguidas (40 min)
+
+- **Qué:** las siete pruebas de la sesión, en orden y con los datos del juego de datos.
+- **Archivos:** ninguno de código.
+- **Qué te explico antes:** el orden 4 y 5 del apartado 2 del plan de pruebas (P-M-20 → 22 → 23 → 24 → 25; después *Pedir → mesa 4 → 2 × Entrecot + 1 × Helado → Enviar* → 26 → 27 → 28, y al terminar cobrar también la comanda nueva de Helado; en `juego-de-datos.md` son los pasos 25–34, que incluyen anular la mesa 6 en el paso 29 y P-M-15 en modo rápido); qué pasos quedan para la S10 (el Resumen de ingresos: P-M-24 paso 5, P-M-25 paso 3, P-M-28 paso 5).
+- **Qué comprobamos después:** P-M-22, 23, 26 y 27 **pasan**; P-M-24, 25 y 28 **Parcial**, con fecha y lo que falta.
+- **Pregunta:** ¿qué prueba demuestra R10 en Cuenta y cuál R14?
+
+### Pieza 19 — P-M-13 y P-M-29 enteras (30 min)
+
+- **Qué:** las dos pruebas del selector que llevaban *Parcial* desde la S5.
+- **Archivos:** ninguno de código.
+- **Qué te explico antes:** P-M-13 ya tiene sus tres caminos (1c, 6a, 1d). P-M-29 pide **la app recién instalada** (hueco 9; si se eligió B, ya se pasó en su sitio al empezar el bloque y aquí solo se anota): *Settings → Apps → All apps → Ako → Storage & cache → Clear storage → Delete* en el emulador (ruta de `juego-de-datos.md`, apartado 1), crear el PIN 1234 y seguir sus cinco pasos; por qué eso borra todo (la base de datos y el PIN viven en el almacenamiento privado de la app) y por qué no importa (el juego de datos se vuelve a montar en la S10).
+- **Qué comprobamos después:** **P-M-13 pasa** (Cuenta abre 6a sin PIN; Atrás vuelve a 1a sin PIN); **P-M-29 pasa** (Panel con Otros y Bebidas con Agua, 14 alérgenos, **60 mesas blancas** en Cuenta, Pedir entra, 3 filas en `etiqueta`).
+- **Pregunta:** ¿por qué P-M-29 no puede pasar entera con el juego de datos montado?
+
+### Pieza 20 — `revisor` y cierre (30 min + revisión)
+
+- **Qué:** la segunda revisión independiente del proyecto (P35) y el cierre.
+- **Archivos:** todo `app-ako/app/src` (lo lee el subagente, no edita nada).
+- **Qué te explico antes:** qué hace el `revisor` (ojos nuevos: lee el código sin saber cómo se escribió y solo devuelve hallazgos verificados) y por qué toca aquí: la app ya hace el guion entero del vídeo. Lo que suele encontrar en esta sesión: textos escritos en el código (un «€», un «×» o un «TOTAL» pegados con `+` en vez de `getString`), una pantalla que calcula, un ViewModel que toca un DAO, un método que toca una comanda cerrada.
+- **Qué comprobamos después:** `assembleDebug` y `testDebugUnitTest` en verde; los hallazgos *Alta* arreglados antes del commit (a la tabla de problemas de la ficha); *Media* y *Baja* a *Siguiente sesión*.
+- **Pregunta:** de todo lo que se hace en Cuenta, ¿qué se guarda en la base de datos y qué solo se calcula?
+
+## 2. Pruebas que cierran la sesión
+
+- **P-C-01 a P-C-05 y P-C-09 siguen en verde** (`testDebugUnitTest`); P-C-04 es la `Calculadora.cambio` que ahora usa 6c.
+- **Pasan enteras:** **P-M-22** (RF-40), **P-M-23** (RF-41), **P-M-26** (RF-43), **P-M-27** (RF-44).
+- **Parcial** (P6), con fecha y se repiten enteras en la **S10**: **P-M-24** (RF-46; falta el paso 5, Resumen de ingresos), **P-M-25** (RF-42; falta el paso 3), **P-M-28** (RF-45; falta el paso 5).
+- **Se completan aquí** (eran *Parcial*): **P-M-06** (RF-06), **P-M-10** (RF-11), **P-M-20** (RF-37), **P-M-13** (RF-24) y **P-M-29** (RF-50): pasan enteras.
+- `estado-nivel.md`: **RF-40, RF-41, RF-43, RF-44 → implementado (S9)** (RF-40 solo blanco y rojo: el verde sigue *diseñado*, nivel 3); **RF-42, RF-45, RF-46 → implementado, no probado (S9)** hasta la S10; **RF-24 y RF-50 → implementado** (S5 y S2); **RF-06 → implementado (S6)**, **RF-11 → implementado (S7)**, **RF-37 → implementado (S8)**. Recuento de arriba actualizado.
+- **Revisión `revisor`** (P35) sobre `app-ako/app/src`: pieza 20.
+- Cierre con `cerrar-sesion`: ficha `sesion-09.md`; `decisiones-code.md` con los nueve huecos del Plan Mode y lo que se decidiera en las piezas (`volverARejilla`, el refresco en `onResume`, el cambio en blanco, dónde se pasó P-M-29 según el hueco 9); **dos commits**: `S9: Cuenta (6a, 6b con Quitar y R7, 6c con ReciboFragment, cambio, Cobrar, Anular)` y después `S9: ficha del diario`, con push.
+
+## 3. Lo que tienes que saber defender
+
+- **R3 y R10, lo que se calcula no se guarda:** la mesa no tiene columna «ocupada» ni la comanda columna «total»; la rejilla y el TOTAL son consultas y cálculos que se repiten cada vez (por eso el total baja solo al quitar una línea).
+- **Los tres estados y por qué no hay «borrar»:** PENDIENTE → PAGADA o ANULADA, con `fechaCierre`; una comanda cerrada es intocable (R5) y es el histórico; R7 deja una comanda ANULADA **con cero líneas**, no la borra. Lo único que se borra son líneas de una comanda abierta.
+- **R14 en el recibo** con P-M-26: el nombre y el precio son los de la línea, congelados al enviar; renombrar o subir el precio de un plato no cambia lo pedido ni lo cobrado.
+- **Se reutiliza el componente, no la pantalla:** la misma rejilla en 1d y 6a con otro significado del toque; el mismo `ReciboFragment` en 6c y en 2g con `soloLectura`; el mismo `LineaAdapter` en tres modos; el mismo `ConfirmacionDialog` para R7, Anular y Cobrar con botones que dicen lo que hacen (P40).
+- **El cambio es una función pura** (`Calculadora.cambio`, P-C-04): no guarda nada, sale negativo si falta y no bloquea el cobro.
+- **Lo que no está, a propósito:** el verde (nivel 3: la mesa queda blanca al cobrar), añadir platos e `[Imprimir]` (incremento 9), y el Resumen de ingresos, que vive detrás del PIN en el Panel porque Cuenta no pide PIN (RNF-10).
+
+## 4. Riesgos típicos y qué hacer
+
+- **El total no baja tras quitar una línea** (la fila desaparece pero el TOTAL sigue en 60,50 €): se recargaron las líneas pero no el total. `quitarLinea` del ViewModel vuelve a pedir **las dos cosas** al repositorio (`lineasDe` y `totalDe`); nunca se resta en la pantalla (R10).
+- **La rejilla sigue roja al volver** tras cobrar o anular: falta `cargarMesas()` en `volverARejilla()` o en `onResume`, o la rejilla observa una lista vieja. Se comprueba en el inspector que la comanda sí está PAGADA/ANULADA: si lo está, el fallo es solo de refresco.
+- **La coma decimal en *Entregado*** (se teclea «40,50» y *Cambio* queda en blanco, o el teclado no deja escribir la coma): `numberDecimal` solo acepta punto en muchos teclados; se usa lo decidido en la S7 (`android:digits` con la coma y `Formato.centimosDesde`, que admite coma y punto).
+- **«−2,−50 €» o «-2,00 €» en el cambio:** la división entera con negativos (pieza 13): se formatea el valor absoluto y se antepone U+2212.
+- **Doble toque en *Cobrar*** (salen dos avisos, o `IllegalStateException` al mostrar el segundo): antes de abrir el `ConfirmacionDialog` se mira si ya hay uno con esa etiqueta; y el repositorio rechaza cobrar una comanda que ya no está PENDIENTE (R5).
+- **Tocar una comanda cerrada (R5)** (la app se cierra con una excepción del repositorio al volver atrás a 6b o 6c de una comanda cobrada): las tres salidas vacían la pila con `popBackStack(null, POP_BACK_STACK_INCLUSIVE)`, así que no queda ninguna vista de una comanda cerrada; y si el repositorio lanza, el ViewModel no lo deja llegar a la pantalla (hueco 8).
+- **El `revisor` encuentra textos escritos en el código** (`"€"`, `" × "`, `"TOTAL"` o el número de mesa pegado con `+`): todo pasa por `getString` con `comun_precio`, `comun_linea`, `comun_total`, `comun_mesa` y `recibo_titulo`. Se arregla antes del commit: es un hallazgo de RNF-19 y rompe el inglés de la S13.

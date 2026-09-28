@@ -1,0 +1,32 @@
+# Ako — raíz del repositorio (C:\AKO). El proyecto de Android Studio vive en app-ako/.
+# Lo que NO se sube: lo que Android Studio y Gradle generan o lo que es de este PC.
+
+# Gradle y compilación
+**/build/
+**/.gradle/
+**/.kotlin/
+**/captures/
+**/*.apk
+**/*.aab
+**/*.ap_
+**/*.dex
+
+# Android Studio (configuración local del IDE)
+**/.idea/
+**/*.iml
+**/local.properties
+**/.cxx/
+**/.externalNativeBuild/
+
+# Claves y datos locales
+**/*.jks
+**/*.keystore
+**/.navigation/
+
+# Sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporales de Claude Code (locales, no del proyecto)
+.claude/settings.local.json

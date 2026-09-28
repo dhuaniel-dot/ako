@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Ako · strings.xml (ES) · BORRADOR del nivel 1
+  Generado el 2026-09-24 a partir de docs/textos-ui.md [Claude], aplicando las decisiones
+  del apartado 4b de docs/decisiones-code.md (D1, D5, D6, D7, D8, D13, D14, D15, D16, D18,
+  D19, D20, P40 y P41).
+
+  Destino: app-ako/app/src/main/res/values/strings.xml. Se pega por grupos en la sesión en la
+  que se construye cada pantalla; este archivo no se compila desde docs/.
+
+  Las claves marcadas con el comentario «propuesta» no están fijadas por ningún documento
+  de diseño (spec, fichas, wireframes ni plan de pruebas): son redacción propuesta y se
+  pueden cambiar sin contradecir nada.
+
+  Convenciones: %1$d entero, %1$s texto ya formateado. Las claves del inventario que
+  repetían un mismo texto se han unificado en una sola; el alias queda anotado junto a la
+  clave que se conserva. Los textos en MAYÚSCULAS se guardan tal cual (literal del
+  wireframe); si el layout usa textAllCaps pueden pasarse a minúsculas.
+-->
+<resources>
+
+    <!-- ============================================================ -->
+    <!-- comunes (barras, botones y formatos compartidos)               -->
+    <!-- ============================================================ -->
+
+    <!-- alias del inventario: app_nombre -->
+    <string name="app_name">AKO</string>
+
+    <!-- Flecha + palabra, arriba a la izquierda (spec §4.1). Si la flecha va como icono
+         (navigationIcon), dejar «Atrás» y usarla también de contentDescription -->
+    <string name="comun_atras">← Atrás</string>
+    <string name="comun_aceptar">Aceptar</string>
+    <string name="comun_cancelar">Cancelar</string>
+    <string name="comun_guardar">Guardar</string>
+    <!-- Botón negativo de los avisos 3e-1 y 3e-2. La clave comun_si del inventario se
+         retira: tras P40 ningún diálogo dice «Sí» (Anular usa Cancelar / Anular) -->
+    <string name="comun_no">No</string>
+    <!-- D13: «Quitar» en cada línea de 5c y 6b -->
+    <string name="comun_quitar">Quitar</string>
+    <!-- Botón afirmativo de 3d y 2e (R6) -->
+    <string name="comun_eliminar">Eliminar</string>
+    <string name="comun_mesa">Mesa %1$d</string>
+    <!-- Importe ya formateado (coma decimal, dos cifras) + espacio duro + € -->
+    <string name="comun_precio">%1$s&#160;€</string>
+    <string name="comun_total">TOTAL</string>
+    <!-- cantidad × nombre congelado (signo × U+00D7) -->
+    <string name="comun_linea">%1$d × %2$s</string>
+    <!-- número · nombre (punto medio U+00B7) -->
+    <string name="comun_plato_numero_nombre">%1$d · %2$s</string>
+    <!-- signo menos U+2212 -->
+    <string name="comun_menos">−</string>
+    <string name="comun_mas">+</string>
+
+    <!-- ============================================================ -->
+    <!-- 1 · Selector de rol y PIN (1a, 1b, 1c, 1d, 1e)                 -->
+    <!-- ============================================================ -->
+
+    <string name="selector_subtitulo">Pedidos para bares y restaurantes</string>
+    <string name="selector_btn_propietario">Propietario</string>
+    <string name="selector_btn_pedir">Pedir</string>
+    <string name="selector_btn_cuenta">Cuenta</string>
+
+    <!-- 1b · barra superior sin Atrás -->
+    <string name="pin_crear_barra">Crear PIN</string>
+    <string name="pin_crear_titulo">Crea el PIN del Propietario</string>
+    <string name="pin_crear_subtitulo">Protege el Panel y la salida de Pedir.</string>
+    <string name="pin_hint_pin">PIN (4 cifras)</string>
+    <string name="pin_hint_repite">Repite el PIN</string>
+    <!-- D1: versión larga del wireframe -->
+    <string name="pin_crear_aviso">Si lo olvidas, no se puede recuperar: habrá que reinstalar la app.</string>
+    <!-- Error en 1b y 1e; los campos se vacían -->
+    <string name="pin_no_coinciden">Los PIN no coinciden</string>
+    <!-- Error en 1c y 1e (PIN actual); el campo se vacía y se sacude -->
+    <string name="pin_incorrecto">PIN incorrecto</string>
+    <!-- D8: título del diálogo 1c -->
+    <string name="pin_introducir_titulo">Introduce el PIN</string>
+    <!-- Título del diálogo 1e; alias del inventario: panel_btn_cambiar_pin (botón de 2a, mismo texto) -->
+    <string name="pin_cambiar_titulo">Cambiar PIN</string>
+    <!-- D18: los tres campos a la vez; al aceptar se comprueba primero el actual -->
+    <string name="pin_hint_actual">PIN actual</string>
+    <string name="pin_hint_nuevo">PIN nuevo</string>
+    <string name="pin_hint_repite_nuevo">Repite el PIN nuevo</string>
+    <!-- 1d · rejilla en modo elegir -->
+    <string name="mesa_elegir_titulo">Elige la mesa</string>
+
+    <!-- ============================================================ -->
+    <!-- 2 · Panel del Propietario (2a, 2b)                             -->
+    <!-- ============================================================ -->
+
+    <string name="panel_titulo">Categorías</string>
+    <string name="panel_btn_resumen_ingresos">Resumen de ingresos</string>
+    <!-- Etiqueta junto al nombre de la caja con activo = false.
+         Alias del inventario: categoria_eliminada_titulo (título del aviso 3e-1, mismo texto) -->
+    <string name="panel_categoria_eliminada">Categoría eliminada</string>
+    <!-- Segunda línea atenuada de la fila de plato con activo = false -->
+    <string name="panel_plato_eliminado">Eliminado</string>
+    <string name="panel_btn_mas_plato">+ Plato</string>
+    <!-- Botón «Cambiar PIN» de la barra inferior: usar pin_cambiar_titulo -->
+    <string name="panel_btn_terminar">Terminar</string>
+
+    <!-- 2b · hoja inferior. Alias del inventario: panel_editar_categoria_cd (lápiz de cada caja) -->
+    <string name="categoria_titulo_editar">Editar categoría</string>
+    <!-- propuesta -->
+    <!-- Alias del inventario: panel_nueva_categoria_cd (botón + de la barra) -->
+    <string name="categoria_titulo_nueva">Nueva categoría</string>
+    <string name="categoria_hint_nombre">Nombre</string>
+    <string name="categoria_foto_opcional">Foto (opcional)</string>
+    <string name="categoria_btn_elegir_foto">+ Elegir</string>
+    <!-- Interruptor de 2b (solo al editar, nunca en la categoría por defecto, R16):
+         P41 → «En la carta», misma cadena que el plato: usar plato_en_la_carta.
+         La clave categoria_activa del inventario queda como alias -->
+    <!-- propuesta -->
+    <string name="categoria_nombre_repetido">Ya existe una categoría con ese nombre</string>
+
+    <!-- ============================================================ -->
+    <!-- 2g · Resumen de ingresos (y recibo en solo lectura)            -->
+    <!-- ============================================================ -->
+
+    <!-- D5: vocabulario obligatorio -->
+    <string name="resumen_titulo">Resumen de ingresos</string>
+    <!-- Etiqueta del selector de fecha; el valor es formato EEEE, dd/MM/yyyy, no cadena -->
+    <string name="resumen_dia">Día</string>
+    <string name="resumen_seccion_comandas">COMANDAS COBRADAS</string>
+    <!-- Segunda línea de cada fila; %1$s = hora HH:mm -->
+    <string name="resumen_fila_hora">Cobrada a las %1$s</string>
+    <!-- D6: dos etiquetas de pie -->
+    <string name="resumen_pie_comandas">Comandas cobradas</string>
+    <string name="resumen_pie_total">Total del día</string>
+    <string name="resumen_vacio">No se cobró ninguna comanda ese día</string>
+
+    <!-- ============================================================ -->
+    <!-- 3 · Alta y edición de plato (3a)                               -->
+    <!-- ============================================================ -->
+
+    <string name="plato_titulo_nuevo">Nuevo plato</string>
+    <!-- propuesta -->
+    <string name="plato_titulo_editar">Editar plato</string>
+    <!-- Obligatorios con * -->
+    <string name="plato_hint_nombre">Nombre *</string>
+    <string name="plato_hint_numero">Número *</string>
+    <string name="plato_hint_precio">Precio (€) *</string>
+    <string name="plato_hint_categoria">Categoría *</string>
+    <string name="plato_hint_descripcion">Descripción</string>
+    <!-- D19: cadena propia para la sección de 3a (la del desplegable de 5b es ficha_alergenos) -->
+    <string name="plato_seccion_alergenos">ALÉRGENOS</string>
+    <!-- Interruptor de 3a y, por P41, también el de 2b. Alias del inventario: categoria_activa -->
+    <string name="plato_en_la_carta">En la carta</string>
+    <!-- propuesta -->
+    <!-- Error de campo al guardar con número repetido (R9) -->
+    <string name="plato_numero_repetido">Ese número ya lo tiene otro plato</string>
+    <!-- Aviso al cambiar el número de un plato ya creado; %1$d = número anterior -->
+    <string name="plato_numero_cambiado">Si alguien tiene apuntado el %1$d, dejará de corresponder</string>
+
+    <!-- ============================================================ -->
+    <!-- 5 · Pedir (5a Carta, 5b Ficha del plato, 5c Carrito)           -->
+    <!-- ============================================================ -->
+
+    <!-- Barra superior de 5a, sin flecha. Alias del inventario: plato_salir_btn_salir
+         (botón afirmativo de «¿Salir sin guardar?») y salir_sin_enviar_btn_salir
+         (botón afirmativo de «¿Salir sin enviar?», D16) -->
+    <string name="carta_btn_salir">Salir</string>
+    <!-- D7: pastilla flotante; %1$d = número de platos, %2$s = total formateado -->
+    <string name="carta_carrito_pastilla">Carrito · %1$d · %2$s</string>
+    <!-- D19: título del desplegable de 5b -->
+    <string name="ficha_alergenos">Alérgenos</string>
+    <!-- Una línea por alérgeno marcado -->
+    <string name="ficha_alergeno_item">• %1$s</string>
+    <string name="ficha_sin_alergenos">El restaurante no ha indicado alérgenos para este plato. Pregunta al personal.</string>
+    <string name="ficha_cantidad">Cantidad</string>
+    <!-- Guion largo U+2014 con espacios; %1$s = importe formateado -->
+    <string name="ficha_btn_anadir">Añadir — %1$s</string>
+    <string name="carrito_titulo">Carrito · Mesa %1$d</string>
+    <!-- Apagado con carrito vacío. Alias del inventario: enviar_btn_enviar (botón afirmativo del diálogo) -->
+    <string name="carrito_btn_enviar">Enviar</string>
+
+    <!-- ============================================================ -->
+    <!-- 6 · Cuenta (6a Rejilla, 6b Comanda, 6c Recibo)                 -->
+    <!-- ============================================================ -->
+
+    <string name="cuenta_titulo">Cuenta</string>
+    <!-- Snackbar al tocar una mesa blanca (decisión tomada, D17) -->
+    <string name="cuenta_mesa_sin_comanda">La mesa %1$d no tiene comanda</string>
+    <!-- Barra superior de 6b y, por P40 (Cancelar / Anular), también botón afirmativo del diálogo de Anular -->
+    <string name="comanda_btn_anular">Anular</string>
+    <string name="comanda_btn_dar_cuenta">Dar la cuenta</string>
+    <!-- 6c y recibo en solo lectura desde 2g -->
+    <string name="recibo_titulo">Mesa %1$d · Recibo</string>
+    <string name="recibo_entregado">Entregado</string>
+    <string name="recibo_opcional">(opcional)</string>
+    <!-- Sufijo a la derecha del campo Entregado -->
+    <string name="recibo_euro_sufijo">€</string>
+    <string name="recibo_cambio">Cambio</string>
+    <!-- No aparece en solo lectura. Alias del inventario: cobrar_btn_cobrar (botón afirmativo del diálogo, P40) -->
+    <string name="recibo_btn_cobrar">Cobrar</string>
+
+    <!-- ============================================================ -->
+    <!-- diálogos (ConfirmacionDialog: título, texto, afirmativo, negativo) -->
+    <!-- Botones (P40): el afirmativo dice lo que hace                   -->
+    <!-- ============================================================ -->
+
+    <!-- Puerta de Pedir · solo botón comun_aceptar -->
+    <!-- propuesta -->
+    <string name="puerta_pedir_titulo">No se puede pedir</string>
+    <string name="puerta_pedir_carta_vacia">La carta está vacía</string>
+    <string name="puerta_pedir_categorias_eliminadas">Todas las categorías están eliminadas</string>
+
+    <!-- 2e · aviso agrupado R6 al apagar el interruptor de una categoría · comun_cancelar / comun_eliminar -->
+    <!-- propuesta -->
+    <string name="categoria_eliminar_titulo">¿Eliminar la categoría?</string>
+    <!-- propuesta -->
+    <!-- %1$s = lista «Flan (mesa 5), …» -->
+    <string name="categoria_eliminar_cuerpo">Estos platos están en comandas pendientes: %1$s. No se quitarán de esas comandas.</string>
+
+    <!-- 3a · Atrás con cambios sin guardar · comun_cancelar / carta_btn_salir -->
+    <!-- propuesta -->
+    <string name="plato_salir_titulo">¿Salir sin guardar?</string>
+    <string name="plato_salir_cuerpo">Se perderán los cambios</string>
+
+    <!-- 3d · R6 al apagar «En la carta» y guardar · comun_cancelar / comun_eliminar -->
+    <string name="mesas_afectadas_titulo">¿Eliminar el plato?</string>
+    <!-- D15 [Claude]: quantity = número de mesas; %1$s = nombre del plato, %2$s = «4 y 7» o «6» -->
+    <plurals name="mesas_afectadas_cuerpo">
+        <item quantity="one">%1$s está en una comanda pendiente de la mesa %2$s. No se quitará de esa comanda.</item>
+        <item quantity="other">%1$s está en comandas pendientes de las mesas %2$s. No se quitará de esas comandas.</item>
+    </plurals>
+
+    <!-- 3e · aviso 1 de 2 · título: panel_categoria_eliminada · comun_no / categoria_eliminada_btn_mover -->
+    <!-- D20: %1$s = categoría eliminada, %2$s = nombre real de la categoría por defecto (R16) -->
+    <string name="categoria_eliminada_cuerpo">La categoría %1$s está eliminada. ¿Muevo el plato a %2$s?</string>
+    <string name="categoria_eliminada_btn_mover">Sí, mover</string>
+
+    <!-- 3e · aviso 2 de 2 · comun_no / recuperar_categoria_btn_recuperar (P9: recuperar, no reactivar) -->
+    <string name="recuperar_categoria_titulo">¿Quieres recuperar %1$s?</string>
+    <!-- D14: con punto final -->
+    <string name="recuperar_categoria_cuerpo">Volverán a la carta sus %1$d platos.</string>
+    <string name="recuperar_categoria_btn_recuperar">Recuperar</string>
+
+    <!-- 5c · confirmación de Enviar · comun_cancelar / carrito_btn_enviar -->
+    <!-- propuesta -->
+    <string name="enviar_titulo">¿Enviar el pedido?</string>
+    <!-- %2$s = total formateado -->
+    <string name="enviar_cuerpo">Mesa %1$d · %2$s</string>
+
+    <!-- RF-38 · Salir o Atrás con carrito no vacío, antes del PIN · comun_cancelar / carta_btn_salir -->
+    <!-- D16 [Claude] -->
+    <string name="salir_sin_enviar_titulo">¿Salir sin enviar?</string>
+    <!-- D16 [Claude]: quantity = %1$d platos en el carrito -->
+    <plurals name="salir_sin_enviar_cuerpo">
+        <item quantity="one">Hay %1$d plato en el carrito sin enviar. Se perderá.</item>
+        <item quantity="other">Hay %1$d platos en el carrito sin enviar. Se perderán.</item>
+    </plurals>
+
+    <!-- 6b · confirmación de Anular · comun_cancelar / comanda_btn_anular (P40) -->
+    <string name="anular_titulo">¿Anular la comanda de la mesa %1$d?</string>
+    <string name="anular_cuerpo">No se puede deshacer</string>
+
+    <!-- 6b · R7 al quitar la última línea · comun_cancelar / ultima_linea_btn_quitar_anular -->
+    <string name="ultima_linea_titulo">¿Quitar la última línea?</string>
+    <string name="ultima_linea_cuerpo">La comanda se quedará vacía y se anulará. La mesa %1$d quedará libre.</string>
+    <string name="ultima_linea_btn_quitar_anular">Quitar y anular</string>
+
+    <!-- 6c · confirmación de Cobrar · comun_cancelar / recibo_btn_cobrar (P40) -->
+    <string name="cobrar_titulo">¿Cobrar la mesa %1$d?</string>
+    <!-- %1$s = total formateado; salto de línea tras el punto -->
+    <string name="cobrar_cuerpo">Total: %1$s.\nLa comanda quedará PAGADA y no se podrá modificar.</string>
+
+    <!-- ============================================================ -->
+    <!-- contentDescription (spec §10: en todo elemento interactivo e imagen) -->
+    <!-- ============================================================ -->
+
+    <!-- El «?» de plato o categoría sin foto (2a, 2b, 3a, 5a, 5b) -->
+    <string name="comun_sin_foto_cd">Sin foto</string>
+    <!-- propuesta -->
+    <!-- Botón redondo + sobre la foto en 3a -->
+    <string name="plato_elegir_foto_cd">Elegir foto</string>
+    <!-- propuesta -->
+    <!-- Botones − y + de cantidad en 5b y 5c -->
+    <string name="comun_menos_cd">Quitar uno</string>
+    <!-- propuesta -->
+    <string name="comun_mas_cd">Añadir uno</string>
+    <!-- Otros cd ya cubiertos por cadenas existentes:
+         · flecha ← de la barra: comun_atras
+         · botón + de la barra del Panel: categoria_titulo_nueva
+         · lápiz de cada caja del Panel: categoria_titulo_editar
+         · celda de mesa en la rejilla: comun_mesa (+ comun_precio si tiene comanda)
+         · miniatura con foto real y foto de categoría: nombre del plato o de la categoría (dato) -->
+
+    <!-- ============================================================ -->
+    <!-- precarga (Precarga.onCreate: van a la base de datos)           -->
+    <!-- ============================================================ -->
+
+    <!-- Los 14 alérgenos en el orden del inventario (= dibujo 03a-2 leído por filas
+         = anexo II del Reglamento (UE) 1169/2011). El número de la clave fija el orden -->
+    <string name="alergeno_01_gluten">Gluten</string>
+    <string name="alergeno_02_crustaceos">Crustáceos</string>
+    <string name="alergeno_03_huevos">Huevos</string>
+    <string name="alergeno_04_pescado">Pescado</string>
+    <string name="alergeno_05_cacahuetes">Cacahuetes</string>
+    <string name="alergeno_06_soja">Soja</string>
+    <string name="alergeno_07_lacteos">Lácteos</string>
+    <string name="alergeno_08_frutos_cascara">Frutos de cáscara</string>
+    <string name="alergeno_09_apio">Apio</string>
+    <string name="alergeno_10_mostaza">Mostaza</string>
+    <string name="alergeno_11_sesamo">Sésamo</string>
+    <string name="alergeno_12_sulfitos">Sulfitos</string>
+    <string name="alergeno_13_altramuces">Altramuces</string>
+    <string name="alergeno_14_moluscos">Moluscos</string>
+
+    <!-- Tabla etiqueta (sin pantalla en nivel 1) -->
+    <string name="etiqueta_vegano">Vegano</string>
+    <string name="etiqueta_vegetariano">Vegetariano</string>
+    <string name="etiqueta_pescetariano">Pescetariano</string>
+
+    <!-- Categoría por defecto (esPorDefecto = true; renombrable, se reconoce por la columna, R16) -->
+    <string name="precarga_categoria_por_defecto">Otros</string>
+    <!-- Categoría y plato de ejemplo (decisión tomada): 1 · Agua · 1,50 € -->
+    <string name="precarga_categoria_ejemplo">Bebidas</string>
+    <string name="precarga_plato_ejemplo">Agua</string>
+
+</resources>

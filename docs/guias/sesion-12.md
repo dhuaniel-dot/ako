@@ -1,0 +1,148 @@
+> **Guía de la sesión 12 — Fotos.** Escrita en la sesión 00 (noche del 24 al 25 sep 2026) [Claude] como plan de piezas, sin código: el código lo da Claude pieza a pieza en el chat (bloque arriba, explicación debajo, pregunta al final) y Daniel lo teclea en Android Studio. Objetivo del spec (apartado 11, S12): **Fotos (`ImageStore`, selector de fotos, Glide en Panel, 5a y 5b); P-M-08 pasa.** Entregable: el Propietario elige una foto de la galería en el formulario del plato (3a) y en la hoja de categoría (2b, P13); la app la guarda **como archivo** en su almacenamiento privado, redimensionada a ~1080 px y en JPEG, con **solo la ruta** en la base de datos; Glide la enseña en la miniatura del Panel y de la carta, en la ficha 5b y, redonda, en la fila de categorías de 5a. **P-M-08 pasa**, y **P-M-04 y P-M-18 pasan enteras** (les faltaba Entrecot con foto). Es **la última pieza del nivel 1** (spec 9: toda la app funciona sin fotos). Manda el spec entero en su apartado 9 (archivo, nunca BLOB; `inSampleSize`; ~1080 px; JPEG ~85; `PickVisualMedia`; Glide con placeholder y «?»; `contentDescription` «Sin foto»), la ficha 3 (campo *Foto*), la ficha 5 (plato y categoría sin foto), la ficha 2 (miniatura de la fila y hoja 2b), P13, P224, la verificación 6 y RNF-18; y se dibuja lo que enseñan `03a-formulario-1`, `02b-editar-categoria`, `05a-carta` y `05b-ficha-plato`.
+> **Prerrequisitos** (de S1 a S11, con los nombres que dejan): Glide 5.0.9 con `ksp(libs.glide.ksp)` en `app/build.gradle.kts` desde la S1 (y quizá ya `AkoGlideModule`, copiado de `stack-verificado/`); `Producto.imagen` y `Categoria.imagen` como `String?` (S2); `CartaRepository.guardarPlato(p, alergenos, aunqueCategoriaEliminada)` y `guardarCategoria(c)`, que guardan la entidad entera, `imagen` incluida (S4); `Ako : Application` con los repositorios (S4); el patrón `AndroidViewModel` + `getApplication<Ako>()` (S5); **S6**: `item_fila_plato.xml` con la miniatura de ~44 dp como `ImageView` con el vector `res/drawable/ic_sin_foto.xml` y `comun_sin_foto_cd`, `FilaPlatoAdapter`, `CategoriaBottomSheet` con `sheet_categoria.xml` (hueco «?» y `categoria_btn_elegir_foto` **desactivado**, P13) y `PanelViewModel`; **S7**: `activity_plato.xml` con el hueco grande «?» y el `+` redondo (`plato_elegir_foto_cd`) **desactivado**, `PlatoViewModel` con `cargar`, `guardar`, `hayCambios`, y en `PlatoActivity` `leerFormulario()` (que hoy copia `imagen` «tal como estaba») e `intentarSalir()`; **S8**: `item_categoria_fila.xml` (círculo de ~56 dp con el «?»), el modo fila de `CategoriaAdapter` (o `CategoriaFilaAdapter`, según su Plan Mode), `FichaPlatoFragment` con `fragment_ficha_plato.xml` y su foto grande «?»; **S11** cerrada (Gradle puede haber desinstalado la app: la S12 empieza con instalación limpia de todas formas). Si alguna sesión cambió un nombre, manda el código.
+> **Horas estimadas: 5–7 h** (11 piezas de 20–40 min más apertura, montaje de datos, pruebas y cierre). **Si pasa de 6 h, se corta con `relevo` al terminar la pieza 7** (la foto del plato se elige, se guarda y se ve en 3a, y el archivo está comprobado; falta enseñarla en las listas y la foto de categoría). Chat con **Opus 5.5, esfuerzo medio**; sin Plan Mode (P25).
+
+# Sesión 12 — guía
+
+## 0. Al abrir
+
+`abrir-sesion` lee la ficha de la S11 (si aplicó la red de seguridad P117, no cambia nada aquí) y Claude mira en el código real, y lo dice en tres líneas: **dónde está `AkoGlideModule`** (en la raíz del paquete, en `imagenes/` o en ninguna parte) y qué dice su línea `package`; **cómo están hechos los cinco «?»** que Glide va a sustituir (miniatura de `item_fila_plato.xml`, hueco grande de `activity_plato.xml`, foto grande de `fragment_ficha_plato.xml`, círculo de `item_categoria_fila.xml` y hueco de `sheet_categoria.xml`): si son `ImageView` con `ic_sin_foto` (lo previsto en la S6) o un texto encima; y **el nombre real del adaptador de la fila de categorías** (S8).
+
+**Antes de la primera pieza (Daniel, 15 min):**
+
+1. **La foto de P-M-08, lista en el PC:** una foto **propia** hecha con el móvil (mejor un plato de comida: sirve también para el vídeo), en **JPEG, de más de 2 MB y con el lado mayor de más de 3000 px** (en Windows: clic derecho → *Propiedades* → *Detalles*). Propia para no depender de licencias de nadie.
+2. **Instalación limpia y montaje mínimo** de `docs/guias/juego-de-datos.md`, apartado 3, S12 (~10 min): deja Carnes con **Entrecot sin foto** (Gluten, Lácteos, descripción), Pollo asado eliminado, Postres eliminada con Flan, Otros con Helado y Bebidas eliminada. Así las piezas tienen algo que enseñar.
+
+**Lo que decide esta guía [Claude]** (las cuatro primeras son dudas para Daniel; si dice otra cosa, se cambia la pieza):
+
+- **El archivo se copia al elegir la foto, no al guardar el plato** (pieza 4): el selector de fotos solo *presta* la foto un rato, y la vista previa enseña el archivo ya reducido, que es lo que verá la carta. Si se sale sin guardar, el archivo nuevo se borra.
+- **Las fotos giradas**: las fotos de móvil suelen venir tumbadas con una marca de giro dentro (EXIF). Se lee con `android.media.ExifInterface`, que ya trae Android (sin librería nueva), y se endereza antes de guardar (piezas 2 y 3).
+- **Si la foto no se puede usar** (archivo roto, no es una imagen): un snackbar con una cadena nueva, `foto_error` = «No se ha podido usar esa foto» (se traduce en la S13).
+- **El hueco de 2b es redondo**, como en la carta (spec 9 y `textos-ui.md` (c) dicen «círculo con «?»… en la hoja 2b»; el dibujo 02b lo pinta cuadrado).
+- Cada archivo lleva **un nombre único** (`UUID.jpg`), nunca «plato_12.jpg»: Glide recuerda las fotos por su ruta, y con el mismo nombre enseñaría la vieja.
+- En la base de datos va la **ruta completa** del archivo (`/data/user/0/yunkang.ako/files/fotos/….jpg`), que es lo que Glide carga con `File(ruta)` (spec 9).
+- Una foto más pequeña que 1080 px **no se agranda**.
+- **Eliminar un plato no borra su foto** (se puede recuperar, R5); **cambiar la foto sí borra la vieja**, y solo después de guardar bien.
+- **Quitar la foto sin poner otra no está en el diseño** y no se hace (regla 4); se anota como mejora.
+
+**Lo provisional que desaparece:** el `+` de la foto en 3a (S7) y *+ Elegir* en 2b (S6, P13) se encienden. Tras la S12 no queda nada provisional en la app.
+
+## 1. Piezas
+
+Regla 12 de `CLAUDE.md`: explicación breve → código completo con su ruta → Daniel lo teclea → `/verificar` → pregunta. Rutas de Kotlin bajo `app-ako/app/src/main/java/yunkang/ako/`; recursos bajo `app-ako/app/src/main/res/`. **Ningún texto visible en el código** (RNF-19). **Nada de leer ni escribir fotos en el hilo de la pantalla**: todo lo lento va en `Dispatchers.IO` (spec 9).
+
+### Pieza 1 — `AkoGlideModule` en `imagenes/` y el dibujo de «cargando» (25 min)
+
+- **Qué:** la pieza de configuración que Glide necesita con KSP, en su paquete, y el fondo neutro que se ve mientras carga una foto.
+- **Archivos:** `imagenes/AkoGlideModule.kt` — `@GlideModule class AkoGlideModule : AppGlideModule()` con `package yunkang.ako.imagenes`. La copia de `docs/guias/stack-verificado/app/AkoGlideModule.kt` dice `package yunkang.ako` aunque su LEEME la manda a `imagenes/`: si la S1 la dejó en la raíz, se mueve con *Refactor → Move* (`F6`), que cambia la línea `package` sola. `res/drawable/foto_cargando.xml` [Claude]: un rectángulo gris claro (la paleta neutra del tema), el *placeholder*.
+- **Qué te explico antes:** qué es **Glide** (*«un ayudante que carga fotos en segundo plano, las recorta al tamaño de cada hueco y se acuerda de las últimas para no volver a leerlas»*); para qué sirve esta clase vacía (es la etiqueta que busca KSP para generar la configuración de Glide de nuestra app; vacía = las opciones de serie, con su memoria y su caché en disco, que es lo que queremos); por qué Glide **no** necesita el permiso `INTERNET` para leer un archivo del propio móvil (RNF-22); la diferencia entre *placeholder* (mientras carga) y *error* (cuando no hay foto o no se puede leer: ahí va el «?» de `ic_sin_foto` que ya existe desde la S6).
+- **Qué comprobamos después:** `assembleDebug` en verde; Claude comprueba que KSP generó la clase de Glide en `app/build/generated/ksp/`; la app arranca igual que antes.
+- **Pregunta:** ¿qué verá el usuario en un hueco de foto mientras Glide carga, y qué verá si el plato no tiene foto?
+
+### Pieza 2 — `ImageStore`, parte 1: medir la foto y leerla reducida (35 min)
+
+- **Qué:** leer una foto enorme sin reventar la memoria.
+- **Archivo:** `imagenes/ImageStore.kt` — `class ImageStore(private val context: Context)` y el principio de `suspend fun guardar(uri: Uri): String` (spec 9), todo dentro de `withContext(Dispatchers.IO)`: **primera pasada** con `inJustDecodeBounds = true` (solo ancho y alto); `private fun calcularMuestreo(ancho: Int, alto: Int): Int` [Claude] (la potencia de 2 más grande que deja el lado mayor en 1080 px o más); **segunda pasada** con ese `inSampleSize`, que ya da un `Bitmap`; y la orientación leída con `android.media.ExifInterface` (si Daniel acepta esa duda). Cada lectura abre el archivo con `context.contentResolver.openInputStream(uri)` y lo cierra con `use`.
+- **Qué te explico antes:** qué es un **bitmap** (*«la foto desempaquetada, píxel a píxel: 4 bytes por píxel»*) y la cuenta: una foto de 4000 × 3000 son 12 millones de píxeles = **48 MB** en memoria para enseñarla en un hueco de 44 dp; la app tiene un límite de memoria y lo pasaría con dos fotos; **las dos pasadas** de la guía oficial *Loading Large Bitmaps Efficiently* (spec 9): primero *«leer solo la etiqueta de la caja»* (medidas, sin píxeles), después *«desempaquetar uno de cada N píxeles»* (con `inSampleSize` 2, la de 48 MB se queda en 12); por qué va en `Dispatchers.IO` (leer y descomprimir tarda: en el hilo de la pantalla la congelaría); qué es la marca EXIF de giro y por qué la foto saldría tumbada sin ella.
+- **Qué comprobamos después:** compila; Claude comprueba que no hay ninguna lectura de la foto sin opciones y que todo está dentro de `withContext(Dispatchers.IO)`.
+- **Pregunta:** una foto de 4000 × 3000, ¿cuánto ocupa en memoria sin `inSampleSize` y cuánto con 2?
+
+### Pieza 3 — `ImageStore`, parte 2: tamaño final, JPEG, archivo y `borrar` (35 min)
+
+- **Qué:** terminar `guardar` y el método para quitar archivos que ya no se usan.
+- **Archivos:** `imagenes/ImageStore.kt` — girar si hace falta (`Matrix`), escalar para que el lado mayor mida **1080 px** (`Bitmap.createScaledBitmap`; si ya es menor, se deja), carpeta `File(context.filesDir, "fotos")` (se crea si no existe), archivo con nombre `UUID` + `.jpg` [Claude], `compress(Bitmap.CompressFormat.JPEG, 85, …)`, y devuelve `archivo.absolutePath`; `fun borrar(ruta: String)` (borra el archivo **solo si está dentro de `filesDir/fotos/`** [Claude]: nunca nada de fuera). `Ako.kt`: `val imageStore by lazy { ImageStore(this) }` (con el contexto de la app, nunca el de una pantalla).
+- **Qué te explico antes:** **archivo, nunca BLOB (verificación 6):** Android lee las filas de la base de datos por una ventana de **2 MB**; una foto de 3 MB dentro de una fila no cabe por esa ventana (la consulta falla), y la base de datos engordaría con cada foto: por eso en `imagen` solo va el texto de la ruta; **almacenamiento privado** (`filesDir`): solo la app lo ve y se borra al desinstalar (spec 8: olvidar el PIN obliga a reinstalar y se pierden las fotos); **JPEG 85** = mucho menos peso sin que se note a simple vista (RNF-18); la copia **no lleva los datos EXIF** del original (tampoco la ubicación GPS): un regalo de privacidad; `borrar` no rompe R5: R5 habla de filas de la base de datos, y un archivo al que ya no apunta ninguna fila es basura.
+- **Qué comprobamos después:** compila; `ImageStore` vive en `imagenes/` (usa Android: nunca en `dominio/`, P237); el `revisor` de la S13 no encontrará ninguna foto en la base de datos.
+- **Pregunta:** ¿por qué en `producto.imagen` se guarda «/data/…/fotos/abc.jpg» y no la foto?
+
+### Pieza 4 — `PlatoViewModel.elegirFoto` y qué pasa con el archivo viejo (35 min)
+
+- **Qué:** el ViewModel del plato guarda la foto elegida y sabe cuándo borrar cada archivo.
+- **Archivos:** `ui/plato/PlatoViewModel.kt` — `fotoRuta: LiveData<String?>` [Claude] (la que enseña el hueco; al `cargar` es la `imagen` del plato); `fun elegirFoto(uri: Uri)` (del diagrama): en `viewModelScope`, `imageStore.guardar(uri)` → si ya había una foto **nueva sin guardar**, se borra esa; se apunta la nueva, `fotoRuta` cambia y `hayCambios = true`; si `guardar` falla, `fotoError` [Claude] avisa a la pantalla y todo queda como estaba; `guardar(...)`: con `Ok` y la foto cambiada, se borra la **vieja** (después de guardar, nunca antes); `fun descartarFotoNueva()` [Claude] para cuando se sale sin guardar. `ui/plato/PlatoActivity.kt` — `leerFormulario()` pasa a poner `imagen = fotoRuta` en vez de copiarla; `intentarSalir()` → *Salir* llama a `descartarFotoNueva()`; `strings.xml`: `foto_error` [Claude, duda].
+- **Qué te explico antes:** por qué se copia **al elegir** (el selector presta la foto con un permiso temporal; si se esperara a *Guardar* y en medio salta la cadena 3e o Android recrea la pantalla, el préstamo puede haber caducado); los tres destinos de un archivo nuevo: se guarda (y la vieja se borra), se cambia por otra antes de guardar (se borra), o se sale sin guardar (se borra); **eliminar el plato no toca su foto** (R5: se puede recuperar entero); la capa: el ViewModel habla con `ImageStore` directamente (así lo dibuja el diagrama de clases: `PlatoViewModel → ImageStore`), y el repositorio solo ve una ruta de texto dentro de `Producto`.
+- **Qué comprobamos después:** compila; Claude comprueba que ningún `borrar` ocurre antes de un guardado con `Ok`.
+- **Pregunta:** si eliges una foto y sales con *Salir* sin guardar, ¿qué pasa con el archivo y quién lo borra?
+
+### Pieza 5 — Una foto grande en la galería del emulador (20 min)
+
+- **Qué:** preparar la foto que pide P-M-08 (herramienta, sin código).
+- **Archivo:** ninguno de la app. La foto del apartado 0.
+- **Qué te explico antes:** por qué P-M-08 exige una foto **grande** (> 2 MB, > 3000 px): con una pequeña no se ve que la app la reduce, que es lo que se prueba; los pasos de `android-studio-basico.md`, apartado 6 (*Meter una foto en el emulador*): arrastrar el archivo desde el Explorador de Windows a la pantalla del emulador → queda en `/sdcard/Download/`, visible en la app **Files** del emulador y en **Device Explorer**.
+- **Qué comprobamos después:** la foto se ve en *Files → Downloads* del emulador. **Si el selector de fotos no la enseña** en la pieza 6 (la documentación no dice si una foto arrastrada aparece ahí): se avisa a Claude antes de probar otra cosa; el plan B es que Claude la copie con `adb push` a `/sdcard/Pictures/` y se reinicie el emulador (Android vuelve a buscar fotos al arrancar; **comprobar en pantalla**).
+- **Pregunta:** ¿por qué con una foto de 800 px P-M-08 «pasaría» sin demostrar nada?
+
+### Pieza 6 — 3a: el selector de fotos y la foto grande con Glide (35 min)
+
+- **Qué:** el `+` de la foto se enciende, abre el selector del sistema y la foto elegida sale en el hueco.
+- **Archivos:** `ui/plato/PlatoActivity.kt` — `registerForActivityResult(ActivityResultContracts.PickVisualMedia())` como **propiedad** de la Activity [Claude]; el `+` lo lanza con `PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)`; si vuelve una `Uri` → `viewModel.elegirFoto(uri)`; si vuelve `null` (se canceló) → nada; se observa `fotoRuta` → `Glide.with(hueco).load(ruta?.let { File(it) }).placeholder(R.drawable.foto_cargando).error(R.drawable.ic_sin_foto).centerCrop().into(hueco)`, y `contentDescription` = `comun_sin_foto_cd` si no hay foto o el nombre del plato si la hay; se observa `fotoError` → snackbar `foto_error`. `res/layout/activity_plato.xml` — el `+` sin `enabled="false"`.
+- **Qué te explico antes:** el **selector de fotos del sistema** (`PickVisualMedia`, spec 9): es de Android, no nuestro; la app **no pide ningún permiso** (ni de almacenamiento ni de fotos: el manifiesto no cambia) y solo recibe la foto que el usuario toca, no la galería entera; por qué el lanzador se registra al crear la pantalla y no dentro del clic (Android tiene que poder devolverle el resultado aunque recree la Activity mientras el selector está abierto); por qué a Glide se le pasa también el `null` (así pone el «?» del *error*); `centerCrop` = llenar el hueco recortando lo que sobra.
+- **Qué comprobamos después:** Entrecot → `+` → se abre el selector → la foto grande → el hueco la enseña (reducida y derecha, no tumbada) → *Guardar*. Cancelar el selector no cambia nada. Elegir y salir con *Salir* → Entrecot sigue sin foto. **P-M-08 paso 1.**
+- **Pregunta:** ¿qué permiso de Android ha tenido que pedir Ako para leer la foto, y por qué?
+
+### Pieza 7 — Comprobar el archivo guardado (25 min)
+
+- **Qué:** ver con los ojos que la foto es un archivo pequeño y que la base de datos solo tiene su ruta (P-M-08 paso 3).
+- **Archivo:** ninguno.
+- **Qué te explico antes:** **Device Explorer** (`android-studio-basico.md`, apartado 6): *View → Tool Windows → Device Explorer* → `data/data/yunkang.ako/files/fotos/` → clic derecho → guardar una copia en el PC → *Propiedades → Detalles*: lado mayor ≤ ~1080 px y unos cientos de KB frente a los MB del original. Con la imagen *Google APIs* esa carpeta puede no abrirse (**comprobar en pantalla**); la alternativa la hace Claude: `adb shell run-as yunkang.ako ls -l files/fotos` (lista los archivos con su tamaño) y copia uno al PC para medirlo. **Database Inspector**: la columna `imagen` de Entrecot es un texto con la ruta, no un bloque binario.
+- **Qué comprobamos después:** un solo archivo en `fotos/` aunque se hayan elegido varias fotos antes de guardar (la pieza 4 borró las intermedias); JPEG, ≤ ~1080 px, una fracción del original; `imagen` = la ruta. Claude apunta las cifras para las *Observaciones* de P-M-08.
+- **Pregunta:** ¿cómo enseñarías en el vídeo que la foto no está dentro de la base de datos?
+
+### Pieza 8 — Glide en la fila de plato (2a, 5a) y en la ficha 5b (40 min)
+
+- **Qué:** la miniatura del Panel y de la carta, y la foto grande de la ficha.
+- **Archivos:** `ui/comun/FilaPlatoAdapter.kt` — en cada `bind`, **siempre** `Glide.with(miniatura).load(…)` con `foto_cargando` e `ic_sin_foto` (también cuando `imagen` es `null`) y el `contentDescription` que toque; `ui/pedido/FichaPlatoFragment.kt` — lo mismo en la foto grande, con `centerCrop`.
+- **Qué te explico antes:** **se reutiliza el componente, no la pantalla** (spec 7): el Panel y la carta usan la misma fila, así que la miniatura se escribe una vez y sale en los dos sitios; qué hace Glide con un archivo de 1080 px en un hueco de 44 dp (lo lee ya reducido al tamaño del hueco y guarda esa versión pequeña en su caché: al bajar y subir la carta no vuelve a leer el archivo); **por qué hay que llamar a Glide también sin foto**: el `RecyclerView` recicla las filas (el camarero de las bandejas de la S6), y una bandeja que llevaba la foto de Entrecot la llevaría puesta en la fila de Pollo asado si nadie la cambia.
+- **Qué comprobamos después:** Panel: miniatura en Entrecot, «?» en Pollo asado, Flan y Helado; carta (Pedir → mesa 7): miniatura de Entrecot; subir y bajar deprisa sin que ninguna foto cambie de fila; ficha 5b de Entrecot con la foto grande y la de Helado con el «?». **P-M-08 paso 2**; **P-M-18 y el remate de P-M-04** ya se pueden mirar.
+- **Pregunta:** ¿por qué hay que llamar a Glide también cuando el plato no tiene foto?
+
+### Pieza 9 — Foto de categoría en 2b (P13) (35 min)
+
+- **Qué:** *+ Elegir* se enciende en la hoja de categoría.
+- **Archivos:** `ui/panel/PanelViewModel.kt` — `imageStore` desde `getApplication<Ako>()` [Claude: el diagrama solo une `ImageStore` con `PlatoViewModel`; P13 lo pide también aquí], `fotoCategoria: LiveData<String?>`, `fun elegirFotoCategoria(uri: Uri)` y `fun descartarFotoCategoria()` [Claude], con las mismas reglas de la pieza 4 (la nueva se borra si no se guarda; la vieja, después de guardar bien); `ui/panel/CategoriaBottomSheet.kt` — su propio lanzador de `PickVisualMedia`, `categoria_btn_elegir_foto` encendido, el hueco con Glide y `circleCrop()` (duda del hueco redondo), `imagen` dentro de la `Categoria` que se pasa a `guardarCategoria`, y al cerrar la hoja sin *Guardar* → `descartarFotoCategoria()`; `sheet_categoria.xml` — el botón sin `enabled="false"`.
+- **Qué te explico antes:** P13: la foto de categoría entra hoy, con la del plato, y **solo se ve pequeña y redonda en la fila de categorías de la carta** (y aquí, en la hoja, para saber qué se eligió); no sale en la cabecera de las cajas del Panel; por qué la foto pendiente vive en el ViewModel y no en la hoja (la hoja se puede recrear; el ViewModel de la Activity sigue ahí: `activityViewModels()`); el mismo patrón que el plato, escrito otra vez a propósito (regla 2: dos sitios que se leen solos); *Otros* también puede tener foto (R16 deja cambiar nombre y foto, no eliminarla).
+- **Qué comprobamos después:** lápiz de Carnes → *+ Elegir* → foto → se ve redonda en la hoja → *Guardar* → volver a abrir la hoja: sigue ahí; abrir la de Postres, elegir una foto y cerrar sin guardar: Postres sigue sin foto y el archivo no queda en `fotos/` (Claude lo mira).
+- **Pregunta:** ¿por qué la foto elegida y aún sin guardar vive en el ViewModel y no en la hoja?
+
+### Pieza 10 — La foto redonda en la fila de categorías de 5a (25 min)
+
+- **Qué:** cada categoría de la carta con su foto redonda, o el círculo con «?» (P224).
+- **Archivo:** `ui/comun/CategoriaAdapter.kt` (el modo fila de la S8, o el adaptador que decidiera su Plan Mode) — Glide con `circleCrop()`, `foto_cargando` e `ic_sin_foto`, y `contentDescription` = el nombre de la categoría o `comun_sin_foto_cd`.
+- **Qué te explico antes:** `circleCrop()` recorta la **foto** en redondo, pero no los dibujos de *placeholder* y *error*: el «?» se ve redondo porque va sobre el fondo circular que la S8 le puso al hueco (si no fuera así, se le da ese fondo aquí); el resaltado de la categoría activa sigue siendo negrita y raya, no un color (RNF-13).
+- **Qué comprobamos después:** Pedir → mesa 7: **Carnes con su foto redonda** y **Otros con el círculo «?»** (la última); tocar Otros sigue saltando a su sección (P-M-17 intacta).
+- **Pregunta:** ¿por qué el «?» sale redondo si `circleCrop()` no lo toca?
+
+### Pieza 11 — P-M-08, P-M-04 y P-M-18 enteras, y el manifiesto sin `INTERNET` (30 min)
+
+- **Qué:** el bloque de pruebas de la sesión (`juego-de-datos.md`, apartado 3, S12) y dos comprobaciones de cierre.
+- **Archivo:** ninguno nuevo.
+- **Qué te explico antes:** por qué el bloque empieza con **instalación limpia** y el montaje mínimo (regla del juego de datos: se prueba sobre datos conocidos; la foto de *Download* no se borra); el orden: paso 36 (P-M-08) → paso 17 (P-M-04 **entera**, con la miniatura de Entrecot) → paso 19 hasta la carta → paso 20 (P-M-18 **entera**, con la foto grande); el *placeholder neutro* de P-M-08 casi no se llega a ver (un archivo local carga en un instante): se anota así en *Observaciones*, no se inventa; cómo comprobar el `contentDescription` «Sin foto» de Pollo asado: *Tools → Layout Inspector* y seleccionar la miniatura (**comprobar en pantalla**), o Claude con `adb shell uiautomator dump`; **el manifiesto final** (`AndroidManifest.xml` → pestaña *Merged Manifest*, **comprobar en pantalla**): ningún permiso `INTERNET` ni de fotos, ni siquiera los que podrían traer las librerías (RNF-22).
+- **Qué comprobamos después:** P-M-08, P-M-04 y P-M-18 **Pasa**; la foto de Carnes en la carta comprobada a mano (fuera de las P-M: se escribe en la ficha, `juego-de-datos.md`); `testDebugUnitTest` en verde (no se lanza `connectedDebugAndroidTest`: desinstalaría la app; lo hace la S13).
+- **Pregunta:** si el Propietario olvida el PIN y reinstala la app, ¿qué pasa con estas fotos y por qué?
+
+## 2. Pruebas que cierran la sesión
+
+- **P-M-08: Pasa** (primera vez; RF-09). *Observaciones*: medidas y peso del original y del archivo guardado (pieza 7), la ruta en `producto.imagen`, «Sin foto» en Pollo asado, y que el *placeholder* apenas se ve en local.
+- **P-M-04: Pasa entera** (era *Parcial* desde la S6: Entrecot sin foto). **P-M-18: Pasa entera** (era *Parcial* desde la S8: foto grande de Entrecot). Se anotan tras el remate del paso 37 de `juego-de-datos.md`, con fecha y el historial de *Parcial* en *Observaciones*.
+- **Foto de categoría:** ninguna P-M la prueba (P-M-05 crea las categorías sin foto); se comprueba a mano (pieza 9 y 10) y se escribe en la ficha del diario, no en el plan (`juego-de-datos.md`, S12).
+- **Sin pruebas de código nuevas.** `testDebugUnitTest` sigue en verde.
+- `estado-nivel.md`: **RF-09 → implementado (S12)**; **RF-04 y RF-30 → implementado** (su sesión no cambia). Recuento de arriba actualizado.
+- Cierre con `cerrar-sesion` (sin `revisor`: toca en la S13): ficha `sesion-12.md` (con la comprobación de la foto de categoría); `decisiones-code.md` con las decisiones de la sesión (copiar al elegir, nombres `UUID`, ruta completa, EXIF con la clase del sistema, no agrandar, no borrar al eliminar, borrar la vieja tras guardar, `foto_error`, `PanelViewModel → ImageStore`, hueco redondo en 2b, `AkoGlideModule` en `imagenes/`); **dos commits**: `S12: fotos` y después `S12: ficha del diario`, con push.
+
+## 3. Lo que tienes que saber defender
+
+- **Archivo, nunca BLOB** (verificación 6): la ventana de 2 MB con la que Android lee las filas, y que en la base de datos solo hay una ruta. Enseñarlo en el vídeo con Device Explorer (o `adb`) y el Database Inspector.
+- **RNF-18 con números**: una foto de 4000 × 3000 son 48 MB en memoria; con `inSampleSize` y 1080 px queda en unos pocos MB mientras se procesa y en unos cientos de KB en disco; JPEG 85.
+- **Glide**: carga en segundo plano, reduce al tamaño del hueco y guarda en caché; todo local, **sin permiso `INTERNET`** (RNF-22).
+- **El selector de fotos del sistema** no necesita permisos: la app solo recibe la foto que el usuario elige.
+- **Por qué la foto es la última pieza**: toda la app funciona sin fotos (el «?» existe desde la S6, P92, P93, P224); es opcional para el bar y lo que más memoria y hilos exige; si no hubiera dado tiempo, el nivel 1 seguía funcionando.
+- **Límite declarado**: las fotos viven en el almacenamiento privado y se pierden al desinstalar (olvidar el PIN = reinstalar, spec 8 y Anexo II).
+
+## 4. Riesgos típicos y qué hacer
+
+- **La app se cierra al elegir la foto con «java.lang.OutOfMemoryError: Failed to allocate…»**: se está leyendo la foto entera; falta la primera pasada o el `inSampleSize` (pieza 2).
+- **La foto sale tumbada** en el hueco y en la carta: falta leer la marca EXIF y girar antes de guardar (piezas 2 y 3).
+- **Al cambiar la foto sigue saliendo la vieja**, o **al bajar la carta una foto aparece en la fila de otro plato**: el archivo nuevo se llamó igual que el viejo (Glide lo tenía guardado por su ruta: nombres `UUID`), o el adaptador no llama a Glide cuando el plato no tiene foto (pieza 8).
+- **«LifecycleOwner … is attempting to register while current state is RESUMED»**: el lanzador de `PickVisualMedia` se registró dentro del clic; va como propiedad de la Activity o de la hoja (pieza 6).
+- **La foto arrastrada no sale en el selector**: comprobar primero que está en *Files → Downloads*; si está y no sale, plan B de la pieza 5 (`adb push` a `Pictures` y reiniciar el emulador). No descargar nada de internet para sustituirla.
+- **«SecurityException: Permission Denial» al leer la foto**: se intentó leer la `Uri` más tarde (al guardar el plato, o tras recrear la pantalla); el préstamo ya caducó: se copia en `elegirFoto` (pieza 4).
+- **En Logcat, «Failed to find GeneratedAppGlideModule»**: falta `AkoGlideModule`, su `package` no coincide con su carpeta o no está `ksp(libs.glide.ksp)`; se sincroniza Gradle y se compila otra vez (pieza 1).
