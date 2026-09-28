@@ -15,6 +15,8 @@ Origen (28 sep 2026): un post enseñaba que buscando `claude_desktop_config.json
 - Firma de Android: `*.jks`, `*.keystore`, y `storePassword` / `keyPassword` escritos en `build.gradle.kts`.
 - Cosas de este PC: `local.properties`, `C:\Users\dhuan\.gradle\gradle.properties`, cualquier cosa de `AppData`.
 - Un PIN, una contraseña o un correo de verdad en el código o en las pruebas (en las pruebas se usan datos inventados, como `1234`).
+- Datos personales en skills, `CLAUDE.md`, el diario o el código: teléfono, DNI, dirección, correo, contraseñas de cuentas, datos de otras personas (profesor, compañeros). Basta con «Daniel» y «el profesor». Las skills se escriben para que se puedan leer en público sin problema.
+- El correo de los commits se ve en un repositorio público: usar el correo anónimo de GitHub (`…@users.noreply.github.com`, en GitHub → Settings → Emails) en `git config user.email`. Pendiente de decidir con Daniel (28 sep 2026).
 
 Ako no necesita ninguna clave de API: el spec prohíbe servidores. Si algún día parece que hace falta una, **se para y se pregunta a Daniel**; no se escribe en el código.
 
