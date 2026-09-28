@@ -23,7 +23,7 @@ Ninguno (la S1 no tiene código tecleado por Daniel).
 ## Decisiones tomadas en este chat que no están en ningún documento
 - En `decisiones-code.md` 5.3 ya están P104, `minSdk 26` y P105. Faltan por pasar al cerrar: **P106 → A** (Claude copia los archivos de Gradle por consola: configuración, no código de negocio) y **P107** (sustituida: en cada cambio de chat, dos PDF por Gmail; ya en `como-trabajamos`, `relevo` 4b y `cerrar-sesion` 8c).
 - `rootProject.name = "AKO"` en `stack-verificado/settings.gradle.kts` [Claude] (coincide con lo que generó el asistente).
-- **Consulta al profesor sobre la IA** (28 sep, enviada por Daniel): pregunta si se permite Claude Code para preparación, documentación y como ayuda al programar (explicar cada fase antes, ejemplos, comprobar que compila), declarándolo en el repositorio y la memoria. **Guardar la respuesta literal** en `decisiones-code.md` y en la ficha.
+- **Consulta al profesor sobre la IA** (28 sep, enviada por Daniel): pregunta si se permite Claude Code para preparación, documentación y como ayuda al programar (explicar cada fase antes, ejemplos, comprobar que compila), declarándolo en el repositorio y la memoria; y además si la IA puede escribir las partes repetitivas del código (clases de la base de datos, datos fijos) mientras Daniel escribe la lógica, y usarse para revisar el código, ayudar con las pruebas, la traducción al inglés y la memoria. Enviado el 28 sep por la noche. **Guardar la respuesta literal** en `decisiones-code.md` y en la ficha.
 
 ## Lo que Daniel dijo que no entendió todavía
 - La explicación técnica de los archivos de Gradle «a medias»: se repitió con el ejemplo del bar y le sirvió. Pide lenguaje coloquial y ejemplos de la vida real (ya en `como-trabajamos`).

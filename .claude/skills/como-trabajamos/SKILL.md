@@ -81,6 +81,7 @@ Cuando hay una pregunta numerada abierta, va **antes** del bloque PENDIENTE. Fue
 | «demasiados pasos» | Agrupar: un paso por acción, no por gesto |
 | «lo que veas» | Decidir, marcar [Claude], contar la elección en dos líneas |
 | «cambiamos de chat» | Terminar la pieza y `/relevo` |
+| «paramos hasta…», «un parón» | Pausa en **este mismo chat**: no es relevo, ni PDF, ni mensaje de chat nuevo |
 
 ## Atajos de la app de Claude que le sirven a Daniel (documentación oficial, sep 2026)
 
@@ -97,6 +98,8 @@ Cuando hay una pregunta numerada abierta, va **antes** del bloque PENDIENTE. Fue
 Daniel dice qué cambia (`/como-trabajamos` o simplemente diciéndolo). Claude edita este archivo en ese momento, añade una línea en el historial de abajo con la fecha y lo que cambió, y lo aplica desde el mensaje siguiente. Se sube al repositorio con el commit de la sesión.
 
 ## Historial de cambios
+
+- **2026-09-28** · Daniel: un «parón» no es un relevo; se sigue en el mismo chat.
 
 - **2026-09-28** · Daniel: en cada cambio de chat, dos resúmenes en PDF (sencillo y normal) enviados a su Gmail.
 
