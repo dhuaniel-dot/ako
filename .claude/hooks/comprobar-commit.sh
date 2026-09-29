@@ -1,7 +1,7 @@
 #!/bin/bash
 # Hook PreToolUse de Claude Code para el repositorio de Ako [Claude].
 # Se ejecuta solo, antes de cada comando de consola. Si el comando es un `git commit`:
-#   1) bloquea si el mensaje lleva "Co-Authored-By" (P226: los commits no llevan atribución);
+#   1) (quitado el 29 sep 2026, P111: desde entonces los commits SÍ llevan la línea de coautor de Claude);
 #   2) exige que el mensaje empiece por "S<N>:" (spec, apartado 13);
 #   3) exige que exista docs/diario/sesion-NN.md (la ficha de la sesión);
 #   4) bloquea si lo que se va a subir parece llevar una clave de API o una clave privada
@@ -16,11 +16,6 @@ cmd=$(printf '%s' "$entrada" | python -c "import sys,json;print(json.load(sys.st
 
 # ¿Es un commit? (tolera opciones entre git y commit, p. ej. git -c x=y commit)
 printf '%s' "$cmd" | grep -qE '(^|[;&|[:space:]])git[[:space:]]+([^;&|]*[[:space:]])?commit([[:space:]]|$)' || exit 0
-
-if printf '%s' "$cmd" | grep -qi 'co-authored-by'; then
-  echo "BLOQUEADO: el mensaje del commit lleva 'Co-Authored-By'. En Ako los commits no llevan atribución (P226); el uso de IA se declara en la ficha del diario." >&2
-  exit 2
-fi
 
 # Mensaje: lo que sigue a -m, -am o --message; tiene que empezar por S<N>: (S1:, S08:, s3: se admiten)
 n=$(printf '%s' "$cmd" | grep -oiE -- '(-[a-z]*m[[:space:]]+|--message[= ][[:space:]]*)["'"'"']?S0*([0-9]+):' | head -1 | grep -oE '[0-9]+:' | tr -d ':')

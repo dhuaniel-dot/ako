@@ -44,7 +44,7 @@ Palabras de Daniel (24 sep): *«con el tiempo que tenemos busco calidad; cuando 
 | Modelo | Opus (alto en las sesiones difíciles); Fable en hitos | Opus medio; Sonnet en todo lo mecánico; Fable solo si algo se rompe |
 | Revisión externa | S4, S9, S13 | Solo S13 |
 | Plan Mode | S4, S6, S8, S9 | Ninguna |
-| Lo que **no cambia** | Ficha del diario, `estado-nivel.md`, pruebas en verde antes de cerrar, commit sin atribución, el hook, [Claude] en lo no pedido, ninguna librería fuera del spec | Igual: es lo que exige la normativa y la memoria |
+| Lo que **no cambia** | Ficha del diario, `estado-nivel.md`, pruebas en verde antes de cerrar, commit con coautor Claude (P111), el hook, [Claude] en lo no pedido, ninguna librería fuera del spec | Igual: es lo que exige la normativa y la memoria |
 
 **Marcha vigente: calidad.**
 

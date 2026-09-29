@@ -1,6 +1,6 @@
 ---
 name: cerrar-sesion
-description: 'Cierra una sesión de código de Ako con el ritual completo: pruebas con fecha, ficha del diario, decisiones-code, estado-nivel, dos commits sin atribución, push y el primer mensaje del chat siguiente.'
+description: 'Cierra una sesión de código de Ako con el ritual completo: pruebas con fecha, ficha del diario, decisiones-code, estado-nivel, dos commits con coautor Claude (P111), push y el primer mensaje del chat siguiente.'
 when_to_use: 'Cuando Daniel diga «cerramos la sesión» o «hemos terminado», o escriba /cerrar-sesion. Solo si el objetivo está cumplido y probado; si falta algo, usa relevo.'
 ---
 
@@ -26,7 +26,7 @@ Ritual de cierre del spec (`docs/spec-claude-code.md`, apartados 11 y 13). **Sol
 7. **Commit y push, en dos commits:**
    - `git add -A` · `git commit -m "S<N>: <objetivo de una línea>"` · `git push` → es **el commit de código** de la sesión.
    - Anotar su identificador corto (7 caracteres) en *Commit final* de la ficha · `git add -A` · `git commit -m "S<N>: ficha del diario"` · `git push`.
-   El mensaje **no lleva `Co-Authored-By`** (P226; el hook lo bloquea) y empieza por `S<N>:` (el hook lo exige). *Nota:* la plantilla del diario habla de «un commit» y del «último commit»; en Ako se hace así (decisión de la sesión 00, anotada en `decisiones-code.md`) para que la ficha lleve el hash del código y el repositorio quede limpio.
+   El mensaje lleva la línea `Co-Authored-By: Claude` (P111; la añade el ajuste `attribution`) y empieza por `S<N>:` (el hook lo exige). *Nota:* la plantilla del diario habla de «un commit» y del «último commit»; en Ako se hace así (decisión de la sesión 00, anotada en `decisiones-code.md`) para que la ficha lleve el hash del código y el repositorio quede limpio.
 8. **Decir a Daniel en tres líneas:** qué se cerró, qué pruebas quedaron *Parcial*, y recordarle que suba la ficha al Project de Claude como `diario-6-sesion-NN.md` (y las fuentes nuevas a `ref+doc-bibliografia.md`).
 8b. **Fable de guardia:** si durante la sesión se usó `/advisor fable`, recordar a Daniel `/advisor off` antes del chat siguiente (regla de `~/.claude/CLAUDE.md`: apagado por defecto, Claude lo propone cuando algo se complica y Daniel lo activa).
 8c. **Resumen para leer en el móvil (Daniel, 28 sep).** Antes de entregar el mensaje del chat nuevo: **preguntar antes a Daniel qué le ha costado entender y qué curiosidades quiere saber** (lo incluye en los dos), y escribir dos resúmenes de **lo hecho y explicado en este chat** (longitud la que pida el contenido): uno **sencillo**, coloquial y con ejemplos de la vida real, y otro **normal**, con los términos técnicos (sirve para la memoria y el vídeo). Guardarlos como PDF en `docs/resumenes/AAAA-MM-DD-S<N>-sencillo.pdf` y `…-normal.pdf` (fuente en Markdown al lado) y **enviarlos a Daniel por Gmail** como adjuntos: enseñarle asunto y adjuntos y **esperar su «sí» antes de enviar** (enviar un correo siempre se confirma).
