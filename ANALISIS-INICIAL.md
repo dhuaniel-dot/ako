@@ -264,7 +264,7 @@ Dos cosas que **no** son problema pero conviene tener presentes: las reglas van 
 | **Android Studio 2026.1.3 (Quail 3)** en `C:\Program Files\Android\Android Studio` | Instalado, **sin SDK** y **sin emulador** creado | Alguien abrió el instalador pero el asistente de primer arranque no descargó el SDK (no hay `AppData\Local\Android\Sdk`). Se completa en la S1. La versión estable actual es Quail 4 (1 sep 2026) |
 | **Git 2.55** | Instalado | Vale |
 | **GitHub CLI (`gh`)**, con sesión iniciada en la cuenta **`dhuaniel-dot`** | Instalado y conectado | Podemos crear el repositorio desde la consola sin pasar por la web |
-| **Identidad global de Git: nombre `Yunkang46`, correo `houyi.shenyi@gmail.com`** | Es otra cuenta | Los commits saldrían con ese nombre y no con el tuyo. Hay que configurar tu nombre y tu correo (E.2, paso 5) |
+| **Identidad global de Git: nombre `Yunkang46`, correo `(correo de la otra cuenta)`** | Es otra cuenta | Los commits saldrían con ese nombre y no con el tuyo. Hay que configurar tu nombre y tu correo (E.2, paso 5) |
 | JDK 25 (Temurin) en Program Files | Instalado | **No hace falta**: Android Studio trae su propio Java (JBR 21). Ojo con que Gradle no lo coja por error |
 | `claude` en consola | No está en el PATH | Da igual: usas la app de escritorio |
 | Ajustes de usuario de Claude Code (`C:\Users\dhuan\.claude\settings.json`) | Existen, **sin `attribution`** | Se añade en la S1 (→ P23) |

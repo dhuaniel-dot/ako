@@ -57,7 +57,7 @@ Claude lo hace por consola desde `C:\AKO` y va diciendo qué hace cada comando:
 1. `git init` en `C:\AKO` (la raíz: `docs/`, `CLAUDE.md`, `.claude/`, `app-ako/`). El `.gitignore` ya existe.
 2. `git status` para ver qué se va a subir (no debe aparecer `build/`, `.idea/` ni `local.properties`).
 3. `git add -A` · `git commit -m "S1: proyecto Android Studio, SDK y emulador"` → el hook comprueba que existe `docs/diario/sesion-01.md` (la crea `abrir-sesion`) y que no hay atribución.
-4. `git log -1` → comprobar que el autor es **Yunkang Daniel <dhuaniel@gmail.com>** y que **no hay línea `Co-Authored-By`**. Si la hubiera: ajuste `attribution` mal cargado → reiniciar la app y repetir.
+4. `git log -1` → comprobar que el autor es **Yunkang Daniel <correo anónimo de GitHub, `…@users.noreply.github.com`>** y que **no hay línea `Co-Authored-By`**. Si la hubiera: ajuste `attribution` mal cargado → reiniciar la app y repetir.
 5. `gh repo create ako --public --source=. --remote=origin --push` → crea el repositorio en `github.com/dhuaniel-dot/ako` y sube.
 6. Abrir en el navegador `https://github.com/dhuaniel-dot/ako` → captura: entregable «el repositorio se ve en GitHub».
 7. `README.md`: el borrador ya está en `docs/guias/readme-borrador.md` [Claude]; Daniel lo lee, lo cambia a su gusto y lo pega en `C:\AKO\README.md`; commit `S1: README`.

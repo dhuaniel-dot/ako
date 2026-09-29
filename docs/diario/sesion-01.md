@@ -14,6 +14,7 @@
 - Día 1 (28 sep, 19:48 – ~22:30): asistente de Android Studio (Custom, SDK en `C:\Android\Sdk`) · proyecto `app-ako` creado por Daniel (Empty Views Activity, paquete `yunkang.ako` **P104**, nombre visible `AKO` **P105**, API 26) · «Hello World!» en el emulador · archivos de Gradle del `stack-verificado` copiados por Claude (**P106 → A**) y `AkoGlideModule.kt`: `assembleDebug` y `testDebugUnitTest` en verde, sincronizado y ejecutado en Android Studio · `git init` en `C:\AKO`, commit `9dbb69a` sin atribución (autor comprobado) · repositorio público https://github.com/dhuaniel-dot/ako creado y subido.
 - Daniel escribió al profesor para confirmar el uso de la IA; la sesión se para hasta su respuesta (ver `EN-CURSO.md`).
 - A medias: captura de GitHub, README (`S1: README`) y cierre.
+- Día 2 (29 sep): retomada a las 14:54. El profesor contestó que el uso de la IA está permitido tal como se planteó (respuesta literal en `decisiones-code.md` 5.3); se sigue con la línea 2.
 
 ## Problemas y soluciones
 
