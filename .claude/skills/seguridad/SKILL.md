@@ -29,6 +29,7 @@ Ako no necesita ninguna clave de API: el spec prohíbe servidores. Si algún dí
    ```
    Si sale algo que no sea un falso positivo (p. ej. `numberPassword` es un tipo de campo, no una contraseña), **no se hace el commit**.
 3. Nunca `git add -A` ni `git add .` a ciegas: se añaden los archivos por su nombre.
+4. Red de seguridad automática (29 sep 2026): el hook `.claude/hooks/comprobar-commit.sh` (paso 4) bloquea los commits que hace Claude Code si lo cambiado lleva una clave con forma real (`sk-ant-…`, `ghp_…`, `AIza…`, `AKIA…`, clave privada). **No vigila los commits que Daniel hace a mano en Git Bash**: ahí sirve el punto 1 de este apartado.
 
 ## 3. Si una clave llega a subirse
 
