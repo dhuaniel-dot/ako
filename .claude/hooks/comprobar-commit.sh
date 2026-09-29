@@ -41,4 +41,12 @@ if git -C "$raiz" diff HEAD | grep '^+' | grep -qE "$claves"; then
   exit 2
 fi
 
+# 5) El autor del commit tiene que ser Daniel, con el correo anónimo de GitHub (29 sep 2026) [Claude]
+autor=$(git -C "$raiz" config user.name)
+correo=$(git -C "$raiz" config user.email)
+if [ "$autor" != "Yunkang Daniel" ] || [[ "$correo" != *@users.noreply.github.com ]]; then
+  echo "BLOQUEADO: el commit saldría como '$autor <$correo>'. En Ako el autor es Yunkang Daniel con el correo anónimo de GitHub (skill seguridad)." >&2
+  exit 2
+fi
+
 exit 0

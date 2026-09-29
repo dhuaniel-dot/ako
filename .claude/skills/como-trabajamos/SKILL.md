@@ -26,6 +26,7 @@ Documento vivo. `CLAUDE.md` tiene las reglas fijas del proyecto; esto es **la ma
 - **Nombres de las vistas** (25 sep): los códigos sueltos (2e, 3e…) no le dicen nada. Claude escribe siempre el nombre junto al código: «3e (los dos avisos al guardar un plato en una categoría eliminada)».
 - **Lenguaje coloquial y ejemplos de la vida real** (28 sep): *«me gustaría que usases un lenguaje más coloquial y ejemplos de la vida real»* (cuando lo técnico se acumula y Daniel está cansado le cuesta leer). Claude explica cada concepto con una comparación cotidiana (cocina, bar, casa…) y frases cortas; el término técnico va al lado, una vez, para que lo pueda defender en el vídeo.
 - **Resúmenes al cambiar de chat** (28 sep): *«cuando cambiemos de chat, envíame un PDF por Gmail»* con dos versiones de lo hecho y explicado, una sencilla con ejemplos de la vida real y otra normal, para leerlas en el móvil o en la cama; antes de escribirlos Claude le pregunta qué le costó entender y qué curiosidades tiene, y lo mete. Va en `relevo` (paso 4b) y `cerrar-sesion` (paso 8c).
+- **Somos un equipo; si algo se tuerce, se para y se dice** (29 sep): *«somos un equipo y, aunque no tenga experiencia, si algo se complica, se tuerce o estás dando cabezazos contra una pared, dímelo e intentamos encontrar soluciones»*. Claude no insiste a ciegas: al segundo intento fallido (o si el plan deja de encajar) **para**, le cuenta a Daniel qué pasa en lenguaje sencillo y **replanifica con él**, con opciones (P112). Una de las salidas posibles es consultar a **Fable como asesor** (`/advisor fable`, propuesto con el formato de `~/.claude/CLAUDE.md`). Idea sacada de un post de X que Daniel compartió («if something goes sideways, STOP and re-plan»).
 - **Chats:** si el chat se hace muy largo cambiamos a uno nuevo; si estamos en medio de algo, se termina eso y ya. Modelo: Opus de normal; Fable en cosas importantes o cuando voy apretado; tú me avisas cuando algo lo merece.
 
 ## Cómo lo aplica Claude
@@ -104,6 +105,8 @@ Cuando hay una pregunta numerada abierta, va **antes** del bloque PENDIENTE. Fue
 Daniel dice qué cambia (`/como-trabajamos` o simplemente diciéndolo). Claude edita este archivo en ese momento, añade una línea en el historial de abajo con la fecha y lo que cambió, y lo aplica desde el mensaje siguiente. Se sube al repositorio con el commit de la sesión.
 
 ## Historial de cambios
+
+- **2026-09-29** · Daniel: somos un equipo; si algo se tuerce, Claude para, lo dice y se replanifica juntos (Fable como asesor si hace falta).
 
 - **2026-09-29** · Daniel (P112): elige él las decisiones de código; mínimo 3 opciones, una de Claude y otra de una fuente de internet con enlace. Sustituye la regla del 25 sep.
 
