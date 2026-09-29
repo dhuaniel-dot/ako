@@ -8,3 +8,4 @@ Una línea por cosa que Claude hizo mal o que costó más de lo debido y que pue
 - (25 sep 2026) Si el límite de uso corta a un subagente, lo escrito en disco se conserva pero su informe final se pierde: que escriban el archivo pronto y retomarlos con `SendMessage` (no relanzarlos desde cero).
 - (25 sep 2026) En Git Bash, `local.properties` con `sdk.dir=C\:\\Android\\Sdk` da «Invalid file path»; con barras normales (`sdk.dir=C:/Android/Sdk`) funciona.
 - (24 sep 2026) `set JAVA_HOME=…` no funciona ni en PowerShell ni en Git Bash; Gradle usa el JBR de Android Studio por `~/.gradle/gradle.properties`, no hace falta tocar el entorno.
+- (29 sep 2026) Los permisos de la app no dejan a Claude editar los hooks de `.claude/hooks/` (protección contra que la IA cambie sus propias reglas): dar el bloque a Daniel para que lo pegue (Bloc de notas: `notepad <ruta>`) y probar el hook ejecutándolo con un JSON de ejemplo.
