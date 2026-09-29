@@ -15,7 +15,13 @@ Documento vivo. `CLAUDE.md` tiene las reglas fijas del proyecto; esto es **la ma
 - **Ni tanto ni tan poco:** «corta el pan, pon la carne dentro y cierra» me sirve; «coge el pan, ponlo de lado, coge un cuchillo, agárralo bien…» no. Si das mucha chapa lo digo; si explicas poco lo digo; si haces demasiados pasos lo digo. Iré ajustando.
 - **Preguntas numeradas con opciones A/B/C y tu recomendación marcada**; contesto con la letra o con mis palabras, en el orden que quiera. Lo que delego («lo que veas») lo decides tú, lo marcas [Claude] y me lo cuentas.
 - **Trabajo a rachas**, sin horas fijas por semana: el plan se mide por hitos, no por semanas.
-- **Dudas técnicas de código** (25 sep): *«en casos de dudas sobre cosas técnicas de código elegiré tu recomendación»*. Claude decide con su recomendación, lo marca [Claude] y lo cuenta en una línea; solo pregunta lo que cambia lo que ve el usuario, el alcance, los datos o las pruebas.
+- ~~**Dudas técnicas de código** (25 sep): Claude decide con su recomendación~~ → **sustituida el 29 sep (P112).**
+- **Daniel elige las decisiones de código** (29 sep, P112): *«me gustaría que siempre me des un mínimo de 3 opciones, con un mínimo de 1 opción tuya y otra que hayas encontrado en vídeos, ejemplos o repositorios de internet»*. Motivo: que el proyecto sea suyo (el profesor: lo malo sería que la IA diseñara y ejecutara el proyecto sola).
+  - **Toda decisión que cambie cómo funciona el código** (dónde va una comprobación, cómo se guarda un dato, qué clase hace qué, en qué orden pasan las cosas): **mínimo 3 opciones** A/B/C, cada una en lenguaje sencillo con ventaja y pega; **al menos una propuesta por Claude** y **al menos una sacada de fuera** (documentación oficial, un repositorio de GitHub, un tutorial o ejemplo publicado), **con el enlace** para la bibliografía. Claude marca cuál recomienda y por qué; **Daniel elige**. En la ficha: «Daniel eligió B entre A/B/C».
+  - Si de verdad solo hay dos caminos razonables, la tercera opción puede ser «dejarlo como está / más adelante», y se dice.
+  - Claude no ve vídeos: las fuentes de fuera son páginas que puede leer (developer.android.com, GitHub, tutoriales escritos, Stack Overflow). Nunca se inventa una fuente: si no la encuentra, lo dice.
+  - **Lo mecánico** (orden de `import`, sangría, sintaxis que no cambia nada) lo hace Claude sin preguntar y lo cuenta en una línea.
+  - Las decisiones tomadas «por la regla de Daniel» en `decisiones-code.md` (P46, P49, P64, P77–P81, P85–P87, P94) se vuelven a preguntar así al llegar a su sesión.
 - **Fable de guardia** (26 sep): el *advisor* está apagado por defecto (en todos los proyectos, `~/.claude/CLAUDE.md`). Cuando algo se complica (un error que vuelve, un plan grande con dudas, antes de dar por terminado algo largo y difícil; en Ako lo más probable es en S4, S6, S8, S9 y S13), Claude **propone** activarlo en una línea y Daniel, si quiere, escribe `/advisor fable`; al resolverse, `/advisor off`.
 - **Nombres de las vistas** (25 sep): los códigos sueltos (2e, 3e…) no le dicen nada. Claude escribe siempre el nombre junto al código: «3e (los dos avisos al guardar un plato en una categoría eliminada)».
 - **Lenguaje coloquial y ejemplos de la vida real** (28 sep): *«me gustaría que usases un lenguaje más coloquial y ejemplos de la vida real»* (cuando lo técnico se acumula y Daniel está cansado le cuesta leer). Claude explica cada concepto con una comparación cotidiana (cocina, bar, casa…) y frases cortas; el término técnico va al lado, una vez, para que lo pueda defender en el vídeo.
@@ -98,6 +104,8 @@ Cuando hay una pregunta numerada abierta, va **antes** del bloque PENDIENTE. Fue
 Daniel dice qué cambia (`/como-trabajamos` o simplemente diciéndolo). Claude edita este archivo en ese momento, añade una línea en el historial de abajo con la fecha y lo que cambió, y lo aplica desde el mensaje siguiente. Se sube al repositorio con el commit de la sesión.
 
 ## Historial de cambios
+
+- **2026-09-29** · Daniel (P112): elige él las decisiones de código; mínimo 3 opciones, una de Claude y otra de una fuente de internet con enlace. Sustituye la regla del 25 sep.
 
 - **2026-09-28** · Daniel: un «parón» no es un relevo; se sigue en el mismo chat.
 
