@@ -41,7 +41,7 @@ Regla 12 de `CLAUDE.md`: explicación breve → código completo con su ruta →
 - **Qué:** la memoria de 2g: qué día se mira y qué se cobró.
 - **Archivo:** `ui/resumen/ResumenIngresosViewModel.kt` — `class ResumenIngresosViewModel(app: Application) : AndroidViewModel(app)`; `dia: LiveData<LocalDate>` (empieza en **hoy**, `LocalDate.now()`), `resumen: LiveData<ResumenIngresos>`, `fun elegirDia(dia: LocalDate)` (del diagrama) y `fun cargar()` (vuelve a pedir el resumen del día que haya, según lo decidido en la S6); `lineasDe(comandaId)` (del diagrama) llega en la pieza 7.
 - **Qué te explico antes:** por qué el día vive en el ViewModel y no en la pantalla (si Android recrea la Activity, se sigue mirando el mismo día); el ViewModel solo habla con `ComandaRepository` (nunca con `ComandaDao`, spec 3); cambiar el día = pedir otra consulta, no filtrar una lista guardada: la base de datos ya sabe buscar entre dos instantes.
-- **Qué comprobamos después:** compila; importa `Ako` y `ComandaRepository`, ningún DAO.
+- **Qué comprobamos después:** compila; importa `EntradaAko` y `ComandaRepository`, ningún DAO.
 - **Pregunta:** ¿qué pasa en la base de datos cuando eliges otro día? ¿Se escribe algo?
 
 ### Pieza 4 — `ResumenIngresosActivity` y el botón del Panel (35 min)
