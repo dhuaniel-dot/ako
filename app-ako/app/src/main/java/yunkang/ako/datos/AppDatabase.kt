@@ -13,6 +13,7 @@ import yunkang.ako.datos.dao.CategoriaDao
 import yunkang.ako.datos.dao.MesaDao
 import yunkang.ako.datos.dao.PrecargadosDao
 import yunkang.ako.datos.dao.ProductoDao
+import yunkang.ako.datos.dao.ComandaDao
 
 // La base de datos de Ako: el archivador con sus 7 cajones.
 // La única instancia la guarda EntradaAko (P116).
@@ -36,4 +37,5 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun productoDao(): ProductoDao
     abstract fun mesaDao(): MesaDao
     abstract fun precargadosDao(): PrecargadosDao
+    abstract fun comandaDao(): ComandaDao
 }
