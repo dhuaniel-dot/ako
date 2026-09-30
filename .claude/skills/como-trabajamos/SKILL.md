@@ -111,6 +111,8 @@ Daniel dice qué cambia (`/como-trabajamos` o simplemente diciéndolo). Claude e
 
 ## Historial de cambios
 
+- **2026-09-30** · Daniel: no se sube la ficha al Project a mano; el chat del Project lee la carpeta `C:\AKO` entera.
+
 - **2026-09-30** · Daniel: los resúmenes en PDF son para estudiar; no se suben a GitHub (`docs/resumenes/` en `.gitignore`), solo se envían por Gmail.
 
 - **2026-09-30** · Daniel: solo nivel 1; lo que se empieza se termina; cualquier propuesta del nivel 2, con todo lo que implica (P115).
