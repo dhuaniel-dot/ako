@@ -7,7 +7,7 @@
 
 | Nivel | RF | Estado |
 |---|---|---|
-| 1 | 29 | 0 implementados |
+| 1 | 29 | 0 implementados · 1 implementado, no probado (RF-50) |
 | 2 | 22 | 0 implementados |
 | 3 | 2 | 0 implementados |
 
@@ -43,7 +43,7 @@
 | RF-44 | Calcular el cambio desde un importe entregado opcional (negativo si falta) | 6 · 6c | Camarero (Cuenta) | 1 | diseñado | — |
 | RF-45 | Cobrar con confirmación → PAGADA con `fecha_cierre` | 6 · 6c | Camarero (Cuenta) | 1 | diseñado | — |
 | RF-46 | Quitar una línea de la comanda desde Cuenta; aviso al quitar la última (la comanda pasa a ANULADA); los modificadores se van con la línea | 6 · 6b | Camarero (Cuenta) | 1 | diseñado | — |
-| RF-50 | Precargar al instalar: categoría por defecto, 60 mesas, 14 alérgenos, 1 categoría y 1 plato de ejemplo (sin etiquetas: llegan con el incremento 1, P115) | — | Sistema | 1 | diseñado | — |
+| RF-50 | Precargar al instalar: categoría por defecto, 60 mesas, 14 alérgenos, 1 categoría y 1 plato de ejemplo (sin etiquetas: llegan con el incremento 1, P115) | — | Sistema | 1 | implementado, no probado | S2 |
 
 ## Nivel 2 — incrementos, en este orden (22 RF)
 

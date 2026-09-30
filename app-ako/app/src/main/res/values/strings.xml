@@ -1,3 +1,28 @@
 <resources>
     <string name="app_name">AKO</string>
+
+    <!-- Precarga: estos textos se guardan en la base de datos la primera vez que se abre la app -->
+
+    <!-- Los 14 alérgenos legales (anexo II del Reglamento UE 1169/2011). El número fija el orden -->
+    <string name="alergeno_01_gluten">Gluten</string>
+    <string name="alergeno_02_crustaceos">Crustáceos</string>
+    <string name="alergeno_03_huevos">Huevos</string>
+    <string name="alergeno_04_pescado">Pescado</string>
+    <string name="alergeno_05_cacahuetes">Cacahuetes</string>
+    <string name="alergeno_06_soja">Soja</string>
+    <string name="alergeno_07_lacteos">Lácteos</string>
+    <string name="alergeno_08_frutos_cascara">Frutos de cáscara</string>
+    <string name="alergeno_09_apio">Apio</string>
+    <string name="alergeno_10_mostaza">Mostaza</string>
+    <string name="alergeno_11_sesamo">Sésamo</string>
+    <string name="alergeno_12_sulfitos">Sulfitos</string>
+    <string name="alergeno_13_altramuces">Altramuces</string>
+    <string name="alergeno_14_moluscos">Moluscos</string>
+
+    <!-- Categoría por defecto (se reconoce por esPorDefecto, nunca por el nombre: R16) -->
+    <string name="precarga_categoria_por_defecto">Otros</string>
+
+    <!-- Categoría y plato de ejemplo: 1 · Agua · 1,50 € (P7) -->
+    <string name="precarga_categoria_ejemplo">Bebidas</string>
+    <string name="precarga_plato_ejemplo">Agua</string>
 </resources>

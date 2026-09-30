@@ -9,3 +9,6 @@ Una línea por cosa que Claude hizo mal o que costó más de lo debido y que pue
 - (25 sep 2026) En Git Bash, `local.properties` con `sdk.dir=C\:\\Android\\Sdk` da «Invalid file path»; con barras normales (`sdk.dir=C:/Android/Sdk`) funciona.
 - (24 sep 2026) `set JAVA_HOME=…` no funciona ni en PowerShell ni en Git Bash; Gradle usa el JBR de Android Studio por `~/.gradle/gradle.properties`, no hace falta tocar el entorno.
 - (29 sep 2026) Los permisos de la app no dejan a Claude editar los hooks de `.claude/hooks/` (protección contra que la IA cambie sus propias reglas): dar el bloque a Daniel para que lo pegue (Bloc de notas: `notepad <ruta>`) y probar el hook ejecutándolo con un JSON de ejemplo.
+- (30 sep 2026) Claude tomó una «sugerencia» de Daniel (un nombre) por decisión y cambió 8 guías: ante un nombre o idea nueva de Daniel, confirmar «¿lo dejamos así?» antes de propagarlo a los documentos.
+- (30 sep 2026) La guía de la S2 no preveía que Room no abre la base de datos (ni salta `Callback.onCreate`) hasta el primer uso: al escribir una guía que dependa de un efecto de Room o de Android, comprobar cuándo ocurre de verdad antes de dar el paso por hecho.
+- (30 sep 2026) Daniel crea a veces archivos en el paquete o con el tipo equivocado (Java Class, carpeta anidada, `dao.kt`): tras cada «ya está», `ls` de la carpeta antes de leer el contenido.
