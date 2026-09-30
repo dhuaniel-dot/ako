@@ -5,7 +5,7 @@
 | **Fecha** | 2026-09-30 |
 | **Sesión nº** | 02 |
 | **Objetivo de la sesión** | Del spec: 14 entidades, `Converters`, `AppDatabase`, `Precarga`; compila y el inspector enseña las 14 tablas con *Otros*, 60 mesas, 14 alérgenos, 3 etiquetas y el ejemplo. **Cambiado en la sesión** (P113, P115): **7 entidades**, sin `Converters` ni etiquetas; el inspector enseña las 7 tablas con Otros, 60 mesas, 14 alérgenos y Bebidas / 1 · Agua · 1,50 € (P7) |
-| **Tiempo dedicado** | 11:16 – ~13:35, unas 2 h 20 min (pausas sin anotar; hora de fin aproximada) |
+| **Tiempo dedicado** | 11:16 – ~13:35, unas 2 h 20 min, sin pausas (confirmado por Daniel) |
 | **Nivel / pieza** | Nivel 1 · capa de datos (entidades Room y precarga, RF-50) |
 | **Commit final** | `d23b193` — S2: 7 entidades, AppDatabase, EntradaAko y Precarga |
 
