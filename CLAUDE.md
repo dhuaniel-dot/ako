@@ -2,6 +2,14 @@
 
 Proyecto Intermodular de DAM. **Es mi primer proyecto de programación**: nunca he usado Android Studio ni Git antes de este repositorio. Es un trabajo académico evaluable, no un producto. **Criterio: aprobar seguro antes que nota.** Entrega: semana del 23 de noviembre de 2026.
 
+## El objetivo es el prototipo (Daniel, 30 sep 2026)
+
+1. **Se construye solo el nivel 1.** Orden fijado: **prototipo (nivel 1) → el doc (memoria) → y solo si sobra tiempo, extras del nivel 2**, cada uno entero, actualizando el doc después. Hasta terminar el doc no se propone nada del nivel 2 (sustituye a P3).
+2. **Nada de código «por si acaso».** Cada clase, tabla, columna, cadena o dependencia la usa algo del nivel 1 hoy. La base de datos tiene **7 tablas** (P115); lo del nivel 2 llega entero con su incremento.
+3. **Lo que se empieza se termina.** Si surge una idea a mitad de una pieza, se apunta y se sigue con la pieza.
+4. **El diseño del nivel 2 no se borra** de ningún documento: se conserva para después.
+5. **Lo decidido aquí manda sobre el spec y sobre el Project «Proyecto Intermodular» de la app de Claude** (donde se planificó todo y se escribe el doc): el doc explica el prototipo. Cada cambio va a «Para el Project» (`docs/decisiones-code.md`, apartado 6); Daniel le pide al chat del Project que lo lea y corrija el doc.
+
 ## Lee esto antes de cada sesión
 
 1. **`docs/spec-claude-code.md`** es el diseño completo y el orden de construcción. Manda sobre cualquier idea tuya. Léelo entero la primera vez; después, el apartado de la sesión.
@@ -63,6 +71,6 @@ Kotlin · Android nativo · XML con Activities y Fragments (**no** Compose) · R
 - Reconocer la categoría por defecto por su nombre: se usa `esPorDefecto`.
 - Programar una segunda carta o un campo para teclear el número de plato.
 - Gestos ocultos: todo lo que se puede hacer tiene un botón visible.
-- Empezar un incremento del nivel 2 con el nivel 1 sin terminar, probar y documentar.
+- Empezar un incremento del nivel 2 antes de terminar, probar y documentar el nivel 1 **y de terminar el doc**; o meter código de nivel 2 «por si acaso» (P115).
 - Autenticación con servidores, pagos reales, notificaciones push, traducción automática.
 - Cambiar el alcance, el modelo de datos o una regla R1-R16 sin decírmelo antes.

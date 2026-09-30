@@ -1,5 +1,5 @@
 > **Guía de la sesión 5 — Selector y PIN (1a, 1b, 1c, 1e) + `ConfirmacionDialog`.** Escrita en la sesión 00 (24 sep 2026) [Claude] como plan de piezas, sin código: el código lo da Claude pieza a pieza en el chat y Daniel lo teclea en Android Studio. Objetivo del spec (apartado 11, S5): **Selector y PIN (1a, 1b, 1c, 1e) + `ConfirmacionDialog`; P-M-01, 02, 03, 13 pasan.** Es la primera sesión con pantalla: se programa lo que dice la ficha 1 de `spec+doc-pantallas.md` y se dibuja lo que enseñan `01a-selector`, `01b-crear-pin`, `dialogo-1c-introducir-pin` y `dialogo-1e-cambiar-pin`.
-> **Prerrequisitos** (de S1 a S4): proyecto con ViewBinding y el catálogo de versiones; las 14 tablas con precarga; `Validacion.pinValido`; `SeguridadRepository`, `CartaRepository` (`hayPlatoVisible`) y `PinStore`; `Ako : Application` con los tres repositorios; `docs/textos-ui.md` con las cadenas de la pantalla 1 (apartado 1), las comunes (apartado 8) y los diálogos (apartado 7), y `docs/guias/strings-es-borrador.xml` con **las claves reales** (el inventario tiene alias: `app_nombre` → `app_name`, `panel_btn_cambiar_pin` → `pin_cambiar_titulo`).
+> **Prerrequisitos** (de S1 a S4): proyecto con ViewBinding y el catálogo de versiones; las 7 tablas con precarga (P115); `Validacion.pinValido`; `SeguridadRepository`, `CartaRepository` (`hayPlatoVisible`) y `PinStore`; `Ako : Application` con los tres repositorios; `docs/textos-ui.md` con las cadenas de la pantalla 1 (apartado 1), las comunes (apartado 8) y los diálogos (apartado 7), y `docs/guias/strings-es-borrador.xml` con **las claves reales** (el inventario tiene alias: `app_nombre` → `app_name`, `panel_btn_cambiar_pin` → `pin_cambiar_titulo`).
 > **Horas estimadas: 7–9 h** (12 piezas de 20–40 min más aperturas y cierre). Chat con **Opus 5.5, esfuerzo medio**; sin Plan Mode (P25).
 
 # Sesión 5 — guía
@@ -114,7 +114,7 @@ Regla 12 de `CLAUDE.md`: explicación breve → código completo con su ruta →
 
 - **P-M-01, P-M-02, P-M-03: pasan enteras** (piezas 7, 10 y 11). Se anotan con fecha en `spec+doc-pruebas.md`.
 - **P-M-13: Parcial** (P6): Propietario → 1c → cancelar sí; Cuenta y Pedir llevan a la caja provisional. Se repite entera en la S9.
-- **P-M-29: Parcial** (P6): solo el paso 5 (tabla `etiqueta` con 3 filas en el inspector) y que la app arranca con el PIN creado; Panel, formulario, Cuenta y 1d se comprueban en S6–S9. Se repite entera en la S9.
+- **P-M-29: Parcial** (P6): ~~solo el paso 5 (tabla `etiqueta` con 3 filas en el inspector)~~ (P115: sin tabla `etiqueta`, el paso 5 de P-M-29 se quita [Claude]) y que la app arranca con el PIN creado; Panel, formulario, Cuenta y 1d se comprueban en S6–S9. Se repite entera en la S9.
 - `estado-nivel.md`: **RF-01, RF-02, RF-03 → implementado (S5)**; **RF-24 → implementado, no probado** (hasta P-M-13 entera).
 - Cierre con `cerrar-sesion` (sin `revisor`: toca en S9): ficha `sesion-05.md`, `decisiones-code.md` (los provisionales [Claude] y `AndroidViewModel`), dos commits (`S5: selector y PIN` y `S5: ficha del diario`) y push.
 

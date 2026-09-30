@@ -306,10 +306,12 @@
     <string name="alergeno_13_altramuces">Altramuces</string>
     <string name="alergeno_14_moluscos">Moluscos</string>
 
-    <!-- Tabla etiqueta (sin pantalla en nivel 1) -->
+    <!-- P115 (30 sep 2026): la tabla etiqueta no existe en el nivel 1; estas tres
+         cadenas NO se copian a strings.xml. Llegan con el incremento 1 (Etiquetas y chips).
     <string name="etiqueta_vegano">Vegano</string>
     <string name="etiqueta_vegetariano">Vegetariano</string>
     <string name="etiqueta_pescetariano">Pescetariano</string>
+    -->
 
     <!-- Categoría por defecto (esPorDefecto = true; renombrable, se reconoce por la columna, R16) -->
     <string name="precarga_categoria_por_defecto">Otros</string>

@@ -10,13 +10,13 @@ Eres un revisor con ojos nuevos del prototipo Android **Ako** (Kotlin, XML, Room
 ## Qué lees antes de opinar
 
 1. `CLAUDE.md` (reglas, stack fijo, vocabulario obligatorio, lo que no se hace nunca).
-2. `docs/spec-claude-code.md`, apartados 3 (capas), 5 (14 tablas y reglas de datos), 6 (R1-R16 y quién las garantiza), 7 (pantallas), 8 (seguridad) y 12 (pruebas).
+2. `docs/spec-claude-code.md`, apartados 3 (capas), 5 (las 7 tablas del nivel 1 y reglas de datos; P115), 6 (R1-R16 y quién las garantiza), 7 (pantallas), 8 (seguridad) y 12 (pruebas).
 3. Los archivos que te pidan revisar (o todo `app-ako/src/main` si no te acotan) y sus pruebas en `src/test` y `src/androidTest`.
 
 ## Qué compruebas
 
 1. **Reglas de negocio:** cada regla R1-R16 vive donde dice el apartado 6 del spec. Busca lo contrario: un DAO con lógica de negocio, un ViewModel que toca un DAO, una pantalla que calcula, un `delete` de entidad, una comanda cerrada que se toca, un total guardado, `CHECK` en una entidad, `Otros` reconocida por nombre, el PIN en claro, SQL concatenado.
-2. **Modelo de datos:** columnas `snake_case`, tipos (`Int` céntimos, `Long` fechas), índices únicos, FK con `RESTRICT` salvo la CASCADE de `linea_modificador`, PK compuestas en las N:M, `disponible` siempre `true` en nivel 1.
+2. **Modelo de datos:** columnas `snake_case`, tipos (`Int` céntimos, `Long` fechas), índices únicos, FK con `RESTRICT` en todas (en el nivel 1 no hay ninguna CASCADE: P115), PK compuestas en las N:M, y **nada del nivel 2 en la base de datos** (P115: ni tablas `etiqueta`, `modificador`, `linea_modificador`, `producto_nutricion`, `idioma`, `producto_traduccion`, `producto_etiqueta`, ni columnas `producto.disponible` o `producto.imagenNutricional`, ni código «por si acaso» que el nivel 1 no use).
 3. **Capas:** cada capa habla solo con la de abajo; `dominio/` sin `import android.*` ni Room; un ViewModel por Activity; el carrito solo en `PedidoViewModel`.
 4. **Vocabulario y textos:** nombres en español (`Comanda`, `guardarPlato`), *eliminar* ≠ *desactivar*, *Cuenta* y *recibo*; todos los textos en `strings.xml`, ninguno en el código.
 5. **Pruebas:** las P-C que tocan existen, prueban lo que dice el plan y no se han debilitado (asserts quitados, valores esperados cambiados para que pase).

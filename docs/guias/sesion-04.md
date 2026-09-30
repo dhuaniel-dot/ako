@@ -1,5 +1,5 @@
 > **Guía de la sesión 4 — Repositorios y `PinStore`.** Escrita en la sesión 00 (24 sep 2026) [Claude] como plan de piezas: qué se construye, en qué orden y qué hay que entender en cada trozo. No lleva código: el código lo da Claude pieza a pieza en el chat (bloque arriba, explicación debajo, pregunta al final) y Daniel lo teclea en Android Studio. Objetivo del spec (apartado 11, S4): **`CartaRepository`, `ComandaRepository`, `SeguridadRepository`, `PinStore`; compila; cada método tiene un comentario de una línea con la regla que garantiza.** Entregable: la app compila y las seis pruebas de `test/` siguen en verde, más la mitad nueva de P-C-09 (con DAO falso).
-> **Prerrequisitos** (de S2 y S3): las 14 entidades, `Converters`, `AppDatabase` y `Precarga`; los 5 DAOs con las consultas del diagrama (`pendienteDeMesa`, `pendientesConTotal`, `visibles`, `existeNumero`, `existeNombre`, `mesasConProductoPendiente`, `mesasConCategoriaPendiente`, `pagadasEntre`…); `Carrito`, `LineaCarrito`, `Calculadora`, `Validacion` (con `precioValido`, `cantidadValida`, `pinValido`), `Hash`; `MesaEstado` y `MesaConTotal` en `dominio/modelos/`; P-C-01 a P-C-05 y la mitad pura de P-C-09 en verde. Si `Ako : Application` ya existe desde la S2 con la base de datos (P17), en la pieza 11 solo se le añaden los repositorios.
+> **Prerrequisitos** (de S2 y S3): las 7 entidades del nivel 1 (P115), `AppDatabase` y `Precarga`; los 5 DAOs con las consultas del diagrama (`pendienteDeMesa`, `pendientesConTotal`, `visibles`, `existeNumero`, `existeNombre`, `mesasConProductoPendiente`, `mesasConCategoriaPendiente`, `pagadasEntre`…); `Carrito`, `LineaCarrito`, `Calculadora`, `Validacion` (con `precioValido`, `cantidadValida`, `pinValido`), `Hash`; `MesaEstado` y `MesaConTotal` en `dominio/modelos/`; P-C-01 a P-C-05 y la mitad pura de P-C-09 en verde. Si `Ako : Application` ya existe desde la S2 con la base de datos (P17), en la pieza 11 solo se le añaden los repositorios.
 > **Horas estimadas: 6–8 h** (12 piezas de 20–40 min más aperturas, cierre y revisión). Chat con **Opus 5.5, esfuerzo alto**.
 
 # Sesión 4 — guía
@@ -55,7 +55,7 @@ Cada pieza sigue la regla 12 de `CLAUDE.md`: explicación breve → código comp
 
 - **Qué:** las consultas que usan el Panel, la carta y la puerta de Pedir.
 - **Archivo:** el mismo — `platosDe(categoriaId)`, `platosVisibles()`, `hayPlatoVisible(): Boolean`, `plato(id)`, `alergenos()`, `alergenosDe(productoId)`.
-- **Qué te explico antes:** la diferencia entre **plato existente** (toda fila) y **plato visible** (activo, `disponible` y categoría activa: R15, que ya vive en la consulta `visibles()` de la S3); el Panel usa `platosDe` y lo ve todo, la carta usa `platosVisibles`; `hayPlatoVisible` es la puerta de Pedir (spec 6); en la S8 se le suma `hayPlatoExistente` [Claude, hueco 4 de su Plan Mode] para elegir entre *«La carta está vacía»* y *«Todas las categorías están eliminadas»*.
+- **Qué te explico antes:** la diferencia entre **plato existente** (toda fila) y **plato visible** (activo y categoría activa: R15; `disponible` se suma con el incremento 12, P115; que ya vive en la consulta `visibles()` de la S3); el Panel usa `platosDe` y lo ve todo, la carta usa `platosVisibles`; `hayPlatoVisible` es la puerta de Pedir (spec 6); en la S8 se le suma `hayPlatoExistente` [Claude, hueco 4 de su Plan Mode] para elegir entre *«La carta está vacía»* y *«Todas las categorías están eliminadas»*.
 - **Qué comprobamos después:** compila; el repositorio no repite la condición de visible (la delega en el DAO).
 - **Pregunta:** un plato activo en una categoría eliminada, ¿es visible? ¿Dónde está escrita esa regla?
 
@@ -102,9 +102,9 @@ Cada pieza sigue la regla 12 de `CLAUDE.md`: explicación breve → código comp
 ### Pieza 11 — `Ako : Application` (25 min)
 
 - **Qué:** el objeto que vive toda la ejecución y reparte la base de datos y los repositorios.
-- **Archivos:** `Ako.kt` (raíz del paquete; existe desde la S2, pieza 8, con `val db by lazy { AppDatabase.obtener(this) }` y ya registrado en `AndroidManifest.xml` con `android:name=".Ako"`) — se le añaden `val pinStore by lazy`, `val cartaRepository by lazy`, `val comandaRepository by lazy`, `val seguridadRepository by lazy`, que usan `db`.
+- **Archivos:** `Ako.kt` (raíz del paquete; existe desde la S2, pieza 7, con `val db by lazy { AppDatabase.obtener(this) }` y ya registrado en `AndroidManifest.xml` con `android:name=".Ako"`) — se le añaden `val pinStore by lazy`, `val cartaRepository by lazy`, `val comandaRepository by lazy`, `val seguridadRepository by lazy`, que usan `db`.
 - **Qué te explico antes:** qué es `Application` (se crea antes que cualquier pantalla y no muere hasta que muere la app); por qué la base de datos se abre **una sola vez** (spec 3: única instancia); qué es `by lazy` (se crea la primera vez que alguien lo pide); cómo un ViewModel llegará a esto en la S5 (`application as Ako`).
-- **Qué comprobamos después:** compila; la app arranca en el emulador sin error en Logcat; el inspector de base de datos sigue enseñando las 14 tablas con la precarga.
+- **Qué comprobamos después:** compila; la app arranca en el emulador sin error en Logcat; el inspector de base de datos sigue enseñando las 7 tablas con la precarga (P115).
 - **Pregunta:** ¿cuántas instancias de `AppDatabase` hay en la app, quién la guarda y quién la pide?
 
 ### Pieza 12 — Pasada de comentarios, pruebas y cierre (30 min + revisión)

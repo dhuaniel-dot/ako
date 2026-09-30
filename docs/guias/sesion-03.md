@@ -69,7 +69,7 @@ Cada pieza sigue la regla 12 de `CLAUDE.md`: explicación breve → código comp
 ### Pieza 7 — `CategoriaDao` y `PrecargadosDao` (25 min)
 
 - **Qué:** las consultas de categorías y de los datos precargados [Claude].
-- **Archivos:** `datos/dao/CategoriaDao.kt` — `insertar`, `actualizar`, `todas()` (ordenadas por `orden`; la regla «Otros la última» la aplica el repositorio, no el SQL), `porDefecto()`, `existeNombre(nombre, exceptoId)`. `PrecargadosDao.kt`: `alergenos()`, `etiquetas()`, `insertarAlergenos`, `insertarEtiquetas`. Todas `suspend` salvo lo que devuelva `LiveData`/`Flow` [Claude: `suspend` para todo en S3; cómo se refrescan las listas se decide en el Plan Mode de la S6, con la primera lista (hueco 3)].
+- **Archivos:** `datos/dao/CategoriaDao.kt` — `insertar`, `actualizar`, `todas()` (ordenadas por `orden`; la regla «Otros la última» la aplica el repositorio, no el SQL), `porDefecto()`, `existeNombre(nombre, exceptoId)`. `PrecargadosDao.kt`: `alergenos()`, `insertarAlergenos` (sin `etiquetas()` ni `insertarEtiquetas`: la tabla `etiqueta` llega con el incremento 1, P115). Todas `suspend` salvo lo que devuelva `LiveData`/`Flow` [Claude: `suspend` para todo en S3; cómo se refrescan las listas se decide en el Plan Mode de la S6, con la primera lista (hueco 3)].
 - **Qué te explico antes:** `@Query` con `:parametro`; `suspend` = «puede tardar, se llama desde una corrutina».
 - **Qué comprobamos después:** compila (Room valida el SQL al compilar: un error de columna sale aquí, no en el móvil).
 - **Pregunta:** ¿qué comprueba Room al compilar que otras librerías no comprueban?
@@ -77,7 +77,7 @@ Cada pieza sigue la regla 12 de `CLAUDE.md`: explicación breve → código comp
 ### Pieza 8 — `ProductoDao` (35 min)
 
 - **Qué:** las consultas de platos, con la de plato visible (R15) y la de número repetido (R9) [Claude].
-- **Archivo:** `datos/dao/ProductoDao.kt` [Claude: la ruta, como en la pieza 7] — `insertar`, `actualizar`, `porId`, `porCategoria(categoriaId)` (por número), **`visibles()`** (`activo = 1 AND disponible = 1` JOIN `categoria.activo = 1`, R15), `hayAlgunoVisible()`, **`existeNumero(numero, exceptoId)`** (R9), `alergenosDe(productoId)`, `guardarAlergenos(productoId, ids)` (`@Transaction`: borrar las relaciones del plato e insertar las nuevas).
+- **Archivo:** `datos/dao/ProductoDao.kt` [Claude: la ruta, como en la pieza 7] — `insertar`, `actualizar`, `porId`, `porCategoria(categoriaId)` (por número), **`visibles()`** (`activo = 1` JOIN `categoria.activo = 1`, R15; sin `disponible`, que llega con el incremento 12, P115), `hayAlgunoVisible()`, **`existeNumero(numero, exceptoId)`** (R9), `alergenosDe(productoId)`, `guardarAlergenos(productoId, ids)` (`@Transaction`: borrar las relaciones del plato e insertar las nuevas).
 - **Qué te explico antes:** el JOIN de visibles con un dibujo de dos tablas; por qué el Panel usa `porCategoria` (ve todos) y la carta `visibles()`.
 - **Qué comprobamos después:** compila [Claude].
 - **Pregunta:** ¿un plato activo de una categoría eliminada aparece en `visibles()`?

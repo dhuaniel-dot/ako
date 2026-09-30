@@ -8,7 +8,7 @@
 
 **El juego de datos** es la carta inventada con la que se prueba todo (apartado 2 del plan): PIN **1234**; **Carnes** con **12 · Entrecot · 18,50 €** (Gluten y Lácteos) y **14 · Pollo asado · 11,00 €**; **Postres** con **30 · Flan · 4,50 €**; **Helado 32 · 5,00 €** en **Otros**; y las mesas **4, 5, 6 y 7**. No se mete de golpe: **lo van creando las propias pruebas**, una detrás de otra. Por eso el orden importa: cada prueba tiene que encontrar hecho lo que pide su *Entrada* y dejar lo que necesita la siguiente.
 
-**La precarga** es lo que la app trae al instalarse (RF-50, `Precarga`, S2): la categoría **Otros** (la de por defecto: siempre la última y sin interruptor, R16), las **60 mesas**, los **14 alérgenos**, las **3 etiquetas** (Vegano, Vegetariano, Pescetariano) y la categoría de ejemplo **Bebidas** (activa, la primera) con el plato **1 · Agua · 1,50 €** (**P7**). Bebidas estorba en las pruebas del Panel y de la carta, así que **se elimina en cuanto dejan de necesitarla P-M-29 y P-M-05** (**P8**, paso 6 del montaje).
+**La precarga** es lo que la app trae al instalarse (RF-50, `Precarga`, S2): la categoría **Otros** (la de por defecto: siempre la última y sin interruptor, R16), las **60 mesas**, los **14 alérgenos** y la categoría de ejemplo **Bebidas** (activa, la primera) con el plato **1 · Agua · 1,50 €** (**P7**). Sin etiquetas: las 3 (Vegano, Vegetariano, Pescetariano) llegan con el incremento 1 (**P115**). Bebidas estorba en las pruebas del Panel y de la carta, así que **se elimina en cuanto dejan de necesitarla P-M-29 y P-M-05** (**P8**, paso 6 del montaje).
 
 **Empezar de cero** (instalación limpia) borra la base de datos, el PIN y las fotos de la app. Dos formas:
 
@@ -48,7 +48,7 @@ Tres cosas que conviene saber:
 ### 2.1 Bloque A — Selector y PIN (pasos 1–4, ~10 min)
 
 1. **P-M-01.** Abrir Ako → sale **1b** sin Atrás y con el aviso → **1234** y **1235** → Aceptar → *«Los PIN no coinciden»*, campos vacíos → **1234** y **1234** → Aceptar → **1a**. *Te quedas en 1a.*
-2. **P-M-29** (necesita Bebidas activa). Propietario → 1234 → **Panel**: Bebidas con *1 · Agua · 1,50 €* y **Otros la última** → [+ Plato] de cualquier caja → **14 alérgenos** → Atrás → Terminar → **Cuenta**: 60 mesas blancas → Atrás → **Pedir** → entra en 1d (Agua es visible) → Atrás → 1a. **Database Inspector** → tabla `etiqueta`: **3 filas**. *Te quedas en 1a.*
+2. **P-M-29** (necesita Bebidas activa). Propietario → 1234 → **Panel**: Bebidas con *1 · Agua · 1,50 €* y **Otros la última** → [+ Plato] de cualquier caja → **14 alérgenos** → Atrás → Terminar → **Cuenta**: 60 mesas blancas → Atrás → **Pedir** → entra en 1d (Agua es visible) → Atrás → 1a. ~~**Database Inspector** → tabla `etiqueta`: **3 filas**.~~ (P115: ese paso se quita; no hay nada que lo sustituya [Claude].) *Te quedas en 1a.*
 3. **P-M-02.** Propietario → **9999** → Aceptar → *«PIN incorrecto»*, se vacía y se sacude, sigue abierto → **1234** → Aceptar → Panel. *Te quedas en el Panel.*
 4. **P-M-03.** Cambiar PIN → actual **0000**, nuevo **5678** dos veces → Aceptar → *«PIN incorrecto»* en el actual (el nuevo no se guarda) → actual **1234**, nuevo **5678** dos veces → Aceptar → Terminar → Propietario → **1234** (falla) → **5678** → Panel → Cambiar PIN → 5678 / 1234 / 1234 → Aceptar → Terminar → Propietario → **1234** → Panel. *Te quedas en el Panel con el PIN 1234.*
    - Ojo: 1e tiene los **tres campos a la vez** (D18) y Aceptar está apagado hasta tener 4 + 4 + 4 cifras; por eso en el primer intento hay que teclear también el nuevo, aunque el plan diga solo «Actual 0000».
@@ -157,7 +157,7 @@ P-M-14 no se repite en modo rápido: su efecto neto es cero (elimina y recupera 
 ### S5 — Selector y PIN
 
 - **Montaje:** instalación limpia → pasos **1, 2** (solo lo que existe), **3, 4, 10**.
-- **Pruebas:** P-M-01, 02 y 03 **Pasa** (primera vez). P-M-13 **Parcial**: Propietario → 1c → Cancelar sí; Cuenta y Pedir enseñan la caja provisional (`pendiente_sesion_posterior`); se repite entera en la **S9**. P-M-29 **Parcial**: la app arranca con el PIN creado y el inspector enseña 3 filas en `etiqueta`; faltan el Panel (S6), el formulario (S7), 1d (S8) y Cuenta (S9); se repite entera en la **S9**.
+- **Pruebas:** P-M-01, 02 y 03 **Pasa** (primera vez). P-M-13 **Parcial**: Propietario → 1c → Cancelar sí; Cuenta y Pedir enseñan la caja provisional (`pendiente_sesion_posterior`); se repite entera en la **S9**. P-M-29 **Parcial**: la app arranca con el PIN creado y ~~el inspector enseña 3 filas en `etiqueta`~~ (P115: paso quitado [Claude]); faltan el Panel (S6), el formulario (S7), 1d (S8) y Cuenta (S9); se repite entera en la **S9**.
 - **A mano:** nada.
 - **Anotar:** las cinco con fecha. **`estado-nivel.md`:** RF-01, RF-02, RF-03 → `implementado`; RF-24 → `implementado, no probado`. (RF-50 ya está `implementado, no probado` desde la S2.)
 - **Tiempo:** ~15 min.
@@ -166,14 +166,14 @@ P-M-14 no se repite en modo rápido: su efecto neto es cero (elimina y recupera 
 
 En la S6 no existen el formulario del plato (S7) ni Pedir (S8): los platos y la comanda se meten a mano con el **Database Inspector** (spec 11: «con platos creados a mano en el inspector si hace falta»). Cómo abrirlo: `docs/guias/android-studio-basico.md`, apartado *Database Inspector*; para escribir SQL, el botón de **nueva consulta** (*Open New Query Tab*, comprobar el nombre en pantalla), **una sentencia cada vez** y *Run*.
 
-- **Antes de escribir nada:** doble clic en las tablas `producto`, `comanda` y `linea_comanda` y **comprobar que las columnas se llaman como en el spec 5** (`categoria_id`, `precio_centimos`, `es_por_defecto`, `mesa_id`, `fecha_creacion`, `fecha_cierre`, `comanda_id`, `producto_id`, `precio_unitario_centimos`, `nombre_producto`). Si alguna se llama distinto en tu código, se cambia en la sentencia. Y confirmar con Claude cómo guarda `Converters` el estado (si guarda el nombre del enum, es `'PENDIENTE'`).
+- **Antes de escribir nada:** doble clic en las tablas `producto`, `comanda` y `linea_comanda` y **comprobar que las columnas se llaman como en el spec 5** (`categoria_id`, `precio_centimos`, `es_por_defecto`, `mesa_id`, `fecha_creacion`, `fecha_cierre`, `comanda_id`, `producto_id`, `precio_unitario_centimos`, `nombre_producto`). Si alguna se llama distinto en tu código, se cambia en la sentencia. El estado se guarda con el nombre del enum (`'PENDIENTE'`): conversor incorporado de Room, P113.
 - **Montaje:** instalación limpia → paso **1** → paso **2** hasta el Panel (Bebidas con Agua y Otros la última) → paso **5** sin la carta → paso **6** (eliminar Bebidas).
 - **A mano, 1 — Flan y la comanda de la mesa 5** (para P-M-06; Postres todavía activa). [Claude] Datos de prueba, no es código de la app:
 
 ```sql
--- [Claude] S6 · datos de prueba para P-M-06 (una sentencia cada vez)
-INSERT INTO producto (categoria_id, numero, nombre, precio_centimos, activo, disponible)
-  VALUES ((SELECT id FROM categoria WHERE nombre = 'Postres'), 30, 'Flan', 450, 1, 1);
+-- [Claude] S6 · datos de prueba para P-M-06 (una sentencia cada vez; sin `disponible`, P115)
+INSERT INTO producto (categoria_id, numero, nombre, precio_centimos, activo)
+  VALUES ((SELECT id FROM categoria WHERE nombre = 'Postres'), 30, 'Flan', 450, 1);
 INSERT INTO comanda (mesa_id, estado, fecha_creacion)
   VALUES ((SELECT id FROM mesa WHERE numero = 5), 'PENDIENTE', strftime('%s','now') * 1000);
 INSERT INTO linea_comanda (comanda_id, producto_id, cantidad, precio_unitario_centimos, nombre_producto)
@@ -185,11 +185,11 @@ INSERT INTO linea_comanda (comanda_id, producto_id, cantidad, precio_unitario_ce
 - **A mano, 2 — los platos de P-M-04:**
 
 ```sql
--- [Claude] S6 · datos de prueba para P-M-04
-INSERT INTO producto (categoria_id, numero, nombre, precio_centimos, activo, disponible) VALUES
-  ((SELECT id FROM categoria WHERE nombre = 'Carnes'), 12, 'Entrecot', 1850, 1, 1),
-  ((SELECT id FROM categoria WHERE nombre = 'Carnes'), 14, 'Pollo asado', 1100, 0, 1),
-  ((SELECT id FROM categoria WHERE es_por_defecto = 1), 32, 'Helado', 500, 1, 1);
+-- [Claude] S6 · datos de prueba para P-M-04 (sin `disponible`, P115)
+INSERT INTO producto (categoria_id, numero, nombre, precio_centimos, activo) VALUES
+  ((SELECT id FROM categoria WHERE nombre = 'Carnes'), 12, 'Entrecot', 1850, 1),
+  ((SELECT id FROM categoria WHERE nombre = 'Carnes'), 14, 'Pollo asado', 1100, 0),
+  ((SELECT id FROM categoria WHERE es_por_defecto = 1), 32, 'Helado', 500, 1);
 ```
 
 - **P-M-04** (paso 17): Bebidas la primera y eliminada con Agua, Carnes (Entrecot y Pollo asado con *Eliminado*), Postres eliminada con Flan, Otros la última con Helado. Todos con «?». **Parcial**: platos metidos a mano en el inspector y Entrecot sin foto; se repite entera en la **S12**. Se añade la línea P8 a su *Entrada* (apartado 2.7).

@@ -3,7 +3,7 @@
 
 # Estado del nivel — Ako
 
-**El nivel 1 (29 RF) es lo único obligatorio.** El nivel 2 (22 RF, 12 incrementos en orden) entra solo cuando el nivel 1 esté terminado, probado y documentado, y solo si queda tiempo. El nivel 3 (2 RF) solo si sobra. Lo que no entre se declara *diseñado, no implementado* en la memoria.
+**El nivel 1 (29 RF) es lo único obligatorio: el objetivo de la fase es el prototipo.** El nivel 2 (22 RF, 12 incrementos en orden) entra solo cuando el nivel 1 esté terminado, probado y documentado **y la memoria (el doc) terminada**, y solo si queda tiempo; cada incremento entra **entero** (sus tablas, columnas, precarga y función) y después se actualiza el doc (**P115**, Daniel, 30 sep 2026; sustituye a P3). Nada de código «por si acaso» que no use el nivel 1. El nivel 3 (2 RF) solo si sobra. Lo que no entre se declara *diseñado, no implementado* en la memoria.
 
 | Nivel | RF | Estado |
 |---|---|---|
@@ -43,7 +43,7 @@
 | RF-44 | Calcular el cambio desde un importe entregado opcional (negativo si falta) | 6 · 6c | Camarero (Cuenta) | 1 | diseñado | — |
 | RF-45 | Cobrar con confirmación → PAGADA con `fecha_cierre` | 6 · 6c | Camarero (Cuenta) | 1 | diseñado | — |
 | RF-46 | Quitar una línea de la comanda desde Cuenta; aviso al quitar la última (la comanda pasa a ANULADA); los modificadores se van con la línea | 6 · 6b | Camarero (Cuenta) | 1 | diseñado | — |
-| RF-50 | Precargar al instalar: categoría por defecto, 60 mesas, 14 alérgenos, 3 etiquetas, 1 categoría y 1 plato de ejemplo | — | Sistema | 1 | diseñado | — |
+| RF-50 | Precargar al instalar: categoría por defecto, 60 mesas, 14 alérgenos, 1 categoría y 1 plato de ejemplo (sin etiquetas: llegan con el incremento 1, P115) | — | Sistema | 1 | diseñado | — |
 
 ## Nivel 2 — incrementos, en este orden (22 RF)
 
@@ -140,4 +140,4 @@
 
 - RF-09 (foto del plato) es nivel 1 pero **la última pieza** (S12): toda la app funciona sin fotos.
 - RF-40: el blanco y el rojo de la rejilla son nivel 1; el **verde** (mesa cobrada) es nivel 3 y va con RF-49.
-- RF-53 (agotado temporal): la columna `producto.disponible` existe desde la S2 con `true` por defecto; la pantalla que la cambia es el incremento 12.
+- RF-53 (agotado temporal): ~~la columna `producto.disponible` existe desde la S2 con `true` por defecto~~ → la columna `producto.disponible` **no existe en el nivel 1**: llega entera con el incremento 12, junto con la pantalla que la cambia (P115).

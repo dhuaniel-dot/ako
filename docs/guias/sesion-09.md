@@ -87,7 +87,7 @@ Cada pieza sigue la regla 12 de `CLAUDE.md`: explicación breve → código comp
 
 - **Qué:** *Quitar* en una comanda de varias líneas la quita al momento y el total baja.
 - **Archivos:** `CuentaViewModel.kt` — `suspend fun quitarLinea(lineaId: Long): Boolean` (hueco 6) que llama al repositorio y **vuelve a cargar** líneas, total y mesas; `ComandaFragment.kt` — el toque de *Quitar* lo llama desde `lifecycleScope`.
-- **Qué te explico antes:** lo único que se **borra** en toda la app: las líneas de una comanda **todavía abierta** (spec 5.1); si la línea llevara modificadores, se irían con ella (CASCADE, R11, nivel 2). Por qué, después de quitar, se **vuelve a preguntar** el total a la base de datos en vez de restar en pantalla (R10: una sola verdad).
+- **Qué te explico antes:** lo único que se **borra** en toda la app: las líneas de una comanda **todavía abierta** (spec 5.1); si la línea llevara modificadores, se irían con ella (CASCADE, R11, incremento 4; en el nivel 1 no hay ninguna CASCADE, P115). Por qué, después de quitar, se **vuelve a preguntar** el total a la base de datos en vez de restar en pantalla (R10: una sola verdad).
 - **Qué comprobamos después:** P-M-24 pasos 1 y 2: quitar Helado → 55,50 €; quitar 1 × Entrecot → 37,00 €, sin aviso; el inspector ya no tiene esas dos filas en `linea_comanda`.
 - **Pregunta:** ¿por qué se puede borrar una línea de comanda pero nunca un plato?
 
@@ -180,7 +180,7 @@ Cada pieza sigue la regla 12 de `CLAUDE.md`: explicación breve → código comp
 - **Qué:** las dos pruebas del selector que llevaban *Parcial* desde la S5.
 - **Archivos:** ninguno de código.
 - **Qué te explico antes:** P-M-13 ya tiene sus tres caminos (1c, 6a, 1d). P-M-29 pide **la app recién instalada** (hueco 9; si se eligió B, ya se pasó en su sitio al empezar el bloque y aquí solo se anota): *Settings → Apps → All apps → Ako → Storage & cache → Clear storage → Delete* en el emulador (ruta de `juego-de-datos.md`, apartado 1), crear el PIN 1234 y seguir sus cinco pasos; por qué eso borra todo (la base de datos y el PIN viven en el almacenamiento privado de la app) y por qué no importa (el juego de datos se vuelve a montar en la S10).
-- **Qué comprobamos después:** **P-M-13 pasa** (Cuenta abre 6a sin PIN; Atrás vuelve a 1a sin PIN); **P-M-29 pasa** (Panel con Otros y Bebidas con Agua, 14 alérgenos, **60 mesas blancas** en Cuenta, Pedir entra, 3 filas en `etiqueta`).
+- **Qué comprobamos después:** **P-M-13 pasa** (Cuenta abre 6a sin PIN; Atrás vuelve a 1a sin PIN); **P-M-29 pasa** (Panel con Otros y Bebidas con Agua, 14 alérgenos, **60 mesas blancas** en Cuenta, Pedir entra; ~~3 filas en `etiqueta`~~ P115: paso quitado [Claude]).
 - **Pregunta:** ¿por qué P-M-29 no puede pasar entera con el juego de datos montado?
 
 ### Pieza 20 — `revisor` y cierre (30 min + revisión)

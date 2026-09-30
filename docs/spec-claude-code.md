@@ -38,11 +38,11 @@ Sale del borrador del diagrama de clases (bloque 7, `spec+doc-clases.md`): 58 cl
 ```
 yunkang.ako/                    [Claude] el paquete raíz; cambiar por el que Daniel prefiera
 ├── datos/
-│   ├── entidades/     14 @Entity + 2 enum (EstadoComanda, TipoModificador) + Converters
+│   ├── entidades/     7 @Entity + 1 enum (EstadoComanda) — solo el nivel 1 (P115)
 │   ├── dao/           CategoriaDao · ProductoDao · PrecargadosDao · MesaDao · ComandaDao
 │   ├── repositorios/  CartaRepository · ComandaRepository · SeguridadRepository  (usan Room: por eso viven en datos/, P237)
-│   ├── AppDatabase    @Database con las 14 entidades y los 5 DAOs (única instancia)
-│   └── Precarga       RoomDatabase.Callback: Otros, 60 mesas, 14 alérgenos, 3 etiquetas, 1 categoría + 1 plato de ejemplo
+│   ├── AppDatabase    @Database con las 7 entidades y los 5 DAOs (única instancia; P115)
+│   └── Precarga       RoomDatabase.Callback: Otros, 60 mesas, 14 alérgenos, 1 categoría + 1 plato de ejemplo (sin etiquetas: P115)
 ├── dominio/           SOLO lo puro: nada de aquí toca Android, Room, SharedPreferences ni archivos (P237)
 │   ├── Carrito, LineaCarrito, Calculadora (importe, total, cambio: funciones puras)
 │   ├── Validacion     precio ≥ 0, cantidad 1-99, PIN de 4 cifras (funciones puras, R4 y R8)
@@ -67,7 +67,7 @@ yunkang.ako/                    [Claude] el paquete raíz; cambiar por el que Da
 
 | Capa | Hace | No hace |
 |---|---|---|
-| Entidades | Describen las 14 tablas con tipos Kotlin | Lógica |
+| Entidades | Describen las 7 tablas del nivel 1 con tipos Kotlin (P115) | Lógica |
 | DAOs | La única capa que sabe SQL: consultas parametrizadas de Room (`@Query`, `@Insert`…), nunca SQL concatenado (RNF-08) | Reglas de negocio |
 | Repositorios | **Garantizan las reglas R1-R16** de su parte y devuelven modelos listos para la pantalla | Saber qué pantalla los llama |
 | Dominio puro (`Carrito`, `Calculadora`, `Validacion`, `Hash`) | Cálculos sin Android: es lo que prueban las P-C en `test/` | Tocar Room, SharedPreferences ni archivos |
@@ -80,7 +80,7 @@ yunkang.ako/                    [Claude] el paquete raíz; cambiar por el que Da
 
 ## 4. Contrato del prototipo — niveles
 
-**El nivel 1 es el prototipo y es lo único obligatorio.** Se termina entero, se prueba (29 pruebas manuales + 9 de código) y se documenta antes de tocar el nivel 2. Después se completa la memoria. Solo entonces, si queda tiempo, entran **incrementos del nivel 2 en este orden**, cada uno terminado y probado antes del siguiente. Lo que no entre se declara en `docs/estado-nivel.md` y en la memoria como *diseñado, no implementado*. **Las 14 tablas se crean desde el primer día** aunque el nivel 1 no use todas.
+**El nivel 1 es el prototipo y es lo único obligatorio.** Se termina entero, se prueba (29 pruebas manuales + 9 de código) y se documenta antes de tocar el nivel 2. Después se completa la memoria. Solo entonces, si queda tiempo, entran **incrementos del nivel 2 en este orden**, cada uno terminado y probado antes del siguiente. **(P115, Daniel, 30 sep 2026; sustituye a P3:** el objetivo de la fase es el **prototipo = nivel 1**. Orden fijo: 1) nivel 1 completo; 2) la memoria (el doc) terminada; 3) solo si sobra tiempo **después de terminar el doc**, incrementos del nivel 2 **enteros**, y luego se actualiza el doc. **Nada de código «por si acaso» que no use el nivel 1.** El diseño del nivel 2 se conserva en este spec y en las fichas como diseño para después: no se construye hasta terminar el doc.) Lo que no entre se declara en `docs/estado-nivel.md` y en la memoria como *diseñado, no implementado*. ~~Las 14 tablas se crean desde el primer día~~ → **la base de datos solo tiene lo del nivel 1: 7 tablas (P115, Daniel, 30 sep 2026: «si empiezo algo, lo termino»).** Cada incremento del nivel 2 que se haga añade **entero** lo suyo (tablas, columnas, precarga y función), subiendo `version` de `AppDatabase` (en desarrollo, desinstalar y reinstalar la app).
 
 **El nivel 1 es el guion del vídeo:** un propietario nuevo crea el PIN → crea una categoría → crea un plato → entra en Pedir y pide → entra en Cuenta, ve lo pedido y el total → quita una línea → "ha pagado con esto" y sale el cambio → cobra → mira el Resumen de ingresos.
 
@@ -94,7 +94,7 @@ yunkang.ako/                    [Claude] el paquete raíz; cambiar por el que Da
 | **3 Plato** | Formulario con scroll único: nombre, número (entero), precio (en euros, se guarda en céntimos; 0,00 se admite), categoría (viene elegida desde el `[+ Plato]` de la caja), descripción, interruptor *En la carta* (apagarlo **elimina** el plato); **Guardar no se activa** sin los cuatro obligatorios · marcar alérgenos entre los 14 (no se crean) · aviso *"Si alguien tiene apuntado el N…"* al cambiar el número · aviso de número repetido (R9) · aviso *"Se perderán los cambios"* al salir sin guardar · aviso de mesas afectadas al eliminar (R6, 3d) · **cadena de dos avisos al guardar en una categoría eliminada (3e)** · **foto: elegir de la galería, redimensionar, comprimir, Glide — la última pieza del nivel 1** |
 | **5 Pedir** | Barra superior con **"Mesa N"** y *Salir* · **fila de categorías fija bajo la barra, con scroll horizontal** (foto redonda pequeña + nombre; **sin foto, un círculo con «?»** en el hueco de la foto, P224; la activa resaltada; *Otros* la última; solo categorías con algún plato visible) · **una sola lista por secciones**; tocar una categoría salta a su sección · puerta de Pedir con sus dos mensajes (*"La carta está vacía"* / *"Todas las categorías están eliminadas"*, mirando platos **visibles**) · ficha 5b (foto grande o "?", número, nombre entero, precio, descripción, **alérgenos desplegables** con el aviso *"El restaurante no ha indicado alérgenos para este plato. Pregunta al personal."* si no hay, cantidad 1-99 con −/+ bloqueados en los límites, botón *"Añadir — precio"*) · **carrito como pastilla abajo a la derecha** (número de platos y total; sin animación) · carrito 5c (líneas, +/−, Quitar, total) · **Enviar** con confirmación *"Mesa N · total"* (R2, R4) |
 | **6 Cuenta** | Sin PIN · rejilla de 60 mesas en modo *gestionar* (blanco / **rojo con el total**) · mesa blanca → snackbar *"La mesa N no tiene comanda"* y nada más · 6b: líneas (cantidad × nombre, importe) y **TOTAL** calculado; **Quitar línea** (sin aviso, salvo la última: aviso R7, que anula la comanda) · **Anular** con confirmación · **Dar la cuenta** → 6c recibo (nombres y precios congelados) · **calculadora de cambio** (campo *Entregado* opcional → cambio, en negativo si falta; no guarda nada) · **Cobrar** con confirmación → PAGADA con `fechaCierre`, vuelve a 6a y la mesa queda blanca (el verde es nivel 3) · botón `[Imprimir]` **no** entra (incremento 9) |
-| Transversal | 14 tablas Room desde el primer día · precarga · tema visual (paleta neutra, naranja de acento) · transiciones por defecto · accesibilidad base (`sp`, 48 dp, `contentDescription`, texto ≥ 12 sp) · repositorio GitHub público · diario por sesión · `estado-nivel.md` · pruebas |
+| Transversal | 7 tablas Room del nivel 1 (P115) · precarga · tema visual (paleta neutra, naranja de acento) · transiciones por defecto · accesibilidad base (`sp`, 48 dp, `contentDescription`, texto ≥ 12 sp) · repositorio GitHub público · diario por sesión · `estado-nivel.md` · pruebas |
 
 > **En el nivel 1, tocar una mesa blanca en Cuenta solo informa.** Las comandas nacen desde Pedir. Añadir platos desde Cuenta y abrir la carta desde una mesa: incremento 9.
 
@@ -102,61 +102,70 @@ yunkang.ako/                    [Claude] el paquete raíz; cambiar por el que Da
 
 | # | Incremento | Qué incluye |
 |---|---|---|
-| 1 | **Etiquetas y chips** | Pantalla 7 entera (lista simple con `[+]`; crear pide solo el nombre; renombrar, eliminar y recuperar) · marcar etiquetas en el plato (3) · `[Etiquetar]` en masa (2c: se elige la etiqueta y salen los platos con casillas) · **chips de filtro en una fila propia bajo la barra** de la carta (5a); todos los chips activos deben cumplirse; sección vacía desaparece; *"Ningún plato cumple los filtros"* con botón para quitarlos |
+| 1 | **Etiquetas y chips** | **Crea las tablas `etiqueta` y `producto_etiqueta` y precarga las 3 etiquetas (Vegano, Vegetariano, Pescetariano) (P115)** · Pantalla 7 entera (lista simple con `[+]`; crear pide solo el nombre; renombrar, eliminar y recuperar) · marcar etiquetas en el plato (3) · `[Etiquetar]` en masa (2c: se elige la etiqueta y salen los platos con casillas) · **chips de filtro en una fila propia bajo la barra** de la carta (5a); todos los chips activos deben cumplirse; sección vacía desaparece; *"Ningún plato cumple los filtros"* con botón para quitarlos |
 | 2 | **Modo kiosco** | Interruptor *"Se la doy al cliente"* en 1a · `startLockTask()` (screen pinning, sin administrador) · aviso si el usuario rechaza el diálogo del sistema · **modo camarero** (interruptor apagado): sin fijar pantalla, salida libre y **cambiar de mesa sin salir** — cómo, se decide entonces (no será un ▾ en la barra, P89) |
 | 3 | **Modo Agrandar** | Tema alternativo con tamaños mayores y más contraste; se apaga al salir de Pedir |
-| 4 | **Modificadores** | Mini-formulario (3b: nombre, tipo, precio; QUITAR siempre a 0 y sin campo) · en la ficha 5b (quitar arriba, añadir abajo, cantidad 1-9) · `linea_modificador` con nombre y precio congelados · líneas idénticas (mismos modificadores) se suman en el carrito |
-| 5 | **Tabla nutricional** | 7 campos en mg (3c) · kcal calculadas desde kJ (÷ 4,184) · desplegable en 5b con el título **"Valores por ración"** (P125) · sin fila si no se rellena nada |
+| 4 | **Modificadores** | **Crea las tablas `modificador` y `linea_modificador` (la única CASCADE, R11) y el enum `TipoModificador` (P115)** · Mini-formulario (3b: nombre, tipo, precio; QUITAR siempre a 0 y sin campo) · en la ficha 5b (quitar arriba, añadir abajo, cantidad 1-9) · `linea_modificador` con nombre y precio congelados · líneas idénticas (mismos modificadores) se suman en el carrito |
+| 5 | **Tabla nutricional** | **Crea la tabla `producto_nutricion` (P115)** · 7 campos en mg (3c) · kcal calculadas desde kJ (÷ 4,184) · desplegable en 5b con el título **"Valores por ración"** (P125) · sin fila si no se rellena nada |
 | 6 | **Vista previa** (2f) | La pantalla 5 sin carrito, Añadir ni Enviar |
 | 7 | **Resumen de ingresos por periodos** (P102, P149) | Desde 2g: años → meses → calendario con el total de cada día → día |
 | 8 | **Orden ▲▼ y `[Eliminar y recuperar]` en masa** | Intercambio de `orden`; flechas bloqueadas en los extremos y en la penúltima (la última es *Otros*) · 2d con el aviso agrupado R6 |
 | 9 | **Cuenta completa** | Añadir platos y cambiar cantidades desde 6b · **abrir la carta (pantalla 5) en modo camarero desde `[+ Añadir platos]` y desde una mesa blanca**, ya fijada a la mesa: carrito, Enviar (R2) y vuelta a 6b · botón `[Imprimir]` que avisa de que no hay impresora |
-| 10 | **Idiomas y traducciones** | Pantalla 8 entera (español fijo arriba *(base)*; código de dos letras mayúsculas, único, *ES* rechazado) · editor que **lee la carta, no la copia**: dos listas (traducidos / pendientes), contador *"N de M"*, autoguardado al salir del campo con snackbar *"Guardado"* · selector de idioma en la carta (5d) · R12 · avisos al cambiar el código o eliminar un idioma con traducciones |
-| 11 | **Foto de la tabla nutricional** (`imagenNutricional`) | Segundo flujo de foto. Si hay campos y foto, se enseñan los campos |
-| 12 | **Agotado temporal** (`producto.disponible`, P153) | Interruptor *Desactivar / Activar* en el formulario del plato (3a) y en su fila del Panel; estado **Desactivado** (distinto de *Eliminado*: el plato vuelve con su número, alérgenos, etiquetas y modificadores intactos) · el plato sale de la carta del cliente sin salir del Panel · aviso R6 al desactivar · `disponible` entra en la definición de plato visible (R15). **En el nivel 1 la columna existe desde el primer día y vale siempre `true`** |
+| 10 | **Idiomas y traducciones** | **Crea las tablas `idioma` y `producto_traduccion` (P115)** · Pantalla 8 entera (español fijo arriba *(base)*; código de dos letras mayúsculas, único, *ES* rechazado) · editor que **lee la carta, no la copia**: dos listas (traducidos / pendientes), contador *"N de M"*, autoguardado al salir del campo con snackbar *"Guardado"* · selector de idioma en la carta (5d) · R12 · avisos al cambiar el código o eliminar un idioma con traducciones |
+| 11 | **Foto de la tabla nutricional** (`imagenNutricional`) | **Añade la columna `producto.imagenNutricional` (P115)** · Segundo flujo de foto. Si hay campos y foto, se enseñan los campos |
+| 12 | **Agotado temporal** (`producto.disponible`, P153) | Interruptor *Desactivar / Activar* en el formulario del plato (3a) y en su fila del Panel; estado **Desactivado** (distinto de *Eliminado*: el plato vuelve con su número, alérgenos, etiquetas y modificadores intactos) · el plato sale de la carta del cliente sin salir del Panel · aviso R6 al desactivar · `disponible` entra en la definición de plato visible (R15). ~~En el nivel 1 la columna existe desde el primer día y vale siempre `true`~~ → **la columna `producto.disponible` (`true` por defecto) se añade en este incremento (P115)** |
+
+> **Cómo entra cada incremento en la base de datos (P115):** añade entero lo suyo (tablas, columnas, precarga y función) y sube `version` de `AppDatabase`; en desarrollo basta con desinstalar y reinstalar la app (https://developer.android.com/training/data-storage/room/migrating-db-versions).
 
 ### 4.3 Nivel 3 — solo si sobra tiempo
 
 Modo de alcance · pago mixto real · color verde con *Liberar mesa* y *Empezar comanda nueva* · línea de resumen del Panel · resaltado del plato al volver al Panel · *"Lo pedido por la mesa"* (5e) · animaciones más allá de las tres básicas.
 
-## 5. Modelo de datos — 14 tablas
+## 5. Modelo de datos — 7 tablas en el nivel 1 (P115)
 
 Tipos Kotlin: `Long` para claves, `Int` para céntimos, cantidades y números de plato y mesa, `Long` (milisegundos desde época) para fechas, `?` donde es nulable. Nombres de columna en `snake_case` como el E-R (`@ColumnInfo(name = "precio_centimos")`), propiedades en `camelCase`.
 
 | # | Tabla / entidad | Campos | Restricciones que **sí** declara Room |
 |---|---|---|---|
 | 1 | `categoria` / `Categoria` | id, nombre, imagen?, orden: Int, activo, esPorDefecto | `@Index(nombre, unique = true)` |
-| 2 | `producto` / `Producto` | id, categoriaId, numero: Int, nombre, descripcion?, precioCentimos: Int, imagen?, imagenNutricional?, activo, **disponible** (`true` por defecto; solo lo cambia el incremento 12) | `@Index(numero, unique = true)`; FK → categoria RESTRICT |
-| 3 | `producto_nutricion` / `ProductoNutricion` | productoId (**PK y FK**, 1 a 1), energiaKj?, grasasMg?, grasasSaturadasMg?, hidratosMg?, azucaresMg?, proteinasMg?, salMg? — todos `Int?` | FK → producto RESTRICT |
-| 4 | `idioma` / `Idioma` | id, codigo, nombre, activo | `@Index(codigo, unique = true)` |
-| 5 | `producto_traduccion` / `ProductoTraduccion` | productoId, idiomaId, nombre | **PK compuesta** (productoId, idiomaId); FKs RESTRICT |
-| 6 | `modificador` / `Modificador` | id, productoId, nombre, precioCentimos: Int, tipo: TipoModificador, activo | FK → producto RESTRICT |
-| 7 | `alergeno` / `Alergeno` | id, nombre | — (14 filas precargadas, no editables) |
-| 8 | `producto_alergeno` / `ProductoAlergeno` | productoId, alergenoId | **PK compuesta**; FKs RESTRICT |
-| 9 | `etiqueta` / `Etiqueta` | id, nombre, activo | `@Index(nombre, unique = true)` |
-| 10 | `producto_etiqueta` / `ProductoEtiqueta` | productoId, etiquetaId | **PK compuesta**; FKs RESTRICT |
-| 11 | `mesa` / `Mesa` | id, numero: Int | `@Index(numero, unique = true)` (P70). **60 filas fijas.** Sin `activo` ni `estado` |
-| 12 | `comanda` / `Comanda` | id, mesaId, estado: EstadoComanda, fechaCreacion: Long, fechaCierre: Long? | FK → mesa RESTRICT |
-| 13 | `linea_comanda` / `LineaComanda` | id, comandaId, productoId, cantidad: Int, precioUnitarioCentimos: Int, nombreProducto | FK → comanda RESTRICT; FK → producto RESTRICT |
-| 14 | `linea_modificador` / `LineaModificador` | id, lineaComandaId, modificadorId, precioCentimos: Int, nombreModificador, cantidad: Int (= 1 en los QUITAR, P71) | FK → linea_comanda **CASCADE** (la única); FK → modificador RESTRICT |
+| 2 | `producto` / `Producto` | id, categoriaId, numero: Int, nombre, descripcion?, precioCentimos: Int, imagen?, activo (sin `imagenNutricional` ni `disponible`: llegan con los incrementos 11 y 12, P115) | `@Index(numero, unique = true)`; FK → categoria RESTRICT |
+| 3 | `alergeno` / `Alergeno` | id, nombre | — (14 filas precargadas, no editables) |
+| 4 | `producto_alergeno` / `ProductoAlergeno` | productoId, alergenoId | **PK compuesta**; FKs RESTRICT |
+| 5 | `mesa` / `Mesa` | id, numero: Int | `@Index(numero, unique = true)` (P70). **60 filas fijas.** Sin `activo` ni `estado` |
+| 6 | `comanda` / `Comanda` | id, mesaId, estado: EstadoComanda, fechaCreacion: Long, fechaCierre: Long? | FK → mesa RESTRICT |
+| 7 | `linea_comanda` / `LineaComanda` | id, comandaId, productoId, cantidad: Int, precioUnitarioCentimos: Int, nombreProducto | FK → comanda RESTRICT; FK → producto RESTRICT |
 
-`EstadoComanda` = PENDIENTE / PAGADA / ANULADA · `TipoModificador` = AÑADIR / QUITAR. Se guardan como texto con `@TypeConverter` (`Converters`), para que en la base de datos se lean.
+**Diseñado para el nivel 2, fuera de la base de datos hasta que se haga entero su incremento (P115):**
+
+| Tabla / columna | Campos | Restricciones | Llega con |
+|---|---|---|---|
+| `producto.imagenNutricional?` | columna nueva de `producto` | — | Incremento 11 |
+| `producto.disponible` | columna nueva de `producto` (`true` por defecto) | — | Incremento 12 |
+| `producto_nutricion` / `ProductoNutricion` | productoId (**PK y FK**, 1 a 1), energiaKj?, grasasMg?, grasasSaturadasMg?, hidratosMg?, azucaresMg?, proteinasMg?, salMg? — todos `Int?` | FK → producto RESTRICT | Incremento 5 |
+| `idioma` / `Idioma` | id, codigo, nombre, activo | `@Index(codigo, unique = true)` | Incremento 10 |
+| `producto_traduccion` / `ProductoTraduccion` | productoId, idiomaId, nombre | **PK compuesta** (productoId, idiomaId); FKs RESTRICT | Incremento 10 |
+| `modificador` / `Modificador` | id, productoId, nombre, precioCentimos: Int, tipo: TipoModificador, activo | FK → producto RESTRICT | Incremento 4 |
+| `etiqueta` / `Etiqueta` | id, nombre, activo | `@Index(nombre, unique = true)` | Incremento 1 |
+| `producto_etiqueta` / `ProductoEtiqueta` | productoId, etiquetaId | **PK compuesta**; FKs RESTRICT | Incremento 1 |
+| `linea_modificador` / `LineaModificador` | id, lineaComandaId, modificadorId, precioCentimos: Int, nombreModificador, cantidad: Int (= 1 en los QUITAR, P71) | FK → linea_comanda **CASCADE** (la única del diseño); FK → modificador RESTRICT | Incremento 4 |
+
+`EstadoComanda` = PENDIENTE / PAGADA / ANULADA · `TipoModificador` = AÑADIR / QUITAR (llega con el incremento 4, P115). Se guardan como texto (el nombre del enum, p. ej. `PAGADA`) con el conversor de enums que Room trae incorporado desde la 2.3.0, sin `Converters` propio (P113, Daniel, 30 sep 2026), para que en la base de datos se lean.
 
 ### 5.1 Reglas de datos que no se negocian
 
 - **Todo importe en céntimos y todo valor nutricional en miligramos, como `Int`.** La coma flotante acumula error al sumar. La interfaz convierte (18,50 € ↔ 1850).
 - **`producto.numero` y `mesa.numero` son enteros y únicos.** Si fueran texto, `"7"` y `"07"` convivirían.
 - **Ningún precio negativo (R8).** Room no sabe declarar `CHECK` (verificación 9): **lo garantiza el código**, en `Validacion.precioValido()` llamada por `CartaRepository.guardarPlato` y `guardarModificador` y por `ComandaRepository.enviarCarrito` al congelar precios. Un precio negativo lanza `IllegalArgumentException`; la interfaz además no admite el signo. Los QUITAR se guardan a 0. **No escribir `CHECK` en ningún `@Entity` ni en un `Callback`**: Room compara el esquema al abrir y no lo entendería.
-- **Las entidades no se borran: `activo = false`** en `producto`, `categoria`, `modificador`, `etiqueta` e `idioma`. `mesa` no lleva `activo`. **Eso es *eliminar*** (y *recuperar* es volver a `activo = true`). **Desactivar es otra cosa** (P153): `producto.disponible = false`, el agotado temporal, **solo en platos**, nivel 2 (incremento 12); en el nivel 1 la columna vale siempre `true` y ninguna pantalla la toca.
+- **Las entidades no se borran: `activo = false`** en `producto`, `categoria`, `modificador`, `etiqueta` e `idioma` (las tres últimas, cuando llegue su incremento: P115). `mesa` no lleva `activo`. **Eso es *eliminar*** (y *recuperar* es volver a `activo = true`). **Desactivar es otra cosa** (P153): `producto.disponible = false`, el agotado temporal, **solo en platos**, nivel 2 (incremento 12); en el nivel 1 la columna no existe: se añade con el incremento 12 (P115).
 - **Lo que sí se borra:** filas de relación (desmarcar una etiqueta, vaciar una traducción) y **líneas de una comanda todavía abierta**. **Una comanda cerrada (PAGADA o ANULADA) es intocable.** Una comanda anulada por R7 queda ANULADA con cero líneas en el histórico.
-- **`onDelete = RESTRICT` en todas las claves foráneas, salvo `linea_modificador → linea_comanda`, que es `CASCADE`.**
-- **Las tres tablas N:M llevan clave primaria compuesta.**
-- **`linea_comanda` congela precio y nombre del producto; `linea_modificador` congela nombre y precio del modificador (R14).** Cambiar la carta no reescribe lo ya pedido ni lo cobrado.
+- **`onDelete = RESTRICT` en todas las claves foráneas.** En el nivel 1 **no hay ninguna `CASCADE`** (P115); la única del diseño, `linea_modificador → linea_comanda`, llega con el incremento 4.
+- **Las tablas N:M llevan clave primaria compuesta** (en el nivel 1, `producto_alergeno`; `producto_etiqueta` y `producto_traduccion` con sus incrementos, P115).
+- **`linea_comanda` congela precio y nombre del producto; `linea_modificador` congela nombre y precio del modificador (R14; incremento 4).** Cambiar la carta no reescribe lo ya pedido ni lo cobrado.
 - **Lo que se puede calcular no se guarda:** total de la comanda (R10), ocupación de la mesa (R3), kcal, traducido/pendiente (= hay fila), con/sin nutrición (= hay fila; **si no se rellena ningún campo no se crea la fila**).
 - **`producto.nombre` es el nombre base en español.** El español no está en `idioma`.
 - **`categoria.orden`**: al crear, máximo + 1. **La categoría con `esPorDefecto = true` va siempre la última**, pase lo que pase con su `orden`, y **es exactamente una** (R16): se reconoce por la columna, nunca por el nombre.
 - **Fechas como instante (`Long`)**: el Resumen de ingresos consulta las PAGADAS con `fechaCierre` entre las 0:00:00 y las 23:59:59.999 del día elegido, en la zona horaria del dispositivo.
-- **Precarga** (`Precarga.onCreate`): categoría *Otros* con `esPorDefecto = true` · 60 mesas (1-60) · 14 alérgenos (nombres del anexo II del Reglamento 1169/2011) · 3 etiquetas (Vegano, Vegetariano, Pescetariano) · 1 categoría y 1 plato de ejemplo. **Otros se crea antes que cualquier plato.**
+- **Precarga** (`Precarga.onCreate`): categoría *Otros* con `esPorDefecto = true` · 60 mesas (1-60) · 14 alérgenos (nombres del anexo II del Reglamento 1169/2011) · 1 categoría y 1 plato de ejemplo. **Otros se crea antes que cualquier plato.** Las 3 etiquetas (Vegano, Vegetariano, Pescetariano) se precargan con el incremento 1 (P115).
 
 ## 6. Reglas de negocio — quién garantiza cada una
 
@@ -172,10 +181,10 @@ Tipos Kotlin: `Long` para claves, `Int` para céntimos, cantidades y números de
 | R8 | Ningún precio negativo | **`Validacion` + repositorios** (ver 5.1). Prueba P-C-09 |
 | R9 | Dos platos no tienen el mismo número a la vez | **La base de datos** (`UNIQUE` sobre entero) y `ProductoDao.existeNumero` para avisar antes de guardar |
 | R10 | La comanda no guarda su total | `Calculadora.total(lineas)`; `ComandaRepository.totalDe` |
-| R11 | RESTRICT en todo salvo `linea_modificador → linea_comanda` CASCADE | **La base de datos** (`@ForeignKey`) |
+| R11 | RESTRICT en todo salvo `linea_modificador → linea_comanda` CASCADE (en el nivel 1 esa tabla no existe: todo RESTRICT, ninguna CASCADE; P115) | **La base de datos** (`@ForeignKey`) |
 | R12 | Sin traducción → nombre en español | `CartaRepository` (incremento 10) |
 | R14 | Las líneas congelan nombre y precio | `ComandaRepository.enviarCarrito` copia `nombre` y `precioCentimos` a cada `LineaComanda` |
-| R15 | Plato visible = en la carta (`activo`) **y** no agotado (`disponible`; nivel 1: siempre `true`) **y** categoría activa | `ProductoDao.visibles()` (`activo = 1 AND disponible = 1`, JOIN con `categoria.activo = 1`); el Panel usa `porCategoria` y los ve todos |
+| R15 | Plato visible = en la carta (`activo`) **y** no agotado (`disponible`, desde el incremento 12; en el nivel 1 la columna no existe, P115) **y** categoría activa | `ProductoDao.visibles()` (nivel 1: `activo = 1`, JOIN con `categoria.activo = 1`; el incremento 12 añade `AND disponible = 1`, P115); el Panel usa `porCategoria` y los ve todos |
 | R16 | Exactamente una categoría por defecto; no se elimina; siempre la última; se puede renombrar | `Precarga` (la crea), `CartaRepository.guardarCategoria` (rechaza una segunda por defecto y rechaza eliminarla), `CategoriaAdapter` (la pinta la última, sin flechas ni interruptor) |
 
 > **Para explicarlo en el vídeo (P128):** R9 la impone la base de datos (un `UNIQUE`) y R1 no puede (haría falta un índice único parcial, que Room no declara): saber dónde vive cada garantía es lo que distingue entender el modelo de copiarlo.
@@ -233,7 +242,7 @@ Cada sesión tiene un objetivo de una línea, un entregable comprobable y termin
 | S | Objetivo | Entregable comprobable | Pruebas |
 |---|---|---|---|
 | **1** | **Proyecto y repositorio.** Android Studio: proyecto vacío (Kotlin DSL, `minSdk 26`, ViewBinding, catálogo de versiones con Room, Glide, KSP, corrutinas, pruebas); primer arranque del emulador; Git: `init`, `.gitignore`, `README.md`, repositorio público en GitHub, primer `commit` y `push`; carpeta `docs/` con este spec, `CLAUDE.md`, fichas, wireframes, plan de pruebas, plantilla del diario y `estado-nivel.md`. **Antes del primer commit (P226):** Claude Code guía a Daniel para crear o editar `C:\Users\dhuan\.claude\settings.json` (ajustes de **usuario**; NO el `.claude/settings.json` del repositorio, que se subiría a GitHub) con `{"attribution": {"commit": "", "pr": ""}}` y reiniciar Claude Code | La app vacía arranca en el emulador; el repositorio se ve en GitHub; **el primer commit no lleva la línea `Co-Authored-By`** | — |
-| **2** | **14 entidades, `Converters`, `AppDatabase`, `Precarga`** | Compila; al arrancar, el inspector de base de datos enseña las 14 tablas con *Otros*, 60 mesas, 14 alérgenos, 3 etiquetas y el ejemplo | — |
+| **2** | **7 entidades (solo el nivel 1, P115), `AppDatabase`, `Precarga`** (sin `Converters`: P113) | Compila; al arrancar, el inspector de base de datos enseña las 7 tablas con *Otros*, 60 mesas, 14 alérgenos y el ejemplo (sin etiquetas: P115) | — |
 | **3** | **DAOs y dominio puro**: los 5 DAOs con sus consultas; `Carrito`, `LineaCarrito`, `Calculadora`, `Validacion`, `Hash` | Compila; las cinco puras pasan | **P-C-01 a P-C-05 y P-C-09** en `test/` |
 | **4** | **Repositorios**: `CartaRepository`, `ComandaRepository`, `SeguridadRepository`, `PinStore` | Compila; cada método tiene un comentario de una línea con la regla que garantiza | — |
 | **5** | **Selector y PIN** (1a, 1b, 1c, 1e) + `ConfirmacionDialog` | P-M-01, 02, 03, 13 pasan | P-M-01, 02, 03, 13, 29 |
@@ -251,7 +260,7 @@ Cada sesión tiene un objetivo de una línea, un entregable comprobable y termin
 1. **Revisión del prototipo con Daniel** (fila 43 del registro): se repasa lo hecho y ahí se deciden dos preguntas aplazadas: **P227 · `CLAUDE.md` público** (A se queda en el repositorio, recomendado / B se borra al final, sabiendo que sigue en el historial de Git) y **P228 · marcas `[Claude]`** (A se mantienen hasta la pasada de apropiación, recomendado / B se quitan al terminar el prototipo).
 2. **Se completa la memoria** (fase 7).
 3. **Pasada de apropiación (P230 → D):** Claude Code hace la lista de las partes del código que Daniel no sabría explicar o que están por encima de su nivel (marcas `[Claude]`, lo más avanzado, lo que el diario dice que no entendió); Daniel elige cuáles; en cada una **Claude Code solo guía y Daniel teclea**; se pasan otra vez las pruebas de esa parte; commit; ficha del diario *"reescrito por Daniel"*. **Coste aceptado:** después hay que actualizar el apartado 7 de la memoria, la declaración de IA y las capturas del Anexo II.
-4. **Solo entonces, y si queda tiempo,** los incrementos del 4.2 (fase 6b), cada uno como una sesión propia con sus pruebas añadidas al final de las tablas (código libre siguiente), su redibujo de wireframes y figura del diagrama afectados, y **una Release `v1-inc<N>` con su APK**. Después, actualizar la memoria y grabar el vídeo (fase 8).
+4. **Solo entonces, con la memoria ya terminada, y si queda tiempo** (P115, sustituye a P3), los incrementos del 4.2 (fase 6b), enteros (tablas, columnas, precarga y función), cada uno como una sesión propia con sus pruebas añadidas al final de las tablas (código libre siguiente), su redibujo de wireframes y figura del diagrama afectados, y **una Release `v1-inc<N>` con su APK**. Después, actualizar la memoria y grabar el vídeo (fase 8).
 
 **Ritual de sesión [Claude]:**
 
@@ -277,7 +286,7 @@ Plan completo en `docs/spec+doc-pruebas.md` (29 manuales P-M-01…29, una por RF
 
 Las de `test/` corren en el PC sin emulador (por eso `Calculadora`, `Validacion` y `Hash` son funciones puras separadas de los ViewModels y de `PinStore`). Las tres de `androidTest/` usan `Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java)` con la precarga ejecutada; necesitan el emulador. **Red de seguridad (P117):** si en la sesión 11 no arrancan, se documenta en la ficha, R1, R7 y R16 quedan cubiertas por P-M-20, P-M-24 y P-M-05, y la memoria lo dice tal cual. La documentación de Room (sep 2026) ofrece además pruebas JVM vía Room KMP; **descartado (P124)**: exige estructura multiplataforma.
 
-**Sin prueba, a propósito:** R11 (CASCADE) y R12 solo actúan en nivel 2. RNF-11/13 se comprueban con el Accessibility Scanner (S13).
+**Sin prueba, a propósito:** R11 (CASCADE) y R12 solo actúan en nivel 2 (en el nivel 1 no hay ninguna CASCADE: P115). RNF-11/13 se comprueban con el Accessibility Scanner (S13).
 
 ## 13. Diario, estado del nivel y Git
 

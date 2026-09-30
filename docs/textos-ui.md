@@ -229,9 +229,9 @@ Un solo componente (título, texto, botón afirmativo, botón negativo). Esta ta
 | `alergeno_sulfitos` | Sulfitos | etiqueta | ídem | 03a-formulario-2.png |
 | `alergeno_altramuces` | Altramuces | etiqueta | ídem | 03a-formulario-2.png |
 | `alergeno_moluscos` | Moluscos | etiqueta | ídem | 03a-formulario-2.png |
-| `etiqueta_vegano` | Vegano | dato precargado (tabla `etiqueta`; sin pantalla en nivel 1) | Inspector de BD (P-M-29) | spec §5.1; P-M-29 |
-| `etiqueta_vegetariano` | Vegetariano | dato precargado | ídem | spec §5.1; P-M-29 |
-| `etiqueta_pescetariano` | Pescetariano | dato precargado | ídem | spec §5.1; P-M-29 |
+| ~~`etiqueta_vegano`~~ | ~~Vegano~~ | **EXCLUIDA del nivel 1 (P115):** la tabla `etiqueta` y su precarga llegan con el incremento 1 | — | spec §4.2 inc. 1; P115 |
+| ~~`etiqueta_vegetariano`~~ | ~~Vegetariano~~ | ídem (P115) | — | ídem |
+| ~~`etiqueta_pescetariano`~~ | ~~Pescetariano~~ | ídem (P115) | — | ídem |
 | `precarga_categoria_por_defecto` | Otros | dato precargado (categoría con `esPorDefecto = true`; renombrable, se reconoce por la columna) | 2a (última caja), 5a (última de la fila), 3e-1 (`%2$s`) | spec §4.1, §5.1, §6; ficha 2; P-M-04, P-M-11, P-M-17, P-M-29 |
 | `precarga_categoria_ejemplo` | Bebidas | dato precargado (categoría de ejemplo) | 2a, 5a | **Decisión tomada**; 05a-carta.png y 02a-panel.png muestran «Bebidas» (en 02a como eliminada, P223) |
 | `precarga_plato_ejemplo` | Agua | dato precargado (plato de ejemplo, número 1, 150 céntimos; se ve como «1 · Agua · 1,50 €») | 2a, 5a | **Decisión tomada**; spec §5.1 («1 categoría y 1 plato de ejemplo»); P-M-29 |
@@ -301,10 +301,10 @@ Orden legal de los 14 alérgenos (anexo II del Reglamento (UE) 1169/2011), por s
 | 5 Pedir (5a, 5b, 5c) | 10 | 5 (`enviar_titulo`, `enviar_btn_enviar`, `salir_sin_enviar_titulo`, `salir_sin_enviar_btn_salir`, y `salir_sin_enviar_cuerpo`, cuya frase exacta no está fijada) | 15 |
 | 6 Cuenta (6a, 6b, 6c) | 18 | 0 | 18 |
 | 8 Comunes | 16 | 2 (`comun_menos_cd`, `comun_mas_cd`) | 18 |
-| 9 Precarga y nombres fijos | 20 | 0 | 20 |
-| **Total** | **122** | **19** | **141** |
+| 9 Precarga y nombres fijos | 17 (sin las 3 `etiqueta_*`, P115) | 0 | 17 |
+| **Total** | **119** | **19** | **138** |
 
-Sin contar la precarga (que va a la base de datos), la interfaz del nivel 1 necesita **121 cadenas** en `strings.xml` (102 fijadas + 19 propuestas), más un `<plurals>` para el aviso RF-38 y, si se quiere, la variante singular del aviso R6 (D15). Las 20 de la precarga pueden vivir también en `strings.xml` (recomendado: así la precarga no lleva texto en el código y la versión EN queda alineada) o directamente en `Precarga.kt`.
+Sin contar la precarga (que va a la base de datos), la interfaz del nivel 1 necesita **121 cadenas** en `strings.xml` (102 fijadas + 19 propuestas), más un `<plurals>` para el aviso RF-38 y, si se quiere, la variante singular del aviso R6 (D15). Las 17 de la precarga (P115: sin las 3 etiquetas) pueden vivir también en `strings.xml` (recomendado: así la precarga no lleva texto en el código y la versión EN queda alineada) o directamente en `Precarga.kt`.
 
 ---
 
