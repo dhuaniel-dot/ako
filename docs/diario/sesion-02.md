@@ -41,6 +41,20 @@
 - Valoración de Daniel: «ni fácil ni difícil».
 - **No entendí todavía:** nada señalado por Daniel. Para repasar al abrir la S3 (dos minutos): la corrutina (trabajo por detrás) y `suspend`, que la S3 usa en todos los DAOs; y por qué `insertar` devuelve el `id`.
 
+## Para el vídeo
+
+*(Añadido el 30 sep 2026, después del cierre, a petición de Daniel: el apartado nació en la S3. Única excepción a «no se reescribe una ficha cerrada».)*
+
+- **Las 7 tablas y no 14 (P115):** el prototipo es el nivel 1 y no se escribe código «por si acaso»; es como no comprar el lavavajillas hasta que haga falta. Las tablas del nivel 2 llegan enteras con su incremento.
+- **Todo RESTRICT, ninguna CASCADE (R11, P115):** en Ako nada se borra, se *elimina* con `activo = false`; RESTRICT es el «no te dejo tirar esta ficha mientras otra apunte a ella».
+- **Enum frente a texto libre (P113):** los tres sellos de goma de la caja (PENDIENTE, PAGADA, ANULADA); con enum, una errata como `PAGDA` la marca el compilador antes de ejecutar, y no la descubre el cliente. Room lo guarda como texto él solo desde la 2.3.0 (bici o coche costando lo mismo).
+- **Precios en céntimos `Int`:** un ordenador hace 0,1 + 0,2 = 0,30000000000000004; con céntimos, 150 + 250 es siempre 400.
+- **La línea congela nombre y precio (R14):** como un recibo ya impreso: si mañana el Agua sube a 1,80 €, el de ayer sigue diciendo 1,50 € (`precio_unitario_centimos`).
+- **Lo calculable no se guarda (R3, R10):** la mesa no tiene casilla «ocupada» (una pizarra que miente el día que se olvida borrarla); está ocupada si tiene una comanda PENDIENTE.
+- **Tabla puente (`producto_alergeno`):** muchos platos con muchos alérgenos; fichitas «plato + alérgeno» cuyo carné es la pareja.
+- **Una sola base de datos con `by lazy` en `EntradaAko` (P116, P117):** la llave del almacén cuelga del local (la `Application`, que vive mientras la app), no del bolsillo de un camarero (una pantalla); `lazy` = «si no hay llave se hace una; si hay, se da esa», seguro aunque la pidan dos a la vez. Lo que más le llamó la atención a Daniel.
+- **La precarga al arrancar (P16, P118):** la inauguración del bar, una sola vez; Room no sube la persiana hasta el primer cliente, así que `EntradaAko` la abre al arrancar y el local está montado antes de que entre nadie.
+
 ## Pruebas
 
 - Pruebas de código: la S2 no tiene P-C; `testDebugUnitTest` en verde el 30 sep (solo la de ejemplo de la plantilla).
