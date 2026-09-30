@@ -80,6 +80,8 @@ Daniel no quiere tener que recordar qué botón, atajo o comando toca en cada mo
 - o que no le toca nada: *«Ahora tú: nada, sigo yo»*;
 - o una corrección si ha usado algo que no debía: *«Ahora tú: eso lo has hecho desde el botón Commit de Android Studio; los commits los hago yo con la ficha; no pasa nada, lo recojo»*, *«no actualices Android Studio aunque lo pida»*.
 
+**Cómo se crea cada archivo, al lado de su ruta** (30 sep, Daniel): *«cuando me pongas Archivo 1 (nuevo): …, ponme al lado lo de Kotlin Class/File y si es Interface, File, Class…»*. Cada archivo nuevo lleva junto a la ruta el clic exacto: en qué paquete (y si es el de la app o el de `(test)`), **New → Kotlin Class/File** y el tipo (**File**, **Class**, **Interface**…). **Forma corta** (30 sep, Daniel: *«lo del clic derecho no hace falta en algo que ya llevo haciendo 2 sesiones»*): `dominio (test) → Kotlin Class/File → File`; el paso a paso solo la primera vez que algo es nuevo. **Los bloques de archivos nuevos van sin la línea `package`**: Android Studio ya la escribe al crear el archivo, y pegarla otra vez la duplicaba (pasó en las piezas 1–4 de la S3). Los bloques que sustituyen un archivo entero sí la llevan.
+
 **Atajos cada vez** (30 sep): *«cada vez que haga algo así dime los atajos»*. Cada acción de Android Studio o Windows lleva su atajo en la misma línea. **Teclado de Daniel: 75 % con distribución US, sin teclado numérico y con **Insert = Fn + I**** (Alt+Insert se escribe **Alt + Fn + I**); nada de Alt+número; la ñ sí la puede escribir (en el chat la omite por comodidad, no es un problema del teclado).
 
 Cuando hay una pregunta numerada abierta, va **antes** del bloque PENDIENTE. Fuera de las sesiones de código (conversación normal) no hace falta.
@@ -110,6 +112,10 @@ Cuando hay una pregunta numerada abierta, va **antes** del bloque PENDIENTE. Fue
 Daniel dice qué cambia (`/como-trabajamos` o simplemente diciéndolo). Claude edita este archivo en ese momento, añade una línea en el historial de abajo con la fecha y lo que cambió, y lo aplica desde el mensaje siguiente. Se sube al repositorio con el commit de la sesión.
 
 ## Historial de cambios
+
+- **2026-09-30** · Daniel: forma corta para crear archivos (`paquete → Kotlin Class/File → tipo`); el paso a paso, solo con lo nuevo.
+
+- **2026-09-30** · Daniel: junto a la ruta de cada archivo nuevo, cómo crearlo (paquete, New → Kotlin Class/File y tipo); los bloques de archivos nuevos van sin `package`.
 
 - **2026-09-30** · Daniel: no se sube la ficha al Project a mano; el chat del Project lee la carpeta `C:\AKO` entera.
 
