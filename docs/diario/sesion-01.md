@@ -47,3 +47,15 @@
 ## Siguiente sesión
 
 - S2 (entidades Room y precarga): empezar repasando Gradle, el catálogo de versiones y el porqué de `minSdk 26`; las decisiones de código, con 3 opciones (P112).
+
+## Para el vídeo
+
+*(Añadido el 30 sep 2026, a petición de Daniel: el apartado nació en la S3 y se añade aquí para recopilar el guion igual en todas las fichas.)*
+
+- **Por qué `minSdk 26`:** es la edad mínima para entrar al bar. El PIN se guarda «picado» (PBKDF2 con SHA-256) y esa receta viene de serie desde Android 8, sin librerías de fuera; llega al ~98,4 % de los móviles (decisión del 28 sep, `decisiones-code.md` 5.3).
+- **El package name no se cambia:** es el DNI de la app; Android distingue las apps por él (P104).
+- **Gradle y el catálogo de versiones:** Gradle es el encargado que monta el bar y fabrica la APK; `libs.versions.toml` es la lista de la compra con las marcas, un solo sitio para las versiones de las librerías (P106; AGP 9.3.3 por compatibilidad con el Android Studio instalado, P42).
+- **Repositorio público desde el primer día:** el libro de caja (Git) con una copia en la nube (GitHub) a la vista del profesor (P22, RNF-25).
+- **Uso de la IA consultado y declarado:** se preguntó al profesor antes de programar; los commits llevan coautor Claude. Como un examen con calculadora permitida: no se esconde (respuesta del 29 sep, P111).
+- **Tres opciones en cada decisión de código:** una de Claude y otra sacada de internet con enlace, y elige Daniel; como pedir presupuesto a tres fontaneros (P112).
+- **Seguridad:** nada de claves ni correos en un repositorio público; el hook es el portero que mira el DNI (autor) antes de apuntar en el libro (P108, skill `seguridad`).
