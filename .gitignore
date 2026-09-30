@@ -36,3 +36,6 @@ desktop.ini
 
 # Temporales de Claude Code (locales, no del proyecto)
 .claude/settings.local.json
+
+# Resúmenes personales para estudiar (se envían por Gmail, no se suben) — Daniel, 30 sep 2026
+docs/resumenes/
