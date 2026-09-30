@@ -1,5 +1,5 @@
 > **Guía de la sesión 3 — DAOs y dominio puro.** Escrita en la sesión 00 (24 sep 2026) [Claude]. Plan de piezas, no código. Objetivo del spec (apartado 11, S3): los 5 DAOs con sus consultas; `Carrito`, `LineaCarrito`, `Calculadora`, `Validacion`, `Hash`; compila y **las seis pruebas puras pasan** (P-C-01 a P-C-05 y P-C-09) en `test/`. Entregable: compila y esas seis pruebas en verde (apartado 2).
-> **Prerrequisitos:** S2 cerrada.
+> **Prerrequisitos:** S2 cerrada. **Lo que dejó la S2 (P115–P118):** 7 entidades; `AppDatabase` con 4 DAOs que **ya existen** en `datos/dao/` con solo los `@Insert` de la precarga (`CategoriaDao.insertar`, `ProductoDao.insertar`, `MesaDao.insertarTodas`, `PrecargadosDao.insertarAlergenos`): en esta sesión se **les añaden** las consultas, no se crean de cero. `ComandaDao` no existe: nace aquí y se añade a `AppDatabase` (`abstract fun comandaDao()`). La base de datos la guarda `EntradaAko.db` (`by lazy`), que la abre al arrancar.
 > **Horas estimadas: 7–9 h.** Chat con **Opus 5.5, esfuerzo medio**.
 
 # Sesión 3 — guía
