@@ -45,6 +45,10 @@
 - **Entendí:** lo que ahora podría explicar sin leerlo (una línea por concepto).
 - **No entendí todavía:** lo que funciona pero no sabría explicar. Se vuelve a ello en la sesión siguiente.
 
+## Para el vídeo
+
+- Lo que se ha explicado en la sesión y se podría contar en el vídeo de 10 minutos: una línea por idea, con la comparación de la vida real si la hubo y la decisión (Pnnn) que la respalda. Sirve para montar el guion al final.
+
 ## Pruebas
 
 - Pruebas de código que pasan al terminar: P-C-nn, …

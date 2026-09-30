@@ -1,17 +1,18 @@
 > **Guía de la sesión 4 — Repositorios y `PinStore`.** Escrita en la sesión 00 (24 sep 2026) [Claude] como plan de piezas: qué se construye, en qué orden y qué hay que entender en cada trozo. No lleva código: el código lo da Claude pieza a pieza en el chat (bloque arriba, explicación debajo, pregunta al final) y Daniel lo teclea en Android Studio. Objetivo del spec (apartado 11, S4): **`CartaRepository`, `ComandaRepository`, `SeguridadRepository`, `PinStore`; compila; cada método tiene un comentario de una línea con la regla que garantiza.** Entregable: la app compila y las seis pruebas de `test/` siguen en verde, más la mitad nueva de P-C-09 (con DAO falso).
-> **Prerrequisitos** (de S2 y S3): las 7 entidades del nivel 1 (P115), `AppDatabase` y `Precarga`; los 5 DAOs con las consultas del diagrama (`pendienteDeMesa`, `pendientesConTotal`, `visibles`, `existeNumero`, `existeNombre`, `mesasConProductoPendiente`, `mesasConCategoriaPendiente`, `pagadasEntre`…); `Carrito`, `LineaCarrito`, `Calculadora`, `Validacion` (con `precioValido`, `cantidadValida`, `pinValido`), `Hash`; `MesaEstado` y `MesaConTotal` en `dominio/modelos/`; P-C-01 a P-C-05 y la mitad pura de P-C-09 en verde. Si `EntradaAko : Application` ya existe desde la S2 con la base de datos (P17), en la pieza 11 solo se le añaden los repositorios.
+> **Prerrequisitos** (de S2 y S3): las 7 entidades del nivel 1 (P115), `AppDatabase` y `Precarga`; los 5 DAOs con las consultas del diagrama (`pendienteDeMesa`, `pendientesConTotal`, `visibles`, `existeNumero`, `existeNombre`, `mesasConProductoPendiente`, `mesasConCategoriaPendiente`, `pagadasEntre`…); `Carrito`, `LineaCarrito`, `Calculadora`, `Validacion` (con `precioValido`, `cantidadValida`, `pinValido`), `Hash` (los cuatro son `object`; `Calculadora` solo tiene `importe` y `cambio`, P120; `Hash` trabaja con textos Base64, P122); `MesaConTotal`, `MesaEstado` y `ComandaConTotal` en `dominio/modelos/`, sin anotaciones de Room (P123); P-C-01 a P-C-05 y la mitad pura de P-C-09 en verde. `EntradaAko : Application` existe desde la S2 con `val db by lazy { … }` y un `onCreate` que abre la base de datos para que salte la precarga (P116–P118); `AppDatabase` no tiene `obtener()` ni `companion object`: en la pieza 11 solo se le añaden los repositorios.
 > **Horas estimadas: 6–8 h** (12 piezas de 20–40 min más aperturas, cierre y revisión). Chat con **Opus 5.5, esfuerzo alto**.
 
 # Sesión 4 — guía
 
 ## 0. Al abrir: Plan Mode (P25)
 
-Esta sesión se abre en **Plan Mode**: Claude lee los DAOs reales de la S3 (los nombres pueden haber cambiado respecto al diagrama) y escribe el plan de las 12 piezas de abajo con los nombres reales antes de tocar código. En ese plan se cierran **cuatro huecos que el diagrama de clases deja abiertos** (todos [Claude], Daniel decide):
+Esta sesión se abre en **Plan Mode**: Claude lee los DAOs reales de la S3 (los nombres pueden haber cambiado respecto al diagrama) y escribe el plan de las 12 piezas de abajo con los nombres reales antes de tocar código. **Toda decisión técnica que cambie cómo funciona el código se plantea a Daniel con mínimo 3 opciones (al menos una de Claude y al menos una de una fuente de internet, con enlace) y elige Daniel (P112).** En ese plan se cierran **cinco huecos que el diagrama de clases deja abiertos** (todos [Claude], Daniel decide):
 
 1. **`CartaRepository` necesita también `ComandaDao`** para R6: las consultas `mesasConProductoPendiente` y `mesasConCategoriaPendiente` viven en `ComandaDao`, no en los DAOs de la carta. Se le pasa por constructor como un cuarto DAO.
 2. **R6 en dos pasos.** La pantalla enseña las mesas afectadas *antes* de confirmar (spec 6), así que hace falta un método de solo lectura (`mesasAfectadasPorPlato(id)` / `mesasAfectadasPorCategoria(id)`) y otro que elimine (`eliminarPlato(id)` / `eliminarCategoria(id)`), que devuelve la misma lista para cuadrar con el diagrama.
 3. **La transacción de `enviarCarrito`.** Room solo pone `@Transaction` en los DAOs; en el repositorio se usa `withTransaction` de `AppDatabase`. Opción A: `ComandaRepository` recibe también la `AppDatabase` por constructor. Opción B: un método `@Transaction` en `ComandaDao` que solo inserta comanda y líneas juntas, sin decidir nada. Recomendada A: la regla se lee entera en un sitio.
 4. **La tercera salida de la cadena 3e** («se guarda ahí, invisible»): `guardarPlato` recibe un parámetro `aunqueCategoriaEliminada: Boolean = false`; la pantalla lo pone a `true` solo cuando el Propietario ha dicho que no a las dos preguntas.
+5. **De dónde sale el total de una comanda** (`totalDe`, pieza 8) [Claude]. P120 dejó `Calculadora` sin `total` y dijo que **las comandas suman en SQL**, pero no qué consulta. Opciones que veo: A) una consulta nueva en `ComandaDao` que suma `cantidad × precio_unitario_centimos` de las líneas de una comanda (la S3 **no** la dejó hecha: `ComandaDao` no tiene ninguna consulta de total por comanda) · B) reutilizar el total de `pendientesConTotal()` (solo sirve para comandas pendientes; el recibo de una comanda cobrada en 2g se quedaría sin total) · C) sumar las líneas en el repositorio con `lineasDe` + `Calculadora.importe` (choca con «las comandas suman en SQL» de P120, pero es lo que P126 ya eligió para `resumenDelDia`, pieza 10). Falta la opción de fuente de internet (P112).
 
 Con el plan aprobado se sale de Plan Mode y se empieza por la pieza 1.
 
@@ -30,8 +31,8 @@ Cada pieza sigue la regla 12 de `CLAUDE.md`: explicación breve → código comp
 ### Pieza 2 — `PinStore` (30 min)
 
 - **Qué:** el archivo privado donde viven la sal y el hash del PIN. Nunca el PIN.
-- **Archivo:** `seguridad/PinStore.kt` — constructor con `Context`; `existe(): Boolean`, `guardar(pin: String)`, `coincide(pin: String): Boolean`; sal de 16 bytes de `Hash.generarSal()` (S3, `SecureRandom`; no se repite aquí [Claude]); hash por `Hash.pbkdf2` (S3); guardado en Base64 en `SharedPreferences` con `MODE_PRIVATE`.
-- **Qué te explico antes:** qué es `SharedPreferences` (un archivo pequeño de pares clave-valor, privado de la app, que se borra al desinstalar); qué es la sal y por qué se genera al azar una vez; por qué guardamos bytes como texto (Base64); por qué `coincide` **recalcula** el hash con la sal guardada y compara, en vez de «desencriptar» (no se puede: es la gracia).
+- **Archivo:** `seguridad/PinStore.kt` — constructor con `Context`; `existe(): Boolean`, `guardar(pin: String)`, `coincide(pin: String): Boolean`; la sal sale de `Hash.generarSal()` (S3: 16 bytes de `SecureRandom`, ya en texto Base64; no se repite aquí [Claude]), el hash de `Hash.pbkdf2(pin, sal)` y la comprobación de `Hash.coincide(pin, sal, hashGuardado)`; `PinStore` guarda **los dos textos tal cual** en `SharedPreferences` con `MODE_PRIVATE`, sin convertir bytes (P122).
+- **Qué te explico antes:** qué es `SharedPreferences` (un archivo pequeño de pares clave-valor, privado de la app, que se borra al desinstalar); qué es la sal y por qué se genera al azar una vez; por qué `Hash` ya devuelve texto (Base64, P122) y `PinStore` solo lo guarda; por qué `coincide` **recalcula** el hash con la sal guardada y compara, en vez de «desencriptar» (no se puede: es la gracia).
 - **Qué comprobamos después:** compila; en el archivo no hay ninguna línea que guarde `pin` tal cual (Claude lo comprueba con una búsqueda); `Hash` sigue sin importar nada de Android.
 - **Pregunta:** si alguien copia el archivo de preferencias, ¿qué ve y por qué no le sirve para entrar?
 
@@ -47,7 +48,7 @@ Cada pieza sigue la regla 12 de `CLAUDE.md`: explicación breve → código comp
 
 - **Qué:** leer, guardar y eliminar categorías con R16 y R6.
 - **Archivo:** `datos/repositorios/CartaRepository.kt` — `class CartaRepository(categoriaDao, productoDao, precargadosDao, comandaDao)`; `categorias()`, `guardarCategoria(c: Categoria): ResultadoGuardado`, `mesasAfectadasPorCategoria(id): List<Int>`, `eliminarCategoria(id): List<Int>`, `recuperarCategoria(id)` [Claude: no está en el diagrama; *recuperar* = volver a `activo = true`, spec 5.1].
-- **Qué te explico antes:** qué es `suspend` y por qué todo lo que toca la base de datos lo lleva (*«lo lento se hace en otra cola y avisa al terminar»*); R16 en código: `guardarCategoria` **normaliza** `esPorDefecto = false` en cualquier categoría nueva (así nunca hay dos, P-C-08) y `eliminarCategoria` **no hace nada** si la categoría es la de por defecto; `orden` = máximo + 1 al crear; `existeNombre` → `NombreRepetido`; eliminar es `activo = false`, nunca un `delete` (R5).
+- **Qué te explico antes:** qué es `suspend` y por qué todo lo que toca la base de datos lo lleva (*«lo lento se hace en otra cola y avisa al terminar»*); R16 en código: `guardarCategoria` **normaliza** `esPorDefecto = false` en cualquier categoría nueva (así nunca hay dos, P-C-08) y `eliminarCategoria` **no hace nada** si la categoría es la de por defecto; `orden` = máximo + 1 al crear; `existeNombre(nombre, exceptoId)` → `NombreRepetido` (sin mirar mayúsculas, `COLLATE NOCASE`, P124: «Carnes» = «carnes», pero las tildes y la ñ no se pliegan; al crear se pasa `exceptoId = 0`, al editar el `id` de la propia categoría); eliminar es `activo = false`, nunca un `delete` (R5).
 - **Qué comprobamos después:** compila; cada método con su comentario (`// R16 …`, `// R6 …`, `// R5 …`).
 - **Pregunta:** ¿cómo sabe el repositorio cuál es la categoría por defecto, y por qué no puede mirar si se llama «Otros»?
 
@@ -55,7 +56,7 @@ Cada pieza sigue la regla 12 de `CLAUDE.md`: explicación breve → código comp
 
 - **Qué:** las consultas que usan el Panel, la carta y la puerta de Pedir.
 - **Archivo:** el mismo — `platosDe(categoriaId)`, `platosVisibles()`, `hayPlatoVisible(): Boolean`, `plato(id)`, `alergenos()`, `alergenosDe(productoId)`.
-- **Qué te explico antes:** la diferencia entre **plato existente** (toda fila) y **plato visible** (activo y categoría activa: R15; `disponible` se suma con el incremento 12, P115; que ya vive en la consulta `visibles()` de la S3); el Panel usa `platosDe` y lo ve todo, la carta usa `platosVisibles`; `hayPlatoVisible` es la puerta de Pedir (spec 6); en la S8 se le suma `hayPlatoExistente` [Claude, hueco 4 de su Plan Mode] para elegir entre *«La carta está vacía»* y *«Todas las categorías están eliminadas»*.
+- **Qué te explico antes:** la diferencia entre **plato existente** (toda fila) y **plato visible** (activo y categoría activa: R15, que ya vive en la consulta `visibles()` de la S3; `disponible` es del nivel 2 y se suma cuando entre su incremento, el 12, P115); el Panel usa `platosDe` y lo ve todo, la carta usa `platosVisibles`; `hayPlatoVisible` es la puerta de Pedir (spec 6); en la S8 se le suma `hayPlatoExistente` [Claude, hueco 4 de su Plan Mode] para elegir entre *«La carta está vacía»* y *«Todas las categorías están eliminadas»*.
 - **Qué comprobamos después:** compila; el repositorio no repite la condición de visible (la delega en el DAO).
 - **Pregunta:** un plato activo en una categoría eliminada, ¿es visible? ¿Dónde está escrita esa regla?
 
@@ -63,7 +64,7 @@ Cada pieza sigue la regla 12 de `CLAUDE.md`: explicación breve → código comp
 
 - **Qué:** el método más cargado de reglas de la carta.
 - **Archivo:** el mismo — `guardarPlato(p: Producto, alergenos: List<Long>, aunqueCategoriaEliminada: Boolean = false): ResultadoGuardado`, `mesasAfectadasPorPlato(id): List<Int>`, `eliminarPlato(id): List<Int>`, `recuperarPlato(id)` [Claude, como `recuperarCategoria`].
-- **Qué te explico antes:** el **orden** de las comprobaciones y por qué importa: primero `Validacion.precioValido` (R8, lanza), después `existeNumero` (R9 → `NumeroRepetido`), después la categoría (`CategoriaEliminada` si está eliminada y no se fuerza), y solo entonces insertar o actualizar y `guardarAlergenos`; cómo R9 vive **dos veces** (el `UNIQUE` de la base de datos la impone; `existeNumero` solo sirve para avisar antes, P128); `eliminarPlato` marca `activo = false` y **no toca ninguna línea de comanda** (R6): lo pedido sigue pedido.
+- **Qué te explico antes:** el **orden** de las comprobaciones y por qué importa: primero `Validacion.precioValido` (R8, lanza), después `existeNumero` (R9 → `NumeroRepetido`), después la categoría (`CategoriaEliminada` si está eliminada y no se fuerza), y solo entonces insertar o actualizar y `productoDao.guardarAlergenos(productoId, alergenos)` (ya es `@Transaction` en el DAO desde la S3, P125: el repositorio solo la llama, sin `withTransaction`; al crear, con el `id` que devuelve `insertar`); cómo R9 vive **dos veces** (el `UNIQUE` de la base de datos la impone; `existeNumero` solo sirve para avisar antes, P128); `eliminarPlato` marca `activo = false` y **no toca ninguna línea de comanda** (R6): lo pedido sigue pedido.
 - **Qué comprobamos después:** compila; comentarios `// R8`, `// R9`, `// R6`, `// R5`; Claude comprueba que no hay ningún `delete` sobre `producto`.
 - **Pregunta:** si se elimina un plato que está en una comanda pendiente de la mesa 6, ¿qué cambia en `linea_comanda`? (Nada. ¿Por qué?)
 
@@ -78,8 +79,8 @@ Cada pieza sigue la regla 12 de `CLAUDE.md`: explicación breve → código comp
 ### Pieza 8 — `ComandaRepository`, lectura (30 min)
 
 - **Qué:** lo que necesitan la rejilla de mesas (1d y 6a) y la comanda (6b).
-- **Archivo:** `datos/repositorios/ComandaRepository.kt` — `class ComandaRepository(mesaDao, comandaDao, db: AppDatabase)` (opción A del Plan Mode); `mesasConEstado(): List<MesaEstado>`, `comandaPendiente(mesaId): Comanda?`, `lineasDe(comandaId)`, `totalDe(comandaId): Int`.
-- **Qué te explico antes:** R3 en código: `mesasConEstado` junta las 60 mesas con `pendientesConTotal` y construye un `MesaEstado` por mesa; **ninguna columna dice si la mesa está ocupada**; R10: `totalDe` suma con `Calculadora.total` sobre las líneas, la comanda no tiene columna `total`.
+- **Archivo:** `datos/repositorios/ComandaRepository.kt` — `class ComandaRepository(mesaDao, comandaDao, db: AppDatabase)` (opción A del Plan Mode); `mesasConEstado(): List<MesaEstado>`, `comandaPendiente(mesaId): Comanda?`, `lineasDe(comandaId)`, `totalDe(comandaId): Int` (de dónde sale el total: hueco 5 del apartado 0).
+- **Qué te explico antes:** R3 en código, en dos pasos (P123): `pendientesConTotal` da solo las mesas ocupadas (`MesaConTotal`) y `mesasConEstado` las pega a las 60 mesas y construye un `MesaEstado` por mesa (libre: `comandaId` y `totalCentimos` vacíos); **ninguna columna dice si la mesa está ocupada**; R10: el total **se calcula** (las comandas suman en SQL, P120; no hay `Calculadora.total`), la comanda no tiene columna `total`.
 - **Qué comprobamos después:** compila; comentarios `// R3` y `// R10`.
 - **Pregunta:** ¿qué tabla o columna dice que la mesa 4 está ocupada? (Ninguna. ¿Cómo se sabe entonces?)
 
@@ -94,16 +95,16 @@ Cada pieza sigue la regla 12 de `CLAUDE.md`: explicación breve → código comp
 ### Pieza 10 — `quitarLinea`, `anular`, `cobrar`, `resumenDelDia` (40 min)
 
 - **Qué:** el ciclo de vida de una comanda y la consulta del Resumen de ingresos.
-- **Archivos:** el mismo, más `dominio/modelos/ResumenIngresos.kt` (`dia`, `comandas: List<ComandaConTotal>`, `numComandas`, `totalCentimos`, del diagrama; `ComandaConTotal` ya existe desde la S3, pieza 6) — `quitarLinea(lineaId): Boolean`, `anular(comandaId)`, `cobrar(comandaId)`, `resumenDelDia(dia: LocalDate): ResumenIngresos`.
-- **Qué te explico antes:** R5 primero: los tres métodos **se niegan** si la comanda no está PENDIENTE (una comanda cerrada es intocable); R7: tras borrar la línea, si `contarLineas` = 0 → estado ANULADA con `fechaCierre` y devuelve `true` (la pantalla ya avisó antes); `cobrar` = PAGADA + `fechaCierre = ahora`; el día como instante: `LocalDate` → milisegundos de las 0:00:00 a las 23:59:59.999 en la zona del dispositivo (spec 5.1) → `pagadasEntre`; el total de cada comanda se **calcula** (R10) y con eso se monta `ResumenIngresos` (comandas con mesa, hora y total; cuántas; total). La fila lleva el **número** de mesa, no su `id`: se saca de `mesaDao.todas()` sin suponer que `id` = número [Claude] (la S10 lo necesita así).
+- **Archivos:** el mismo, más `dominio/modelos/ResumenIngresos.kt` (`dia`, `comandas: List<ComandaConTotal>`, `numComandas`, `totalCentimos`, del diagrama; `ComandaConTotal` —`comandaId`, `mesaNumero`, `fechaCierre`, `totalCentimos`— ya existe desde la S3, pieza 6) — `quitarLinea(lineaId): Boolean`, `anular(comandaId)`, `cobrar(comandaId)`, `resumenDelDia(dia: LocalDate): ResumenIngresos`.
+- **Qué te explico antes:** R5 primero: los tres métodos **se niegan** si la comanda no está PENDIENTE (una comanda cerrada es intocable); R7: tras borrar la línea, si `contarLineas` = 0 → estado ANULADA con `fechaCierre` y devuelve `true` (la pantalla ya avisó antes); `cobrar` = PAGADA + `fechaCierre = ahora`; el día como instante: `LocalDate` → milisegundos de las 0:00:00 a las 23:59:59.999 en la zona del dispositivo (spec 5.1) → `pagadasEntre` (devuelve `List<Comanda>`, P126); el total de cada comanda se **calcula** (R10) en Kotlin, con `lineasDe` y `Calculadora.importe` de cada línea (P126), se monta un `ComandaConTotal` por comanda y con eso `ResumenIngresos` (comandas con mesa, hora y total; cuántas; total). La fila lleva el **número** de mesa, no su `id`: se saca de `mesaDao.todas()` sin suponer que `id` = número [Claude] (la S10 lo necesita así).
 - **Qué comprobamos después:** compila; comentarios `// R5`, `// R7`, `// R10`; no existe ningún método que borre una comanda ni una entidad.
 - **Pregunta:** si quitas la única línea de una comanda, ¿qué queda en la base de datos y por qué no se borra la comanda?
 
 ### Pieza 11 — `EntradaAko : Application` (25 min)
 
 - **Qué:** el objeto que vive toda la ejecución y reparte la base de datos y los repositorios.
-- **Archivos:** `EntradaAko.kt` (raíz del paquete; existe desde la S2, pieza 7, con `val db by lazy { Room.databaseBuilder(…).build() }` (P116 → B` y ya registrado en `AndroidManifest.xml` con `android:name=".EntradaAko"`) — se le añaden `val pinStore by lazy`, `val cartaRepository by lazy`, `val comandaRepository by lazy`, `val seguridadRepository by lazy`, que usan `db`.
-- **Qué te explico antes:** qué es `Application` (se crea antes que cualquier pantalla y no muere hasta que muere la app); por qué la base de datos se abre **una sola vez** (spec 3: única instancia); qué es `by lazy` (se crea la primera vez que alguien lo pide); cómo un ViewModel llegará a esto en la S5 (`application as Ako`).
+- **Archivos:** `EntradaAko.kt` (raíz del paquete; existe desde la S2, pieza 7, con `val db by lazy { Room.databaseBuilder(…).build() }` (P116 → B), un `onCreate` que abre la base de datos al arrancar para que salte la precarga (P118), y ya registrado en `AndroidManifest.xml` con `android:name=".EntradaAko"`) — se le añaden `val pinStore by lazy`, `val cartaRepository by lazy`, `val comandaRepository by lazy`, `val seguridadRepository by lazy`, que usan `db`.
+- **Qué te explico antes:** qué es `Application` (se crea antes que cualquier pantalla y no muere hasta que muere la app); por qué la base de datos se abre **una sola vez** (spec 3: única instancia); qué es `by lazy` (se crea la primera vez que alguien lo pide); cómo un ViewModel llegará a esto en la S5 (`application as EntradaAko`: nadie más crea la base de datos, y `AppDatabase` no tiene `obtener()`, P116).
 - **Qué comprobamos después:** compila; la app arranca en el emulador sin error en Logcat; el inspector de base de datos sigue enseñando las 7 tablas con la precarga (P115).
 - **Pregunta:** ¿cuántas instancias de `AppDatabase` hay en la app, quién la guarda y quién la pide?
 
@@ -113,7 +114,7 @@ Cada pieza sigue la regla 12 de `CLAUDE.md`: explicación breve → código comp
 - **Archivos:** los tres repositorios y `PinStore`.
 - **Qué te explico antes:** Claude lista los métodos públicos y la R que cada uno declara, y la cuadra con la tabla del spec (apartado 6): **ninguna R1–R16 del nivel 1 puede quedar sin dueño**; qué hace el subagente `revisor` (ojos nuevos: lee el código sin saber cómo se escribió y solo devuelve hallazgos verificados, P35) y por qué se pasa aquí y no en la S5 (todo lo demás se construye encima).
 - **Qué comprobamos después:** `assembleDebug` en verde; las seis P-C de `test/` (P-C-01 a 05 y 09) en verde; el `revisor` sobre `app-ako/app/src`: los hallazgos *Alta* se arreglan antes del commit, los *Media/Baja* van a *Siguiente sesión* de la ficha.
-- **Pregunta:** de las 16 reglas, ¿cuáles garantiza la base de datos sola y cuáles el código? (R9 y R11 la base; el resto el código.)
+- **Pregunta:** de las 16 reglas, ¿cuáles garantiza la base de datos sola y cuáles el código? (R9 y R11 la base —en el nivel 1, R11 es solo RESTRICT: no hay ninguna CASCADE, P115—; el resto el código.)
 
 ## 2. Pruebas que cierran la sesión
 
@@ -121,14 +122,14 @@ Cada pieza sigue la regla 12 de `CLAUDE.md`: explicación breve → código comp
 - **P-C-09 completa:** `precioValido` (S3) **y** `guardarPlato` con DAO falso (pieza 7): 1850 y 0 guardan, −100 lanza y no guarda. Se anota con fecha en `spec+doc-pruebas.md`.
 - **Sin pruebas manuales**: no hay pantalla. P-C-06, 07 y 08 (Room en memoria) son de la S11.
 - `estado-nivel.md`: ningún RF pasa a *implementado* (los repositorios no son un RF); se anota en la ficha que R1–R16 tienen dueño en el código.
-- Cierre con `cerrar-sesion`: revisión del `revisor`, ficha `sesion-04.md`, `decisiones-code.md` con las cuatro decisiones del Plan Mode, y **dos commits**: `S4: repositorios y PinStore` y después `S4: ficha del diario` (decisión de la sesión 00), con push.
+- Cierre con `cerrar-sesion`: revisión del `revisor`, ficha `sesion-04.md`, `decisiones-code.md` con las cinco decisiones del Plan Mode, y **dos commits**: `S4: repositorios y PinStore` y después `S4: ficha del diario` (decisión de la sesión 00), con push.
 
 ## 3. Lo que tienes que saber defender
 
 - **La tabla «quién garantiza cada regla»** (spec 6) entera, y en especial: R9 la impone la base de datos con un `UNIQUE`; R1 no puede (Room no declara índices únicos parciales) y la impone `enviarCarrito`. Es el argumento del vídeo (P128).
 - **Por qué los repositorios reciben los DAOs por constructor** y qué permite eso: P-C-09 prueba `guardarPlato` sin emulador con un DAO falso.
 - **Eliminar no borra:** `activo = false` en categorías y platos (R5), y al eliminar **no se toca ninguna línea** de comanda (R6); *recuperar* es volver a `activo = true`. Y desactivar es otra cosa (nivel 2).
-- **Lo que se calcula no se guarda:** ocupación de la mesa (R3) y total de la comanda (R10) salen de consultas y de `Calculadora`; las líneas, en cambio, **congelan** nombre y precio (R14).
+- **Lo que se calcula no se guarda:** ocupación de la mesa (R3) y total de la comanda (R10) salen de consultas o de cuentas al leer (la rejilla suma en SQL con `pendientesConTotal`; el Resumen suma las líneas con `Calculadora.importe`, P126; el carrito suma solo, P120); las líneas, en cambio, **congelan** nombre y precio (R14).
 - **El PIN nunca se guarda:** `PinStore` guarda sal + hash PBKDF2 y `coincide` recalcula; olvidarlo obliga a reinstalar (recorte declarado).
 
 ## 4. Riesgos típicos y qué hacer

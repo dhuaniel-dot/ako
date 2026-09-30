@@ -8,6 +8,8 @@
 
 `abrir-sesion` lee la ficha de la S4 (los hallazgos *Media/Baja* del `revisor` que quedaron en *Siguiente sesión* se hacen aquí si tocan al PIN; si no, esperan). Antes de la primera pieza, Daniel tiene abiertos los cuatro PNG de la pantalla 1 y la ficha 1. Lo que la S1 dejó de la plantilla (`MainActivity.kt`, `activity_main.xml`) se **borra en la pieza 3**: la app arranca en `SelectorActivity`.
 
+**Decisiones técnicas (P112):** toda decisión que cambie cómo funciona el código se plantea a Daniel con mínimo 3 opciones (al menos una de Claude y al menos una de una fuente de internet, con enlace) y elige Daniel. En esta guía, **P46** (orden de comprobaciones en 1e, pieza 11) estaba dada por tomada «por la regla de Daniel» del 25 sep: **se pregunta en la sesión (P112)**.
+
 **Lo que en esta sesión es provisional [Claude]** y se sustituye después: un `PanelActivity` mínimo con los botones *Cambiar PIN* y *Terminar* (para que P-M-03 pase entera; el Panel real es la S6), y una caja «Esta parte llega en una sesión posterior» detrás de *Pedir* (1d, S8) y *Cuenta* (6a, S9). Por eso **P-M-13 y P-M-29 se anotan como *Parcial*** con fecha (decisión P6) y se repiten enteras en la S9 (calendario de pruebas común de las guías).
 
 ## 1. Piezas
@@ -25,7 +27,7 @@ Regla 12 de `CLAUDE.md`: explicación breve → código completo con su ruta →
 ### Pieza 2 — Tema Material 3, colores y orientación (30 min)
 
 - **Qué:** la paleta neutra con el naranja como único acento y la app en vertical.
-- **Archivos:** `res/values/colors.xml` (naranja de acento, blanco, negro, gris oscuro; **sin rojo ni verde de acento**: ya significan mesa ocupada y mesa cobrada), `res/values/themes.xml` (`Theme.Ako` con padre `Theme.Material3.DayNight.NoActionBar` y `colorPrimary` naranja [Claude]) y `AndroidManifest.xml` (`android:screenOrientation="portrait"` en **cada** `<activity>`, RNF-15; `android:theme="@style/Theme.Ako"`).
+- **Archivos:** `res/values/colors.xml` (naranja de acento, blanco, negro, gris oscuro; **sin rojo ni verde de acento**: ya significan mesa ocupada y mesa cobrada), `res/values/themes.xml` (`Theme.AKO` —el nombre que generó el asistente en la S1, sobre `Base.Theme.AKO` con padre `Theme.Material3.DayNight.NoActionBar`— con `colorPrimary` naranja [Claude]) y `AndroidManifest.xml` (`android:screenOrientation="portrait"` en **cada** `<activity>`, RNF-15; `android:theme="@style/Theme.AKO"` ya está desde la S1).
 - **Qué te explico antes:** qué es un tema (los colores y formas que heredan todos los botones sin repetirlos); qué es `colorPrimary` en Material 3 y qué botones lo cogen solos (los `MaterialButton` rellenos: *Pedir* en 1a, *Aceptar* en 1b); por qué la orientación va en el manifiesto y no en el código; qué es *DayNight* y por qué no nos preocupa (paleta neutra).
 - **Qué comprobamos después:** la app arranca; girar el emulador (`Ctrl+F11`) **no** gira la pantalla; un botón relleno sale naranja.
 - **Pregunta:** ¿por qué el rojo y el verde no pueden ser color de acento en esta app?
@@ -48,7 +50,7 @@ Regla 12 de `CLAUDE.md`: explicación breve → código completo con su ruta →
 
 ### Pieza 5 — `SelectorFragment` (1a) (35 min)
 
-- **Qué:** el nombre *Ako*, el subtítulo y los tres botones grandes apilados.
+- **Qué:** el nombre de la app (`app_name` = `AKO`, P105), el subtítulo y los tres botones grandes apilados.
 - **Archivos:** `ui/selector/SelectorFragment.kt`, `res/layout/fragment_selector.xml` (`ConstraintLayout`; `app_name` grande, `selector_subtitulo`; tres `MaterialButton` a todo lo ancho, altura ≥ 48 dp y en el dibujo bastante más; *Pedir* relleno de acento, *Propietario* y *Cuenta* con borde, como el wireframe 01a); `SelectorActivity` decide en `onCreate`: `hayPin` → 1a, si no → 1b.
 - **Qué te explico antes:** `ConstraintLayout` con palabras sencillas (cada vista se ata a otra o al borde); `dp` (tamaño físico) frente a `sp` (texto, crece con el ajuste del usuario: RNF-11); por qué los botones son grandes (P101: los pulsa gente que nunca ha visto la app); el editor de diseño de Android Studio: vista *Design* y vista *Code*; `viewLifecycleOwner` al observar desde un Fragment. Los tres `onClick` quedan vacíos hasta la pieza 12.
 - **Qué comprobamos después:** en el emulador (con un PIN metido a mano en la pieza 7 o saltando la comprobación provisionalmente) se ve 1a como el wireframe; ningún texto por debajo de 12 sp.
@@ -67,7 +69,7 @@ Regla 12 de `CLAUDE.md`: explicación breve → código completo con su ruta →
 - **Qué:** Aceptar se enciende con 4 + 4 cifras; si no coinciden, aviso y campos vacíos; si coinciden, se guarda y se pasa a 1a.
 - **Archivo:** `ui/selector/CrearPinFragment.kt` — `doAfterTextChanged` en los dos campos (core-ktx) → `botón.isEnabled = los dos tienen 4 cifras`; al pulsar: distintos → `pin_no_coinciden` como error del primer campo y vaciar los dos; iguales → `viewModel.crearPin(pin)` y `replace` por `SelectorFragment`.
 - **Qué te explico antes:** qué es un *listener* (*«avísame cuando cambie el texto»*); dónde vive cada comprobación (coinciden → pantalla; 4 cifras → pantalla **y** `Validacion`; guardar → repositorio → `PinStore`); qué pasa en `crearPin` de punta a punta (sal nueva, hash, archivo privado).
-- **Qué comprobamos después:** **P-M-01 pasa**: 1234/1235 → aviso y campos vacíos; 1234/1234 → 1a. Para repetirla: en el emulador, *Settings → Apps → All apps → Ako → Storage & cache → Clear storage → Delete* (o por consola `adb shell pm clear yunkang.ako`, o desinstalar), y se explica por qué eso borra el PIN.
+- **Qué comprobamos después:** **P-M-01 pasa**: 1234/1235 → aviso y campos vacíos; 1234/1234 → 1a. Para repetirla: en el emulador, *Settings → Apps → All apps → AKO → Storage & cache → Clear storage → Delete* (o por consola `adb shell pm clear yunkang.ako`, o desinstalar), y se explica por qué eso borra el PIN.
 - **Pregunta:** ¿dónde queda guardado el PIN 1234 después de aceptar, y qué hay exactamente en ese archivo?
 
 ### Pieza 8 — `PinDialog` (1c), diseño y resultado (35 min)
@@ -98,7 +100,7 @@ Regla 12 de `CLAUDE.md`: explicación breve → código completo con su ruta →
 
 - **Qué:** tres campos a la vez (actual, nuevo, repite), como el wireframe 1e (D18).
 - **Archivos:** `ui/panel/CambiarPinDialog.kt`, `res/layout/dialog_cambiar_pin.xml` (tres `TextInputLayout` con `numberPassword` y hints `pin_hint_actual`, `pin_hint_nuevo`, `pin_hint_repite_nuevo`; título `pin_cambiar_titulo`); Aceptar apagado hasta 4 + 4 + 4 cifras; al aceptar: nuevo ≠ repite → `pin_no_coinciden` y se vacían los dos nuevos; si coinciden → `viewModel.cambiarPin` y, si devuelve `false`, `pin_incorrecto` en el campo actual **sin tocar los nuevos** y el diálogo sigue abierto; si `true`, cierra.
-- **Qué te explico antes:** el orden de la ficha («primero el actual; si es incorrecto, no se llega a pedir el nuevo») se cumple **en el repositorio** (S4, `cambiarPin` mira el actual antes de nada), no en la pantalla; qué se reutiliza de `PinDialog` (misma trampa del botón, misma sacudida en el campo del actual [Claude], mismo `numberPassword`) y por qué aun así son dos clases (un campo frente a tres, y viven en paquetes distintos: `PinDialog` lo usará Pedir).
+- **Qué te explico antes:** (el orden exacto de las comprobaciones al Aceptar es P46: **se pregunta en la sesión, P112**; lo de esta pieza es la recomendada del 25 sep) el orden de la ficha («primero el actual; si es incorrecto, no se llega a pedir el nuevo») se cumple **en el repositorio** (S4, `cambiarPin` mira el actual antes de nada), no en la pantalla; qué se reutiliza de `PinDialog` (misma trampa del botón, misma sacudida en el campo del actual [Claude], mismo `numberPassword`) y por qué aun así son dos clases (un campo frente a tres, y viven en paquetes distintos: `PinDialog` lo usará Pedir).
 - **Qué comprobamos después:** **P-M-03 pasa entera** (paso 2: actual 0000 **y el nuevo 5678 tecleado dos veces**, porque Aceptar está apagado hasta 4 + 4 + 4 cifras, D18; como lo escribe `juego-de-datos.md` → «PIN incorrecto» en el actual y el nuevo no se guarda; 1234 → 5678 dos veces → después 1234 falla y 5678 abre; volver a 1234).
 - **Pregunta:** si el PIN actual está mal y el nuevo bien, ¿qué queda guardado? ¿Y quién lo decide?
 
@@ -106,7 +108,7 @@ Regla 12 de `CLAUDE.md`: explicación breve → código completo con su ruta →
 
 - **Qué:** la única caja de confirmación de toda la app y las salidas provisionales de *Pedir* y *Cuenta*.
 - **Archivos:** `ui/comun/ConfirmacionDialog.kt` (`DialogFragment`; `companion fun nueva(titulo: String, texto: String, afirmativo: String, negativo: String? = null, clave: String)`; resultado con `setFragmentResult` [Claude]; **el botón negativo es opcional**, P15); `SelectorFragment.kt` — *Propietario* → `PinDialog` → `PanelActivity`; *Pedir* y *Cuenta* → `ConfirmacionDialog` con `pendiente_sesion_posterior` y solo `comun_aceptar` (en la S8 *Pedir* pasa a `hayPlatoVisible` + 1d; en la S9 *Cuenta* pasa a 6a).
-- **Qué te explico antes:** por qué **una sola** clase para Enviar, Cobrar, Anular, R7, la cadena 3e, «Se perderán los cambios», RF-38 y la puerta de Pedir (P84, P121: se reutiliza el componente, no la pantalla; y **los botones dicen lo que hacen**, P40: «Cobrar», «Eliminar», no «Sí»); los textos entran por `arguments` (un `Bundle`), nunca por constructor: si Android recrea el diálogo, el constructor no se vuelve a llamar y los argumentos sí se conservan; qué significa «solo botón afirmativo» (la puerta de Pedir solo informa).
+- **Qué te explico antes:** por qué **una sola** clase para Enviar, Cobrar, Anular, R7, la cadena 3e, «Se perderán los cambios», RF-38 y la puerta de Pedir (P84, P121 del Project: se reutiliza el componente, no la pantalla; y **los botones dicen lo que hacen**, P40: «Cobrar», «Eliminar», no «Sí»); los textos entran por `arguments` (un `Bundle`), nunca por constructor: si Android recrea el diálogo, el constructor no se vuelve a llamar y los argumentos sí se conservan; qué significa «solo botón afirmativo» (la puerta de Pedir solo informa).
 - **Qué comprobamos después:** los tres botones hacen algo; la caja provisional sale con un solo botón y cierra; **P-M-13 Parcial** (Propietario → 1c → cancelar vuelve a 1a; Cuenta y Pedir enseñan la caja provisional en vez de 6a/1d).
 - **Pregunta:** ¿por qué el aviso de platos sin enviar (RF-38) no es una clase nueva?
 
@@ -122,7 +124,7 @@ Regla 12 de `CLAUDE.md`: explicación breve → código completo con su ruta →
 
 - **El flujo de la ficha 1:** primer arranque → 1b obligatoria y sin Atrás; después siempre 1a; Propietario pide el PIN, Cuenta no, y salir de Pedir lo pedirá (S8). Y por qué el Resumen de ingresos vivirá detrás del PIN (RNF-10).
 - **Activity, Fragment, ViewModel y LiveData con tus palabras**: la pantalla, el trozo de pantalla, la memoria que sobrevive, el valor que avisa. Y que el ViewModel no toca ningún DAO.
-- **Por qué un solo `ConfirmacionDialog`** con botón negativo opcional (P84, P15, P121) y por qué sus botones dicen lo que hacen (P40).
+- **Por qué un solo `ConfirmacionDialog`** con botón negativo opcional (P84, P15, P121 del Project) y por qué sus botones dicen lo que hacen (P40).
 - **La sacudida es una animación con función** (spec 10, RNF-13): comunica el fallo sin depender del color; intentos ilimitados es un recorte declarado.
 - **De dónde sale cada texto** (`strings.xml`, RNF-19) y qué hace falta para el inglés en la S13.
 

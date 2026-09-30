@@ -1,6 +1,6 @@
 > **Borrador del `README.md` de la raíz del repositorio** [Claude]. Escrito en la sesión 00 (noche del 24 al 25 sep 2026) a partir de `docs/plantilla-readme.md`, con las versiones reales de `docs/guias/stack-verificado/` y lo decidido en `docs/decisiones-code.md`. **En la S1 (guía `sesion-01.md`, apartado 5, paso 7) Daniel lo lee, cambia lo que quiera y lo pega** en `C:\AKO\README.md`; Claude hace el commit `S1: README`. Regla 2 de `CLAUDE.md`: tienes que entender cada línea.
 >
-> **Qué cambia respecto a la plantilla** [Claude]: SDK de compilación 37 (no 36: lo exige Glide 5.0.9, apartado 4c de `decisiones-code.md`); ruta real del proyecto (`app-ako/`); comandos de prueba con `gradlew.bat` y la carpeta desde la que se lanzan; la carpeta `docs/guias/`; el diario explicado como la prueba del uso de la IA (spec 13, P226: los commits no llevan atribución); la versión de Android Studio sin número fijo, porque depende de la duda de AGP de la S1 (`sesion-01.md`, apartado 4: AGP 9.4.1 con Android Studio 2026.1.4, o AGP 9.3.3 con la 2026.1.3 instalada); y lo que en la S1 todavía no existe (las pruebas, sus resultados, el código) dicho como lo que se va construyendo o «se anota al ejecutarlo», para que el README no prometa nada falso el día que se pega. **Antes de pegarlo, comprueba tres cosas:** tu nombre completo tal como quieres que salga (la plantilla dice «Yunkang Daniel Hu Zhou»; en Git firmas como «Yunkang Daniel»), el curso y el enlace del repositorio.
+> **Qué cambia respecto a la plantilla** [Claude]: SDK de compilación 37 (no 36: lo exige Glide 5.0.9, apartado 4c de `decisiones-code.md`); ruta real del proyecto (`app-ako/`); comandos de prueba con `gradlew.bat` y la carpeta desde la que se lanzan; la carpeta `docs/guias/`; el diario explicado como la prueba del uso de la IA (spec 13; desde el 29 sep los commits de Claude Code llevan además `Co-Authored-By: Claude`, **P111**, que sustituye a P226); la versión de Android Studio sin número fijo, porque depende de la duda de AGP de la S1 (`sesion-01.md`, apartado 4: AGP 9.4.1 con Android Studio 2026.1.4, o AGP 9.3.3 con la 2026.1.3 instalada); y lo que en la S1 todavía no existe (las pruebas, sus resultados, el código) dicho como lo que se va construyendo o «se anota al ejecutarlo», para que el README no prometa nada falso el día que se pega. **Antes de pegarlo, comprueba tres cosas:** tu nombre completo tal como quieres que salga (la plantilla decía «Yunkang Daniel Hu Zhou»; Daniel eligió «Yunkang Daniel Huzhou», **P109 → B**; en Git firmas como «Yunkang Daniel»), el curso y el enlace del repositorio.
 >
 > Todo lo que va entre las dos líneas de abajo es el archivo. Lo de antes no se pega.
 
@@ -9,7 +9,7 @@
 ```markdown
 # Ako — app Android de pedidos para bares y restaurantes
 
-Proyecto Intermodular del ciclo de Desarrollo de Aplicaciones Multiplataforma (DAM), curso 2026-2027. Autor: Yunkang Daniel Hu Zhou.
+Proyecto Intermodular del ciclo de Desarrollo de Aplicaciones Multiplataforma (DAM), curso 2026-2027. Autor: Yunkang Daniel Huzhou.
 
 **Qué es:** una app para un móvil del restaurante, en vertical, con tres roles desde una pantalla de tres botones:
 
@@ -49,7 +49,9 @@ El plan tiene nueve pruebas de código (seis en `test/` y tres en `androidTest/`
 
 ## Uso de IA
 
-El código se construye con **Claude Code** (Anthropic) como apoyo, siguiendo las reglas de `CLAUDE.md`: el autor pide cada pieza, Claude Code la explica y da el código, y el autor lo teclea (o lo revisa, si en algún tramo Claude Code lo escribe directamente: cada ficha dice cuál de las dos), lo prueba y responde preguntas de comprensión antes de seguir. **Qué pidió el autor, qué generó la IA y qué revisó, tecleó o cambió el autor está en cada ficha de `docs/diario/`**: los commits no llevan la marca de la IA, así que el diario es el registro de ese reparto. Lo propuesto por la IA y no pedido lleva la marca `[Claude]`.
+El código se construye con **Claude Code** (Anthropic) como apoyo, siguiendo las reglas de `CLAUDE.md`: el autor pide cada pieza, Claude Code la explica y da el código, y el autor lo teclea (o lo revisa, si en algún tramo Claude Code lo escribe directamente: cada ficha dice cuál de las dos), lo prueba y responde preguntas de comprensión antes de seguir. **Qué pidió el autor, qué generó la IA y qué revisó, tecleó o cambió el autor está en cada ficha de `docs/diario/`.** Desde el 29 de septiembre de 2026, los commits en los que ha trabajado Claude Code llevan además la línea `Co-Authored-By: Claude` (P111). Lo propuesto por la IA y no pedido lleva la marca `[Claude]`.
+
+El uso de la IA se consultó con el profesor del módulo antes de empezar a programar, y lo aprobó (29 de septiembre de 2026; P110).
 
 ## Licencia
 

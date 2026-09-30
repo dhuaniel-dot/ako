@@ -12,8 +12,8 @@
 
 **Empezar de cero** (instalación limpia) borra la base de datos, el PIN y las fotos de la app. Dos formas:
 
-- **Clear storage (recomendada, más rápida):** en el emulador, *Settings → Apps → All apps* (sale *See all N apps* si hay apps recientes) *→ Ako → Storage & cache → Clear storage →* **Delete**. La app sigue instalada: se abre y arranca en 1b como el primer día. *(Ruta comprobada en el `Pixel_6_API_34` el 24 sep 2026 [Claude]: el emulador está en inglés.)* Claude puede hacer lo mismo desde la consola con `adb shell pm clear yunkang.ako`.
-- **Desinstalar:** mantener pulsado el icono de Ako → *App info → Uninstall*; después **Run ▶** en Android Studio.
+- **Clear storage (recomendada, más rápida):** en el emulador, *Settings → Apps → All apps* (sale *See all N apps* si hay apps recientes) *→ AKO → Storage & cache → Clear storage →* **Delete** (la app se llama **AKO** en la lista: `app_name`, P105). La app sigue instalada: se abre y arranca en 1b como el primer día. *(Ruta comprobada en el `Pixel_6_API_34` el 24 sep 2026 [Claude], con el emulador en inglés; desde la S10 está en español, P103 → A, y los nombres del menú salen traducidos.)* Claude puede hacer lo mismo desde la consola con `adb shell pm clear yunkang.ako`.
+- **Desinstalar:** mantener pulsado el icono de AKO → *App info → Uninstall*; después **Run ▶** en Android Studio.
 
 Tres cosas que conviene saber:
 
@@ -55,7 +55,7 @@ Tres cosas que conviene saber:
 
 ### 2.2 Bloque B — La carta del Propietario (pasos 5–10, ~20 min)
 
-5. **P-M-05** (necesita Bebidas activa). [+] de arriba → hoja **sin interruptor** → **Carnes**, sin foto → Guardar → [+] → **Postres** → Guardar (cada una sale la última **antes de Otros**) → lápiz de Carnes → aparece el interruptor *En la carta* → **Carnes y aves** → Guardar → lápiz → **Carnes** → Guardar → [+] → **Carnes** → Guardar → *«Ya existe una categoría con ese nombre»*, no guarda → cerrar la hoja → lápiz de **Otros** → **sin interruptor** → cerrar. **La carta (P224):** Terminar → Pedir → mesa 7 → **Bebidas** sale con el **círculo «?»** (Carnes y Postres no salen: todavía no tienen platos) → Salir → 1234 → 1a.
+5. **P-M-05** (necesita Bebidas activa). [+] de arriba → hoja **sin interruptor** → **Carnes**, sin foto → Guardar → [+] → **Postres** → Guardar (cada una sale la última **antes de Otros**) → lápiz de Carnes → aparece el interruptor *En la carta* → **Carnes y aves** → Guardar → lápiz → **Carnes** → Guardar → [+] → **Carnes** → Guardar → *«Ya existe una categoría con ese nombre»*, no guarda (P124: el aviso no mira mayúsculas, así que «carnes» también avisaría; la prueba usa el nombre idéntico y no cambia) → cerrar la hoja → lápiz de **Otros** → **sin interruptor** → cerrar. **La carta (P224):** Terminar → Pedir → mesa 7 → **Bebidas** sale con el **círculo «?»** (Carnes y Postres no salen: todavía no tienen platos) → Salir → 1234 → 1a.
 6. **[a mano · P8] Eliminar Bebidas.** Propietario → 1234 → **lápiz de Bebidas → apagar *En la carta* → Guardar**. Sin aviso: no hay ninguna comanda. En el Panel, Bebidas sigue **la primera**, marcada *Categoría eliminada*, con Agua atenuado. *Te quedas en el Panel.* Desde aquí y hasta el paso 7, Pedir no entra (no hay ningún plato visible): es lo esperado.
 7. **P-M-07.** [+ Plato] de **Carnes** → la categoría viene elegida; Guardar apagado → **Entrecot**, **12**, **18,50** → Guardar → [+ Plato] de Carnes → **Pollo asado**, **12**, **11,00** → Guardar → *«Ese número ya lo tiene otro plato»* → número **14** → Guardar → tocar Entrecot → número **13** → aviso *«Si alguien tiene apuntado el 12…»* → Atrás → *«¿Salir sin guardar?»* → **Salir** → Entrecot sigue con el 12 → [+ Plato] de **Postres** (aún activa) → **Flan**, **30**, **4,50** → Guardar. *Te quedas en el Panel.*
    - **[Claude]** El precio **11,00 se teclea ya en el paso 4 del plan**: sin precio, Guardar no se enciende y el aviso de número repetido no se puede provocar (apartado 2.8, choque 2).
@@ -72,7 +72,7 @@ Tres cosas que conviene saber:
 15. **[a mano] Comanda de la mesa 6.** Pedir → **mesa 6** → Pollo asado → Añadir → Enviar → **Enviar** → Salir → 1234 → 1a.
 16. **P-M-10.** Propietario → 1234 → tocar **Pollo asado** → apagar *En la carta* → Guardar → aviso **3d** *«Pollo asado está en una comanda pendiente de la mesa 6…»* → **Eliminar** → en el Panel, Pollo asado con ***Eliminado*** → Terminar → Pedir → mesa 7 → en Carnes **solo Entrecot** → Salir → 1234 → Cuenta → mesa 6 → **6b conserva 1 × Pollo asado 11,00** → Atrás → Atrás → 1a.
 17. **P-M-04.** Propietario → 1234 → recorrer las cajas: **Bebidas** (la primera, *Categoría eliminada*, Agua atenuado, **P8**) · **Carnes** (12 Entrecot, 14 Pollo asado con *Eliminado*) · **Postres** (*Categoría eliminada*: 30 Flan, 31 Tarta y 33 Natillas atenuados) · **Otros la última** (32 Helado), sin flechas ni interruptor. Platos por número, «?» donde no hay foto (Entrecot tiene miniatura solo si ya se hizo P-M-08), [+ Plato] fijo abajo, todas las cajas de la misma altura con scroll propio. *Te quedas en el Panel.*
-18. **P-M-14.** **[a mano, antes]** lápiz de **Carnes** → apagar → Guardar (si sale el aviso 2e con *Pollo asado (mesa 6)*, **Eliminar**; ver duda en el apartado 2.8) → tocar **Helado** → apagar *En la carta* → Guardar (sin aviso) → Terminar. **Prueba:** Pedir → *«Todas las categorías están eliminadas»* → **Aceptar** → 1a → Propietario → 1234 → lápiz de Carnes → encender → Guardar → Terminar → Pedir → entra en 1d → Atrás. **[a mano, después]** Propietario → 1234 → Helado → encender *En la carta* → Guardar → Terminar → 1a.
+18. **P-M-14.** **[a mano, antes]** lápiz de **Carnes** → apagar → Guardar (si sale el aviso 2e con *Pollo asado (mesa 6)*, **Eliminar**; ver apartado 2.8, choque 8) → tocar **Helado** → apagar *En la carta* → Guardar (sin aviso) → Terminar. **Prueba:** Pedir → *«Todas las categorías están eliminadas»* → **Aceptar** → 1a → Propietario → 1234 → lápiz de Carnes → encender → Guardar → Terminar → Pedir → entra en 1d → Atrás. **[a mano, después]** Propietario → 1234 → Helado → encender *En la carta* → Guardar → Terminar → 1a.
    - **Con Bebidas eliminada no hace falta eliminar Agua** (P8): Agua sigue con `activo = true`, pero su categoría está eliminada, así que ya no es visible (R15). Es justo lo que pide la *Entrada* («la categoría de ejemplo sin platos visibles»).
 
 ### 2.4 Bloque D — Pedir y Cuenta (pasos 19–29, ~35 min)
@@ -120,12 +120,12 @@ Tres cosas que conviene saber:
 1. **La mesa 6 se queda abierta.** El orden del plan crea la comanda de la mesa 6 (antes de P-M-10) y nunca la cierra, así que P-M-15 no encuentra «resto sin comanda». **Arreglo:** paso 29, anularla (no cobrarla: rompería los 47,00 € de P-M-12).
 2. **P-M-07, paso 4, no se puede hacer tal cual:** «nombre Pollo asado, número 12; Guardar» sin precio deja Guardar apagado (lo dice el mismo resultado esperado). **Arreglo:** teclear 11,00 ya en el paso 4.
 3. **Nadie pone la descripción de Entrecot** y P-M-18 la espera. **Arreglo:** paso 9.
-4. **P-M-04 y P-M-18 piden «Entrecot con foto»**, pero el orden deja P-M-08 la última. **Arreglo:** en S12 y S13, remate del paso 37 (P-M-08 ya mira la miniatura del Panel y la foto de 5b; se anotan las tres a la vez). Alternativa: pasar P-M-08 justo antes de P-M-04 (duda para Daniel).
+4. **P-M-04 y P-M-18 piden «Entrecot con foto»**, pero el orden deja P-M-08 la última. **Arreglo:** en S12 y S13, remate del paso 37 (P-M-08 ya mira la miniatura del Panel y la foto de 5b; se anotan las tres a la vez). La alternativa (pasar P-M-08 justo antes de P-M-04) la descartó Daniel: **P88 → A**, P-M-08 la última.
 5. **P-M-04: Postres tiene más que Flan.** Después de P-M-11, Postres eliminada tiene **Flan, Tarta y Natillas**. No contradice el resultado esperado; se anota en *Observaciones*.
 6. **Las pruebas que crean datos no se repiten encima de sí mismas** (P-M-05, 07, 11: nombre y número repetidos). **Arreglo:** instalación limpia al empezar las pruebas de cada sesión (apartado 1).
 7. **«Ayer» en P-M-12** solo está vacío si el día anterior no hubo cobros. **Arreglo:** instalación limpia en la S10 y en la S13, y los pasos 30–35 el mismo día.
-8. **Posible aviso 2e al eliminar Carnes** en la preparación de P-M-14: Carnes tiene Pollo asado (ya eliminado) en la comanda de la mesa 6. Depende de si la consulta de 2e cuenta los platos ya eliminados (se decide en el Plan Mode de la S6). No rompe nada: si sale, **Eliminar**.
-9. **P-M-11, paso 1: «Volverán a la carta sus 1 platos.»** Con N = 1 la cadena `recuperar_categoria_cuerpo` queda mal en español. No rompe la prueba; es una duda de textos para la S7.
+8. **Posible aviso 2e al eliminar Carnes** en la preparación de P-M-14: Carnes tiene Pollo asado (ya eliminado) en la comanda de la mesa 6. Depende de si la consulta de 2e cuenta los platos ya eliminados: Daniel decidió que **solo cuenta los activos** (P55 → A), así que no debería salir. No rompe nada: si sale, **Eliminar**.
+9. **P-M-11, paso 1: «Volverán a la carta sus 1 platos.»** Con N = 1 la cadena `recuperar_categoria_cuerpo` queda mal en español. No rompe la prueba; Daniel decidió pasarla a `<plurals>` en la S7 (P63 → A).
 
 ### 2.9 Modo rápido: solo los datos
 
@@ -235,7 +235,7 @@ Ya no hace falta el inspector: las comandas se envían desde Pedir. Cuenta sigue
 P-M-29 pide app **recién instalada**, y P-M-06, P-M-10 y P-M-20 necesitan sus comandas reales: instalación limpia y montaje entero hasta el paso 34 (sin el Resumen de ingresos, que llega en la S10: su botón sigue en la caja provisional).
 
 - **Montaje:** instalación limpia → pasos **1–34** (pasos 3 y 4 se pueden saltar: no crean datos). Lo que ya pasó, en modo rápido pero haciendo sus toques.
-- **Duda abierta (guía de la S9, hueco 9 de su Plan Mode):** la guía recomienda pasar P-M-29 **al final** de la sesión, con otro *Clear storage* después de las demás pruebas (opción A); lo de este apartado, P-M-29 en su sitio (paso 2) con una sola instalación limpia, es su opción B. Hasta que Daniel decida, se sigue lo que se eligiera en ese Plan Mode; la S10 empieza con instalación limpia en los dos casos.
+- **Decidido (P83 → A, Daniel, 25 sep):** P-M-29 **en su sitio** (paso 2) con una sola instalación limpia, como dice este apartado (en la guía de la S9, hueco 9, es la opción B). La S10 empieza con instalación limpia igualmente.
 - **Primera vez:** P-M-22, 23, 26, 27 **Pasa**. P-M-24 **Parcial** (falta el paso 5, Resumen de ingresos: S10). P-M-25 **Parcial** (falta el paso 3: S10). P-M-28 **Parcial** (falta el paso 5: S10).
 - **Repetidas enteras:** P-M-13, P-M-29, P-M-06, P-M-10 y P-M-20 → **Pasa**.
 - **Siguen Parcial:** P-M-04 y P-M-18 (la foto, S12).

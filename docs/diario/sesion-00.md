@@ -35,6 +35,16 @@
 - **Entendí:** *(Daniel: en tus palabras, qué sabrías explicar de lo de hoy: qué es la virtualización y por qué la necesita el emulador, qué es el SDK, qué es un commit, qué es un hook)*.
 - **No entendí todavía:** *(Daniel)*.
 
+## Para el vídeo
+
+*(Añadido el 30 sep 2026 al crearse este apartado en la plantilla; ideas que salieron en la sesión 00.)*
+
+- **Dónde vive cada regla (P128 del spec):** R9 (dos platos no comparten número) la impone la base de datos con un `UNIQUE`, como el registro civil con el DNI; R1 (una sola comanda abierta por mesa) no puede vivir ahí (Room no declara índices parciales) y la vigila el repositorio, como el camarero que mira si la mesa ya tiene comanda. Saber dónde está cada garantía es lo que distingue entender el modelo de copiarlo.
+- **Archivo, nunca BLOB (verificación 6):** las fotos se guardan como archivos y en la base de datos solo va la ruta, como un álbum que guarda las fotos y una agenda que solo apunta dónde están. Por eso la foto es la última pieza del nivel 1: toda la app funciona sin ella.
+- **Se reutiliza el componente, no la pantalla:** la misma fila de plato sirve en el Panel y en la carta, la misma rejilla en Elegir mesa y en Cuenta, el mismo recibo al cobrar y en el Resumen de ingresos; como una bandeja que vale en barra y en mesa.
+- **Importes en céntimos enteros (spec 5.1):** se cuenta en monedas, no en euros con coma, porque la coma flotante acumula «céntimos fantasma» al sumar.
+- **Cómo se controló el uso de la IA (decisiones P24, P28, P29 de la sesión 00):** el código lo teclea Daniel; cada pieza se explica antes y se pregunta después; un hook (un portero automático) no deja pasar un commit sin su ficha del diario; lo que propone Claude y no se pidió lleva [Claude]; el stack se comprobó compilando antes de la S1 («probar la receta antes de la cena»). Vale también para el apartado de metodología y la declaración de IA de la memoria.
+
 ## Pruebas
 
 - Ninguna de código ni manual: no hay código. El emulador arranca y `adb devices` lo ve (`emulator-5554 device`).

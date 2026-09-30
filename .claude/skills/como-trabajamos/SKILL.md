@@ -30,6 +30,7 @@ Documento vivo. `CLAUDE.md` tiene las reglas fijas del proyecto; esto es **la ma
 - **Lo decidido en Claude Code manda** (30 sep): *«lo que hacemos aquí tiene prioridad y, si vemos que no hace falta algo, lo apuntamos para luego; yo lo modifico en la sesión del Project con Claude que tengo para hacer el doc»*. Cada cambio frente al spec va a la lista del apartado 6 de `decisiones-code.md` («Para el Project») en el momento.
 - **Subir cosas del nivel 2 al 1** (30 sep): *«si ves que es fácil de implementar y no requiere luego mucho lío, me lo dices, lo vemos y decimos si pasarlo a nivel 1»*. Cuando Claude toque algo del nivel 2 (una tabla, un campo, un incremento), dice en una línea si es fácil o no y qué costaría; si es fácil, Daniel decide si sube. Lo que suba va a «Para el Project» y a `estado-nivel.md`. Recordar el hito: nivel 1 cerrado el 8 de noviembre (P2).
 - **Solo el nivel 1, y lo que se empieza se termina** (30 sep): *«si pongo 1 tengo que poner los demás números»*; *«me conozco: me propongo hacer una cosa y mientras la hago empiezo a añadir cosas y luego se alarga»*. Claude no mete nada del nivel 2 a medias (P115). **Nada de código «por si acaso»** (30 sep): *«no quiero partes de código que no apuntan a ningún sitio, a la espera de que, si tengo tiempo en el futuro, les dé sentido»*: cada clase, columna, cadena o dependencia tiene que usarla algo del nivel 1; si Claude ve alguna que no, lo dice. **Orden fijado por Daniel:** prototipo (nivel 1) → doc → y solo si sobra tiempo, extras del nivel 2, actualizando el doc después; hasta terminar el doc no se proponen subidas del nivel 2. Cuando proponga subir algo del nivel 2, lo presenta **con todo lo que implica** (tablas, pantallas, pruebas, horas) y como incremento entero, nunca un trozo; y si Daniel empieza a añadir cosas a mitad de una pieza, se lo recuerda en una línea.
+- **Recopilatorio para el vídeo** (30 sep): *«todo esto que dices que se puede explicar en el vídeo, apuntado en el diario, para en el futuro hacer un recopilatorio y discutir qué añadir al guion»*. Cada ficha tiene el apartado **«Para el vídeo»** (plantilla del diario); Claude apunta ahí, en el momento, cada idea explicable en el vídeo con su comparación de la vida real y su Pnnn.
 - **Chats:** si el chat se hace muy largo cambiamos a uno nuevo; si estamos en medio de algo, se termina eso y ya. Modelo: Opus de normal; Fable en cosas importantes o cuando voy apretado; tú me avisas cuando algo lo merece.
 
 ## Cómo lo aplica Claude
@@ -112,6 +113,9 @@ Cuando hay una pregunta numerada abierta, va **antes** del bloque PENDIENTE. Fue
 Daniel dice qué cambia (`/como-trabajamos` o simplemente diciéndolo). Claude edita este archivo en ese momento, añade una línea en el historial de abajo con la fecha y lo que cambió, y lo aplica desde el mensaje siguiente. Se sube al repositorio con el commit de la sesión.
 
 ## Historial de cambios
+
+- **2026-09-30** · Daniel: al cerrar cada sesión, Claude pone al día las guías de las sesiones siguientes y `juego-de-datos.md` con lo decidido (`cerrar-sesion`, paso 5b).
+- **2026-09-30** · Daniel: apartado «Para el vídeo» en cada ficha del diario, para montar después el guion.
 
 - **2026-09-30** · Daniel: forma corta para crear archivos (`paquete → Kotlin Class/File → tipo`); el paso a paso, solo con lo nuevo.
 
