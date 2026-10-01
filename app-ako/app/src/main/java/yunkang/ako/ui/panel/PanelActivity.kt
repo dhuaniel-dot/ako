@@ -30,6 +30,9 @@ class PanelActivity : AppCompatActivity() {
         binding.botonAtras.setOnClickListener { finish() }
         binding.botonTerminar.setOnClickListener { finish() }
 
-        // Cambiar PIN se conecta en la pieza 11
+        // Cambiar PIN: abre 1e
+        binding.botonCambiarPin.setOnClickListener {
+            CambiarPinDialog().show(supportFragmentManager, "cambiar_pin")
+        }
     }
-}
+}   
