@@ -12,7 +12,8 @@
 
 entrada=$(cat)
 cmd=$(printf '%s' "$entrada" | python -c "import sys,json;print(json.load(sys.stdin).get('tool_input',{}).get('command',''))" 2>/dev/null)
-[ -z "$cmd" ] && exit 0
+# F03 (revisión del 1 oct): si hay un comando y no se pudo leer (¿falta python?), se bloquea en vez de dejar pasar
+[ -z "$cmd" ] && { printf '%s' "$entrada" | grep -q '"command"' && { echo "BLOQUEADO: el hook no pudo leer el comando (¿falta python?). Avisa a Daniel." >&2; exit 2; }; exit 0; }
 
 # ¿Es un commit? (tolera opciones entre git y commit, p. ej. git -c x=y commit)
 printf '%s' "$cmd" | grep -qE '(^|[;&|[:space:]])git[[:space:]]+([^;&|]*[[:space:]])?commit([[:space:]]|$)' || exit 0
@@ -36,7 +37,8 @@ fi
 # Solo se miran las líneas nuevas (las que empiezan por +).
 # Los patrones son los de las claves reales: Anthropic, OpenAI, GitHub, Google, AWS y claves privadas.
 claves='sk-ant-[A-Za-z0-9_-]{20,}|sk-[A-Za-z0-9]{32,}|ghp_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{30,}|AIza[0-9A-Za-z_-]{35}|AKIA[0-9A-Z]{16}|BEGIN [A-Z ]*PRIVATE KEY'
-if git -C "$raiz" diff HEAD | grep '^+' | grep -qE "$claves"; then
+# F02 (revisión del 1 oct): además de lo cambiado, los archivos nuevos sin añadir (los que git add -A subiría)
+if { git -C "$raiz" diff HEAD | grep '^+'; git -C "$raiz" ls-files --others --exclude-standard -z | xargs -0 -r grep -hE "$claves" 2>/dev/null; } | grep -qE "$claves"; then
   echo "BLOQUEADO: lo que se va a subir parece llevar una clave de API o una clave privada. Quítala, mete el archivo en .gitignore y avisa a Daniel (skill seguridad)." >&2
   exit 2
 fi
