@@ -1,5 +1,6 @@
 package yunkang.ako.ui.selector
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -9,6 +10,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import yunkang.ako.R
 import yunkang.ako.databinding.ActivitySelectorBinding
+import yunkang.ako.ui.panel.PanelActivity
 
 // Pantalla 1 (Selector de rol). Es solo el marco: dentro enseña 1a (Selector) o 1b (Crear PIN)
 class SelectorActivity : AppCompatActivity() {
@@ -41,6 +43,11 @@ class SelectorActivity : AppCompatActivity() {
             supportFragmentManager.commit {
                 replace(R.id.contenedor, vista)
             }
+        }
+
+        // Cuando 1c deja el sobre de «PIN correcto», esta pantalla decide: abrir el Panel (Propietario)
+        supportFragmentManager.setFragmentResultListener(PinDialog.CLAVE_RESULTADO, this) { _, _ ->
+            startActivity(Intent(this, PanelActivity::class.java))
         }
     }
 }

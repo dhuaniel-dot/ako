@@ -23,6 +23,9 @@ class SelectorViewModel(
         seguridadRepository.crearPin(pin)
     }
 
+    // 1c: ¿es este el PIN guardado? También suspend; el repositorio cambia de hilo (P134)
+    suspend fun comprobarPin(pin: String): Boolean = seguridadRepository.comprobarPin(pin)
+
     // P140: la fábrica que sabe construir esta libreta con el repositorio de EntradaAko
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
