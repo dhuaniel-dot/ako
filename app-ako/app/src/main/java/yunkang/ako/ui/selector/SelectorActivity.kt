@@ -2,6 +2,7 @@ package yunkang.ako.ui.selector
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commit
 import androidx.core.view.ViewCompat
@@ -14,6 +15,9 @@ class SelectorActivity : AppCompatActivity() {
 
     // El "mando" de las vistas de activity_selector.xml (ViewBinding)
     private lateinit var binding: ActivitySelectorBinding
+
+    // La libreta de la pantalla 1, hecha con su fábrica (P140)
+    private val viewModel: SelectorViewModel by viewModels { SelectorViewModel.Factory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,11 +34,12 @@ class SelectorActivity : AppCompatActivity() {
             insets
         }
 
-        // La primera vez se monta 1a. Si Android rehace la pantalla, ya está montado y no se repite
-        // (la elección entre 1a y 1b según haya PIN llega en la pieza 6, con 1b)
+        // La primera vez: si ya hay PIN, 1a; si no, 1b (ficha 1, flujo).
+        // Si Android rehace la pantalla, ya está montado y no se repite
         if (savedInstanceState == null) {
+            val vista = if (viewModel.hayPin()) SelectorFragment() else CrearPinFragment()
             supportFragmentManager.commit {
-                replace(R.id.contenedor, SelectorFragment())
+                replace(R.id.contenedor, vista)
             }
         }
     }

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 1b · Crear PIN (wireframe 01b): solo en el primer arranque y obligatoria, por eso la barra no tiene Atrás -->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Barra superior gris, sin flecha Atrás -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/barra"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorSurfaceContainer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="@string/pin_crear_barra" />
+
+    <TextView
+        android:id="@+id/textoTitulo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="24dp"
+        android:text="@string/pin_crear_titulo"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/barra" />
+
+    <TextView
+        android:id="@+id/textoSubtitulo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="@string/pin_crear_subtitulo"
+        android:textColor="?android:attr/textColorSecondary"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@id/textoTitulo"
+        app:layout_constraintStart_toStartOf="@id/textoTitulo"
+        app:layout_constraintTop_toBottomOf="@id/textoTitulo" />
+
+    <!-- Primer PIN: teclado numérico, cifras ocultas, como mucho 4 -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/campoPin"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:hint="@string/pin_hint_pin"
+        app:layout_constraintEnd_toEndOf="@id/textoTitulo"
+        app:layout_constraintStart_toStartOf="@id/textoTitulo"
+        app:layout_constraintTop_toBottomOf="@id/textoSubtitulo">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/textoPin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberPassword"
+            android:maxLength="4" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Segundo PIN: el mismo, repetido -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/campoRepite"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:hint="@string/pin_hint_repite"
+        app:layout_constraintEnd_toEndOf="@id/textoTitulo"
+        app:layout_constraintStart_toStartOf="@id/textoTitulo"
+        app:layout_constraintTop_toBottomOf="@id/campoPin">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/textoRepite"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberPassword"
+            android:maxLength="4" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Aviso fijo en una caja gris (D1) -->
+    <TextView
+        android:id="@+id/textoAviso"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:background="?attr/colorSurfaceContainerHighest"
+        android:padding="16dp"
+        android:text="@string/pin_crear_aviso"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@id/textoTitulo"
+        app:layout_constraintStart_toStartOf="@id/textoTitulo"
+        app:layout_constraintTop_toBottomOf="@id/campoRepite" />
+
+    <!-- Aceptar: apagado hasta que los dos campos tengan 4 cifras (pieza 7) -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/botonAceptar"
+        android:layout_width="0dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="24dp"
+        android:enabled="false"
+        android:text="@string/comun_aceptar"
+        android:textSize="18sp"
+        app:cornerRadius="12dp"
+        app:layout_constraintEnd_toEndOf="@id/textoTitulo"
+        app:layout_constraintStart_toStartOf="@id/textoTitulo"
+        app:layout_constraintTop_toBottomOf="@id/textoAviso" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
