@@ -75,13 +75,14 @@ interface ComandaDao {
     """)
     suspend fun mesasConProductoPendiente(productoId: Long): List<Int>
 
-    // R6: números de las mesas con comanda PENDIENTE que llevan algún plato de esta categoría.
+    // R6: números de las mesas con comanda PENDIENTE que llevan algún plato de esta categoría
+    // que siga en la carta (P55: solo los activos, lo que de verdad se elimina; P147).
     @Query("""
         SELECT DISTINCT m.numero FROM mesa m
         JOIN comanda c ON c.mesa_id = m.id
         JOIN linea_comanda l ON l.comanda_id = c.id
         JOIN producto p ON p.id = l.producto_id
-        WHERE c.estado = 'PENDIENTE' AND p.categoria_id = :categoriaId
+        WHERE c.estado = 'PENDIENTE' AND p.categoria_id = :categoriaId AND p.activo = 1
         ORDER BY m.numero
     """)
     suspend fun mesasConCategoriaPendiente(categoriaId: Long): List<Int>
@@ -90,7 +91,7 @@ interface ComandaDao {
     @Query("SELECT COALESCE(SUM(cantidad * precio_unitario_centimos), 0) FROM linea_comanda WHERE comanda_id = :comandaId")
     suspend fun totalDe(comandaId: Long): Int
 
-    // Una línea por su id (para saber de qué comanda es antes de quitarla).
+    // Una línea por su id (para saber de qué comanda es antes de quitarla); vacío si ya no existe (P152).
     @Query("SELECT * FROM linea_comanda WHERE id = :lineaId")
-    suspend fun lineaPorId(lineaId: Long): LineaComanda
+    suspend fun lineaPorId(lineaId: Long): LineaComanda?
 }

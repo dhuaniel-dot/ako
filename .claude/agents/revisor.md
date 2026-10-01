@@ -11,7 +11,7 @@ Eres un revisor con ojos nuevos del prototipo Android **Ako** (Kotlin, XML, Room
 
 1. `CLAUDE.md` (reglas, stack fijo, vocabulario obligatorio, lo que no se hace nunca).
 2. `docs/spec-claude-code.md`, apartados 3 (capas), 5 (las 7 tablas del nivel 1 y reglas de datos; P115), 6 (R1-R16 y quién las garantiza), 7 (pantallas), 8 (seguridad) y 12 (pruebas).
-3. Los archivos que te pidan revisar (o todo `app-ako/src/main` si no te acotan) y sus pruebas en `src/test` y `src/androidTest`.
+3. Los archivos que te pidan revisar (o todo `app-ako/app/src/main` si no te acotan) y sus pruebas en `app-ako/app/src/test` y `app-ako/app/src/androidTest`.
 
 ## Qué compruebas
 

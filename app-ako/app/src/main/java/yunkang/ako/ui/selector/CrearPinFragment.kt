@@ -21,6 +21,13 @@ class CrearPinFragment : Fragment(R.layout.fragment_crear_pin) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentCrearPinBinding.bind(view)
 
+        // P146: si Android rehizo esta pantalla justo cuando el PIN ya se había guardado
+        // (cambio de tamaño de letra o de modo noche en ese instante), 1b ya no toca: se pasa a 1a
+        if (viewModel.hayPin()) {
+            parentFragmentManager.commit { replace(R.id.contenedor, SelectorFragment()) }
+            return
+        }
+
         // Cada vez que cambia un campo, se mira si Aceptar se enciende
         binding.textoPin.doAfterTextChanged {
             binding.campoPin.error = null   // al volver a escribir, se quita el aviso
@@ -45,7 +52,9 @@ class CrearPinFragment : Fragment(R.layout.fragment_crear_pin) {
                 binding.botonAceptar.isEnabled = false
                 viewLifecycleOwner.lifecycleScope.launch {
                     viewModel.crearPin(pin)
-                    parentFragmentManager.commit {
+                    // P146: allowStateLoss = true: si mientras se picaba el PIN la app pasó a segundo
+                    // plano (Home), un commit normal rompería la app; así cambia de vista sin romper
+                    parentFragmentManager.commit(allowStateLoss = true) {
                         replace(R.id.contenedor, SelectorFragment())
                     }
                 }

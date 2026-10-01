@@ -21,7 +21,7 @@ class PanelActivity : AppCompatActivity() {
         binding = ActivityPanelBinding.inflate(layoutInflater)
         setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(binding.raiz) { vista, insets ->
-            val barras = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val barras = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.ime())
             vista.setPadding(barras.left, barras.top, barras.right, barras.bottom)
             insets
         }

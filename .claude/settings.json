@@ -12,7 +12,17 @@
       "Bash(git checkout -- :*)",
       "Bash(git clean:*)",
       "Bash(git branch -D:*)",
-      "PowerShell(Remove-Item -Recurse:*)"
+      "PowerShell(Remove-Item -Recurse:*)",
+      "Bash(git commit --amend:*)",
+      "Bash(git restore:*)",
+      "Bash(git checkout .:*)",
+      "Bash(git push --force-with-lease:*)",
+      "Bash(git rebase:*)",
+      "Bash(git stash drop:*)",
+      "Bash(git stash clear:*)",
+      "Bash(rm -fr:*)",
+      "Bash(rm -r -f:*)",
+      "Bash(rm -f -r:*)"
     ]
   },
   "hooks": {

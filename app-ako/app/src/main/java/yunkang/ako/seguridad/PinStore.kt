@@ -16,7 +16,7 @@ class PinStore(context: Context) {
     private val preferencias = context.getSharedPreferences("pin", Context.MODE_PRIVATE)
 
     // ¿Ya hay un PIN creado? (1b, crear el PIN, solo sale la primera vez)
-    fun existe(): Boolean = preferencias.contains(CLAVE_HASH)
+    fun existe(): Boolean = preferencias.contains(CLAVE_HASH) && preferencias.contains(CLAVE_SAL)
 
     // Guarda un PIN nuevo: sal al azar + hash. El PIN no se escribe en ningún sitio.
     fun guardar(pin: String) {
@@ -32,6 +32,11 @@ class PinStore(context: Context) {
     fun coincide(pin: String): Boolean {
         val sal = preferencias.getString(CLAVE_SAL, null) ?: return false
         val hash = preferencias.getString(CLAVE_HASH, null) ?: return false
-        return Hash.coincide(pin, sal, hash)
+        // [Claude] Si el archivo está roto (la sal no es Base64), es «no coincide», no un cierre de la app (H15)
+        return try {
+            Hash.coincide(pin, sal, hash)
+        } catch (e: IllegalArgumentException) {
+            false
+        }
     }
 }

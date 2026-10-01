@@ -25,6 +25,7 @@
             android:layout_gravity="center_vertical|start"
             android:layout_marginStart="8dp"
             android:text="@string/comun_atras"
+            android:contentDescription="@string/comun_atras_cd"
             android:textColor="?attr/colorOnSurface"
             android:textSize="18sp"
             android:textStyle="bold" />

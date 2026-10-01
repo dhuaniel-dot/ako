@@ -29,9 +29,11 @@ class HashTest {
         assertNotEquals(hash1, hash2)
     }
 
+    // [Claude] Con una sal fija la prueba da siempre lo mismo (sin azar, H22)
     @Test
     fun elHashNoContieneElPin() {
-        val hash = Hash.pbkdf2("1234", Hash.generarSal())
+        val salFija = java.util.Base64.getEncoder().encodeToString(ByteArray(16))
+        val hash = Hash.pbkdf2("1234", salFija)
         assertFalse(hash.contains("1234"))
     }
 }

@@ -53,4 +53,36 @@ class CarritoTest {
         assertEquals(99, carrito.lineas[0].cantidad)
         assertFalse(cupo)   // P74: avisa de que no cabía
     }
+
+    // P-C-11 [Claude, revisión 1 oct]: el mínimo de R4 (P148): con 0 o menos no se añade nada
+    @Test
+    fun cantidadMenorQueUnoNoEntra() {
+        val carrito = Carrito(mesaId = 4)
+
+        assertFalse(carrito.anadir(agua, 0))
+        assertTrue(carrito.estaVacio())
+
+        carrito.anadir(entrecot, 3)
+        assertFalse(carrito.anadir(entrecot, -5))
+        assertEquals(3, carrito.lineas[0].cantidad)
+    }
+
+    // P-C-11: cambiarCantidad fuera de 1–99 o de un plato que no está no hace nada; quitar vacía el renglón
+    @Test
+    fun cambiarCantidadYQuitar() {
+        val carrito = Carrito(mesaId = 4)
+        carrito.anadir(entrecot, 3)
+
+        carrito.cambiarCantidad(entrecot.id, 0)
+        carrito.cambiarCantidad(entrecot.id, 100)
+        assertEquals(3, carrito.lineas[0].cantidad)
+
+        carrito.cambiarCantidad(agua.id, 5)   // el agua no está en el carrito
+        assertEquals(1, carrito.lineas.size)
+
+        carrito.quitar(entrecot.id)
+        assertTrue(carrito.estaVacio())
+        carrito.quitar(entrecot.id)           // quitar dos veces no rompe
+        assertTrue(carrito.estaVacio())
+    }
 }

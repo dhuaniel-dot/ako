@@ -32,7 +32,7 @@ interface CategoriaDao {
     @Query("SELECT EXISTS(SELECT 1 FROM categoria WHERE nombre = :nombre COLLATE NOCASE AND id != :exceptoId)")
     suspend fun existeNombre(nombre: String, exceptoId: Long): Boolean
 
-    // Una categoría por su id (para editarla, eliminarla o recuperarla).
+    // Una categoría por su id (para editarla, eliminarla o recuperarla); vacío si no existe (P152, como ProductoDao.porId).
     @Query("SELECT * FROM categoria WHERE id = :id")
-    suspend fun porId(id: Long): Categoria
+    suspend fun porId(id: Long): Categoria?
 }

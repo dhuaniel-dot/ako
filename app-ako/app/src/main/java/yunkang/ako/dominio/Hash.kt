@@ -1,5 +1,6 @@
 package yunkang.ako.dominio
 
+import java.security.MessageDigest
 import java.security.SecureRandom
 import java.util.Base64
 import javax.crypto.SecretKeyFactory
@@ -26,10 +27,13 @@ object Hash {
         val receta = PBEKeySpec(pin.toCharArray(), bytesSal, ITERACIONES, BITS_CLAVE)
         val picadora = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256")
         val pasta = picadora.generateSecret(receta).encoded
+        receta.clearPassword()   // [Claude] borra la copia del PIN que guarda la receta (H14)
         return Base64.getEncoder().encodeToString(pasta)
     }
 
     // ¿Este PIN, picado con la misma sal, da la misma pasta que la guardada?
+    // [Claude] MessageDigest.isEqual compara en tiempo constante (buena práctica OWASP, H14): tarda lo mismo
+    // acierte o no, para no dar pistas por el tiempo de respuesta
     fun coincide(pin: String, sal: String, hashGuardado: String): Boolean =
-        pbkdf2(pin, sal) == hashGuardado
+        MessageDigest.isEqual(pbkdf2(pin, sal).toByteArray(), hashGuardado.toByteArray())
 }

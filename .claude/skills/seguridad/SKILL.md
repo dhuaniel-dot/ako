@@ -17,7 +17,7 @@ Origen (28 sep 2026): un post enseñaba que buscando `claude_desktop_config.json
 - Un PIN, una contraseña o un correo de verdad en el código o en las pruebas (en las pruebas se usan datos inventados, como `1234`).
 - Un secreto escrito en un log (29 sep 2026): ningún `Log.d`, `println` ni mensaje de error imprime un PIN, un hash, una sal ni una clave, ni siquiera para depurar.
 - Datos personales en skills, `CLAUDE.md`, el diario o el código: teléfono, DNI, dirección, correo, contraseñas de cuentas, datos de otras personas (profesor, compañeros). Basta con «Daniel» y «el profesor». Las skills se escriben para que se puedan leer en público sin problema.
-- El correo de los commits se ve en un repositorio público: se usa el correo anónimo de GitHub (`…@users.noreply.github.com`) en `git config user.email` de `C:AKO` (hecho el 29 sep 2026). Los commits anteriores al 29 sep llevan el correo personal y siguen en el historial (reescribirlo exige `push --force`, prohibido).
+- El correo de los commits se ve en un repositorio público: se usa el correo anónimo de GitHub (`…@users.noreply.github.com`) en `git config user.email` de `C:AKO` (hecho el 29 sep 2026). La identidad de Git se cambió el 29 sep; el historial anterior no se reescribe (exigiría `push --force`, prohibido).
 - (29 sep 2026, P108) Los documentos ya no nombran correos: se dice «correo personal», «correo de la otra cuenta» o «correo anónimo de GitHub».
 
 Ako no necesita ninguna clave de API: el spec prohíbe servidores. Si algún día parece que hace falta una, **se para y se pregunta a Daniel**; no se escribe en el código.
@@ -30,7 +30,7 @@ Ako no necesita ninguna clave de API: el spec prohíbe servidores. Si algún dí
    git diff --cached | grep -niE 'sk-ant-|sk-[A-Za-z0-9_-]{20,}|api[_-]?key|ghp_|github_pat_|AIza|AKIA|BEGIN .*PRIVATE|storePassword|keyPassword|password *='
    ```
    Si sale algo que no sea un falso positivo (p. ej. `numberPassword` es un tipo de campo, no una contraseña), **no se hace el commit**.
-3. Nunca `git add -A` ni `git add .` a ciegas: se añaden los archivos por su nombre.
+3. `git add -A` solo **después** de los puntos 1 y 2 (mirar `git status --short` y buscar claves); así lo hacen `cerrar-sesion`, `relevo` y `verificar` (P154, 1 oct: sustituye a «nunca `git add -A`»). El hook corregido (F02) escanea también los archivos nuevos sin añadir.
 4. Red de seguridad automática (29 sep 2026): el hook `.claude/hooks/comprobar-commit.sh` (paso 4) bloquea los commits que hace Claude Code si lo cambiado lleva una clave con forma real (`sk-ant-…`, `ghp_…`, `AIza…`, `AKIA…`, clave privada). **No vigila los commits que Daniel hace a mano en Git Bash**: ahí sirve el punto 1 de este apartado.
 
 ## 3. Si una clave llega a subirse

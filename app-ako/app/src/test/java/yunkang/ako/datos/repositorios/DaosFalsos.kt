@@ -11,10 +11,10 @@ import yunkang.ako.datos.entidades.ProductoAlergeno
 // [Claude] Actores que hacen de DAO en las pruebas: no tocan ninguna base de datos.
 // Solo contestan lo que la prueba necesita; lo demás es TODO() ("esto no lo ensayamos").
 
-// Contesta siempre que la categoría existe y está activa.
-class CategoriaDaoFalso : CategoriaDao {
-    override suspend fun porId(id: Long): Categoria =
-        Categoria(id = id, nombre = "Carnes", imagen = null, orden = 2, activo = true, esPorDefecto = false)
+// Contesta que la categoría existe; si está en la carta o eliminada lo decide cada prueba (activa).
+class CategoriaDaoFalso(var activa: Boolean = true) : CategoriaDao {
+    override suspend fun porId(id: Long): Categoria? =
+        Categoria(id = id, nombre = "Carnes", imagen = null, orden = 2, activo = activa, esPorDefecto = false)
     override suspend fun insertar(categoria: Categoria): Long = TODO()
     override suspend fun actualizar(categoria: Categoria): Unit = TODO()
     override suspend fun todas(): List<Categoria> = TODO()
@@ -22,18 +22,26 @@ class CategoriaDaoFalso : CategoriaDao {
     override suspend fun existeNombre(nombre: String, exceptoId: Long): Boolean = TODO()
 }
 
-// Apunta si alguien intenta guardar un plato nuevo; el número siempre está libre.
-class ProductoDaoFalso : ProductoDao {
+// Apunta qué plato y qué marcas de alérgeno le llegan; el número siempre está libre.
+// "guardado" es el plato que la prueba dice que ya existe (para editar); vacío si no hay ninguno.
+class ProductoDaoFalso(var guardado: Producto? = null) : ProductoDao {
     var seLlamoInsertar = false
+    var productoRecibido: Producto? = null
+    var marcasRecibidas: List<ProductoAlergeno>? = null
     override suspend fun insertar(producto: Producto): Long {
         seLlamoInsertar = true
+        productoRecibido = producto
         return 1
     }
+    override suspend fun actualizar(producto: Producto) {
+        productoRecibido = producto
+    }
+    override suspend fun porId(id: Long): Producto? = guardado?.takeIf { it.id == id }
     override suspend fun existeNumero(numero: Int, exceptoId: Long): Boolean = false
     override suspend fun borrarAlergenosDe(productoId: Long) {}                  // las usa guardarAlergenos
-    override suspend fun insertarAlergenosDe(marcas: List<ProductoAlergeno>) {}  // ídem
-    override suspend fun actualizar(producto: Producto): Unit = TODO()
-    override suspend fun porId(id: Long): Producto? = TODO()
+    override suspend fun insertarAlergenosDe(marcas: List<ProductoAlergeno>) {
+        marcasRecibidas = marcas
+    }
     override suspend fun porCategoria(categoriaId: Long): List<Producto> = TODO()
     override suspend fun visibles(): List<Producto> = TODO()
     override suspend fun hayAlgunoVisible(): Boolean = TODO()

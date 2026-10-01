@@ -160,3 +160,10 @@ Fechas que mandan (P2, P26): **hito interno del nivel 1, 8 de noviembre** · el 
 - **Una P-M falla en la pasada**: se anota *Falla* con lo visto; si el arreglo es pequeño, se hace y se repiten esa prueba y las que dependan de ella (`juego-de-datos.md`, apartado 4); si es grande, la sesión no se cierra (`relevo`) y la ficha dice qué falta.
 - **La etiqueta quedó en un commit equivocado**: si aún no se subió, Claude la quita en local y la vuelve a crear; si ya se subió, se avisa a Daniel antes de nada (nada de `--force`, prohibido en `.claude/settings.json`).
 - **«App not installed» al probar la APK**: casi siempre es que se cogió la APK de Run ▶ (marcada «solo pruebas», `testOnly`), que Android no instala fuera de `adb`: se genera otra vez desde el menú de la pieza 12. La de Run ▶ y la del menú van firmadas con la misma clave de pruebas, así que la firma no es el problema; aun así, para la comprobación de la pieza 12 se desinstala Ako antes, que es lo que verá quien siga el Anexo I.
+
+## 5. Notas de la revisión del 1 oct (`docs/revisiones/2026-10-01-plan.md`)
+
+- El crédito de la nube caduca el 5 nov (P26): si la S13 cierra después, la revisión independiente (pieza 7) se hace con el subagente `revisor` local.
+- P98 → B ya decidido: las piezas 5 y 6 se hacen con la rama «opción B» (editor de diseño + lint + revisión a mano); el título de las piezas se conserva por no reescribir la guía.
+- P101 (botón día/noche): Daniel lo pasó al **nivel 2** el 1 oct (P159): no se hace en la S13; queda como idea para después del doc. `allowBackup` ya está en `false` (P151).
+- La pieza 1 del tema: el naranja ya está desde la S5 (P138); queda comprobar y el contraste del naranja **como texto** en los diálogos (revisión del código H07).

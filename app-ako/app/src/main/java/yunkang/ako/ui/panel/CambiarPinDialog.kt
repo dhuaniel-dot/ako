@@ -66,8 +66,8 @@ class CambiarPinDialog : DialogFragment() {
                         binding.campoNuevo.error = getString(R.string.pin_no_coinciden)
                         binding.textoNuevo.requestFocus()
                     } else if (viewModel.cambiarPin(actual, nuevo)) {
-                        // 3. Todo bien: guardado. Se cierra
-                        dismiss()
+                        // 3. Todo bien: guardado. Se cierra (P146: sin romper si la app pasó a segundo plano)
+                        dismissAllowingStateLoss()
                     } else {
                         // El repositorio vuelve a mirar el actual; si dijera que no, mismo aviso
                         avisarActualIncorrecto(binding)

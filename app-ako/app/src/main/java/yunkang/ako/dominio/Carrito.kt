@@ -12,6 +12,8 @@ class Carrito(val mesaId: Long) {
     // Añade un plato. Si ya está en el carrito, suma en el mismo renglón.
     // Si se pasa de 99, se queda en 99 y devuelve false para que la pantalla avise (P74).
     fun anadir(producto: Producto, cantidad: Int): Boolean {
+        // R4 (P148): menos de 1 no es una cantidad: no se añade nada y se avisa con false
+        if (cantidad < 1) return false
         val maximo = Validacion.MAXIMO_POR_PLATO
         val linea = lineas.find { it.producto.id == producto.id }
         if (linea == null) {

@@ -27,6 +27,7 @@
 | **Tiempo dedicado** | HH:MM (inicio – fin, descontando pausas) |
 | **Nivel / pieza** | Nivel 1 · <pantalla o capa> (p. ej. *entidades Room*, *pantalla 6c*) |
 | **Commit final** | `abc1234` — mensaje del commit |
+| **Contexto al cerrar** | NN % (el anillo junto al modelo; P156) |
 
 ## Qué se hizo
 

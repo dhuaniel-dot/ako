@@ -16,7 +16,7 @@ Android Studio no siempre escribe en disco al instante. Pedir a Daniel: **«Ctrl
 
 - `git status --short` en `C:\AKO` da los archivos tocados (`??` = nuevos).
 - Leer cada archivo cambiado que forme parte de la pieza y **compararlo con el bloque que se le dio a Daniel**. Diferencias típicas: una llave o un paréntesis de menos, un `import` que Android Studio no añadió (por eso en la S1 se pone *Settings → Editor → General → Auto Import → Insert imports on paste: Always*), un nombre con una letra cambiada, código pegado en el archivo equivocado.
-- **Paquete ↔ carpeta:** la línea `package yunkang.ako.xxx` tiene que coincidir con la ruta del archivo. Kotlin compila aunque no coincida, pero rompe las capas; se corrige antes de seguir.
+- **Paquete ↔ carpeta, antes de compilar (P155, 1 oct):** para cada `.kt` nuevo o tocado, comprobar que la línea `package yunkang.ako.xxx` coincide con la carpeta y que solo hay **una** línea `package` (`grep -c "^package" <archivo>` tiene que dar 1), y que el archivo está en la carpeta que decía la pieza (`ls` de la carpeta). Es el fallo más repetido del proyecto (siete veces en S2, S3 y S5); se avisa en una línea y se arregla antes de seguir. Kotlin compila aunque el paquete no coincida, pero rompe las capas.
 - Un archivo `.sh` de `.claude/hooks/` tocado desde Android Studio puede quedar con finales CRLF y bash lo rompe (`$'\r': command not found`): `.gitattributes` lo fuerza a LF; si pasa, `dos2unix` o `sed -i 's/\r$//'`.
 
 ## 2. Compilar
@@ -52,5 +52,5 @@ Daniel sigue haciendo las pruebas manuales con el dedo; esto es para que Claude 
 
 ## 6. Después del OK
 
-- Si la pieza está completa y sus pruebas pasan: **commit intermedio** `git add -A && git commit -m "S<N>: <pieza>"` (sin push hasta el cierre). Es lo que pide el spec, apartado 13; el hook comprueba el formato.
+- Si la pieza está completa y sus pruebas pasan: **commit intermedio** `git add -A && git commit -m "S<N>: <pieza>" -m "Co-Authored-By: Claude <noreply@anthropic.com>"` (sin push hasta el cierre; el coautor va con el segundo `-m`, P111). Es lo que pide el spec, apartado 13; el hook comprueba el formato.
 - Un error que costó más de un intento va a la tabla *Problemas y soluciones* de la ficha en ese momento: síntoma copiado, arreglo, justificación, fuente.

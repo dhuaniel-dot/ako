@@ -25,20 +25,25 @@ class CartaRepository(
 
     // R16: nunca una segunda por defecto ni la por defecto eliminada; nombre sin repetir (P124).
     suspend fun guardarCategoria(c: Categoria): ResultadoGuardado {
-        if (categoriaDao.existeNombre(c.nombre, c.id)) {
+        // [Claude] H12: sin espacios por los lados y nunca vacío (la hoja 2b ya lo impide; aquí se asegura)
+        val nombre = c.nombre.trim()
+        require(nombre.isNotEmpty()) { "El nombre de la categoría no puede estar vacío" }
+        if (categoriaDao.existeNombre(nombre, c.id)) {
             return ResultadoGuardado.NombreRepetido
         }
         if (c.id == 0L) {
             // Nueva: va detrás de las demás y nunca es la por defecto.
             val ordenMaximo = categoriaDao.todas().maxOfOrNull { it.orden } ?: 0
-            categoriaDao.insertar(c.copy(orden = ordenMaximo + 1, esPorDefecto = false))
+            categoriaDao.insertar(c.copy(nombre = nombre, orden = ordenMaximo + 1, esPorDefecto = false))
         } else {
-            // Editada: "por defecto" se queda como está guardado, y la por defecto no se apaga.
-            val guardada = categoriaDao.porId(c.id)
+            // Editada: "por defecto" y "activo" se quedan como están guardados (P150): eliminar y recuperar
+            // solo se hace por eliminarCategoria / recuperarCategoria, que es donde la pantalla avisa (R6).
+            val guardada = checkNotNull(categoriaDao.porId(c.id)) { "La categoría ${c.id} no existe" }
             categoriaDao.actualizar(
                 c.copy(
+                    nombre = nombre,
                     esPorDefecto = guardada.esPorDefecto,
-                    activo = if (guardada.esPorDefecto) true else c.activo
+                    activo = guardada.activo
                 )
             )
         }
@@ -51,14 +56,14 @@ class CartaRepository(
 
     // R5, R6, R16: eliminar = activo false, sin borrar ni tocar platos ni líneas; la por defecto no se elimina.
     suspend fun eliminarCategoria(id: Long) {
-        val categoria = categoriaDao.porId(id)
+        val categoria = categoriaDao.porId(id) ?: return   // P152: id inexistente = nada, como en los platos
         if (categoria.esPorDefecto) return
         categoriaDao.actualizar(categoria.copy(activo = false))
     }
 
     // R5: recuperar = vuelve a la carta (activo true), con sus platos tal como estaban.
     suspend fun recuperarCategoria(id: Long) {
-        val categoria = categoriaDao.porId(id)
+        val categoria = categoriaDao.porId(id) ?: return   // P152
         categoriaDao.actualizar(categoria.copy(activo = true))
     }
 
@@ -100,16 +105,20 @@ class CartaRepository(
         }
         // 3. Cadena 3e (P62, P130): solo al crear o mover un plato a una categoría eliminada,
         //    y si el Propietario no ha dicho ya que no a las dos preguntas.
-        val categoria = categoriaDao.porId(p.categoriaId)
+        val categoria = checkNotNull(categoriaDao.porId(p.categoriaId)) { "La categoría ${p.categoriaId} no existe" }
+        // El plato tal como está guardado (vacío si es nuevo); editar un id que no existe es un fallo de programación (H13)
+        val antes = if (p.id == 0L) null else checkNotNull(productoDao.porId(p.id)) { "El plato ${p.id} no existe" }
         if (!categoria.activo && !aunqueCategoriaEliminada) {
-            val antes = if (p.id == 0L) null else productoDao.porId(p.id)
             val esNuevoOMovido = antes == null || antes.categoriaId != p.categoriaId
             if (esNuevoOMovido) {
                 return ResultadoGuardado.CategoriaEliminada
             }
         }
         // 4. Guardar el plato y sus alérgenos juntos, en una transacción (P125, P137).
-        productoDao.guardarConAlergenos(p, alergenos)
+        //    P150: al editar, "activo" se queda como estaba: eliminar y recuperar van por eliminarPlato / recuperarPlato.
+        //    distinct(): un alérgeno marcado dos veces no puede romper la transacción (H13).
+        val aGuardar = if (antes == null) p else p.copy(activo = antes.activo)
+        productoDao.guardarConAlergenos(aGuardar, alergenos.distinct())
         return ResultadoGuardado.Ok
     }
 

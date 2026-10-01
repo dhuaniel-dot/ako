@@ -3,5 +3,13 @@
     <style name="Base.Theme.AKO" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimary">@color/acento</item>
         <item name="colorOnPrimary">@color/white</item>
+        <!-- P153: en los diálogos (1c, 1e, cajas de confirmación) el texto de Aceptar/Cancelar y la etiqueta
+             del campo se pintan con colorPrimary; el naranja como TEXTO sobre fondo claro no llega a 4,5:1,
+             así que dentro de los diálogos colorPrimary pasa a ser el color del texto normal -->
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.AKO.Dialogo</item>
+    </style>
+
+    <style name="ThemeOverlay.AKO.Dialogo" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="colorPrimary">?attr/colorOnSurface</item>
     </style>
 </resources>

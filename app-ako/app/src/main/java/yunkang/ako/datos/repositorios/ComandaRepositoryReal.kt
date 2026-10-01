@@ -72,7 +72,8 @@ class ComandaRepositoryReal(
             )
         }
         // R14: cada línea copia nombre y precio del plato (congelados); R8: nunca un precio negativo.
-        val lineas = carrito.lineas.map { linea ->
+        // [Claude] toList(): se trabaja sobre una copia por si la pantalla toca el carrito mientras se envía (H11)
+        val lineas = carrito.lineas.toList().map { linea ->
             Validacion.precioValido(linea.producto.precioCentimos)
             // R4: cada línea, de 1 a 99 unidades.
             require(Validacion.cantidadValida(linea.cantidad)) { "Cantidad fuera de 1-99: ${linea.cantidad}" }
@@ -91,7 +92,8 @@ class ComandaRepositoryReal(
 
     // R5, R7: quita una línea de una comanda abierta; si era la última, la comanda queda ANULADA (true).
     override suspend fun quitarLinea(lineaId: Long): Boolean = db.withTransaction {
-        val linea = comandaDao.lineaPorId(lineaId)
+        // P152: si la línea ya no existe (doble toque en Quitar), no se hace nada y no se anula
+        val linea = comandaDao.lineaPorId(lineaId) ?: return@withTransaction false
         val comanda = abierta(linea.comandaId)
         comandaDao.borrarLinea(lineaId)
         if (comandaDao.contarLineas(comanda.id) == 0) {

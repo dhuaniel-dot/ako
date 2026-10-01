@@ -2,6 +2,7 @@ package yunkang.ako.datos
 
 import android.content.Context
 import androidx.room.RoomDatabase
+import androidx.room.withTransaction
 import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -20,13 +21,17 @@ class Precarga(private val context: Context) : RoomDatabase.Callback() {
     override fun onCreate(db: SupportSQLiteDatabase) {
         super.onCreate(db)
         // Se hace por detrás (corrutina) para no bloquear el arranque de la app.
+        // Ojo: no usa el "db" que pasa Room (es la base cruda), sino la de EntradaAko. Las pruebas de
+        // Room (S11) con una base en memoria NO registran este callback: llaman a cargar(db) directamente.
         CoroutineScope(Dispatchers.IO).launch {
             cargar((context.applicationContext as EntradaAko).db)
         }
     }
 
     // Todo el trabajo. Recibe la base de datos para que las pruebas de la S11 puedan usar otra.
-    suspend fun cargar(db: AppDatabase) {
+    // P149: todo dentro de UNA transacción: o se precarga entero o nada (si la app muriera a mitad,
+    // la base no quedaría a medias para siempre).
+    suspend fun cargar(db: AppDatabase) = db.withTransaction {
 
         // 1. La categoría por defecto, ANTES que cualquier plato (R16, P44: orden 0).
         db.categoriaDao().insertar(
@@ -81,7 +86,7 @@ class Precarga(private val context: Context) : RoomDatabase.Callback() {
         )
         db.productoDao().insertar(
             Producto(
-                categoriaId = idBebidas,   // el ticket del guardarropa de la pieza 8a
+                categoriaId = idBebidas,   // el id que devolvió insertar al guardar Bebidas (el resguardo del guardarropa)
                 numero = 1,
                 nombre = context.getString(R.string.precarga_plato_ejemplo),
                 descripcion = null,

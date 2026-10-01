@@ -14,4 +14,5 @@ interface MesaDao {
     suspend fun insertarTodas(mesas: List<Mesa>)
     // Las 60 mesas, por número.
     @Query("SELECT * FROM mesa ORDER BY numero")
-    suspend fun todas(): List<Mesa>}
+    suspend fun todas(): List<Mesa>
+}

@@ -20,4 +20,4 @@ Ritual de apertura del spec (`docs/spec-claude-code.md`, apartado 11) y de la pl
 
 ## Durante la sesión
 
-La forma de trabajar (piezas, formato código-arriba, quién teclea, «Ahora tú», marcha vigente) está en `como-trabajamos`, leída en el paso 2, y las reglas en `CLAUDE.md`; no se repiten aquí para que vivan en un solo sitio. Lo que sí es de esta skill: **al terminar cada pieza, mirar el uso de contexto del chat** y aplicar los umbrales de `relevo` (aviso al 60 %, relevo al 75 %, emergencia al 85 %; o seis piezas / tercera hora si no se puede medir), y anotar cada error en la tabla *Problemas y soluciones* de la ficha en el momento.
+La forma de trabajar (piezas, formato código-arriba, quién teclea, «Ahora tú», marcha vigente) está en `como-trabajamos`, leída en el paso 2, y las reglas en `CLAUDE.md`; no se repiten aquí para que vivan en un solo sitio. Lo que sí es de esta skill: **al terminar cada pieza, mirar el uso de contexto del chat** y aplicar los umbrales de `relevo` (aviso al 60 %, relevo al 75 %, emergencia al 85 %; el % se anota en la ficha al cerrar, P156), y anotar cada error en la tabla *Problemas y soluciones* de la ficha en el momento.

@@ -5,7 +5,6 @@ import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -13,13 +12,15 @@ import kotlinx.coroutines.launch
 import yunkang.ako.R
 import yunkang.ako.databinding.DialogPinBinding
 import android.animation.ObjectAnimator
+import yunkang.ako.ui.comun.ComprobadorPin
 
-// 1c · Introducir PIN. No decide nada: pregunta a la libreta y, si es correcto,
+// 1c · Introducir PIN. No decide nada: pregunta a quien lo abrió (un ComprobadorPin, P145) y, si es correcto,
 // deja un sobre (CLAVE_RESULTADO) para quien lo abrió. Cancelar cierra sin sobre
 class PinDialog : DialogFragment() {
 
-    // La libreta de la Activity que lo abre (hoy, la pantalla 1)
-    private val viewModel: SelectorViewModel by activityViewModels { SelectorViewModel.Factory }
+    // La Activity que lo abre tiene que saber comprobar un PIN (hoy SelectorActivity; en la S8, PedidoActivity)
+    private val comprobador: ComprobadorPin
+        get() = requireActivity() as ComprobadorPin
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val binding = DialogPinBinding.inflate(layoutInflater)
@@ -47,9 +48,11 @@ class PinDialog : DialogFragment() {
                 val pin = binding.textoPin.text.toString()
                 aceptar.isEnabled = false   // mientras se comprueba, sin doble toque
                 lifecycleScope.launch {
-                    if (viewModel.comprobarPin(pin)) {
+                    if (comprobador.comprobarPin(pin)) {
                         setFragmentResult(CLAVE_RESULTADO, Bundle())
-                        dismiss()
+                        // P146: si mientras se picaba el PIN la pantalla pasó a segundo plano (Home),
+                        // dismiss() normal rompería la app; esta versión cierra igual sin romper
+                        dismissAllowingStateLoss()
                     } else {
                         // Incorrecto: se vacía el campo, se avisa y se sacude
                         binding.textoPin.text?.clear()

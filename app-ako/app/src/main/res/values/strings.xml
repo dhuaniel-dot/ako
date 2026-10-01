@@ -1,8 +1,10 @@
 <resources>
-    <string name="app_name">AKO</string>
+    <string name="app_name" translatable="false">AKO</string>
 
     <!-- Comunes: botones y barras que se repiten en varias pantallas -->
     <string name="comun_atras">← Atrás</string>
+    <!-- [Claude] Lo que lee el lector de pantalla en el botón Atrás (sin la flecha), H26 -->
+    <string name="comun_atras_cd">Atrás</string>
     <string name="comun_aceptar">Aceptar</string>
     <string name="comun_cancelar">Cancelar</string>
 
@@ -40,28 +42,29 @@
     <!-- [Claude] Provisional: la caja de Pedir y Cuenta hasta la S8/S9 y la del Resumen de ingresos hasta la S10, que la borra -->
     <string name="pendiente_sesion_posterior">Esta parte llega en una sesión posterior</string>
 
-    <!-- Precarga: estos textos se guardan en la base de datos la primera vez que se abre la app -->
+    <!-- Precarga: estos textos se guardan en la base de datos la primera vez que se abre la app.
+         translatable="false" (P100): son datos de la carta en español, no se traducen -->
 
     <!-- Los 14 alérgenos legales (anexo II del Reglamento UE 1169/2011). El número fija el orden -->
-    <string name="alergeno_01_gluten">Gluten</string>
-    <string name="alergeno_02_crustaceos">Crustáceos</string>
-    <string name="alergeno_03_huevos">Huevos</string>
-    <string name="alergeno_04_pescado">Pescado</string>
-    <string name="alergeno_05_cacahuetes">Cacahuetes</string>
-    <string name="alergeno_06_soja">Soja</string>
-    <string name="alergeno_07_lacteos">Lácteos</string>
-    <string name="alergeno_08_frutos_cascara">Frutos de cáscara</string>
-    <string name="alergeno_09_apio">Apio</string>
-    <string name="alergeno_10_mostaza">Mostaza</string>
-    <string name="alergeno_11_sesamo">Sésamo</string>
-    <string name="alergeno_12_sulfitos">Sulfitos</string>
-    <string name="alergeno_13_altramuces">Altramuces</string>
-    <string name="alergeno_14_moluscos">Moluscos</string>
+    <string name="alergeno_01_gluten" translatable="false">Gluten</string>
+    <string name="alergeno_02_crustaceos" translatable="false">Crustáceos</string>
+    <string name="alergeno_03_huevos" translatable="false">Huevos</string>
+    <string name="alergeno_04_pescado" translatable="false">Pescado</string>
+    <string name="alergeno_05_cacahuetes" translatable="false">Cacahuetes</string>
+    <string name="alergeno_06_soja" translatable="false">Soja</string>
+    <string name="alergeno_07_lacteos" translatable="false">Lácteos</string>
+    <string name="alergeno_08_frutos_cascara" translatable="false">Frutos de cáscara</string>
+    <string name="alergeno_09_apio" translatable="false">Apio</string>
+    <string name="alergeno_10_mostaza" translatable="false">Mostaza</string>
+    <string name="alergeno_11_sesamo" translatable="false">Sésamo</string>
+    <string name="alergeno_12_sulfitos" translatable="false">Sulfitos</string>
+    <string name="alergeno_13_altramuces" translatable="false">Altramuces</string>
+    <string name="alergeno_14_moluscos" translatable="false">Moluscos</string>
 
     <!-- Categoría por defecto (se reconoce por esPorDefecto, nunca por el nombre: R16) -->
-    <string name="precarga_categoria_por_defecto">Otros</string>
+    <string name="precarga_categoria_por_defecto" translatable="false">Otros</string>
 
     <!-- Categoría y plato de ejemplo: 1 · Agua · 1,50 € (P7) -->
-    <string name="precarga_categoria_ejemplo">Bebidas</string>
-    <string name="precarga_plato_ejemplo">Agua</string>
+    <string name="precarga_categoria_ejemplo" translatable="false">Bebidas</string>
+    <string name="precarga_plato_ejemplo" translatable="false">Agua</string>
 </resources>
