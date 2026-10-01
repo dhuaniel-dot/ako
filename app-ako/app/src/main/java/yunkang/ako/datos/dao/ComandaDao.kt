@@ -85,4 +85,12 @@ interface ComandaDao {
         ORDER BY m.numero
     """)
     suspend fun mesasConCategoriaPendiente(categoriaId: Long): List<Int>
+
+    // R10: el total de una comanda, sumando sus líneas (P131); sin líneas, 0.
+    @Query("SELECT COALESCE(SUM(cantidad * precio_unitario_centimos), 0) FROM linea_comanda WHERE comanda_id = :comandaId")
+    suspend fun totalDe(comandaId: Long): Int
+
+    // Una línea por su id (para saber de qué comanda es antes de quitarla).
+    @Query("SELECT * FROM linea_comanda WHERE id = :lineaId")
+    suspend fun lineaPorId(lineaId: Long): LineaComanda
 }
