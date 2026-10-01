@@ -35,4 +35,4 @@ class PanelActivity : AppCompatActivity() {
             CambiarPinDialog().show(supportFragmentManager, "cambiar_pin")
         }
     }
-}   
+}

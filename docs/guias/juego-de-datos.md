@@ -160,6 +160,7 @@ P-M-14 no se repite en modo rápido: su efecto neto es cero (elimina y recupera 
 - **Pruebas:** P-M-01, 02 y 03 **Pasa** (primera vez). P-M-13 **Parcial**: Propietario → 1c → Cancelar sí; Cuenta y Pedir enseñan la caja provisional (`pendiente_sesion_posterior`); se repite entera en la **S9**. P-M-29 **Parcial**: la app arranca con el PIN creado y ~~el inspector enseña 3 filas en `etiqueta`~~ (P115: paso quitado [Claude]); faltan el Panel (S6), el formulario (S7), 1d (S8) y Cuenta (S9); se repite entera en la **S9**.
 - **A mano:** nada.
 - **Anotar:** las cinco con fecha. **`estado-nivel.md`:** RF-01, RF-02, RF-03 → `implementado`; RF-24 → `implementado, no probado`. (RF-50 ya está `implementado, no probado` desde la S2.)
+- **Hecho (1 oct 2026):** así quedaron las cinco en `spec+doc-pruebas.md`. P-M-02 y P-M-03 se pasaron desde el **Panel provisional** de la S5 (solo *← Atrás*, *Cambiar PIN* y *Terminar*); P-M-03 con el nuevo 5678 tecleado ya en el primer intento (D18, como dice el paso 4). La caja provisional de *Pedir* y *Cuenta* es un `ConfirmacionDialog` con un solo botón (*Aceptar*).
 - **Tiempo:** ~15 min.
 
 ### S6 — Panel (platos y comandas con el Database Inspector)
