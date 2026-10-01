@@ -1,6 +1,45 @@
 <resources>
     <string name="app_name">AKO</string>
 
+    <!-- Comunes: botones y barras que se repiten en varias pantallas -->
+    <string name="comun_atras">← Atrás</string>
+    <string name="comun_aceptar">Aceptar</string>
+    <string name="comun_cancelar">Cancelar</string>
+
+    <!-- 1a · Selector de rol -->
+    <string name="selector_subtitulo">Pedidos para bares y restaurantes</string>
+    <string name="selector_btn_propietario">Propietario</string>
+    <string name="selector_btn_pedir">Pedir</string>
+    <string name="selector_btn_cuenta">Cuenta</string>
+
+    <!-- 1b · Crear PIN (barra superior sin Atrás) -->
+    <string name="pin_crear_barra">Crear PIN</string>
+    <string name="pin_crear_titulo">Crea el PIN del Propietario</string>
+    <string name="pin_crear_subtitulo">Protege el Panel y la salida de Pedir.</string>
+    <string name="pin_hint_pin">PIN (4 cifras)</string>
+    <string name="pin_hint_repite">Repite el PIN</string>
+    <!-- D1: versión larga del wireframe -->
+    <string name="pin_crear_aviso">Si lo olvidas, no se puede recuperar: habrá que reinstalar la app.</string>
+
+    <!-- Errores del PIN (1b, 1c y 1e) -->
+    <string name="pin_no_coinciden">Los PIN no coinciden</string>
+    <string name="pin_incorrecto">PIN incorrecto</string>
+
+    <!-- 1c · Introducir PIN (D8) -->
+    <string name="pin_introducir_titulo">Introduce el PIN</string>
+
+    <!-- 1e · Cambiar PIN (D18: los tres campos a la vez). El título sirve también para el botón del Panel -->
+    <string name="pin_cambiar_titulo">Cambiar PIN</string>
+    <string name="pin_hint_actual">PIN actual</string>
+    <string name="pin_hint_nuevo">PIN nuevo</string>
+    <string name="pin_hint_repite_nuevo">Repite el PIN nuevo</string>
+
+    <!-- 2a · Panel: botón Terminar (en la S5 lo usa el Panel provisional) -->
+    <string name="panel_btn_terminar">Terminar</string>
+
+    <!-- [Claude] Provisional: la caja de Pedir y Cuenta hasta la S8/S9 y la del Resumen de ingresos hasta la S10, que la borra -->
+    <string name="pendiente_sesion_posterior">Esta parte llega en una sesión posterior</string>
+
     <!-- Precarga: estos textos se guardan en la base de datos la primera vez que se abre la app -->
 
     <!-- Los 14 alérgenos legales (anexo II del Reglamento UE 1169/2011). El número fija el orden -->

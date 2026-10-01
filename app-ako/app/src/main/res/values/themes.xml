@@ -1,8 +1,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+    <!-- Tema de la app (modo día) -->
     <style name="Base.Theme.AKO" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <!-- [Claude] Los botones rellenos cogen este color solos -->
+        <item name="colorPrimary">@color/acento</item>
+        <!-- Texto encima del naranja: blanco (contraste 4,6:1, P138) -->
+        <item name="colorOnPrimary">@color/white</item>
     </style>
 
     <style name="Theme.AKO" parent="Base.Theme.AKO" />

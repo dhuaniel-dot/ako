@@ -2,4 +2,7 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- P138: único color de acento (botones de acción). Nunca rojo ni verde: son mesa ocupada y mesa cobrada -->
+    <color name="acento">#FFC75000</color>
 </resources>
