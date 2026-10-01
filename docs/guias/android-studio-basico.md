@@ -183,20 +183,96 @@ Con la vista **Project** activa, desplegar `app-ako` → `app` → `src`:
 
 ## 10. Atajos que valen la pena
 
+Teclado de Daniel: 75 % con distribución US, **sin teclado numérico** (los atajos con `NumPad` no le sirven; se usa el menú). Ampliado en la S4 (1 oct 2026) con lo que Daniel fue preguntando [Claude].
+
+### Los menús escondidos
+
+La interfaz nueva de Android Studio esconde los menús (File, Edit, View, Code…) detrás del icono **☰** de arriba a la izquierda. También se abren pulsando **`Alt`** una vez. Cuando una guía dice «menú **Code → …**», se entra por ahí.
+
+### Escribir y guardar
+
 | Atajo | Qué hace |
 |---|---|
 | `Ctrl+S` | Guardar |
-| `Ctrl+Z` | Deshacer (`Ctrl+Mayús+Z` rehace) |
-| `Ctrl+Mayús+F` | Buscar un texto en todo el proyecto |
-| `Mayús Mayús` (doble Mayús) | Buscar cualquier cosa: archivos, clases, acciones |
-| `Ctrl+B` | Ir a donde está definido lo que hay bajo el cursor |
+| `Ctrl+Z` | Deshacer; se puede pulsar varias veces |
+| `Ctrl+Mayús+Z` | Rehacer lo deshecho |
+| `Ctrl+A` | Seleccionar todo el archivo (para sustituirlo entero al pegar) |
+| `Ctrl+Alt+L` | Ordenar la sangría y el formato del archivo. **Pista:** si después de pegar unos métodos quedan más metidos a la derecha que los demás, es que han caído dentro de otro método |
 | `Alt+Enter` | Arreglo rápido (importar, crear, corregir) |
-| `Ctrl+Alt+L` | Ordenar el formato del archivo |
-| `Mayús+F10` | Run ▶ |
+| Clic derecho en el archivo → **Local History → Show History** | Versiones anteriores del archivo con su hora, para volver muy atrás |
+
+### Buscar
+
+| Atajo | Qué busca |
+|---|---|
+| `Ctrl+F` | Una palabra en el archivo abierto. `Enter` salta a la siguiente, `Mayús+Enter` a la anterior, `Esc` cierra |
+| `Ctrl+R` | Buscar y **sustituir** en el archivo abierto |
+| `Ctrl+Mayús+F` | Una palabra en **todo el proyecto**. Ejemplo útil: `R6` enseña todos los sitios donde se cumple esa regla |
+| `Ctrl+Mayús+N` | Un **archivo** por su nombre (`Entrada` → `EntradaAko.kt`) |
+| `Ctrl+N` | Una **clase** por su nombre |
+| `Mayús Mayús` (doble Mayús) | Todo a la vez: archivos, clases, menús y ajustes |
+| `Ctrl+G` | Ir a un número de línea |
+
+### Moverse por el código
+
+| Atajo | Qué hace |
+|---|---|
+| `Ctrl+clic` o `Ctrl+B` sobre un nombre | Saltar a donde está escrito (p. ej. en `totalDe`, lleva a la consulta del DAO) |
+| `Alt+F7` sobre un nombre | **Quién lo usa** (*Find Usages*) |
+| `Ctrl+F11` | Poner un marcador con número o letra en la línea (sale en el margen) |
+| `Ctrl+` número | Saltar al marcador de ese número |
+| `Alt+2` | Lista de marcadores (*Bookmarks*) |
+
+No se puede poner un número al lado de cada archivo en el árbol del proyecto; los «Archivo 16» del chat son solo etiquetas de esa sesión. Para abrir un archivo, `Ctrl+Mayús+N` y su nombre.
+
+### Plegar y desplegar el código
+
+- **Todo el archivo:** menú **☰ → Code → Folding → Collapse All** (plegar) o **Expand All** (desplegar).
+- **Un trozo:** la flechita `>` al lado del número de línea, o clic en `{…}` para abrirlo.
+- Los atajos oficiales usan el teclado numérico (`Ctrl+Mayús+NumPad -`), que este teclado no tiene. Si se quiere un atajo propio: **Settings (`Ctrl+Alt+S`) → Keymap** → buscar *Collapse All* → clic derecho → *Add Keyboard Shortcut*.
+
+### Ejecutar y probar
+
+| Atajo | Qué hace |
+|---|---|
+| `Mayús+F10` | Run ▶ (instala y abre la app en el emulador) |
+| `Ctrl+Mayús+F10` | Ejecutar lo que está seleccionado (p. ej. clic derecho en la carpeta `test` → *Run 'Tests in…'*) |
 | `Ctrl+F9` | Compilar sin ejecutar (desde Meerkat lanza *Build 'app'*) |
+| ☰ → **View → Tool Windows → App Inspection** → *Database Inspector* | Ver las tablas de la base de datos con la app abierta |
+
+### Paneles y ajustes
+
+| Atajo | Qué hace |
+|---|---|
 | `Alt+1` | Mostrar u ocultar el panel Project |
 | `Alt+9` | Panel Git (solo mirar) |
 | `Ctrl+Alt+S` | Abrir Settings |
+
+### Casos de uso: «quiero… → hago…»
+
+| Quiero… | Hago… |
+|---|---|
+| Abrir `CartaRepository` sin buscarlo en el árbol | `Ctrl+Mayús+N` → escribo `Carta` → `Enter` |
+| Ver todos los sitios donde se cumple la regla R6 (o cualquier R) | `Ctrl+Mayús+F` → escribo `R6` → doble clic en un resultado para ir allí. Sirve para el vídeo: «esta regla vive aquí» |
+| Saber qué hace `totalDe` cuando lo veo usado en otro archivo | `Ctrl+clic` sobre `totalDe` → me lleva a la consulta de `ComandaDao` |
+| Saber quién llama a `guardarPlato` | Cursor sobre `guardarPlato` → `Alt+F7` → lista de sitios que lo usan |
+| Encontrar dónde pone `PENDIENTE` en el archivo abierto | `Ctrl+F` → `PENDIENTE` → `Enter` para ir de uno en uno |
+| Cambiar una palabra repetida en el archivo abierto | `Ctrl+R` → arriba lo que busco, abajo lo nuevo → *Replace* (uno a uno) o *Replace All* |
+| Ver solo los nombres de los métodos de una clase larga, sin el código | ☰ → **Code → Folding → Collapse All**; luego clic en `{…}` del que me interesa |
+| Volver rápido a un archivo que uso mucho | Lo abro → `Ctrl+F11` → elijo `1` → desde cualquier sitio, `Ctrl+1` |
+| Deshacer lo que acabo de pegar mal | `Ctrl+Z` (varias veces si hace falta); `Ctrl+Mayús+Z` si me paso |
+| Recuperar cómo estaba el archivo hace una hora | Clic derecho en el archivo → **Local History → Show History** → elijo la hora |
+| Saber si unos métodos pegados han caído dentro de otro | `Ctrl+Alt+L` y miro la sangría: si quedan más a la derecha que los demás, están dentro |
+| Ir a la línea 83 que me dice el error | `Ctrl+G` → `83` → `Enter` |
+| Entender un error rojo al compilar | Pestaña **Build** → copio la línea que empieza por `e:` → la pego en el chat |
+| Pasar todas las pruebas del PC | Clic derecho en la carpeta `test` → *Run 'Tests in…'* (o `Ctrl+Mayús+F10` con la carpeta seleccionada) |
+| Ver si la base de datos tiene los datos | App abierta en el emulador → ☰ → **View → Tool Windows → App Inspection** → *Database Inspector* → doble clic en una tabla |
+| Encontrar un menú o ajuste que no sé dónde está | `Mayús Mayús` → escribo su nombre en inglés (p. ej. `Keymap`, `Logcat`) |
+
+### Botones que no se pulsan
+
+- **«Fix with AI»** (sale junto a los errores): pide a otra IA que cambie el código. No se usa: Daniel tiene que poder explicar cada línea; los errores se traen al chat.
+- **Commit** (`Ctrl+K`) y el menú **Git**: los commits los hace Claude al cerrar la sesión (apartado 8).
 
 ## 11. Cuando algo va mal
 
@@ -250,5 +326,6 @@ Con la vista **Project** activa, desplegar `app-ako` → `app` → `src`:
 - https://developer.android.com/studio/debug/device-file-explorer — *View → Tool Windows → Device Explorer*; `data/data/nombre_app/` = almacenamiento interno de la app; aviso de que con imágenes Google APIs casi todo está oculto y de que las apps no depurables no se abren.
 - https://developer.android.com/studio/run/managing-avds y https://developer.android.com/studio/run/emulator-snapshots — *Device Manager*: *Launch*, menú → *Stop*, *Wipe Data*; arranque en frío con **Cold Boot** desde el menú del dispositivo (no «Cold Boot Now»).
 - https://developer.android.com/studio/test/test-in-android-studio — clic derecho en carpeta o archivo → *Run*; triángulo verde en el margen; resultados en la ventana *Run*; sincronizar antes.
+- (1 oct 2026) https://www.jetbrains.com/help/idea/working-with-source-code.html — plegado de código: solo da atajos con `NumPad` (`Ctrl+NumPad -`, `Ctrl+Mayús+NumPad -`…), sin alternativa para teclados sin teclado numérico. https://www.jetbrains.com/help/idea/bookmarks.html — `F11`, `Ctrl+F11` (marcador con número o letra), `Ctrl+` número para saltar, `Alt+2` lista de marcadores.
 - https://www.jetbrains.com/help/idea/invalidate-caches.html — *File → Invalidate Caches…*, casillas opcionales, *Invalidate and Restart*.
 - https://www.jetbrains.com/help/idea/enabling-version-control.html, https://www.jetbrains.com/help/idea/set-up-a-git-repository.html, https://www.jetbrains.com/help/idea/adding-files-to-version-control.html y https://www.jetbrains.com/help/idea/log-tab.html — *VCS → Enable Version Control Integration* crea el repositorio en la raíz del proyecto; aviso de raíces sin registrar (*Add roots* / *Ignore*); *Settings → Version Control → Confirmation → When files are created: Do not add*; pestaña *Log* del panel `Alt+9`.

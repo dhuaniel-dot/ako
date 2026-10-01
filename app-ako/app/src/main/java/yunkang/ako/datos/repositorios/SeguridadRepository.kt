@@ -15,6 +15,8 @@ class SeguridadRepository(private val pinStore: PinStore) {
     // 1b: guarda el primer PIN; solo 4 cifras (la pantalla ya lo impide, aquí se asegura).
     suspend fun crearPin(pin: String) {
         withContext(Dispatchers.Default) {
+            // D18: si ya hay PIN, no se pisa; para cambiarlo hay que dar el actual (cambiarPin).
+            check(!pinStore.existe()) { "Ya hay un PIN: se cambia con cambiarPin" }
             require(Validacion.pinValido(pin)) { "El PIN tiene que tener 4 cifras" }
             pinStore.guardar(pin)
         }

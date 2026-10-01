@@ -74,6 +74,8 @@ class ComandaRepositoryReal(
         // R14: cada línea copia nombre y precio del plato (congelados); R8: nunca un precio negativo.
         val lineas = carrito.lineas.map { linea ->
             Validacion.precioValido(linea.producto.precioCentimos)
+            // R4: cada línea, de 1 a 99 unidades.
+            require(Validacion.cantidadValida(linea.cantidad)) { "Cantidad fuera de 1-99: ${linea.cantidad}" }
             LineaComanda(
                 comandaId = comandaId,
                 productoId = linea.producto.id,
@@ -117,7 +119,7 @@ class ComandaRepositoryReal(
             comanda.copy(estado = EstadoComanda.PAGADA, fechaCierre = System.currentTimeMillis())
         )
     }
-    
+
     // R10 (P126, P135): las comandas cobradas en un día, cada una con su total calculado.
     override suspend fun resumenDelDia(dia: LocalDate): ResumenIngresos {
         // El día va de las 0:00:00,000 a las 23:59:59,999 en la hora del móvil.

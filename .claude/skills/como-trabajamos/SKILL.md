@@ -114,6 +114,10 @@ Daniel dice qué cambia (`/como-trabajamos` o simplemente diciéndolo). Claude e
 
 ## Historial de cambios
 
+- **2026-10-01** · Daniel: se mantiene «pega antes de la última `}`» para añadir métodos (no hace falta dar el archivo entero aunque dos veces quedaran dentro de otro método); Claude lee el archivo tras cada «ya está» y arregla la sangría. Cuando Daniel pide «revisa», Claude lee el archivo entero, no solo compila.
+- **2026-10-01** · Daniel: el repaso de lo no entendido puede ir a los PDF del cierre en vez de darse en el chat; se vuelve a comprobar al abrir la sesión siguiente.
+- **2026-10-01** · Daniel: los atajos y trucos de Android Studio que pregunta se apuntan en `docs/guias/android-studio-basico.md` (apartado 10, con casos de uso «quiero… → hago…»).
+
 - **2026-09-30** · Daniel: al cerrar cada sesión, Claude pone al día las guías de las sesiones siguientes y `juego-de-datos.md` con lo decidido (`cerrar-sesion`, paso 5b).
 - **2026-09-30** · Daniel: apartado «Para el vídeo» en cada ficha del diario, para montar después el guion.
 

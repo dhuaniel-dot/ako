@@ -141,3 +141,4 @@
 - RF-09 (foto del plato) es nivel 1 pero **la última pieza** (S12): toda la app funciona sin fotos.
 - RF-40: el blanco y el rojo de la rejilla son nivel 1; el **verde** (mesa cobrada) es nivel 3 y va con RF-49.
 - RF-53 (agotado temporal): ~~la columna `producto.disponible` existe desde la S2 con `true` por defecto~~ → la columna `producto.disponible` **no existe en el nivel 1**: llega entera con el incremento 12, junto con la pantalla que la cambia (P115).
+- S4 (1 oct 2026): ningún RF cambia de estado (los repositorios no son un RF). Las reglas R1–R16 del nivel 1 tienen dueño en el código (repositorios, DAOs o la base de datos); comprobado por el revisor independiente.

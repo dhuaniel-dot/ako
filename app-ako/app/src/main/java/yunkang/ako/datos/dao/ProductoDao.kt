@@ -76,4 +76,17 @@ interface ProductoDao {
         borrarAlergenosDe(productoId)
         insertarAlergenosDe(alergenoIds.map { ProductoAlergeno(productoId, it) })
     }
+
+    // Guarda un plato (nuevo o editado) y sus alérgenos, las dos cosas o ninguna (P137); devuelve su id.
+    @Transaction
+    suspend fun guardarConAlergenos(producto: Producto, alergenoIds: List<Long>): Long {
+        val productoId = if (producto.id == 0L) {
+            insertar(producto)
+        } else {
+            actualizar(producto)
+            producto.id
+        }
+        guardarAlergenos(productoId, alergenoIds)
+        return productoId
+    }
 }

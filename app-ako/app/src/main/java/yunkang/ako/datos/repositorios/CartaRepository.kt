@@ -108,14 +108,8 @@ class CartaRepository(
                 return ResultadoGuardado.CategoriaEliminada
             }
         }
-        // 4. Guardar: nuevo (id 0) o editado; después, sus alérgenos (P125).
-        val productoId = if (p.id == 0L) {
-            productoDao.insertar(p)
-        } else {
-            productoDao.actualizar(p)
-            p.id
-        }
-        productoDao.guardarAlergenos(productoId, alergenos)
+        // 4. Guardar el plato y sus alérgenos juntos, en una transacción (P125, P137).
+        productoDao.guardarConAlergenos(p, alergenos)
         return ResultadoGuardado.Ok
     }
 
