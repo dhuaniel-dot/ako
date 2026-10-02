@@ -7,8 +7,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import yunkang.ako.databinding.ActivityPanelBinding
 
-// [Claude] Panel del Propietario PROVISIONAL (S5): se llega tras el PIN correcto.
-// En la S6 se sustituye por el Panel de verdad (pantalla 2)
+// 2a · Panel del Propietario: se llega tras el PIN correcto (1c). La lista de cajas se conecta en la pieza 6;
+// el «+» y el Resumen de ingresos, en las piezas 12 y 18
 class PanelActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPanelBinding

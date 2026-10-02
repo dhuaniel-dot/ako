@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- [Claude] Panel del Propietario PROVISIONAL (S5): solo Atrás, Cambiar PIN y Terminar, para P-M-02 y P-M-03.
-     El Panel de verdad (wireframe 02a) lo sustituye en la S6 -->
+<!-- 2a · Panel del Propietario (wireframe 02a): barra con Atrás, título y +; Resumen de ingresos fijo;
+     la lista de cajas en medio; Cambiar PIN y Terminar abajo -->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/raiz"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Barra superior gris con «← Atrás» -->
+    <!-- Barra superior gris: «← Atrás» a la izquierda, «Categorías» en el centro y «+» a la derecha -->
     <FrameLayout
         android:id="@+id/barraSuperior"
         android:layout_width="0dp"
@@ -29,7 +29,60 @@
             android:textColor="?attr/colorOnSurface"
             android:textSize="18sp"
             android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textoTitulo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/panel_titulo"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <!-- «+» crea una categoría (2b). Sin texto que leer: el lector dice «Nueva categoría» -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/botonNuevaCategoria"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|end"
+            android:layout_marginEnd="8dp"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
+            android:text="@string/comun_mas"
+            android:contentDescription="@string/categoria_titulo_nueva"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="28sp" />
     </FrameLayout>
+
+    <!-- Resumen de ingresos: fijo, fuera de la lista (siempre a la vista) -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/botonResumen"
+        style="@style/Widget.Material3.Button.OutlinedButton"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="16dp"
+        android:text="@string/panel_btn_resumen_ingresos"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/barraSuperior" />
+
+    <!-- La lista de cajas: alto 0dp atado arriba (al Resumen) y abajo (a los botones) = «lo que quede en medio» -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/listaCategorias"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
+        app:layout_constraintBottom_toTopOf="@id/botonCambiarPin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/botonResumen" />
 
     <!-- Barra inferior: Cambiar PIN (con borde) y Terminar (acento), uno al lado del otro -->
     <com.google.android.material.button.MaterialButton
