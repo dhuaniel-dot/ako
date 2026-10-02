@@ -9,7 +9,7 @@
 ## 1. Cómo se lee
 
 - **Prueba manual (`P-M-nn`):** la ejecuta Daniel con el dedo en el emulador. Atraviesa todas las capas (pantalla → ViewModel → repositorio → DAO → Room). **Una por cada RF de nivel 1: 29.**
-- **Prueba de código (`P-C-nn`):** la ejecuta JUnit; es código que prueba una clase. Cubre lo que no tiene interfaz o cuesta provocar en pantalla. **Nueve**, sobre las clases del borrador del diagrama de clases (bloques 7 y 10). **Seis son puras** (carpeta `test/`, corren en el PC sin emulador) y **tres usan Room en memoria** (carpeta `androidTest/`, corren en el emulador). Decisión P117 con su red de seguridad: las tres de Room son lo último del trabajo de pruebas; si no arrancan en una sesión, R1, R7 y R16 quedan cubiertas por P-M-20, P-M-24 y P-M-05, y la memoria lo dice tal cual.
+- **Prueba de código (`P-C-nn`):** la ejecuta JUnit; es código que prueba una clase. Cubre lo que no tiene interfaz o cuesta provocar en pantalla. **Once**, sobre las clases del borrador del diagrama de clases (bloques 7 y 10); P-C-10 y P-C-11 las añadió la revisión del 1 oct 2026. **Ocho son puras** (carpeta `test/`, corren en el PC sin emulador) y **tres usan Room en memoria** (carpeta `androidTest/`, corren en el emulador). Decisión P117 con su red de seguridad: las tres de Room son lo último del trabajo de pruebas; si no arrancan en una sesión, R1, R7 y R16 quedan cubiertas por P-M-20, P-M-24 y P-M-05, y la memoria lo dice tal cual.
 - **La C de `P-C` significa "de Claude"** (P115): son las pruebas cuyo código se escribe con Claude Code. La leyenda de la memoria lo dice, y se cuadra con la declaración de uso de IA que se redacta en la fase 7.
 - **Código:** vitalicio. No depende del número de RF: si un RF necesitara dos pruebas, se añade la siguiente libre.
 - **Columnas de la tabla manual (P113, P114):** *Código · RF · Entrada · Pasos · Resultado esperado · Resultado · Observaciones · Fecha*. *Entrada* es el estado de partida (qué hay guardado y en qué pantalla se está); *Pasos*, lo que se toca, numerado; *Resultado esperado*, lo que tiene que pasar según el diseño, no según el código; *Resultado*, **Pasa** o **Falla**; *Observaciones*, lo que se vio; *Fecha*, el día de la ejecución.
@@ -92,9 +92,9 @@ El orden es una ayuda, no una obligación: cada *Entrada* dice lo que hace falta
 
 **Recuento: 29 pruebas manuales.** Propietario 12 · Cliente 9 · Camarero 7 · Sistema 1.
 
-## 4. Pruebas de código — nueve
+## 4. Pruebas de código — once
 
-Apoyadas en las clases de `spec+doc-clases.md` y en la estructura definitiva de `spec-claude-code.md`, apartado 3 (borrador: si en la fase 6 cambia un nombre, se cambia aquí). **Las seis primeras corren en `test/`** sin emulador; **las tres últimas en `androidTest/`** con `Room.inMemoryDatabaseBuilder`, que crea una base de datos vacía al empezar cada prueba y la destruye al acabar (con la precarga ejecutada, para que exista *Otros* y las mesas).
+Apoyadas en las clases de `spec+doc-clases.md` y en la estructura definitiva de `spec-claude-code.md`, apartado 3 (borrador: si en la fase 6 cambia un nombre, se cambia aquí). **Las ocho puras (P-C-01 a 05, 09, 10 y 11) corren en `test/`** sin emulador; **las tres de Room (P-C-06, 07 y 08) en `androidTest/`** con `Room.inMemoryDatabaseBuilder`, que crea una base de datos vacía al empezar cada prueba y la destruye al acabar (con la precarga ejecutada, para que exista *Otros* y las mesas).
 
 | Código | Qué se prueba | Clase · método | Entrada | Resultado esperado | Regla | Carpeta | Resultado | Observaciones | Fecha |
 |---|---|---|---|---|---|---|---|---|---|
@@ -114,9 +114,9 @@ Apoyadas en las clases de `spec+doc-clases.md` y en la estructura definitiva de 
 
 **Notas para la fase 6:**
 
-- **`cambio()` y `hash()` ya no viven en `CuentaViewModel` ni en `PinStore`** (decisión del bloque 10): se sacaron a **tres clases de dominio puro** —`Calculadora`, `Validacion` y `Hash`— en el paquete `dominio/`, separado de `datos/`. El motivo es exactamente probarlas: un ViewModel arrastra `LiveData` y exige `InstantTaskExecutorRule` para probarlo, y `PinStore` arrastra SharedPreferences. **Separar calcular de guardar** deja las seis pruebas de `test/` sin una sola dependencia de Android. **El diagrama de clases definitivo de la fase 7 las recoge.**
+- **`cambio()` y `hash()` ya no viven en `CuentaViewModel` ni en `PinStore`** (decisión del bloque 10): se sacaron a **tres clases de dominio puro** —`Calculadora`, `Validacion` y `Hash`— en el paquete `dominio/`, separado de `datos/`. El motivo es exactamente probarlas: un ViewModel arrastra `LiveData` y exige `InstantTaskExecutorRule` para probarlo, y `PinStore` arrastra SharedPreferences. **Separar calcular de guardar** deja las ocho pruebas de `test/` sin una sola dependencia de Android. **El diagrama de clases definitivo de la fase 7 las recoge.**
 - `PinStore` sigue existiendo: guarda y lee el hash y la sal en SharedPreferences. Eso **no se prueba en `test/`** y ya lo cubren P-M-01 y P-M-02.
-- Las tres de Room necesitan las dependencias `androidx.room:room-testing`, `androidx.test.ext:junit` y `androidx.test:runner`, y el emulador encendido. Se escriben **después** de que las seis puras pasen.
+- Las tres de Room necesitan las dependencias `androidx.room:room-testing`, `androidx.test.ext:junit` y `androidx.test:runner`, y el emulador encendido. Se escriben **después** de que las ocho puras pasen.
 - **Hecho nuevo del bloque 9, y no cambia la decisión (P124):** la documentación oficial de Room (consultada el 17 de septiembre de 2026) recomienda hoy ejecutar las pruebas de base de datos **en la JVM mediante Kotlin Multiplatform**, en vez de con Robolectric. **Se descarta**: exigiría montar el proyecto con estructura multiplataforma, que es un cambio de arquitectura entero para ahorrar arrancar el emulador tres veces. **Se mantiene P117**: Room en memoria en `androidTest/`, con su red de seguridad. Queda escrito porque es el tipo de alternativa que conviene poder nombrar en la defensa.
 
 ## 5. Cobertura — qué cubre qué
@@ -126,12 +126,13 @@ Apoyadas en las clases de `spec+doc-clases.md` y en la estructura definitiva de 
 | R1 una comanda abierta por mesa | P-M-20 (paso 4), P-M-28 (paso 4) | P-C-06 |
 | R2 crear o ampliar | P-M-20 | P-C-06 |
 | R3 ocupación calculada | P-M-15, P-M-22 | P-C-07 |
-| R4 carrito no vacío, tope 99 | P-M-19 | P-C-02, P-C-03 |
+| R4 carrito no vacío, tope 99 | P-M-19 | P-C-02, P-C-03, P-C-11 |
 | R5 no se borra; comanda cerrada intocable | P-M-06, P-M-10 (líneas conservadas) | — |
 | R6 aviso de mesas | P-M-06, P-M-10 | — |
 | R7 sin líneas → ANULADA | P-M-24 | P-C-07 |
 | **R8 ningún precio negativo** | **P-M-07** (el formulario no deja guardar sin precio válido) | **P-C-09** |
 | R9 número único | P-M-07 | — |
+| RF-12 cadena 3e (plato en una categoría eliminada) | P-M-11 | P-C-10 |
 | R10 total calculado | P-M-19, P-M-23 | P-C-01, P-C-02 |
 | R14 nombre y precio congelados | P-M-20 (paso 6), P-M-26 | P-C-06 |
 | R15 plato visible | P-M-06, P-M-14, P-M-17 | — |
@@ -142,4 +143,4 @@ Apoyadas en las clases de `spec+doc-clases.md` y en la estructura definitiva de 
 | RNF-24 carrito en memoria | P-M-21 | — |
 | Calculadora de cambio (spec, apartado 10) | P-M-27 | P-C-04 |
 
-**Sin prueba, a propósito:** **R11** (CASCADE) y **R12** solo actúan en el nivel 2. **RNF-11 y RNF-13** (accesibilidad) se comprueban con el *Accessibility Scanner* en la sesión 13 de la fase 6, fuera de esta tabla. *(R8 salió de esta lista en el cierre de la 2d: ahora la cubre P-C-09.)*
+**Sin prueba, a propósito:** **R11** (CASCADE) y **R12** solo actúan en el nivel 2. **RNF-11 y RNF-13** (accesibilidad) se comprueban en la sesión 13 de la fase 6, fuera de esta tabla, sin *Accessibility Scanner* (P98 → B): la comprobación de accesibilidad de Android Studio, lint y la revisión a mano. *(R8 salió de esta lista en el cierre de la 2d: ahora la cubre P-C-09.)*

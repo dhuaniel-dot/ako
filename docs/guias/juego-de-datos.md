@@ -72,7 +72,7 @@ Tres cosas que conviene saber:
 15. **[a mano] Comanda de la mesa 6.** Pedir → **mesa 6** → Pollo asado → Añadir → Enviar → **Enviar** → Salir → 1234 → 1a.
 16. **P-M-10.** Propietario → 1234 → tocar **Pollo asado** → apagar *En la carta* → Guardar → aviso **3d** *«Pollo asado está en una comanda pendiente de la mesa 6…»* → **Eliminar** → en el Panel, Pollo asado con ***Eliminado*** → Terminar → Pedir → mesa 7 → en Carnes **solo Entrecot** → Salir → 1234 → Cuenta → mesa 6 → **6b conserva 1 × Pollo asado 11,00** → Atrás → Atrás → 1a.
 17. **P-M-04.** Propietario → 1234 → recorrer las cajas: **Bebidas** (la primera, *Categoría eliminada*, Agua atenuado, **P8**) · **Carnes** (12 Entrecot, 14 Pollo asado con *Eliminado*) · **Postres** (*Categoría eliminada*: 30 Flan, 31 Tarta y 33 Natillas atenuados) · **Otros la última** (32 Helado), sin flechas ni interruptor. Platos por número, «?» donde no hay foto (Entrecot tiene miniatura solo si ya se hizo P-M-08), [+ Plato] fijo abajo, todas las cajas de la misma altura con scroll propio. *Te quedas en el Panel.*
-18. **P-M-14.** **[a mano, antes]** lápiz de **Carnes** → apagar → Guardar (si sale el aviso 2e con *Pollo asado (mesa 6)*, **Eliminar**; ver apartado 2.8, choque 8) → tocar **Helado** → apagar *En la carta* → Guardar (sin aviso) → Terminar. **Prueba:** Pedir → *«Todas las categorías están eliminadas»* → **Aceptar** → 1a → Propietario → 1234 → lápiz de Carnes → encender → Guardar → Terminar → Pedir → entra en 1d → Atrás. **[a mano, después]** Propietario → 1234 → Helado → encender *En la carta* → Guardar → Terminar → 1a.
+18. **P-M-14.** **[a mano, antes]** lápiz de **Carnes** → apagar → Guardar (sin aviso: Pollo asado ya está eliminado y 2e solo cuenta platos activos, P147; si aun así saliera, **Eliminar**; ver apartado 2.8, choque 8) → tocar **Helado** → apagar *En la carta* → Guardar (sin aviso) → Terminar. **Prueba:** Pedir → *«Todas las categorías están eliminadas»* → **Aceptar** → 1a → Propietario → 1234 → lápiz de Carnes → encender → Guardar → Terminar → Pedir → entra en 1d → Atrás. **[a mano, después]** Propietario → 1234 → Helado → encender *En la carta* → Guardar → Terminar → 1a.
    - **Con Bebidas eliminada no hace falta eliminar Agua** (P8): Agua sigue con `activo = true`, pero su categoría está eliminada, así que ya no es visible (R15). Es justo lo que pide la *Entrada* («la categoría de ejemplo sin platos visibles»).
 
 ### 2.4 Bloque D — Pedir y Cuenta (pasos 19–29, ~35 min)
@@ -124,7 +124,7 @@ Tres cosas que conviene saber:
 5. **P-M-04: Postres tiene más que Flan.** Después de P-M-11, Postres eliminada tiene **Flan, Tarta y Natillas**. No contradice el resultado esperado; se anota en *Observaciones*.
 6. **Las pruebas que crean datos no se repiten encima de sí mismas** (P-M-05, 07, 11: nombre y número repetidos). **Arreglo:** instalación limpia al empezar las pruebas de cada sesión (apartado 1).
 7. **«Ayer» en P-M-12** solo está vacío si el día anterior no hubo cobros. **Arreglo:** instalación limpia en la S10 y en la S13, y los pasos 30–35 el mismo día.
-8. **Posible aviso 2e al eliminar Carnes** en la preparación de P-M-14: Carnes tiene Pollo asado (ya eliminado) en la comanda de la mesa 6. Depende de si la consulta de 2e cuenta los platos ya eliminados: Daniel decidió que **solo cuenta los activos** (P55 → A), así que no debería salir. No rompe nada: si sale, **Eliminar**. **[Claude] Ojo con el código de la S4:** `CartaRepository.mesasAfectadasPorCategoria` (consulta `mesasConCategoriaPendiente`) **no** mira `activo`: si el aviso 2e se montara solo con ella, aquí sí saldría la mesa 6; con el método del hueco 8 de la S6, filtrado a los platos activos, no. Lo que se haga con ella lo decide la S6 (su hueco 8).
+8. **Posible aviso 2e al eliminar Carnes** en la preparación de P-M-14: Carnes tiene Pollo asado (ya eliminado) en la comanda de la mesa 6. Depende de si la consulta de 2e cuenta los platos ya eliminados: Daniel decidió que **solo cuenta los activos** (P55 → A), y desde la revisión del 1 oct la consulta lo cumple: `ComandaDao.mesasConCategoriaPendiente` (la de `CartaRepository.mesasAfectadasPorCategoria`) filtra `p.activo = 1` (P147), así que **no sale** el aviso por Pollo asado. Si aun así saliera, no rompe nada: **Eliminar**, y se anota en la ficha (sería un fallo).
 9. **P-M-11, paso 1: «Volverán a la carta sus 1 platos.»** Con N = 1 la cadena `recuperar_categoria_cuerpo` queda mal en español. No rompe la prueba; Daniel decidió pasarla a `<plurals>` en la S7 (P63 → A).
 
 ### 2.9 Modo rápido: solo los datos
@@ -269,7 +269,7 @@ Es el **ensayo general** de la pasada final (sin la foto). Instalación limpia p
 
 ### S13 — Cierre: la pasada final
 
-- **Primero las nueve P-C** (`testDebugUnitTest` y `connectedDebugAndroidTest`): la segunda puede desinstalar la app, así que va **antes** de la pasada manual.
+- **Primero las once P-C** (`testDebugUnitTest` y `connectedDebugAndroidTest`): la segunda puede desinstalar la app, así que va **antes** de la pasada manual.
 - **Después, la pasada final entera** del apartado 4: las 29, todas anotadas con la fecha de la S13 (*Observaciones*: «Pasada final S13» detrás del historial).
 - **`estado-nivel.md`:** los 29 RF del nivel 1 en `implementado` con su sesión; recuento de arriba a 29.
 
@@ -281,7 +281,7 @@ Desde **instalación limpia**, los pasos **1 a 37** del apartado 2, en este orde
 
 Es el orden recomendado del plan con cuatro añadidos [Claude]: la descripción de Entrecot (paso 9), anular la mesa 6 (paso 29), el precio en el paso 4 de P-M-07 y el remate de la foto (paso 37). P-M-08 va la última, y P-M-04 y P-M-18 se anotan tras el remate.
 
-**Cuánto se tarda (aprox.):** bloque A 10 min · B 20 · C 30 · D 35 · E 25 · F 10 → **unas 2 h 10 min de toques**, y **2 h 30 min – 3 h** con las notas de cada prueba. Las nueve P-C, unos 10 min más.
+**Cuánto se tarda (aprox.):** bloque A 10 min · B 20 · C 30 · D 35 · E 25 · F 10 → **unas 2 h 10 min de toques**, y **2 h 30 min – 3 h** con las notas de cada prueba. Las once P-C, unos 10 min más.
 
 - **Se puede partir en dos** (por ejemplo, A–C un día y D–F otro): los datos se conservan si no se hace Clear storage ni se desinstala entre medias. Cortar siempre en 1a, nunca con un carrito a medias.
 - **Si una prueba falla:** se anota *Falla* con lo que se vio y se sigue si el estado de los datos sigue valiendo para las siguientes. Si el arreglo obliga a cambiar el código, al terminar se repite esa prueba (y las que dependan de ella) en su punto del montaje, en modo rápido hasta llegar.

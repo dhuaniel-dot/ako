@@ -244,7 +244,7 @@ Cada sesión tiene un objetivo de una línea, un entregable comprobable y termin
 |---|---|---|---|
 | **1** | **Proyecto y repositorio.** Android Studio: proyecto vacío (Kotlin DSL, `minSdk 26`, ViewBinding, catálogo de versiones con Room, Glide, KSP, corrutinas, pruebas); primer arranque del emulador; Git: `init`, `.gitignore`, `README.md`, repositorio público en GitHub, primer `commit` y `push`; carpeta `docs/` con este spec, `CLAUDE.md`, fichas, wireframes, plan de pruebas, plantilla del diario y `estado-nivel.md`. **Antes del primer commit (P226):** Claude Code guía a Daniel para crear o editar `C:\Users\dhuan\.claude\settings.json` (ajustes de **usuario**; NO el `.claude/settings.json` del repositorio, que se subiría a GitHub) con `{"attribution": {"commit": "", "pr": ""}}` y reiniciar Claude Code | La app vacía arranca en el emulador; el repositorio se ve en GitHub; **el primer commit no lleva la línea `Co-Authored-By`** | — | **[1 oct: lo de `attribution` vacío y «el primer commit no lleva coautor» quedó sustituido por P111: desde el 29 sep los commits llevan `Co-Authored-By: Claude`.]**
 | **2** | **7 entidades (solo el nivel 1, P115), `AppDatabase`, `Precarga`** (sin `Converters`: P113) | Compila; al arrancar, el inspector de base de datos enseña las 7 tablas con *Otros*, 60 mesas, 14 alérgenos y el ejemplo (sin etiquetas: P115) | — |
-| **3** | **DAOs y dominio puro**: los 5 DAOs con sus consultas; `Carrito`, `LineaCarrito`, `Calculadora`, `Validacion`, `Hash` | Compila; las cinco puras pasan | **P-C-01 a P-C-05 y P-C-09** en `test/` |
+| **3** | **DAOs y dominio puro**: los 5 DAOs con sus consultas; `Carrito`, `LineaCarrito`, `Calculadora`, `Validacion`, `Hash` | Compila; las cinco puras pasan | **P-C-01 a P-C-05 y P-C-09** en `test/` (P-C-09 llegó en la S4; P-C-10 y P-C-11, en la revisión del 1 oct) |
 | **4** | **Repositorios**: `CartaRepository`, `ComandaRepository`, `SeguridadRepository`, `PinStore` | Compila; cada método tiene un comentario de una línea con la regla que garantiza | — |
 | **5** | **Selector y PIN** (1a, 1b, 1c, 1e) + `ConfirmacionDialog` | P-M-01, 02, 03, 13 pasan | P-M-01, 02, 03, 13, 29 |
 | **6** | **Panel** (2a, 2b, 2e) con `CategoriaAdapter`, `FilaPlatoAdapter`, `MesasAfectadasDialog` | P-M-04, 05, 06 pasan (con platos creados a mano en el inspector si hace falta) | P-M-04, 05, 06 |
@@ -271,7 +271,7 @@ Cada sesión tiene un objetivo de una línea, un entregable comprobable y termin
 
 ## 12. Pruebas
 
-Plan completo en `docs/spec+doc-pruebas.md` (29 manuales P-M-01…29, una por RF de nivel 1; tabla de 8 columnas con *Resultado*, *Observaciones* y *Fecha* que se rellenan al ejecutar). **Pruebas de código: nueve.**
+Plan completo en `docs/spec+doc-pruebas.md` (29 manuales P-M-01…29, una por RF de nivel 1; tabla de 8 columnas con *Resultado*, *Observaciones* y *Fecha* que se rellenan al ejecutar). **Pruebas de código: ~~nueve~~ once** (revisión del 1 oct: P-C-10 y P-C-11 nuevas; ocho puras en `test/` y tres de Room).
 
 | Código | Qué | Clase · función | Carpeta |
 |---|---|---|---|
