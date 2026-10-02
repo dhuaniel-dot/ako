@@ -3,28 +3,61 @@ package yunkang.ako.ui.panel
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import yunkang.ako.databinding.ItemCategoriaCajaBinding
+import yunkang.ako.datos.entidades.Categoria
+import yunkang.ako.datos.entidades.Producto
 import yunkang.ako.dominio.modelos.CategoriaConPlatos
+import yunkang.ako.ui.comun.FilaPlatoAdapter
 
 // 2a · El encargado de las cajas del Panel (P52 A: la fila de categorías de la carta tendrá el suyo, S8).
 // ListAdapter: le das la lista nueva con submitList y DiffUtil repinta solo lo que cambió (P50 C)
-class CategoriaAdapter : ListAdapter<CategoriaConPlatos, CategoriaAdapter.CajaViewHolder>(Comparador) {
+class CategoriaAdapter(
+    // [Claude] Los tres timbres de la caja: lo que pasa al tocarlos lo decide el Panel
+    private val alEditar: (Categoria) -> Unit,
+    private val alAnadirPlato: (Categoria) -> Unit,
+    private val alTocarPlato: (Producto) -> Unit
+) : ListAdapter<CategoriaConPlatos, CategoriaAdapter.CajaViewHolder>(Comparador) {
 
-    // La bandeja: la vista de una caja con sus huecos ya localizados (por ViewBinding)
-    class CajaViewHolder(val binding: ItemCategoriaCajaBinding) : RecyclerView.ViewHolder(binding.root)
+    // El armario de bandejas de plato compartido por todas las cajas: la que sobra en una la aprovecha otra
+    private val armario = RecyclerView.RecycledViewPool()
 
-    // Se llama solo unas pocas veces: fabrica una bandeja vacía a partir del XML
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CajaViewHolder {
-        val binding = ItemCategoriaCajaBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return CajaViewHolder(binding)
+    // La bandeja de una caja: su vista y SU encargado de filas, creado una sola vez con la bandeja
+    class CajaViewHolder(
+        val binding: ItemCategoriaCajaBinding,
+        val filas: FilaPlatoAdapter
+    ) : RecyclerView.ViewHolder(binding.root) {
+        // [Claude] De qué categoría es ahora esta bandeja (0 = de ninguna todavía)
+        var categoriaId: Long = 0L
     }
 
-    // Se llama cada vez que una bandeja entra en pantalla: la rellena con el dato de esa posición
+    // Pocas veces: fabrica una caja vacía con su lista de platos ya montada
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CajaViewHolder {
+        val binding = ItemCategoriaCajaBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val filas = FilaPlatoAdapter(alTocarPlato)
+        binding.listaPlatos.layoutManager = LinearLayoutManager(parent.context)
+        binding.listaPlatos.adapter = filas
+        binding.listaPlatos.setRecycledViewPool(armario)
+        return CajaViewHolder(binding, filas)
+    }
+
+    // Cada vez que una caja entra en pantalla: se rellena con su categoría y sus platos
     override fun onBindViewHolder(holder: CajaViewHolder, position: Int) {
         val caja = getItem(position)
-        holder.binding.textoNombre.text = caja.categoria.nombre
+        val categoria = caja.categoria
+        holder.binding.textoNombre.text = categoria.nombre
+
+        // [Claude] Si la bandeja viene reciclada de OTRA categoría, traería su scroll: se sube arriba
+        if (holder.categoriaId != categoria.id) {
+            holder.binding.listaPlatos.scrollToPosition(0)
+            holder.categoriaId = categoria.id
+        }
+
+        holder.filas.mostrar(caja.platos, categoria.activo)
+        holder.binding.botonEditar.setOnClickListener { alEditar(categoria) }
+        holder.binding.botonMasPlato.setOnClickListener { alAnadirPlato(categoria) }
     }
 
     // DiffUtil: cómo comparar la foto vieja con la nueva

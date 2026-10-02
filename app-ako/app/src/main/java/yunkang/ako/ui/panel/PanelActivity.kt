@@ -32,7 +32,13 @@ class PanelActivity : AppCompatActivity() {
         }
 
         // La lista de cajas: una debajo de otra (LinearLayoutManager) y su encargado
-        val adaptador = CategoriaAdapter()
+        // Los timbres de las cajas: de momento no hacen nada. El lápiz abre 2b en la pieza 12;
+        // «+ Plato» y tocar un plato, la caja provisional en la pieza 18
+        val adaptador = CategoriaAdapter(
+            alEditar = { },
+            alAnadirPlato = { },
+            alTocarPlato = { }
+        )
         binding.listaCategorias.layoutManager = LinearLayoutManager(this)
         binding.listaCategorias.adapter = adaptador
 
