@@ -8,9 +8,11 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import yunkang.ako.EntradaAko
+import yunkang.ako.datos.entidades.Categoria
 import yunkang.ako.datos.repositorios.CartaRepository
 import yunkang.ako.datos.repositorios.SeguridadRepository
 import yunkang.ako.dominio.modelos.CategoriaConPlatos
+import yunkang.ako.dominio.modelos.ResultadoGuardado
 
 // La libreta del Panel (pantalla 2): el PIN (1e) y, desde la S6, la carta en modo edición (2a)
 class PanelViewModel(
@@ -23,6 +25,9 @@ class PanelViewModel(
     // Nadie lo escribe a mano: por eso no hay MutableLiveData ni cargar()
     val categoriasConPlatos: LiveData<List<CategoriaConPlatos>> =
         cartaRepository.categoriasConPlatos().asLiveData()
+
+    // 2b: crea o renombra una categoría. La lista se pone al día sola (P49 B)
+    suspend fun guardarCategoria(c: Categoria): ResultadoGuardado = cartaRepository.guardarCategoria(c)
 
     // 1e (P46 B): primero se comprueba el PIN actual, antes de mirar los nuevos
     suspend fun comprobarPin(pin: String): Boolean = seguridadRepository.comprobarPin(pin)

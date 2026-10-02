@@ -11,6 +11,11 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import yunkang.ako.R
 import yunkang.ako.databinding.SheetCategoriaBinding
+import androidx.core.widget.doAfterTextChanged
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
+import yunkang.ako.datos.entidades.Categoria
+import yunkang.ako.dominio.modelos.ResultadoGuardado
 
 // 2b · Crear o editar una categoría en una hoja inferior (P84: formulario corto → hoja).
 // Recibe el id por arguments (0 = nueva), como ConfirmacionDialog: si Android rehace la hoja, no se pierde
@@ -48,6 +53,34 @@ class CategoriaBottomSheet : BottomSheetDialogFragment() {
             if (!categoria.esPorDefecto) {
                 binding.interruptorEnLaCarta.visibility = View.VISIBLE
                 if (savedInstanceState == null) binding.interruptorEnLaCarta.isChecked = categoria.activo
+            }
+        }
+
+        // Guardar solo se enciende con algo escrito (en blanco no hay nombre que guardar)
+        binding.botonGuardar.isEnabled = !binding.textoNombre.text.isNullOrBlank()
+        binding.textoNombre.doAfterTextChanged {
+            binding.campoNombre.error = null
+            binding.botonGuardar.isEnabled = !binding.textoNombre.text.isNullOrBlank()
+        }
+
+        binding.botonGuardar.setOnClickListener {
+            val nombre = binding.textoNombre.text.toString().trim()
+            // Editar: la misma categoría con el nombre nuevo (activo lo conserva el repositorio, P150).
+            // Crear: una nueva en la carta; el orden (mayor + 1) lo pone el repositorio
+            val aGuardar = categoria?.copy(nombre = nombre)
+                ?: Categoria(nombre = nombre, imagen = null, orden = 0, activo = true, esPorDefecto = false)
+
+            binding.botonGuardar.isEnabled = false   // sin doble toque mientras se guarda (P142)
+            viewLifecycleOwner.lifecycleScope.launch {
+                val resultado = viewModel.guardarCategoria(aGuardar)
+                if (resultado == ResultadoGuardado.NombreRepetido) {
+                    // P124: el aviso no mira mayúsculas («carnes» = «Carnes»); la hoja sigue abierta
+                    binding.campoNombre.error = getString(R.string.categoria_nombre_repetido)
+                    binding.botonGuardar.isEnabled = true
+                } else {
+                    // P146: cerrar sin romper aunque mientras tanto se pulsara Inicio
+                    dismissAllowingStateLoss()
+                }
             }
         }
     }
