@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- [Claude] Alto de la lista de platos de cada caja del Panel: cuatro filas de 56 dp (P51 B, P99).
+         Si hay que ajustarlo, se cambia solo aquí -->
+    <dimen name="alto_lista_caja">224dp</dimen>
+</resources>

@@ -1,11 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 2a · Una caja de categoría. Pieza 6: de momento solo el nombre; la caja entera llega en la pieza 9 -->
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/textoNombre"
+<!-- 2a · Una caja de categoría (wireframe 02a): cabecera con nombre, «Categoría eliminada» y lápiz;
+     la lista de platos con ALTURA FIJA y scroll propio; «+ Plato» fijo abajo, fuera del scroll -->
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="?attr/materialCardViewOutlinedStyle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp"
-    android:textAllCaps="true"
-    android:textColor="?attr/colorOnSurface"
-    android:textSize="18sp"
-    android:textStyle="bold" />
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginBottom="12dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Cabecera: NOMBRE · (Categoría eliminada) · lápiz -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:minHeight="56dp"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingEnd="4dp">
+
+            <TextView
+                android:id="@+id/textoNombre"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textAllCaps="true"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textoCategoriaEliminada"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="@string/panel_categoria_eliminada"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:textSize="14sp"
+                android:visibility="gone" />
+
+            <ImageButton
+                android:id="@+id/botonEditar"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/categoria_titulo_editar"
+                android:src="@drawable/ic_editar" />
+        </LinearLayout>
+
+        <!-- Raya fina bajo la cabecera -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?attr/colorOutlineVariant" />
+
+        <!-- Los platos: altura FIJA (cuatro filas, P51 B / P99). Nunca wrap_content ni un ScrollView alrededor -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/listaPlatos"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/alto_lista_caja" />
+
+        <!-- «+ Plato»: fijo abajo; añadir no puede depender de cuántos platos lleves (ficha 2) -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/botonMasPlato"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="12dp"
+            android:minHeight="48dp"
+            android:text="@string/panel_btn_mas_plato"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="16sp" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
