@@ -13,7 +13,9 @@
 ## Qué se hizo
 
 - Al abrir (10:11): Claude terminó de explicar los bloques 2, 3 y 4 de los cambios de la revisión del 1–2 oct (el 1 se explicó en el chat de revisión) con una pregunta por bloque.
-- P160 → B (etiqueta naranja de los campos, P153 a medias). Borrador probado por Claude en el emulador (1c en día y noche) y deshecho; pieza 0.
+- P160 → B (etiqueta naranja de los campos, P153 a medias). Borrador probado por Claude en el emulador (1c en día y noche) y deshecho; pieza 0, tecleada por Daniel en los dos `themes.xml`; compila. Commit `68f9b35`.
+- Plan Mode (Daniel: «lo importante es actualizar el plan con todos los cambios nuevos»): pasada mecánica de las guías S6–S13, `juego-de-datos.md`, `spec+doc-pruebas.md` y dos frases del spec con P145–P160, H25 y H26 y los recuentos de pruebas (ocho P-C en `test/`, once en total). En la S6 quedan resueltos los huecos 8 y 11 y simplificado el 10; solo queda abierto el 3 (P49). Dos dudas apuntadas en las guías para su Plan Mode: cómo aplicar P146 a `popBackStack` (S8 y S9) y el hueco 10 de la S9. Un subagente hizo S7–S13; Claude, la S6. Commit `fb469fa`.
+- P49 vuelta a preguntar (P112) → B (Room avisa solo con `Flow`); guía S6 y notas en S7–S9 puestas al día. Claude corrigió una pega mal dicha al plantearla (B no cambia los DAOs de la S3: añade dos consultas).
 
 ## Problemas y soluciones
 
