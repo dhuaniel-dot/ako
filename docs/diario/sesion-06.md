@@ -18,13 +18,14 @@
 - P49 vuelta a preguntar (P112) → B (Room avisa solo con `Flow`); guía S6 y notas en S7–S9 puestas al día. Claude corrigió una pega mal dicha al plantearla (B no cambia los DAOs de la S3: añade dos consultas).
 - Pieza 1: cadenas de 2a, 2b y 2e en `strings.xml` (comunes `comun_guardar`, `comun_eliminar`, `comun_precio`, `comun_plato_numero_nombre`, `comun_mas`, `comun_sin_foto_cd`, `comun_y` [Claude]; `panel_*`, `categoria_*`, `plato_en_la_carta`; `<plurals>` `categoria_eliminar_cuerpo` y `categoria_eliminar_plato_mesas` [Claude], P54 A). Compila. Daniel, a «apagas el interruptor de Postres: ¿eliminada o desactivada, qué columna?»: «se elimina y cambia activo» (bien).
 - Pieza 2: `ui/comun/Formato.kt` (`object`, `precio` y `lista`) [Claude]. **[Claude] Los negativos se dejan para la S9** (la guía los preparaba ya; hoy no los usa nadie, regla «nada por si acaso»): `precio` hace `require(centimos >= 0)`; guía S9 (hueco 5) anotada. Compila. Daniel, a «¿por qué no dividir 1805 entre 100.0?»: «por el redondeo» (bien: el `Double` no guarda exacto los decimales).
+- Antes de la pieza 3 (lección de la S3: herramienta nueva aparte): `Flow` explicado como la pantalla de pedidos de la cocina frente a la llamada de teléfono (`suspend`) y `combine` como el camarero de dos bandejas. Daniel, a «creas Postres desde 2b, ¿quién avisa al Panel?»: «Room, la hoja no hace nada» (bien).
+- Pieza 3: `dominio/modelos/CategoriaConPlatos.kt`, `CategoriaDao.todasObservadas()` y `ProductoDao.todosObservados()` (`Flow`, P49 B) [Claude: nombres], `CartaRepository.categoriasConPlatos()` con `combine` (R16 repetida y comentada [Claude]) y las dos frases nuevas con `TODO()` en `DaosFalsos`. Borrador probado antes por Claude y deshecho. Compila; 21 pruebas en verde. Daniel, a «eliminas Flan: ¿qué grifo se mueve?»: «el de productos y combine vuelve a montar» (bien).
 
 ## Problemas y soluciones
 
 | # | Qué falló | Cómo se resolvió | Justificación (por qué esta solución y no otra) | Fuente |
 |---|---|---|---|---|
-| 1 | El síntoma tal cual: mensaje de error copiado, o qué hacía la app en vez de lo esperado | Lo que se cambió, en concreto | Por qué era el arreglo correcto; qué otra opción había y por qué se descartó | Enlace y fecha, o "propio" |
-| 2 | | | | |
+| 1 | Pieza 3: `compileDebugKotlin` falla con «[ksp] ProductoDao.kt:14: [MissingType]: Element 'yunkang.ako.datos.dao.ProductoDao' references a type that is not present» | Faltaba `import kotlinx.coroutines.flow.Flow` en `ProductoDao.kt` (en `CategoriaDao` sí estaba); Daniel la añadió | El mensaje lo da Room (KSP), que lee los DAOs antes que el compilador de Kotlin, y por eso no dice «Unresolved reference». Truco: palabra en rojo → Alt+Enter → Import | Propio |
 
 ## Qué entendí y qué no
 

@@ -8,6 +8,9 @@ import yunkang.ako.datos.dao.ProductoDao
 import yunkang.ako.datos.entidades.Alergeno
 import yunkang.ako.datos.entidades.Producto
 import yunkang.ako.dominio.Validacion
+import yunkang.ako.dominio.modelos.CategoriaConPlatos
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 
 // La carta: categorías, platos y alérgenos. Garantiza R5, R6, R8, R9, R15 y R16 (spec 6).
 // Recibe sus herramientas por constructor (P17).
@@ -22,6 +25,17 @@ class CartaRepository(
     // R16 (P48): todas las categorías por su orden; la de por defecto, siempre la última.
     suspend fun categorias(): List<Categoria> =
         categoriaDao.todas().sortedBy { it.esPorDefecto }
+
+    // Panel (P47 A, P49 B): las cajas con sus platos, al día solas.
+    // combine junta los dos grifos: si cambia cualquiera de las dos tablas, se vuelve a montar la lista
+    fun categoriasConPlatos(): Flow<List<CategoriaConPlatos>> =
+        combine(categoriaDao.todasObservadas(), productoDao.todosObservados()) { categorias, platos ->
+            // R16: la de por defecto la última (se reconoce por esPorDefecto, nunca por el nombre), como en categorias()
+            categorias.sortedBy { it.esPorDefecto }.map { c ->
+                // R15 no se aplica aquí: el Panel ve todos los platos, también los eliminados
+                CategoriaConPlatos(c, platos.filter { it.categoriaId == c.id })
+            }
+        }
 
     // R16: nunca una segunda por defecto ni la por defecto eliminada; nombre sin repetir (P124).
     suspend fun guardarCategoria(c: Categoria): ResultadoGuardado {

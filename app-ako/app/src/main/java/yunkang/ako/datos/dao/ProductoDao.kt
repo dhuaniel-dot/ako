@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
+import kotlinx.coroutines.flow.Flow
 import yunkang.ako.datos.entidades.Alergeno
 import yunkang.ako.datos.entidades.Producto
 import yunkang.ako.datos.entidades.ProductoAlergeno
@@ -28,6 +29,11 @@ interface ProductoDao {
     // Panel: todos los platos de una categoría, también los eliminados, por número.
     @Query("SELECT * FROM producto WHERE categoria_id = :categoriaId ORDER BY numero")
     suspend fun porCategoria(categoriaId: Long): List<Producto>
+
+    // P49 B: todos los platos existentes (también los eliminados: el Panel los ve todos, R15), por número.
+    // Room vuelve a mandar la lista cada vez que cambia la tabla producto
+    @Query("SELECT * FROM producto ORDER BY numero")
+    fun todosObservados(): Flow<List<Producto>>
 
     // La carta: platos visibles = activos y con su categoría activa (R15).
     @Query("""

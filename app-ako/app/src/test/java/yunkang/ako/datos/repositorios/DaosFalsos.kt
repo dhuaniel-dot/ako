@@ -7,6 +7,7 @@ import yunkang.ako.datos.entidades.Alergeno
 import yunkang.ako.datos.entidades.Categoria
 import yunkang.ako.datos.entidades.Producto
 import yunkang.ako.datos.entidades.ProductoAlergeno
+import kotlinx.coroutines.flow.Flow
 
 // [Claude] Actores que hacen de DAO en las pruebas: no tocan ninguna base de datos.
 // Solo contestan lo que la prueba necesita; lo demás es TODO() ("esto no lo ensayamos").
@@ -18,6 +19,7 @@ class CategoriaDaoFalso(var activa: Boolean = true) : CategoriaDao {
     override suspend fun insertar(categoria: Categoria): Long = TODO()
     override suspend fun actualizar(categoria: Categoria): Unit = TODO()
     override suspend fun todas(): List<Categoria> = TODO()
+    override fun todasObservadas(): Flow<List<Categoria>> = TODO()
     override suspend fun porDefecto(): Categoria = TODO()
     override suspend fun existeNombre(nombre: String, exceptoId: Long): Boolean = TODO()
 }
@@ -43,6 +45,7 @@ class ProductoDaoFalso(var guardado: Producto? = null) : ProductoDao {
         marcasRecibidas = marcas
     }
     override suspend fun porCategoria(categoriaId: Long): List<Producto> = TODO()
+    override fun todosObservados(): Flow<List<Producto>> = TODO()
     override suspend fun visibles(): List<Producto> = TODO()
     override suspend fun hayAlgunoVisible(): Boolean = TODO()
     override suspend fun alergenosDe(productoId: Long): List<Alergeno> = TODO()

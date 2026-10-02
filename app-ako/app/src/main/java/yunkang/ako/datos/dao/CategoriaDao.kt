@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import yunkang.ako.datos.entidades.Categoria
+import kotlinx.coroutines.flow.Flow
 
 // Lo que se le puede pedir a Room sobre las categorías.
 @Dao
@@ -22,6 +23,11 @@ interface CategoriaDao {
     // «Otros la última» lo decide el repositorio, no el SQL (P48).
     @Query("SELECT * FROM categoria ORDER BY orden")
     suspend fun todas(): List<Categoria>
+
+    // P49 B: la misma lista que todas(), pero Room la vuelve a mandar cada vez que cambia la tabla.
+    // Sin suspend: devuelve al momento el «grifo»; las listas salen después
+    @Query("SELECT * FROM categoria ORDER BY orden")
+    fun todasObservadas(): Flow<List<Categoria>>
 
     // La categoría por defecto (Otros): se reconoce por esPorDefecto, nunca por el nombre (R16).
     @Query("SELECT * FROM categoria WHERE es_por_defecto = 1 LIMIT 1")
