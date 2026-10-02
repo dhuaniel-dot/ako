@@ -54,6 +54,9 @@
     <string name="panel_categoria_eliminada">Categoría eliminada</string>
     <string name="panel_plato_eliminado">Eliminado</string>
     <string name="panel_btn_mas_plato">+ Plato</string>
+    <!-- [Claude] Lo que dice el lector de pantalla en el icono de plegar/desplegar una caja (P56 A) -->
+    <string name="panel_plegar_cd">Plegar</string>
+    <string name="panel_desplegar_cd">Desplegar</string>
 
     <!-- 2b · Hoja de categoría. Los títulos sirven también de contentDescription del + y del lápiz -->
     <string name="categoria_titulo_nueva">Nueva categoría</string>

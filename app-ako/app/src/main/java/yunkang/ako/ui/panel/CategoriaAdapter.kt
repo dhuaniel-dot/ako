@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import yunkang.ako.R
 import yunkang.ako.databinding.ItemCategoriaCajaBinding
 import yunkang.ako.datos.entidades.Categoria
 import yunkang.ako.datos.entidades.Producto
@@ -16,6 +17,8 @@ import yunkang.ako.ui.comun.FilaPlatoAdapter
 // 2a · El encargado de las cajas del Panel (P52 A: la fila de categorías de la carta tendrá el suyo, S8).
 // ListAdapter: le das la lista nueva con submitList y DiffUtil repinta solo lo que cambió (P50 C)
 class CategoriaAdapter(
+    private val estaPlegada: (Long) -> Boolean,
+    private val alPlegar: (Categoria) -> Unit,
     // [Claude] Los tres timbres de la caja: lo que pasa al tocarlos lo decide el Panel
     private val alEditar: (Categoria) -> Unit,
     private val alAnadirPlato: (Categoria) -> Unit,
@@ -62,6 +65,23 @@ class CategoriaAdapter(
         }
 
         holder.filas.mostrar(caja.platos, categoria.activo)
+
+        // P56 A: plegada = solo la cabecera (sin lista ni «+ Plato»); es la única excepción a la altura fija
+        val plegada = estaPlegada(categoria.id)
+        val visibilidad = if (plegada) View.GONE else View.VISIBLE
+        holder.binding.listaPlatos.visibility = visibilidad
+        holder.binding.botonMasPlato.visibility = visibilidad
+        holder.binding.botonPlegar.rotation = if (plegada) -90f else 0f   // ⌄ desplegada, › plegada
+        holder.binding.botonPlegar.contentDescription = holder.itemView.context.getString(
+            if (plegada) R.string.panel_desplegar_cd else R.string.panel_plegar_cd
+        )
+        // Tocar el icono o el nombre pliega o despliega; después se repinta solo esta caja
+        val plegar = View.OnClickListener {
+            alPlegar(categoria)
+            notifyItemChanged(holder.bindingAdapterPosition)
+        }
+        holder.binding.botonPlegar.setOnClickListener(plegar)
+        holder.binding.textoNombre.setOnClickListener(plegar)
         holder.binding.botonEditar.setOnClickListener { alEditar(categoria) }
         holder.binding.botonMasPlato.setOnClickListener { alAnadirPlato(categoria) }
     }

@@ -27,6 +27,15 @@ class PanelViewModel(
     val categoriasConPlatos: LiveData<List<CategoriaConPlatos>> =
         cartaRepository.categoriasConPlatos().asLiveData()
 
+    // P56 A: qué cajas están plegadas. Vive en la libreta, no en la bandeja: las bandejas se reciclan
+    private val plegadas = mutableSetOf<Long>()
+
+    fun estaPlegada(categoriaId: Long): Boolean = categoriaId in plegadas
+
+    fun alternarPlegado(categoriaId: Long) {
+        if (categoriaId in plegadas) plegadas.remove(categoriaId) else plegadas.add(categoriaId)
+    }
+
     // 2b: crea o renombra una categoría. La lista se pone al día sola (P49 B)
     suspend fun guardarCategoria(c: Categoria): ResultadoGuardado = cartaRepository.guardarCategoria(c)
 

@@ -36,6 +36,8 @@ class PanelActivity : AppCompatActivity() {
         // La lista de cajas y sus timbres: el lápiz abre 2b; «+ Plato» y tocar un plato,
         // la caja provisional hasta la S7 (entonces abrirán el formulario del plato)
         val adaptador = CategoriaAdapter(
+            estaPlegada = { id -> viewModel.estaPlegada(id) },
+            alPlegar = { categoria -> viewModel.alternarPlegado(categoria.id) },
             alEditar = { categoria -> CategoriaBottomSheet.nueva(categoria.id).show(supportFragmentManager, "categoria") },
             alAnadirPlato = { abrirPendiente(getString(R.string.panel_btn_mas_plato)) },
             alTocarPlato = { plato ->
