@@ -5,10 +5,10 @@
 | **Fecha** | 2026-10-02 |
 | **Sesión nº** | 06 |
 | **Objetivo de la sesión** | Del spec: **Panel (2a, 2b, 2e)** con `CategoriaAdapter`, `FilaPlatoAdapter`, `MesasAfectadasDialog`; P-M-04, 05 y 06 pasan (con platos creados a mano en el inspector si hace falta) |
-| **Tiempo dedicado** | 10:11 – … (inicio – fin, descontando pausas) |
-| **Nivel / pieza** | Nivel 1 · <pantalla o capa> (p. ej. *entidades Room*, *pantalla 6c*) |
-| **Commit final** | `abc1234` — mensaje del commit |
-| **Contexto al cerrar** | NN % (el anillo junto al modelo; P156) |
+| **Tiempo dedicado** | 10:11 – 13:25, unas 3 h. Hubo un descanso a media mañana que Daniel no cronometró: no se descuenta [Claude] |
+| **Nivel / pieza** | Nivel 1 · pantalla 2 (2a Panel, 2b hoja de categoría, 2e aviso de mesas afectadas) |
+| **Commit final** | `253e295` — S6: Panel (2a, 2b, 2e) (antes, intermedios `68f9b35`, `fb469fa`, `6a56031`, `fdc1dce`, `4948399`, `7c0df0b`, `42eaa9e`, `f149fa6`, `57ebdc6`, `3d7ea40`, `26a9101`, `4013ef0`, `be41b67`, `a20b777`, `268bb0c`, `6b4d13c`, `cd5b7f3`, `99ca6f0`, `5874db4`, `d95989f`, `b9c8b40`, `c298bc5`, `a56034a`, `e0b1647`) |
+| **Contexto al cerrar** | ~70 % (estimación de Claude; el último dato de Daniel fue 51 % tras la pieza 17; él decidió no hacer relevo) |
 
 ## Qué se hizo
 
@@ -55,22 +55,35 @@
 - Bloque 2 (datos), «cambias Carnes a Carne y la pantalla manda `activo = false` por error»: «se queda igual, es mejor así porque evitamos errores» (bien: solo cambia el nombre; eliminar solo pasa por `eliminarCategoria`, donde está el aviso R6, P150).
 - Bloque 3 (tema), «¿por qué *Terminar* puede ser naranja con letra blanca y *Aceptar* no puede ser letra naranja?»: «para no confundirlos por el color; mucha gente pulsa el verde sin leer» (no era eso: es el **contraste**; blanco sobre naranja da 4,6:1, letra naranja sobre el gris del diálogo 3,75:1, y la norma pide 4,5:1 para texto). Al PDF.
 - Bloque 4 (pruebas), «en P-C-09 con −100, ¿por qué no basta con que salte el error?»: «no sé» (ahora además comprueba que al DAO no llegó ni el plato ni sus alérgenos: que no queda nada guardado a medias). Al PDF.
-- **Entendí:** …
-- **No entendí todavía:** contraste de color (bloque 3) y qué afirma de más P-C-09 (bloque 4): van al PDF.
+- **Entendí (por sus respuestas):** `Flow` frente a `suspend` (Room avisa y la hoja no hace nada); `gone` frente a `invisible`; un `0dp` sin ataduras mide cero; altura fija y `wrap_content` en listas anidadas; la palabra *Eliminado* frente al color; por qué el adaptador no decide qué pasa al tocar; R6 en dos pasos (mirar antes de eliminar); qué cambia y qué no al eliminar una categoría; por qué el Panel no hay que tocarlo en la S7 (P49 B); el reparto del dedo entre listas (P161).
+- **A medias o no todavía (van al PDF, regla del 1 oct):** contraste de color (bloque 3); qué afirma de más P-C-09 (bloque 4); quién se da cuenta de qué caja cambió (`DiffUtil`); qué ahorra el armario compartido (`RecycledViewPool`, lo dijo al revés); quién garantiza de verdad el nombre único (el `UNIQUE` solo con nombres idénticos; «carnes» lo para el repositorio); por qué no hay `cargar()` (Room manda la lista sola).
 
 ## Para el vídeo
 
-- Lo que se ha explicado en la sesión y se podría contar en el vídeo de 10 minutos: una línea por idea, con la comparación de la vida real si la hubo y la decisión (Pnnn) que la respalda. Sirve para montar el guion al final.
+- **La pantalla de pedidos de la cocina (P49 B):** con `suspend` se llama por teléfono y se cuelga; con `Flow` la cocina tiene una pantalla que se actualiza sola. El Panel nunca recarga a mano; `combine` es el camarero de dos bandejas (categorías y platos).
+- **El camarero con pocas bandejas (`RecyclerView`):** con 80 platos solo prepara las que caben; la que sale por arriba se rellena y entra por abajo. `DiffUtil` compara la foto vieja con la nueva y repinta solo lo que cambió (P50 C).
+- **Una lista dentro de otra sin `ScrollView`:** la de dentro sabe cuánto mide (altura fija, P99) y el armario de bandejas se comparte (`RecycledViewPool`).
+- **Dos camareros y una bandeja (P161):** la lista de dentro pide el dedo mientras le queda recorrido y, al llegar al final, se lo pasa al Panel. Fallo encontrado al probar y arreglado con la guía oficial.
+- **R6 en dos pasos (P128):** primero mirar qué platos están en mesas pendientes y avisar con **un solo aviso agrupado**; después eliminar. Eliminar es `activo = false`: lo pedido sigue pedido.
+- **El timbre (pasar una función):** el adaptador instala el timbre; lo que suena lo decide quien lo usa. Así la misma fila sirve al Panel y a la carta.
+- **La palabra, no el color (RNF-13):** *Eliminado* y *Categoría eliminada*; el gris solo refuerza. Y el contraste: letra naranja sobre gris no llega a 4,5:1 (P153, P160).
+- **El uniforme de la casa (P160):** un estilo para todos los campos de texto en el tema; los campos nuevos nacen ya bien.
+- **Dos cerrojos (P124, R16):** la hoja avisa del nombre repetido, el repositorio no lo deja pasar aunque cambien las mayúsculas, y la base de datos garantiza los idénticos. Otros sin interruptor en pantalla y el repositorio que no obedece.
+- **Accesibilidad con la letra al 200 %:** el título atado entre los botones y botones que crecen.
 
 ## Pruebas
 
-- Pruebas de código que pasan al terminar: P-C-nn, …
-- Pruebas manuales ejecutadas en esta sesión: P-M-nn (resultado y fecha ya apuntados en `spec+doc-pruebas.md`).
+- Pruebas de código que pasan al terminar (2 oct, `testDebugUnitTest`): las 21 de `test/` (P-C-01 a 05, 09, 10 y 11). La S6 no añade pruebas de código.
+- Pruebas manuales (apuntadas en `spec+doc-pruebas.md`): **P-M-04 Parcial** (falta Entrecot con foto, S12), **P-M-05 Parcial** (falta el «?» en la carta, S8), **P-M-06 Parcial** (pasos 3–4 en la S9), **P-M-29** sigue Parcial con la observación del Panel. Las ejecutó Claude con `adb` y `sqlite3` tras una instalación limpia; Daniel revisó las capturas.
 
 ## Uso de IA en esta sesión
 
-- Qué pidió Daniel a Claude Code, qué generó, qué revisó o cambió Daniel a mano. Una línea por pieza. (Alimenta la frase de P37; **lo escrito coincide con lo hecho**.)
+- Decisiones: P160, P49 (vuelta a preguntar) y P161 se plantearon con 3 opciones (al menos una con fuente enlazada) y **eligió Daniel**. Los nombres y detalles menores los decidió Claude y van marcados [Claude] (`decisiones-code.md` 5.9).
+- Piezas 0–19: Claude dio cada bloque tras **compilarlo y probarlo en el emulador** dentro del proyecto (y deshacerlo); **Daniel creó los archivos y pegó el código en Android Studio**; Claude comprobó leyendo el disco, compilando y pasando las pruebas. Arreglos mecánicos de Claude: etiqueta de cierre repetida (problema 2), bloque fuera del `else` (problema 4), tinte de los iconos.
+- **Escrito por Claude, con el visto bueno de Daniel** (poca energía): los iconos `ic_desplegado` e `ic_editar` (sustituto), la pieza 20 (barra superior y botones de abajo de `activity_panel.xml`) y las pruebas pieza 14 y pieza 21 en el emulador. El arreglo P161 lo tecleó Daniel.
+- Documentación: Claude puso al día las guías S6–S13, `juego-de-datos.md`, `spec+doc-pruebas.md` y dos frases del spec (subagentes para S7–S13), la ficha, `decisiones-code.md`, `estado-nivel.md` y los resúmenes.
 
 ## Siguiente sesión
 
-- Con qué se empieza, en una línea.
+- Guías S7–S13 y `juego-de-datos.md` puestas al día con el código real de la S6 (subagente). Preguntas abiertas para sus aperturas (P112): dónde vive `MesasAfectadasDialog` cuando lo usen dos pantallas (S7); si la carta, la rejilla de 1d (S8), la de Cuenta (S9) y el Resumen (S10) se refrescan con `Flow` como el Panel; carpeta de `CategoriaFilaAdapter` (S8).
+- S7 (formulario del plato sin foto: 3a, 3d, 3e; 14 piezas, ~2,5–3,5 h al ritmo de hoy): `alAnadirPlato`/`alTocarPlato` del Panel abren `PlatoActivity`; `MesasAfectadasDialog` crece con el aviso del plato (3d). PIN del emulador: 1234; datos de prueba de la S6 en el emulador (la S7 empieza con instalación limpia).
