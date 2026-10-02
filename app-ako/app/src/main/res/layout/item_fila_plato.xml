@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fila de plato (2a y, en la S8, 5a): miniatura · «12 · Entrecot» · precio; debajo, «Eliminado» si toca -->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="56dp"
+    android:paddingStart="12dp"
+    android:paddingTop="4dp"
+    android:paddingEnd="12dp"
+    android:paddingBottom="4dp">
+
+    <!-- Miniatura: hoy siempre el «?»; en la S12 Glide pondrá aquí la foto, en esta misma vista -->
+    <ImageView
+        android:id="@+id/imagenPlato"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:background="?attr/colorSurfaceContainerHigh"
+        android:contentDescription="@string/comun_sin_foto_cd"
+        android:padding="8dp"
+        android:src="@drawable/ic_sin_foto"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- «12 · Entrecot» en una línea; si no cabe, se corta con «…» -->
+    <TextView
+        android:id="@+id/textoNumeroNombre"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="8dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@id/textoEliminado"
+        app:layout_constraintEnd_toStartOf="@id/textoPrecio"
+        app:layout_constraintStart_toEndOf="@id/imagenPlato"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="12 · Entrecot" />
+
+    <!-- La palabra «Eliminado»: oculta (gone) mientras el plato está en la carta -->
+    <TextView
+        android:id="@+id/textoEliminado"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/panel_plato_eliminado"
+        android:textColor="?attr/colorOnSurfaceVariant"
+        android:textSize="14sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/textoNumeroNombre"
+        app:layout_constraintTop_toBottomOf="@id/textoNumeroNombre"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/textoPrecio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="18,50 €" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
