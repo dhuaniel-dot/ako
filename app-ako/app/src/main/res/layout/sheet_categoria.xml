@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 2b · Hoja inferior para crear o editar una categoría (wireframe 02b) -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingStart="24dp"
+    android:paddingTop="8dp"
+    android:paddingEnd="24dp"
+    android:paddingBottom="24dp">
+
+    <!-- «Nueva categoría» o «Editar categoría»: lo pone el código -->
+    <TextView
+        android:id="@+id/textoTitulo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="22sp"
+        android:textStyle="bold" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/campoNombre"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/categoria_hint_nombre">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/textoNombre"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textCapSentences"
+            android:maxLines="1" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/categoria_foto_opcional"
+        android:textColor="?attr/colorOnSurfaceVariant"
+        android:textSize="14sp" />
+
+    <!-- Foto: el hueco con el «?» y «+ Elegir», que existe pero está apagado hasta la S12 (P13) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="?attr/colorSurfaceContainerHigh"
+            android:contentDescription="@string/comun_sin_foto_cd"
+            android:padding="20dp"
+            android:src="@drawable/ic_sin_foto" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/botonElegirFoto"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:enabled="false"
+            android:minHeight="48dp"
+            android:text="@string/categoria_btn_elegir_foto" />
+    </LinearLayout>
+
+    <!-- «En la carta» (P41): solo al editar y nunca en la categoría por defecto (R16) -->
+    <com.google.android.material.materialswitch.MaterialSwitch
+        android:id="@+id/interruptorEnLaCarta"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:minHeight="48dp"
+        android:text="@string/plato_en_la_carta"
+        android:textSize="16sp"
+        android:visibility="gone" />
+
+    <!-- [Claude] Estilo de botón relleno escrito a mano: dentro de la hoja, sin él, sale como texto naranja -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/botonGuardar"
+        style="@style/Widget.Material3.Button"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/comun_guardar"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+</LinearLayout>

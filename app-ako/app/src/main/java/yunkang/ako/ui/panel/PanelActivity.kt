@@ -35,7 +35,7 @@ class PanelActivity : AppCompatActivity() {
         // Los timbres de las cajas: de momento no hacen nada. El lápiz abre 2b en la pieza 12;
         // «+ Plato» y tocar un plato, la caja provisional en la pieza 18
         val adaptador = CategoriaAdapter(
-            alEditar = { },
+            alEditar = { categoria -> CategoriaBottomSheet.nueva(categoria.id).show(supportFragmentManager, "categoria") },
             alAnadirPlato = { },
             alTocarPlato = { }
         )
@@ -45,6 +45,11 @@ class PanelActivity : AppCompatActivity() {
         // P49 B: se mira el tablón UNA sola vez, aquí en onCreate. Cada vez que Room manda
         // una lista nueva, se le pasa al encargado; no hace falta recargar en onResume
         viewModel.categoriasConPlatos.observe(this) { cajas -> adaptador.submitList(cajas) }
+
+        // «+» de la barra: hoja 2b para crear una categoría
+        binding.botonNuevaCategoria.setOnClickListener {
+            CategoriaBottomSheet.nueva().show(supportFragmentManager, "categoria")
+        }
 
         // Atrás y Terminar hacen lo mismo: cerrar el Panel y volver a 1a, sin pedir PIN (ficha 1)
         binding.botonAtras.setOnClickListener { finish() }
