@@ -34,6 +34,11 @@ class PanelViewModel(
     suspend fun platosAfectados(categoriaId: Long): List<PlatoConMesas> =
         cartaRepository.platosAfectadosPorCategoria(categoriaId)
 
+    // 2b: eliminar (activo = false) o recuperar una categoría. Las mesas ya se miraron antes (P128)
+    suspend fun eliminarCategoria(id: Long) = cartaRepository.eliminarCategoria(id)
+
+    suspend fun recuperarCategoria(id: Long) = cartaRepository.recuperarCategoria(id)
+
     // 1e (P46 B): primero se comprueba el PIN actual, antes de mirar los nuevos
     suspend fun comprobarPin(pin: String): Boolean = seguridadRepository.comprobarPin(pin)
 
