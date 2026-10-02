@@ -1,6 +1,7 @@
 package yunkang.ako.ui.panel
 
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -44,6 +45,31 @@ class CategoriaAdapter(
         binding.listaPlatos.layoutManager = LinearLayoutManager(parent.context)
         binding.listaPlatos.adapter = filas
         binding.listaPlatos.setRecycledViewPool(armario)
+        // P161 A: dos listas que se mueven en vertical. Sin esto, la de fuera (el Panel) se queda el dedo
+        // y la de dentro nunca baja. Mientras a la lista de platos le quede recorrido hacia donde va el dedo,
+        // le pide al Panel que no se lo quite; al llegar al final, se lo deja (y el Panel sigue bajando).
+        // Fuente: https://developer.android.com/develop/ui/views/touch-and-input/gestures/viewgroup
+        binding.listaPlatos.addOnItemTouchListener(object : RecyclerView.SimpleOnItemTouchListener() {
+            private var yAnterior = 0f   // dónde estaba el dedo la última vez
+
+            override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
+                when (e.actionMasked) {
+                    // El dedo toca: si la lista puede moverse (tiene más platos de los que caben), lo pide
+                    MotionEvent.ACTION_DOWN -> {
+                        yAnterior = e.y
+                        rv.parent.requestDisallowInterceptTouchEvent(rv.canScrollVertically(1) || rv.canScrollVertically(-1))
+                    }
+                    // El dedo se mueve: ¿le queda recorrido hacia ese lado? Si no, el Panel puede quedárselo
+                    MotionEvent.ACTION_MOVE -> {
+                        val haciaArriba = e.y < yAnterior
+                        val puede = if (haciaArriba) rv.canScrollVertically(1) else rv.canScrollVertically(-1)
+                        rv.parent.requestDisallowInterceptTouchEvent(puede)
+                        yAnterior = e.y
+                    }
+                }
+                return false   // la lista sigue recibiendo el toque como siempre
+            }
+        })
         return CajaViewHolder(binding, filas)
     }
 
