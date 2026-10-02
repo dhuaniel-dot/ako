@@ -9,6 +9,7 @@ import yunkang.ako.datos.entidades.Alergeno
 import yunkang.ako.datos.entidades.Producto
 import yunkang.ako.dominio.Validacion
 import yunkang.ako.dominio.modelos.CategoriaConPlatos
+import yunkang.ako.dominio.modelos.PlatoConMesas
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 
@@ -67,6 +68,22 @@ class CartaRepository(
     // R6: mesas con comanda pendiente que llevan algún plato de esta categoría (aviso 2e, antes de confirmar).
     suspend fun mesasAfectadasPorCategoria(id: Long): List<Int> =
         comandaRepository.mesasConCategoriaPendiente(id)
+
+    // R6 (P128, hueco 8): ANTES de eliminar una categoría, qué platos suyos están en comandas pendientes
+    // y en qué mesas. Solo lee: no toca ninguna línea. Solo cuenta los platos activos (P55, P147)
+    suspend fun platosAfectadosPorCategoria(categoriaId: Long): List<PlatoConMesas> {
+        // [Claude] Si ninguna mesa tiene platos de esta categoría, no hace falta mirar plato a plato
+        if (mesasAfectadasPorCategoria(categoriaId).isEmpty()) return emptyList()
+
+        val afectados = mutableListOf<PlatoConMesas>()
+        for (plato in platosDe(categoriaId)) {
+            if (!plato.activo) continue   // un plato ya eliminado no se vuelve a eliminar: no se avisa
+            // P127: a las comandas se pregunta por el puesto (ComandaRepository), nunca por su DAO
+            val mesas = comandaRepository.mesasConPlatoPendiente(plato.id)
+            if (mesas.isNotEmpty()) afectados.add(PlatoConMesas(plato.nombre, mesas))
+        }
+        return afectados
+    }
 
     // R5, R6, R16: eliminar = activo false, sin borrar ni tocar platos ni líneas; la por defecto no se elimina.
     suspend fun eliminarCategoria(id: Long) {

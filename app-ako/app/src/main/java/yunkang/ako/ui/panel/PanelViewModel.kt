@@ -12,6 +12,7 @@ import yunkang.ako.datos.entidades.Categoria
 import yunkang.ako.datos.repositorios.CartaRepository
 import yunkang.ako.datos.repositorios.SeguridadRepository
 import yunkang.ako.dominio.modelos.CategoriaConPlatos
+import yunkang.ako.dominio.modelos.PlatoConMesas
 import yunkang.ako.dominio.modelos.ResultadoGuardado
 
 // La libreta del Panel (pantalla 2): el PIN (1e) y, desde la S6, la carta en modo edición (2a)
@@ -29,6 +30,10 @@ class PanelViewModel(
     // 2b: crea o renombra una categoría. La lista se pone al día sola (P49 B)
     suspend fun guardarCategoria(c: Categoria): ResultadoGuardado = cartaRepository.guardarCategoria(c)
 
+    // 2e: qué platos de la categoría están en mesas pendientes, para avisar antes de eliminarla
+    suspend fun platosAfectados(categoriaId: Long): List<PlatoConMesas> =
+        cartaRepository.platosAfectadosPorCategoria(categoriaId)
+    
     // 1e (P46 B): primero se comprueba el PIN actual, antes de mirar los nuevos
     suspend fun comprobarPin(pin: String): Boolean = seguridadRepository.comprobarPin(pin)
 
