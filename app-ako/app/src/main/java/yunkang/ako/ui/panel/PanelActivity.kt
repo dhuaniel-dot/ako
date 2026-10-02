@@ -7,10 +7,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import yunkang.ako.R
 import yunkang.ako.databinding.ActivityPanelBinding
+import yunkang.ako.ui.comun.ConfirmacionDialog
 
 // 2a · Panel del Propietario: se llega tras el PIN correcto (1c).
-// El «+» y el Resumen de ingresos se conectan en las piezas 12 y 18
+// Lo que llega en otras sesiones (Resumen de ingresos, S10; el formulario del plato, S7) abre la caja provisional
 class PanelActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPanelBinding
@@ -31,13 +33,14 @@ class PanelActivity : AppCompatActivity() {
             insets
         }
 
-        // La lista de cajas: una debajo de otra (LinearLayoutManager) y su encargado
-        // Los timbres de las cajas: de momento no hacen nada. El lápiz abre 2b en la pieza 12;
-        // «+ Plato» y tocar un plato, la caja provisional en la pieza 18
+        // La lista de cajas y sus timbres: el lápiz abre 2b; «+ Plato» y tocar un plato,
+        // la caja provisional hasta la S7 (entonces abrirán el formulario del plato)
         val adaptador = CategoriaAdapter(
             alEditar = { categoria -> CategoriaBottomSheet.nueva(categoria.id).show(supportFragmentManager, "categoria") },
-            alAnadirPlato = { },
-            alTocarPlato = { }
+            alAnadirPlato = { abrirPendiente(getString(R.string.panel_btn_mas_plato)) },
+            alTocarPlato = { plato ->
+                abrirPendiente(getString(R.string.comun_plato_numero_nombre, plato.numero, plato.nombre))
+            }
         )
         binding.listaCategorias.layoutManager = LinearLayoutManager(this)
         binding.listaCategorias.adapter = adaptador
@@ -51,6 +54,11 @@ class PanelActivity : AppCompatActivity() {
             CategoriaBottomSheet.nueva().show(supportFragmentManager, "categoria")
         }
 
+        // Resumen de ingresos: caja provisional hasta la S10
+        binding.botonResumen.setOnClickListener {
+            abrirPendiente(getString(R.string.panel_btn_resumen_ingresos))
+        }
+
         // Atrás y Terminar hacen lo mismo: cerrar el Panel y volver a 1a, sin pedir PIN (ficha 1)
         binding.botonAtras.setOnClickListener { finish() }
         binding.botonTerminar.setOnClickListener { finish() }
@@ -59,5 +67,16 @@ class PanelActivity : AppCompatActivity() {
         binding.botonCambiarPin.setOnClickListener {
             CambiarPinDialog().show(supportFragmentManager, "cambiar_pin")
         }
+    }
+
+    // [Claude] La caja provisional de la S5 («Esta parte llega en una sesión posterior»), solo con Aceptar.
+    // Una sola función para los tres botones que todavía no tienen pantalla
+    private fun abrirPendiente(titulo: String) {
+        ConfirmacionDialog.nueva(
+            titulo = titulo,
+            texto = getString(R.string.pendiente_sesion_posterior),
+            afirmativo = getString(R.string.comun_aceptar),
+            clave = "pendiente"
+        ).show(supportFragmentManager, "pendiente")
     }
 }
