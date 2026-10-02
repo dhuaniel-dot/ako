@@ -33,7 +33,7 @@ class PanelViewModel(
     // 2e: qué platos de la categoría están en mesas pendientes, para avisar antes de eliminarla
     suspend fun platosAfectados(categoriaId: Long): List<PlatoConMesas> =
         cartaRepository.platosAfectadosPorCategoria(categoriaId)
-    
+
     // 1e (P46 B): primero se comprueba el PIN actual, antes de mirar los nuevos
     suspend fun comprobarPin(pin: String): Boolean = seguridadRepository.comprobarPin(pin)
 
