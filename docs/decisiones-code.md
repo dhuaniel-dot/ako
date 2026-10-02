@@ -320,6 +320,12 @@ Tres revisiones con Fable (`docs/revisiones/2026-10-01-codigo.md`, `-skills.md`,
 | 2 oct · **Hook F02 y F03 aplicados** (Daniel copió el archivo probado; Claude no puede editar los hooks): el hook mira también los archivos nuevos sin añadir (F02) y bloquea si no puede leer el comando (F03). Probado con 6 casos (commit normal, mensaje sin `S<N>:`, archivo nuevo con clave falsa, el mismo sin el archivo, JSON roto, otro comando) | `.claude/hooks/comprobar-commit.sh` |
 | 2 oct · **Commit → C** (Daniel): los cambios de la revisión quedan sin commit hasta que otro chat los revise | — |
 
+### 5.9 Sesión 6 — 2 oct 2026
+
+| Fecha · decisión | Consecuencia |
+|---|---|
+| 2 oct · **P160 · Etiqueta y borde naranjas en los campos de texto (P153 a medias, revisión del 2 oct, apartado F) → B** (Daniel eligió B entre A/B/C): A) inflar la vista de 1c y 1e con `LayoutInflater.from(constructor.context)` (revisor; https://developer.android.com/reference/androidx/appcompat/app/AlertDialog.Builder#getContext()) · **B) un estilo para todos los campos en el tema: `textInputStyle` = `Widget.AKO.CampoTexto` con `materialThemeOverlay` que pone `colorPrimary = colorOnSurface` solo dentro del campo** (Claude, siguiendo https://github.com/material-components/material-components-android/blob/master/docs/components/TextField.md, «Theming text fields») · C) dejarlo para la S13 (Claude). Motivo: el fallo no era solo de 1c/1e: 1b daba 4,4:1 y lo heredarían la hoja 2b y el formulario 3a | Pieza 0 de la S6, en los dos `themes.xml`. Borrador probado por Claude en el emulador (1c en día y en noche: etiqueta y borde con color de texto) y deshecho. Cierra P153. Fuente a la bibliografía |
+
 ## 6. Para el Project (lo que Daniel corrige en el doc)
 
 Regla de Daniel (30 sep 2026): **lo que se decide en Claude Code tiene prioridad sobre el Project «Proyecto Intermodular» de la app de Claude** (donde se planificó todo y se escribe el doc): el doc explica el prototipo, así que manda lo que se construye aquí. Daniel le pide al chat del Project que lea esta lista y corrija el doc en consecuencia; si algo del spec no hace falta o cambia, se sigue lo decidido aquí y se apunta en esta lista para que Daniel lo corrija después en el Project «Línea 2 Ako». Se tacha cuando Daniel diga que ya está en el doc. (Los «Anotar para el Project» sueltos de los apartados anteriores se pasan aquí al cerrar la sesión.)
