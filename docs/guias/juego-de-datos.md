@@ -181,7 +181,7 @@ INSERT INTO linea_comanda (comanda_id, producto_id, cantidad, precio_unitario_ce
   VALUES ((SELECT MAX(id) FROM comanda), (SELECT id FROM producto WHERE numero = 30), 1, 450, 'Flan');
 ```
 
-  Después: **Terminar → Propietario → 1234** para que el Panel vuelva a leer (la lista se refresca al volver a la pantalla; si no sale Flan, cerrar la app y abrirla).
+  Después: **Terminar → Propietario → 1234** para que el Panel vuelva a leer (desde P49 B el Panel se pone al día solo cuando la **app** cambia una tabla; lo escrito desde fuera, con el inspector o con `sqlite3`, puede no avisarle, y al volver a entrar se abre un Panel nuevo que lee la base de datos; si no sale Flan, cerrar la app y abrirla).
 - **P-M-06** (paso 12, solo sus pasos 1–2): aviso 2e con Flan (mesa 5) → **Eliminar** → Postres eliminada con Flan atenuado. **[Claude]** Se mira además en el inspector lo que 6b enseñará en la S9: la línea de Flan sigue en `linea_comanda` (R5) y `producto.activo` de Flan sigue a 1. **Parcial**: faltan 6b (S9) y la carta (S8); se repite entera en la **S9**.
 - **A mano, 2 — los platos de P-M-04:**
 

@@ -7,7 +7,7 @@
 
 | Nivel | RF | Estado |
 |---|---|---|
-| 1 | 29 | 3 implementados (RF-01, RF-02, RF-03) · 2 implementados, no probados (RF-24, RF-50) |
+| 1 | 29 | 3 implementados (RF-01, RF-02, RF-03) · 5 implementados, no probados (RF-04, RF-05, RF-06, RF-24, RF-50) |
 | 2 | 22 | 0 implementados |
 | 3 | 2 | 0 implementados |
 
@@ -18,9 +18,9 @@
 | RF-01 | Crear el PIN en el primer arranque, escrito dos veces, con aviso de que no se recupera | 1 · 1b | Propietario | 1 | implementado | S5 |
 | RF-02 | Entrar en Propietario introduciendo el PIN; error con sacudida e intentos ilimitados | 1 · 1c | Propietario | 1 | implementado | S5 |
 | RF-03 | Cambiar el PIN (actual + nuevo dos veces) | 1 · 1e | Propietario | 1 | implementado | S5 |
-| RF-04 | Ver la carta en modo edición: cajas por categoría con sus platos, incluidos los **eliminados** marcados con la palabra *Eliminado* | 2 · 2a | Propietario | 1 | diseñado | — |
-| RF-05 | Crear y editar una categoría (nombre, foto, activo); la categoría por defecto sin interruptor ni flechas | 2 · 2b | Propietario | 1 | diseñado | — |
-| RF-06 | **Eliminar** una categoría avisando de las mesas con sus platos en comandas pendientes, sin borrar líneas | 2 · 2b, 2e | Propietario | 1 | diseñado | — |
+| RF-04 | Ver la carta en modo edición: cajas por categoría con sus platos, incluidos los **eliminados** marcados con la palabra *Eliminado* | 2 · 2a | Propietario | 1 | implementado, no probado | S6 |
+| RF-05 | Crear y editar una categoría (nombre, foto, activo); la categoría por defecto sin interruptor ni flechas | 2 · 2b | Propietario | 1 | implementado, no probado | S6 |
+| RF-06 | **Eliminar** una categoría avisando de las mesas con sus platos en comandas pendientes, sin borrar líneas | 2 · 2b, 2e | Propietario | 1 | implementado, no probado | S6 |
 | RF-08 | Crear y editar un plato: nombre, número, precio y categoría obligatorios; descripción y activo | 3 · 3a | Propietario | 1 | diseñado | — |
 | RF-09 | Añadir foto al plato: elegir, redimensionar (~1080px), comprimir a JPEG, guardar como archivo | 3 · 3a | Propietario | 1 (última pieza) | diseñado | — |
 | RF-10 | Marcar los alérgenos del plato entre los 14 legales | 3 · 3a | Propietario | 1 | diseñado | — |

@@ -117,6 +117,7 @@ Daniel dice qué cambia (`/como-trabajamos` o simplemente diciéndolo). Claude e
 
 Los últimos; el historial completo está en `docs/como-trabajamos-historial.md` (se mueve allí al cerrar cada sesión lo anterior a la última).
 
+- **2026-10-02** · Daniel (S6, con poca energía): puede pedir que **Claude ejecute las pruebas manuales en el emulador** (`adb`) o **escriba piezas pequeñas** (iconos, retoques de diseño); se declara en la ficha y en la memoria, y Daniel revisa las capturas o el diff. También puede decidir **no hacer relevo** pasado el 60 % para terminar la sesión en el mismo chat (al 75 % Claude lo vuelve a avisar).
 - **2026-10-01** · Daniel (S5): los repasos de lo no entendido van **siempre** a los PDF, no al chat; solo hay repaso en el chat si él lo pide. Sustituye a «se vuelve a comprobar al abrir la sesión siguiente».
 - **2026-10-01** · Daniel: se mantiene «pega antes de la última `}`» para añadir métodos (no hace falta dar el archivo entero aunque dos veces quedaran dentro de otro método); Claude lee el archivo tras cada «ya está» y arregla la sangría. Cuando Daniel pide «revisa», Claude lee el archivo entero, no solo compila.
 - **2026-10-01** · Daniel: el repaso de lo no entendido puede ir a los PDF del cierre en vez de darse en el chat; se vuelve a comprobar al abrir la sesión siguiente.
