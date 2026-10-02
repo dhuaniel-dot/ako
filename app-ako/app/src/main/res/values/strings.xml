@@ -7,6 +7,16 @@
     <string name="comun_atras_cd">Atrás</string>
     <string name="comun_aceptar">Aceptar</string>
     <string name="comun_cancelar">Cancelar</string>
+    <string name="comun_guardar">Guardar</string>
+    <string name="comun_eliminar">Eliminar</string>
+    <!-- Precio ya formateado + espacio que no se parte (&#160;) + € -->
+    <string name="comun_precio">%1$s&#160;€</string>
+    <!-- «12 · Entrecot»: número · nombre (punto medio) -->
+    <string name="comun_plato_numero_nombre">%1$d · %2$s</string>
+    <string name="comun_mas">+</string>
+    <string name="comun_sin_foto_cd">Sin foto</string>
+    <!-- [Claude] La «y» de las listas («mesas 5, 6 y 7»); los espacios los pone el código (XML se come los de los bordes) -->
+    <string name="comun_y">y</string>
 
     <!-- 1a · Selector de rol -->
     <string name="selector_subtitulo">Pedidos para bares y restaurantes</string>
@@ -38,6 +48,35 @@
 
     <!-- 2a · Panel: botón Terminar (en la S5 lo usa el Panel provisional) -->
     <string name="panel_btn_terminar">Terminar</string>
+    <!-- 2a · Panel -->
+    <string name="panel_titulo">Categorías</string>
+    <string name="panel_btn_resumen_ingresos">Resumen de ingresos</string>
+    <string name="panel_categoria_eliminada">Categoría eliminada</string>
+    <string name="panel_plato_eliminado">Eliminado</string>
+    <string name="panel_btn_mas_plato">+ Plato</string>
+
+    <!-- 2b · Hoja de categoría. Los títulos sirven también de contentDescription del + y del lápiz -->
+    <string name="categoria_titulo_nueva">Nueva categoría</string>
+    <string name="categoria_titulo_editar">Editar categoría</string>
+    <string name="categoria_hint_nombre">Nombre</string>
+    <string name="categoria_foto_opcional">Foto (opcional)</string>
+    <string name="categoria_btn_elegir_foto">+ Elegir</string>
+    <!-- P41: el interruptor de 2b se llama igual que el del plato; apagarlo ELIMINA la categoría -->
+    <string name="plato_en_la_carta">En la carta</string>
+    <string name="categoria_nombre_repetido">Ya existe una categoría con ese nombre</string>
+
+    <!-- 2e · Aviso agrupado (R6) al eliminar una categoría con platos en comandas pendientes -->
+    <string name="categoria_eliminar_titulo">¿Eliminar la categoría?</string>
+    <!-- %1$s = la lista de platos, p. ej. «Flan (mesa 5), Helado (mesas 5 y 7)» -->
+    <plurals name="categoria_eliminar_cuerpo">
+        <item quantity="one">Este plato está en comandas pendientes: %1$s. No se quitará de esas comandas.</item>
+        <item quantity="other">Estos platos están en comandas pendientes: %1$s. No se quitarán de esas comandas.</item>
+    </plurals>
+    <!-- [Claude] Un plato con sus mesas: %1$s = nombre, %2$s = «5» o «5 y 7» -->
+    <plurals name="categoria_eliminar_plato_mesas">
+        <item quantity="one">%1$s (mesa %2$s)</item>
+        <item quantity="other">%1$s (mesas %2$s)</item>
+    </plurals>
 
     <!-- [Claude] Provisional: la caja de Pedir y Cuenta hasta la S8/S9 y la del Resumen de ingresos hasta la S10, que la borra -->
     <string name="pendiente_sesion_posterior">Esta parte llega en una sesión posterior</string>
