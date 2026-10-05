@@ -138,8 +138,27 @@ class PlatoActivity : AppCompatActivity() {
                 binding.textoCategoria.setText(porDefecto.nombre, false)
                 binding.botonGuardar.isEnabled = false
                 lifecycleScope.launch { guardar() }
+            } else {
+                // No: segundo aviso, «¿Quieres recuperar Postres?»
+                lifecycleScope.launch { preguntarRecuperar() }
             }
-            // No: el segundo aviso llega en la pieza 12. Cerrar sin contestar no deja sobre (P144 A): nada
+            // Cerrar sin contestar no deja sobre (P144 A): no se guarda nada
+        }
+
+        // El sobre del segundo aviso 3e («¿Quieres recuperar Postres?»)
+        supportFragmentManager.setFragmentResultListener(CLAVE_3E_RECUPERAR, this) { _, sobre ->
+            binding.botonGuardar.isEnabled = false
+            if (sobre.getBoolean(ConfirmacionDialog.RESPUESTA_AFIRMATIVA)) {
+                // Recuperar: la categoría vuelve con sus platos y el plato se guarda ahí, visible
+                val categoriaId = checkNotNull(viewModel.categoriaElegidaId)
+                lifecycleScope.launch {
+                    viewModel.recuperarCategoria(categoriaId)
+                    guardar()
+                }
+            } else {
+                // No: «ya es decisión del propietario» (ficha 3). Se guarda ahí, invisible (R15)
+                lifecycleScope.launch { guardar(aunqueCategoriaEliminada = true) }
+            }
         }
 
         binding.botonAtras.setOnClickListener { finish() }
@@ -175,9 +194,10 @@ class PlatoActivity : AppCompatActivity() {
         return !antes.activo && binding.interruptorEnLaCarta.isChecked
     }
 
-    // Guarda y, si el interruptor cambió, elimina o recupera (como la hoja 2b, P150)
-    private suspend fun guardar() {
-        when (viewModel.guardar(leerFormulario())) {
+    // Guarda y, si el interruptor cambió, elimina o recupera (como la hoja 2b, P150).
+    // aunqueCategoriaEliminada solo lo pone el «No» del segundo aviso 3e
+    private suspend fun guardar(aunqueCategoriaEliminada: Boolean = false) {
+        when (viewModel.guardar(leerFormulario(), aunqueCategoriaEliminada)) {
             ResultadoGuardado.Ok -> {
                 if (seVaAEliminar()) {
                     viewModel.eliminar()          // R5: activo = false; ninguna línea se toca (R6)
@@ -213,6 +233,20 @@ class PlatoActivity : AppCompatActivity() {
             clave = CLAVE_3E_MOVER
         ).show(supportFragmentManager, "3e_mover")
         actualizarGuardar()
+    }
+
+    // 3e, segundo aviso: «¿Quieres recuperar Postres? Platos que volverán a la carta: 2» (P164 B)
+    private suspend fun preguntarRecuperar() {
+        val datos = checkNotNull(viewModel.datos.value)
+        val elegida = datos.categorias.first { it.id == viewModel.categoriaElegidaId }
+        val cuantos = viewModel.platosQueVuelven(elegida.id)
+        ConfirmacionDialog.nueva(
+            titulo = getString(R.string.recuperar_categoria_titulo, elegida.nombre),
+            texto = getString(R.string.recuperar_categoria_cuerpo, cuantos),
+            afirmativo = getString(R.string.recuperar_categoria_btn_recuperar),
+            negativo = getString(R.string.comun_no),
+            clave = CLAVE_3E_RECUPERAR
+        ).show(supportFragmentManager, "3e_recuperar")
     }
 
     // Pone en los campos lo que hay guardado (al editar) y elige la categoría
@@ -290,7 +324,8 @@ class PlatoActivity : AppCompatActivity() {
         const val EXTRA_PRODUCTO_ID = "producto_id"
         const val EXTRA_CATEGORIA_ID = "categoria_id"
 
-        // [Claude] El nombre del sobre del primer aviso 3e (cada pregunta, su sobre)
+        // [Claude] Los nombres de los sobres de los dos avisos 3e (cada pregunta, su sobre)
         const val CLAVE_3E_MOVER = "3e_mover"
+        const val CLAVE_3E_RECUPERAR = "3e_recuperar"
     }
 }

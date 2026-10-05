@@ -65,8 +65,19 @@ class PlatoViewModel(private val cartaRepository: CartaRepository) : ViewModel()
 
     // Guarda el plato con los alérgenos marcados. Las reglas (R8, R9 y la categoría eliminada)
     // las comprueba el repositorio en ese orden; la pantalla solo reacciona a la respuesta
-    suspend fun guardar(p: Producto): ResultadoGuardado =
-        cartaRepository.guardarPlato(p, alergenosMarcados.toList())
+    // aunqueCategoriaEliminada = true es la tercera salida de 3e: el Propietario dijo «No» a las dos preguntas (P130)
+    suspend fun guardar(p: Producto, aunqueCategoriaEliminada: Boolean = false): ResultadoGuardado =
+        cartaRepository.guardarPlato(p, alergenosMarcados.toList(), aunqueCategoriaEliminada = aunqueCategoriaEliminada)
+
+    // [Claude] 3e, segundo aviso: cuántos platos volverían a la carta al recuperar la categoría.
+    // El reverso de R6: los activos de esa categoría, sin contar el que se está guardando (P-M-11)
+    suspend fun platosQueVuelven(categoriaId: Long): Int {
+        val idDelPlato = datos.value?.plato?.id
+        return cartaRepository.platosDe(categoriaId).count { it.activo && it.id != idDelPlato }
+    }
+
+    // [Claude] Recuperar la categoría (vuelve con todos sus platos, R5)
+    suspend fun recuperarCategoria(id: Long) = cartaRepository.recuperarCategoria(id)
 
     // R6, primer paso (P128): qué mesas tienen este plato en una comanda pendiente. Solo mira, no toca nada
     suspend fun mesasAfectadas(): List<Int> {

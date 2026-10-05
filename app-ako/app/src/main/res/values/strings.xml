@@ -121,11 +121,8 @@
 
     <!-- 3e · aviso 2 de 2 · comun_no / recuperar_categoria_btn_recuperar (P9: recuperar, no reactivar) -->
     <string name="recuperar_categoria_titulo">¿Quieres recuperar %1$s?</string>
-    <!-- P63 A: plurals para no decir «sus 1 platos»; %1$d = platos que vuelven. [Claude] texto del singular -->
-    <plurals name="recuperar_categoria_cuerpo">
-        <item quantity="one">Volverá a la carta %1$d plato.</item>
-        <item quantity="other">Volverán a la carta sus %1$d platos.</item>
-    </plurals>
+    <!-- P164 B: frase neutra que vale para 0, 1 o varios (sustituye al plurals de P63 A); %1$d = platos que vuelven -->
+    <string name="recuperar_categoria_cuerpo">Platos que volverán a la carta: %1$d</string>
     <string name="recuperar_categoria_btn_recuperar">Recuperar</string>
 
     <!-- [Claude] Provisional: la caja de Pedir y Cuenta hasta la S8/S9 y la del Resumen de ingresos hasta la S10, que la borra -->
