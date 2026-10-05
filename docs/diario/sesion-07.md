@@ -5,10 +5,10 @@
 | **Fecha** | 2026-10-05 |
 | **Sesión nº** | 07 |
 | **Objetivo de la sesión** | Del spec: **Plato sin foto (3a, 3d, 3e)**; P-M-07 pasa y P-M-09, 10 y 11 quedan *Parcial* (guía S7, P6) |
-| **Tiempo dedicado** | 11:35 – HH:MM (descontando pausas) |
-| **Nivel / pieza** | Nivel 1 · <pantalla o capa> (p. ej. *entidades Room*, *pantalla 6c*) |
-| **Commit final** | `abc1234` — mensaje del commit |
-| **Contexto al cerrar** | NN % (el anillo junto al modelo; P156) |
+| **Tiempo dedicado** | 11:35 – 18:40, unas 6 h y media de reloj. Hubo una pausa para comer tras la pieza 4 que Daniel no cronometró: no se descuenta [Claude] |
+| **Nivel / pieza** | Nivel 1 · pantalla 3 (3a formulario del plato, 3d aviso de mesas afectadas, 3e cadena de dos avisos al guardar en una categoría eliminada) |
+| **Commit final** | `f79e021` — S7: Plato sin foto (3a, 3d, 3e) (antes, intermedios `187b441`, `61085d5`, `f90ae18`, `38123dd`, `251a891`, `c828c50`, `5724c28`, `d089586`, `c878961`, `83e37a1`, `2c58084`, `8bf5c15`, `b444ae3`, `2261d4a`) |
+| **Contexto al cerrar** | ~55 % (estimación de Claude; el último dato de Daniel fue 25 % al volver de comer y no avisó del 60 %) |
 
 ## Qué se hizo
 
@@ -51,22 +51,36 @@
 
 ## Qué entendí y qué no
 
-- **Entendí:** lo que ahora podría explicar sin leerlo (una línea por concepto).
-- **No entendí todavía:** lo que funciona pero no sabría explicar. Se vuelve a ello en la sesión siguiente.
+- Daniel, al cerrar: *«en general todo bien; lo normal, que lo nuevo cuesta, pero cuando lo miras un tiempo ya vas entendiendo un poco»*.
+- **Entendí (por sus respuestas):** céntimos con enteros y por qué «7,5» es 750; qué hace la categoría por defecto si no se grapa el id; que la categoría sale del id grapado a la nota (`Intent`); por qué *Guardar* va fuera del scroll; que las casillas salen de la base de datos (un alérgeno 15 no cambia la pantalla); que la descripción no enciende *Guardar* porque es opcional; que al editar con el mismo número no salta R9 por el id; por qué la de por defecto se busca por `esPorDefecto` (se puede renombrar; en la pieza 1 lo dijo al revés y en la 11 ya bien); el contador de 3e (vuelven Flan y Tarta, no el plato nuevo); el guardián de Atrás sin cambios.
+- **A medias o no todavía (van al PDF, regla del 1 oct):** eliminar un plato no «quita» nada de `producto`: solo cambia `activo` a 0 y la fila sigue; por qué la pantalla no habla con el repositorio (además de que la libreta guarda los datos, es la regla del spec 3); dónde vive cada regla (R8 en la pantalla y el repositorio; R9 en la base de datos y el repositorio).
 
 ## Para el vídeo
 
-- Lo que se ha explicado en la sesión y se podría contar en el vídeo de 10 minutos: una línea por idea, con la comparación de la vida real si la hubo y la decisión (Pnnn) que la respalda. Sirve para montar el guion al final.
+- **Euros con monedas, no con báscula (`centimosDesde`):** «18,50» se parte por la coma y se cuentan euros × 100 + céntimos; un `Double` daría 28 céntimos para 0,29. R8 en tres sitios: teclado sin signo, la conversión y `Validacion`.
+- **La nota y lo que se grapa (`Intent` y *extras*):** el Panel grapa un id; la pantalla del plato lee el resto de la base de datos. Nunca se pasa el plato entero.
+- **La bandeja completa (P162 B):** el formulario recibe de una vez plato, categorías, alérgenos y marcados, como dice la guía oficial («single stream»).
+- **La libreta que sobrevive (ViewModel, P66 A):** al cambiar el tema, la pantalla se rehace, pero lo elegido (categoría, casillas, «hay cambios») sigue en la libreta.
+- **Las casillas salen de la tabla:** 14 filas precargadas → 14 casillas; un alérgeno 15 no cambia la pantalla.
+- **Ayuda gris frente a error rojo:** el número cambiado informa; el repetido no deja guardar (R9 dos veces: el repositorio avisa, la base de datos lo impide).
+- **R6 en dos pasos con el mismo aviso para dos pantallas (P128, P163 A):** primero mirar las mesas, después tocar; `MesasAfectadasDialog` en `comun` sirve al Panel (2e) y al plato (3d). Eliminar no borra: la línea de la mesa 6 sigue.
+- **La máquina de dos preguntas (3e):** ¿lo muevo a Otros? → ¿recupero la categoría? (el reverso de R6: dice cuántos platos vuelven, con frase neutra, P164 B) → si no, «ya es decisión del propietario». Otros nunca está escrito: sale de `esPorDefecto` (R16).
+- **El guardián de Atrás (P165 C):** solo se enciende cuando has tocado algo; la flecha y el botón del sistema pasan por el mismo sitio. Y un fallo encontrado al probar (recrear la pantalla «tocaba» los campos) arreglado con `onPostCreate`.
 
 ## Pruebas
 
-- Pruebas de código que pasan al terminar: P-C-nn, …
-- Pruebas manuales ejecutadas en esta sesión: P-M-nn (resultado y fecha ya apuntados en `spec+doc-pruebas.md`).
+- Pruebas de código que pasan al terminar (5 oct, `testDebugUnitTest`): las 21 de `test/` (P-C-01 a 05, 09, 10 y 11). La S7 no añade pruebas de código (la guía no las pide).
+- Pruebas manuales (apuntadas en `spec+doc-pruebas.md`, 5 oct): **P-M-07 Pasa**; **P-M-09 Parcial** (pasos 3–4, ficha 5b, S8); **P-M-10 Parcial** (comanda de la mesa 6 metida con `sqlite3`; faltan la carta, S8, y 6b, S9); **P-M-11 Parcial** (paso 4, la carta, S8); P-M-04 y P-M-29 con una observación más (siguen Parcial). Las ejecutó Claude con `adb` tras una instalación limpia, a petición de Daniel.
 
 ## Uso de IA en esta sesión
 
-- Qué pidió Daniel a Claude Code, qué generó, qué revisó o cambió Daniel a mano. Una línea por pieza. (Alimenta la frase de P37; **lo escrito coincide con lo hecho**.)
+- Decisiones: P162, P163, P164 y P165 se plantearon con 3 opciones (al menos una con fuente enlazada) y **eligió Daniel** (en P162 y P163 la recomendada; en P164 y P165, otra). Los nombres y detalles menores los decidió Claude y van marcados [Claude] (`decisiones-code.md` 5.10).
+- Piezas 1–13: Claude dio cada bloque tras **compilarlo y probarlo en el emulador** dentro del proyecto (y deshacerlo); **Daniel creó los archivos y pegó el código en Android Studio**; Claude comprobó leyendo el disco, compilando y probando en el emulador (desde la pieza 8, Daniel pidió que las pruebas las hiciera Claude).
+- Arreglos de Claude sobre lo tecleado (mismo contenido que el bloque dado, sin código nuevo): la palabra «porque» dentro de `Formato.kt` (problema 1), una llave final (4), los dos archivos cruzados de las piezas 7 y 10 (5 y 7), el bloque de Guardar fuera de sitio en la pieza 9 (6) y dos líneas en blanco del manifiesto. El movimiento de `MesasAfectadasDialog` lo hizo Daniel con *Refactor → Move*.
+- **Hecho por Claude a petición de Daniel:** la preparación del emulador (apartado 0) y la pasada de pruebas de la pieza 14 (con `adb` y `sqlite3`).
+- Cierre: resúmenes sencillo y normal en PDF (`docs/resumenes/`, fuera de Git) enviados por Gmail con el visto bueno de Daniel («haz el cierre y envía el gmail»).
+- Documentación: Claude escribió la ficha, `decisiones-code.md`, `estado-nivel.md`, `spec+doc-pruebas.md`, `como-trabajamos` y `lecciones-claude.md`; un subagente puso al día las guías S8–S13 y `juego-de-datos.md` con lo decidido hoy.
 
 ## Siguiente sesión
 
-- Con qué se empieza, en una línea.
+- S8 (**Pedir**: 1d, 5a, 5b, 5c; Plan Mode al abrir, P25): la carta, la ficha del plato y el carrito; completa P-M-09 y P-M-11 (pasos de la carta) y la comanda de la mesa 6 ya se hace desde Pedir. Datos del emulador: los de la pasada de la pieza 14 (PIN 1234); la S8 empieza con instalación limpia.
