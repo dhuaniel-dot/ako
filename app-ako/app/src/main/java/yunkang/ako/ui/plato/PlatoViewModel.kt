@@ -40,6 +40,10 @@ class PlatoViewModel(private val cartaRepository: CartaRepository) : ViewModel()
     // [Claude] true cuando los campos ya tienen lo guardado; desde ahí manda lo que se teclea
     var formularioRelleno = false
 
+    // P66 A: los alérgenos marcados (sus ids) viven en la libreta, no en las casillas:
+    // las casillas se crean de nuevo si Android recrea la pantalla
+    val alergenosMarcados = mutableSetOf<Long>()
+
     // Lee la base de datos UNA sola vez. productoId null = plato nuevo.
     // viewModelScope.launch empieza en el hilo principal; cada llamada de Room
     // se va ella sola a otro hilo y vuelve con el resultado

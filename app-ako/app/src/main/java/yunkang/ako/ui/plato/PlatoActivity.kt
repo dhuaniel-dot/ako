@@ -1,12 +1,15 @@
 package yunkang.ako.ui.plato
 
 import android.os.Bundle
+import android.widget.GridLayout
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.checkbox.MaterialCheckBox
 import yunkang.ako.R
+import yunkang.ako.datos.entidades.Alergeno
 import yunkang.ako.databinding.ActivityPlatoBinding
 import yunkang.ako.ui.comun.Formato
 
@@ -71,6 +74,9 @@ class PlatoActivity : AppCompatActivity() {
             if (elegida != null) {
                 binding.textoCategoria.setText(elegida.nombre, false)
             }
+
+            // Las casillas también se crean cada vez (vista nueva tras una recreación)
+            pintarAlergenos(datos.alergenos)
         }
 
         binding.botonAtras.setOnClickListener { finish() }
@@ -86,6 +92,8 @@ class PlatoActivity : AppCompatActivity() {
             binding.textoDescripcion.setText(plato.descripcion)
             binding.interruptorEnLaCarta.isChecked = plato.activo
         }
+        // Los alérgenos que ya lleva el plato (vacío si es nuevo)
+        viewModel.alergenosMarcados.addAll(datos.alergenosDelPlato)
 
         // La categoría: la del plato; si es nuevo, la de su caja; si no llegó ninguna,
         // la de por defecto, buscada por su columna y nunca por el nombre (ficha 3, R16)
@@ -93,6 +101,32 @@ class PlatoActivity : AppCompatActivity() {
         val categoria = datos.categorias.find { it.id == idBuscado }
             ?: datos.categorias.first { it.esPorDefecto }
         viewModel.categoriaElegidaId = categoria.id
+    }
+
+    // Una casilla por cada alérgeno de la base de datos (no se escriben en el XML: son datos, ficha 3).
+    // Cuáles están marcadas lo dice la libreta (P66 A)
+    private fun pintarAlergenos(alergenos: List<Alergeno>) {
+        binding.rejillaAlergenos.removeAllViews()
+        for (alergeno in alergenos) {
+            val casilla = MaterialCheckBox(this)
+            casilla.text = alergeno.nombre
+            casilla.isChecked = alergeno.id in viewModel.alergenosMarcados
+            // Al tocarla, se apunta o se borra en la libreta
+            casilla.setOnCheckedChangeListener { _, marcada ->
+                if (marcada) {
+                    viewModel.alergenosMarcados.add(alergeno.id)
+                } else {
+                    viewModel.alergenosMarcados.remove(alergeno.id)
+                }
+            }
+            // [Claude] Dos columnas del mismo ancho: ancho 0 y la columna con peso 1
+            val sitio = GridLayout.LayoutParams(
+                GridLayout.spec(GridLayout.UNDEFINED),
+                GridLayout.spec(GridLayout.UNDEFINED, 1f)
+            )
+            sitio.width = 0
+            binding.rejillaAlergenos.addView(casilla, sitio)
+        }
     }
 
     // [Claude] Los nombres de lo que se grapa a la nota. Están aquí para que el Panel
