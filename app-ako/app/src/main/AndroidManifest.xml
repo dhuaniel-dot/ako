@@ -28,6 +28,12 @@
             android:name=".ui.panel.PanelActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
+
+        <!-- Pantalla 3 (formulario del plato). Solo en vertical (RNF-15) -->
+        <activity
+            android:name=".ui.plato.PlatoActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

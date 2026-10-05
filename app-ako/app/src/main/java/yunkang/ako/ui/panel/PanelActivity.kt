@@ -1,5 +1,6 @@
 package yunkang.ako.ui.panel
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -10,9 +11,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import yunkang.ako.R
 import yunkang.ako.databinding.ActivityPanelBinding
 import yunkang.ako.ui.comun.ConfirmacionDialog
+import yunkang.ako.ui.plato.PlatoActivity
 
 // 2a · Panel del Propietario: se llega tras el PIN correcto (1c).
-// Lo que llega en otras sesiones (Resumen de ingresos, S10; el formulario del plato, S7) abre la caja provisional
+// El Resumen de ingresos (llega en la S10) abre todavía la caja provisional
 class PanelActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPanelBinding
@@ -33,15 +35,23 @@ class PanelActivity : AppCompatActivity() {
             insets
         }
 
-        // La lista de cajas y sus timbres: el lápiz abre 2b; «+ Plato» y tocar un plato,
-        // la caja provisional hasta la S7 (entonces abrirán el formulario del plato)
+        // La lista de cajas y sus timbres: el lápiz abre 2b; «+ Plato» y tocar un plato abren
+        // el formulario del plato (3a) con una nota (Intent) que lleva grapado un id
         val adaptador = CategoriaAdapter(
             estaPlegada = { id -> viewModel.estaPlegada(id) },
             alPlegar = { categoria -> viewModel.alternarPlegado(categoria.id) },
             alEditar = { categoria -> CategoriaBottomSheet.nueva(categoria.id).show(supportFragmentManager, "categoria") },
-            alAnadirPlato = { abrirPendiente(getString(R.string.panel_btn_mas_plato)) },
+            alAnadirPlato = { categoria ->
+                // Crear: se grapa la categoría de la caja, que saldrá ya elegida (ficha 3)
+                val nota = Intent(this, PlatoActivity::class.java)
+                nota.putExtra(PlatoActivity.EXTRA_CATEGORIA_ID, categoria.id)
+                startActivity(nota)
+            },
             alTocarPlato = { plato ->
-                abrirPendiente(getString(R.string.comun_plato_numero_nombre, plato.numero, plato.nombre))
+                // Editar: se grapa solo el id; la pantalla lee el plato fresco de la base de datos
+                val nota = Intent(this, PlatoActivity::class.java)
+                nota.putExtra(PlatoActivity.EXTRA_PRODUCTO_ID, plato.id)
+                startActivity(nota)
             }
         )
         binding.listaCategorias.layoutManager = LinearLayoutManager(this)
@@ -72,7 +82,7 @@ class PanelActivity : AppCompatActivity() {
     }
 
     // [Claude] La caja provisional de la S5 («Esta parte llega en una sesión posterior»), solo con Aceptar.
-    // Una sola función para los tres botones que todavía no tienen pantalla
+    // Hoy solo la usa Resumen de ingresos, hasta la S10
     private fun abrirPendiente(titulo: String) {
         ConfirmacionDialog.nueva(
             titulo = titulo,
