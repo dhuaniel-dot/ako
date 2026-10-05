@@ -1,11 +1,9 @@
-package yunkang.ako.ui.panel
+package yunkang.ako.ui.comun
 
 import android.content.Context
 import androidx.fragment.app.FragmentManager
 import yunkang.ako.R
 import yunkang.ako.dominio.modelos.PlatoConMesas
-import yunkang.ako.ui.comun.ConfirmacionDialog
-import yunkang.ako.ui.comun.Formato
 
 // 2e · El aviso agrupado de R6 (P53 A): monta el texto y abre la caja de siempre (ConfirmacionDialog, P84).
 // [Claude] Es un object (no guarda nada): solo sabe escribir el aviso. En la S7 crecerá con el del plato (3d)

@@ -17,6 +17,7 @@ import yunkang.ako.databinding.SheetCategoriaBinding
 import yunkang.ako.datos.entidades.Categoria
 import yunkang.ako.dominio.modelos.ResultadoGuardado
 import yunkang.ako.ui.comun.ConfirmacionDialog
+import yunkang.ako.ui.comun.MesasAfectadasDialog
 
 // 2b · Crear o editar una categoría en una hoja inferior (P84: formulario corto → hoja).
 // Recibe el id por arguments (0 = nueva), como ConfirmacionDialog: si Android rehace la hoja, no se pierde
