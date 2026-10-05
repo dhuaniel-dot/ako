@@ -129,6 +129,19 @@ class PlatoActivity : AppCompatActivity() {
             // Cancelar: no se guarda nada y el formulario sigue como lo dejó el Propietario
         }
 
+        // El sobre del primer aviso 3e («¿Muevo el plato a Otros?»), también escuchado desde onCreate
+        supportFragmentManager.setFragmentResultListener(CLAVE_3E_MOVER, this) { _, sobre ->
+            if (sobre.getBoolean(ConfirmacionDialog.RESPUESTA_AFIRMATIVA)) {
+                // Sí, mover: el plato pasa a la categoría por defecto (R16: por la columna) y se vuelve a guardar
+                val porDefecto = checkNotNull(viewModel.datos.value).categorias.first { it.esPorDefecto }
+                viewModel.categoriaElegidaId = porDefecto.id
+                binding.textoCategoria.setText(porDefecto.nombre, false)
+                binding.botonGuardar.isEnabled = false
+                lifecycleScope.launch { guardar() }
+            }
+            // No: el segundo aviso llega en la pieza 12. Cerrar sin contestar no deja sobre (P144 A): nada
+        }
+
         binding.botonAtras.setOnClickListener { finish() }
     }
 
@@ -179,11 +192,27 @@ class PlatoActivity : AppCompatActivity() {
                 binding.campoNumero.error = getString(R.string.plato_numero_repetido)
                 actualizarGuardar()
             }
-            // De momento nada: la cadena 3e llega en las piezas 11 y 12
-            ResultadoGuardado.CategoriaEliminada -> actualizarGuardar()
+            // Cadena 3e (P62): la categoría elegida está eliminada; primero se pregunta si se mueve
+            ResultadoGuardado.CategoriaEliminada -> preguntarMover()
             // Solo lo devuelven las categorías: guardarPlato nunca lo da
             ResultadoGuardado.NombreRepetido -> actualizarGuardar()
         }
+    }
+
+    // 3e, primer aviso: «La categoría Postres está eliminada. ¿Muevo el plato a Otros?»
+    // El nombre de la de por defecto sale de la base de datos: se puede renombrar (R16, D20)
+    private fun preguntarMover() {
+        val datos = checkNotNull(viewModel.datos.value)
+        val elegida = datos.categorias.first { it.id == viewModel.categoriaElegidaId }
+        val porDefecto = datos.categorias.first { it.esPorDefecto }
+        ConfirmacionDialog.nueva(
+            titulo = getString(R.string.panel_categoria_eliminada),
+            texto = getString(R.string.categoria_eliminada_cuerpo, elegida.nombre, porDefecto.nombre),
+            afirmativo = getString(R.string.categoria_eliminada_btn_mover),
+            negativo = getString(R.string.comun_no),
+            clave = CLAVE_3E_MOVER
+        ).show(supportFragmentManager, "3e_mover")
+        actualizarGuardar()
     }
 
     // Pone en los campos lo que hay guardado (al editar) y elige la categoría
@@ -260,5 +289,8 @@ class PlatoActivity : AppCompatActivity() {
     companion object {
         const val EXTRA_PRODUCTO_ID = "producto_id"
         const val EXTRA_CATEGORIA_ID = "categoria_id"
+
+        // [Claude] El nombre del sobre del primer aviso 3e (cada pregunta, su sobre)
+        const val CLAVE_3E_MOVER = "3e_mover"
     }
 }
