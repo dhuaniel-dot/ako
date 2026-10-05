@@ -17,6 +17,8 @@
     <string name="comun_sin_foto_cd">Sin foto</string>
     <!-- [Claude] La «y» de las listas («mesas 5, 6 y 7»); los espacios los pone el código (XML se come los de los bordes) -->
     <string name="comun_y">y</string>
+    <!-- Botón negativo de los dos avisos 3e -->
+    <string name="comun_no">No</string>
 
     <!-- 1a · Selector de rol -->
     <string name="selector_subtitulo">Pedidos para bares y restaurantes</string>
@@ -80,6 +82,51 @@
         <item quantity="one">%1$s (mesa %2$s)</item>
         <item quantity="other">%1$s (mesas %2$s)</item>
     </plurals>
+
+
+    <!-- 3a · Formulario del plato -->
+    <string name="plato_titulo_nuevo">Nuevo plato</string>
+    <string name="plato_titulo_editar">Editar plato</string>
+    <string name="plato_elegir_foto_cd">Elegir foto</string>
+    <!-- Obligatorios con * -->
+    <string name="plato_hint_nombre">Nombre *</string>
+    <string name="plato_hint_numero">Número *</string>
+    <string name="plato_hint_precio">Precio (€) *</string>
+    <string name="plato_hint_categoria">Categoría *</string>
+    <string name="plato_hint_descripcion">Descripción</string>
+    <string name="plato_seccion_alergenos">ALÉRGENOS</string>
+    <!-- Error del campo número al guardar (R9) -->
+    <string name="plato_numero_repetido">Ese número ya lo tiene otro plato</string>
+    <!-- Ayuda al cambiar el número de un plato ya creado; %1$d = el número ANTERIOR -->
+    <string name="plato_numero_cambiado">Si alguien tiene apuntado el %1$d, dejará de corresponder</string>
+
+    <!-- 3a · Atrás con cambios sin guardar · comun_cancelar / carta_btn_salir -->
+    <string name="plato_salir_titulo">¿Salir sin guardar?</string>
+    <string name="plato_salir_cuerpo">Se perderán los cambios</string>
+    <!-- El mismo «Salir» que la barra de la carta (5a) -->
+    <string name="carta_btn_salir">Salir</string>
+
+    <!-- 3d · R6 al apagar «En la carta» y guardar · comun_cancelar / comun_eliminar -->
+    <string name="mesas_afectadas_titulo">¿Eliminar el plato?</string>
+    <!-- D15: cuenta las mesas; %1$s = nombre del plato, %2$s = «6» o «4 y 7» -->
+    <plurals name="mesas_afectadas_cuerpo">
+        <item quantity="one">%1$s está en una comanda pendiente de la mesa %2$s. No se quitará de esa comanda.</item>
+        <item quantity="other">%1$s está en comandas pendientes de las mesas %2$s. No se quitará de esas comandas.</item>
+    </plurals>
+
+    <!-- 3e · aviso 1 de 2 · título: panel_categoria_eliminada · comun_no / categoria_eliminada_btn_mover -->
+    <!-- D20: %1$s = la categoría eliminada, %2$s = el nombre REAL de la categoría por defecto (R16) -->
+    <string name="categoria_eliminada_cuerpo">La categoría %1$s está eliminada. ¿Muevo el plato a %2$s?</string>
+    <string name="categoria_eliminada_btn_mover">Sí, mover</string>
+
+    <!-- 3e · aviso 2 de 2 · comun_no / recuperar_categoria_btn_recuperar (P9: recuperar, no reactivar) -->
+    <string name="recuperar_categoria_titulo">¿Quieres recuperar %1$s?</string>
+    <!-- P63 A: plurals para no decir «sus 1 platos»; %1$d = platos que vuelven. [Claude] texto del singular -->
+    <plurals name="recuperar_categoria_cuerpo">
+        <item quantity="one">Volverá a la carta %1$d plato.</item>
+        <item quantity="other">Volverán a la carta sus %1$d platos.</item>
+    </plurals>
+    <string name="recuperar_categoria_btn_recuperar">Recuperar</string>
 
     <!-- [Claude] Provisional: la caja de Pedir y Cuenta hasta la S8/S9 y la del Resumen de ingresos hasta la S10, que la borra -->
     <string name="pendiente_sesion_posterior">Esta parte llega en una sesión posterior</string>
