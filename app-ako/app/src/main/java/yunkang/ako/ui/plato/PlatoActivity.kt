@@ -8,10 +8,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.doAfterTextChanged
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.checkbox.MaterialCheckBox
+import kotlinx.coroutines.launch
 import yunkang.ako.R
 import yunkang.ako.datos.entidades.Alergeno
+import yunkang.ako.datos.entidades.Producto
 import yunkang.ako.databinding.ActivityPlatoBinding
+import yunkang.ako.dominio.modelos.ResultadoGuardado
 import yunkang.ako.ui.comun.Formato
 
 // 3a · Formulario del plato. Se abre desde el Panel: «+ Plato» de una caja (crear)
@@ -87,12 +91,50 @@ class PlatoActivity : AppCompatActivity() {
         // Cada cambio en nombre, número o precio vuelve a mirar si Guardar se puede encender
         binding.textoNombre.doAfterTextChanged { actualizarGuardar() }
         binding.textoNumero.doAfterTextChanged {
+            binding.campoNumero.error = null      // al cambiar el número, se quita el «repetido»
             actualizarGuardar()
             avisarNumeroCambiado()
         }
         binding.textoPrecio.doAfterTextChanged { actualizarGuardar() }
 
+        // Guardar: la libreta guarda y la pantalla reacciona a la respuesta del repositorio
+        binding.botonGuardar.setOnClickListener {
+            lifecycleScope.launch {
+                binding.botonGuardar.isEnabled = false      // P142: sin doble toque mientras guarda
+                when (viewModel.guardar(leerFormulario())) {
+                    // Hecho: vuelta al Panel, que ya está al día él solo (P49 B)
+                    ResultadoGuardado.Ok -> finish()
+                    // R9: error rojo en el campo y la pantalla sigue abierta
+                    ResultadoGuardado.NumeroRepetido -> {
+                        binding.campoNumero.error = getString(R.string.plato_numero_repetido)
+                        actualizarGuardar()
+                    }
+                    // De momento nada: la cadena 3e llega en las piezas 11 y 12
+                    ResultadoGuardado.CategoriaEliminada -> actualizarGuardar()
+                    // Solo lo devuelven las categorías: guardarPlato nunca lo da
+                    ResultadoGuardado.NombreRepetido -> actualizarGuardar()
+                }
+            }
+        }
+
         binding.botonAtras.setOnClickListener { finish() }
+    }
+
+    // [Claude] Convierte lo que hay en pantalla en un Producto listo para guardar.
+    // Solo se llama con Guardar encendido: los cuatro obligatorios ya se pueden leer
+    private fun leerFormulario(): Producto {
+        val antes = viewModel.datos.value?.plato               // null = plato nuevo
+        val descripcion = binding.textoDescripcion.text.toString().trim()
+        return Producto(
+            id = antes?.id ?: 0L,                                 // 0 = Room le dará uno nuevo
+            categoriaId = checkNotNull(viewModel.categoriaElegidaId),
+            numero = binding.textoNumero.text.toString().toInt(),
+            nombre = binding.textoNombre.text.toString().trim(),
+            descripcion = if (descripcion.isEmpty()) null else descripcion,   // vacía = sin descripción
+            precioCentimos = checkNotNull(Formato.centimosDesde(binding.textoPrecio.text.toString())),
+            imagen = antes?.imagen,                               // la foto llega en la S12
+            activo = antes?.activo ?: true                        // el interruptor, en la pieza 10
+        )
     }
 
     // Pone en los campos lo que hay guardado (al editar) y elige la categoría

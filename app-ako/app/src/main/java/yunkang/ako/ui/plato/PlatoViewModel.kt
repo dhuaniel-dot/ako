@@ -14,6 +14,7 @@ import yunkang.ako.datos.entidades.Alergeno
 import yunkang.ako.datos.entidades.Categoria
 import yunkang.ako.datos.entidades.Producto
 import yunkang.ako.datos.repositorios.CartaRepository
+import yunkang.ako.dominio.modelos.ResultadoGuardado
 
 // [Claude] P162 B: todo lo que el formulario lee al abrirse, junto en una sola bandeja
 data class DatosFormulario(
@@ -61,6 +62,11 @@ class PlatoViewModel(private val cartaRepository: CartaRepository) : ViewModel()
             )
         }
     }
+
+    // Guarda el plato con los alérgenos marcados. Las reglas (R8, R9 y la categoría eliminada)
+    // las comprueba el repositorio en ese orden; la pantalla solo reacciona a la respuesta
+    suspend fun guardar(p: Producto): ResultadoGuardado =
+        cartaRepository.guardarPlato(p, alergenosMarcados.toList())
 
     // P140: la fábrica que construye esta libreta con el repositorio de la carta de EntradaAko
     companion object {
