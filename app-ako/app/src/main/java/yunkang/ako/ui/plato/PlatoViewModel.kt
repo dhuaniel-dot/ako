@@ -68,6 +68,24 @@ class PlatoViewModel(private val cartaRepository: CartaRepository) : ViewModel()
     suspend fun guardar(p: Producto): ResultadoGuardado =
         cartaRepository.guardarPlato(p, alergenosMarcados.toList())
 
+    // R6, primer paso (P128): qué mesas tienen este plato en una comanda pendiente. Solo mira, no toca nada
+    suspend fun mesasAfectadas(): List<Int> {
+        val plato = datos.value?.plato ?: return emptyList()      // un plato nuevo no está en ninguna mesa
+        return cartaRepository.mesasAfectadasPorPlato(plato.id)
+    }
+
+    // R5: eliminar = activo false; la fila sigue y ninguna línea de comanda se toca (R6)
+    suspend fun eliminar() {
+        val plato = datos.value?.plato ?: return
+        cartaRepository.eliminarPlato(plato.id)
+    }
+
+    // [Claude] Recuperar = vuelve a la carta con todo lo que tenía (R5)
+    suspend fun recuperar() {
+        val plato = datos.value?.plato ?: return
+        cartaRepository.recuperarPlato(plato.id)
+    }
+
     // P140: la fábrica que construye esta libreta con el repositorio de la carta de EntradaAko
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {

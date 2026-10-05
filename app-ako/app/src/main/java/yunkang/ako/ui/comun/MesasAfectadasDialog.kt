@@ -5,12 +5,14 @@ import androidx.fragment.app.FragmentManager
 import yunkang.ako.R
 import yunkang.ako.dominio.modelos.PlatoConMesas
 
-// 2e · El aviso agrupado de R6 (P53 A): monta el texto y abre la caja de siempre (ConfirmacionDialog, P84).
-// [Claude] Es un object (no guarda nada): solo sabe escribir el aviso. En la S7 crecerá con el del plato (3d)
+// Los avisos de R6 (P53 A): montan el texto y abren la caja de siempre (ConfirmacionDialog, P84).
+// 2e al eliminar una categoría (Panel) y 3d al eliminar un plato (formulario). Vive en comun (P163 A).
+// [Claude] Es un object (no guarda nada): solo sabe escribir los avisos
 object MesasAfectadasDialog {
 
     // [Claude] El nombre del sobre que deja la caja (RESPUESTA_AFIRMATIVA true = Eliminar, false = Cancelar)
     const val CLAVE_CATEGORIA = "eliminar_categoria"
+    const val CLAVE_PLATO = "eliminar_plato"
 
     // «Este plato está en comandas pendientes: Flan (mesa 5). No se quitará de esas comandas.»
     // Todas las palabras salen de strings.xml; aquí solo se juntan las piezas
@@ -37,6 +39,27 @@ object MesasAfectadasDialog {
             afirmativo = contexto.getString(R.string.comun_eliminar),   // P40: el botón dice lo que hace
             negativo = contexto.getString(R.string.comun_cancelar),
             clave = CLAVE_CATEGORIA
+        ).show(gestor, "mesas_afectadas")
+    }
+
+    // 3d · «Pollo asado está en una comanda pendiente de la mesa 6. No se quitará de esa comanda.»
+    // Una mesa o varias (D15): el plurals elige la frase según cuántas mesas haya
+    fun textoPlato(contexto: Context, nombre: String, mesas: List<Int>): String {
+        val y = contexto.getString(R.string.comun_y)
+        val listaMesas = Formato.lista(mesas.map { it.toString() }, y)   // «6» o «4 y 7»
+        return contexto.resources.getQuantityString(
+            R.plurals.mesas_afectadas_cuerpo, mesas.size, nombre, listaMesas
+        )
+    }
+
+    // La misma caja que abrirCategoria, con el texto de un solo plato
+    fun abrirPlato(gestor: FragmentManager, contexto: Context, nombre: String, mesas: List<Int>) {
+        ConfirmacionDialog.nueva(
+            titulo = contexto.getString(R.string.mesas_afectadas_titulo),
+            texto = textoPlato(contexto, nombre, mesas),
+            afirmativo = contexto.getString(R.string.comun_eliminar),   // P40: el botón dice lo que hace
+            negativo = contexto.getString(R.string.comun_cancelar),
+            clave = CLAVE_PLATO
         ).show(gestor, "mesas_afectadas")
     }
 }

@@ -16,7 +16,9 @@ import yunkang.ako.datos.entidades.Alergeno
 import yunkang.ako.datos.entidades.Producto
 import yunkang.ako.databinding.ActivityPlatoBinding
 import yunkang.ako.dominio.modelos.ResultadoGuardado
+import yunkang.ako.ui.comun.ConfirmacionDialog
 import yunkang.ako.ui.comun.Formato
+import yunkang.ako.ui.comun.MesasAfectadasDialog
 
 // 3a · Formulario del plato. Se abre desde el Panel: «+ Plato» de una caja (crear)
 // o tocando un plato (editar)
@@ -97,24 +99,34 @@ class PlatoActivity : AppCompatActivity() {
         }
         binding.textoPrecio.doAfterTextChanged { actualizarGuardar() }
 
-        // Guardar: la libreta guarda y la pantalla reacciona a la respuesta del repositorio
+        // Guardar: si se va a eliminar el plato, PRIMERO se miran las mesas (R6 en dos pasos, P128)
         binding.botonGuardar.setOnClickListener {
+            binding.botonGuardar.isEnabled = false      // P142: sin doble toque mientras trabaja
             lifecycleScope.launch {
-                binding.botonGuardar.isEnabled = false      // P142: sin doble toque mientras guarda
-                when (viewModel.guardar(leerFormulario())) {
-                    // Hecho: vuelta al Panel, que ya está al día él solo (P49 B)
-                    ResultadoGuardado.Ok -> finish()
-                    // R9: error rojo en el campo y la pantalla sigue abierta
-                    ResultadoGuardado.NumeroRepetido -> {
-                        binding.campoNumero.error = getString(R.string.plato_numero_repetido)
+                if (seVaAEliminar()) {
+                    val mesas = viewModel.mesasAfectadas()
+                    if (mesas.isNotEmpty()) {
+                        // Con mesas: decide el aviso 3d; su respuesta llega al sobre de abajo
+                        val nombre = checkNotNull(viewModel.datos.value?.plato).nombre
+                        MesasAfectadasDialog.abrirPlato(supportFragmentManager, this@PlatoActivity, nombre, mesas)
                         actualizarGuardar()
+                        return@launch
                     }
-                    // De momento nada: la cadena 3e llega en las piezas 11 y 12
-                    ResultadoGuardado.CategoriaEliminada -> actualizarGuardar()
-                    // Solo lo devuelven las categorías: guardarPlato nunca lo da
-                    ResultadoGuardado.NombreRepetido -> actualizarGuardar()
                 }
+                // [Claude] Sin mesas no hay nada que avisar: se guarda directamente
+                guardar()
             }
+        }
+
+        // El sobre del aviso 3d: se abre y se escucha en el MISMO gestor (supportFragmentManager),
+        // y se escucha desde aquí, onCreate, para que la respuesta encuentre a alguien si Android recrea la pantalla
+        supportFragmentManager.setFragmentResultListener(MesasAfectadasDialog.CLAVE_PLATO, this) { _, sobre ->
+            if (sobre.getBoolean(ConfirmacionDialog.RESPUESTA_AFIRMATIVA)) {
+                // Eliminar: ahora sí se guarda y se elimina
+                binding.botonGuardar.isEnabled = false
+                lifecycleScope.launch { guardar() }
+            }
+            // Cancelar: no se guarda nada y el formulario sigue como lo dejó el Propietario
         }
 
         binding.botonAtras.setOnClickListener { finish() }
@@ -133,8 +145,45 @@ class PlatoActivity : AppCompatActivity() {
             descripcion = if (descripcion.isEmpty()) null else descripcion,   // vacía = sin descripción
             precioCentimos = checkNotNull(Formato.centimosDesde(binding.textoPrecio.text.toString())),
             imagen = antes?.imagen,                               // la foto llega en la S12
-            activo = antes?.activo ?: true                        // el interruptor, en la pieza 10
+            // Al editar, como estaba (P150: solo eliminar/recuperar lo cambian). Al crear, el interruptor
+            activo = antes?.activo ?: binding.interruptorEnLaCarta.isChecked
         )
+    }
+
+    // [Claude] ¿El Propietario ha apagado «En la carta» de un plato que estaba en la carta?
+    private fun seVaAEliminar(): Boolean {
+        val antes = viewModel.datos.value?.plato ?: return false   // al crear no hay nada que eliminar
+        return antes.activo && !binding.interruptorEnLaCarta.isChecked
+    }
+
+    // [Claude] ¿Lo ha encendido en un plato eliminado?
+    private fun seVaARecuperar(): Boolean {
+        val antes = viewModel.datos.value?.plato ?: return false
+        return !antes.activo && binding.interruptorEnLaCarta.isChecked
+    }
+
+    // Guarda y, si el interruptor cambió, elimina o recupera (como la hoja 2b, P150)
+    private suspend fun guardar() {
+        when (viewModel.guardar(leerFormulario())) {
+            ResultadoGuardado.Ok -> {
+                if (seVaAEliminar()) {
+                    viewModel.eliminar()          // R5: activo = false; ninguna línea se toca (R6)
+                } else if (seVaARecuperar()) {
+                    viewModel.recuperar()
+                }
+                // Vuelta al Panel, que ya está al día él solo (P49 B)
+                finish()
+            }
+            // R9: error rojo en el campo y la pantalla sigue abierta
+            ResultadoGuardado.NumeroRepetido -> {
+                binding.campoNumero.error = getString(R.string.plato_numero_repetido)
+                actualizarGuardar()
+            }
+            // De momento nada: la cadena 3e llega en las piezas 11 y 12
+            ResultadoGuardado.CategoriaEliminada -> actualizarGuardar()
+            // Solo lo devuelven las categorías: guardarPlato nunca lo da
+            ResultadoGuardado.NombreRepetido -> actualizarGuardar()
+        }
     }
 
     // Pone en los campos lo que hay guardado (al editar) y elige la categoría
