@@ -7,6 +7,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.widget.doAfterTextChanged
 import com.google.android.material.checkbox.MaterialCheckBox
 import yunkang.ako.R
 import yunkang.ako.datos.entidades.Alergeno
@@ -77,7 +78,19 @@ class PlatoActivity : AppCompatActivity() {
 
             // Las casillas también se crean cada vez (vista nueva tras una recreación)
             pintarAlergenos(datos.alergenos)
+
+            // Con los datos ya puestos, se mira cómo queda Guardar y si el número cambió
+            actualizarGuardar()
+            avisarNumeroCambiado()
         }
+
+        // Cada cambio en nombre, número o precio vuelve a mirar si Guardar se puede encender
+        binding.textoNombre.doAfterTextChanged { actualizarGuardar() }
+        binding.textoNumero.doAfterTextChanged {
+            actualizarGuardar()
+            avisarNumeroCambiado()
+        }
+        binding.textoPrecio.doAfterTextChanged { actualizarGuardar() }
 
         binding.botonAtras.setOnClickListener { finish() }
     }
@@ -126,6 +139,28 @@ class PlatoActivity : AppCompatActivity() {
             )
             sitio.width = 0
             binding.rejillaAlergenos.addView(casilla, sitio)
+        }
+    }
+
+    // [Claude] Guardar se enciende solo con los cuatro obligatorios (ficha 3: «todo campo es opcional
+    // salvo que una regla o la base de datos lo exijan»). Descripción y alérgenos no cuentan
+    private fun actualizarGuardar() {
+        val nombreBien = binding.textoNombre.text.toString().isNotBlank()
+        val numeroBien = binding.textoNumero.text.toString().toIntOrNull() != null   // «07» se lee como 7
+        val precioBien = Formato.centimosDesde(binding.textoPrecio.text.toString()) != null
+        val categoriaBien = viewModel.categoriaElegidaId != null
+        binding.botonGuardar.isEnabled = nombreBien && numeroBien && precioBien && categoriaBien
+    }
+
+    // [Claude] Al editar, si el número tecleado ya no es el guardado, una AYUDA (gris, no bloquea)
+    // con el número ANTERIOR: «Si alguien tiene apuntado el 12, dejará de corresponder»
+    private fun avisarNumeroCambiado() {
+        val plato = viewModel.datos.value?.plato
+        val tecleado = binding.textoNumero.text.toString().toIntOrNull()
+        if (plato != null && tecleado != null && tecleado != plato.numero) {
+            binding.campoNumero.helperText = getString(R.string.plato_numero_cambiado, plato.numero)
+        } else {
+            binding.campoNumero.helperText = null
         }
     }
 
