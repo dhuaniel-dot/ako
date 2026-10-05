@@ -1,7 +1,9 @@
 package yunkang.ako.ui.plato
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -13,6 +15,9 @@ import yunkang.ako.databinding.ActivityPlatoBinding
 class PlatoActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPlatoBinding
+
+    // P140: la libreta de esta pantalla, construida por su fábrica
+    private val viewModel: PlatoViewModel by viewModels { PlatoViewModel.Factory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +40,18 @@ class PlatoActivity : AppCompatActivity() {
             binding.textoTitulo.setText(R.string.plato_titulo_nuevo)
         } else {
             binding.textoTitulo.setText(R.string.plato_titulo_editar)
+        }
+
+        // P162 B: se pide la bandeja siempre; si la libreta ya la tiene, no vuelve a leer
+        if (productoId == -1L) {
+            viewModel.cargar(null)
+        } else {
+            viewModel.cargar(productoId)
+        }
+
+        // PROVISIONAL (se borra en la pieza 6): enseña en Logcat lo que llega
+        viewModel.datos.observe(this) { datos ->
+            Log.d("Ako", "Plato: ${datos.plato?.nombre} · categorías: ${datos.categorias.size} · alérgenos: ${datos.alergenos.size} · marcados: ${datos.alergenosDelPlato}")
         }
 
         binding.botonAtras.setOnClickListener { finish() }
