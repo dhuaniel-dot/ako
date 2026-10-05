@@ -2,6 +2,7 @@ package yunkang.ako.ui.plato
 
 import android.os.Bundle
 import android.widget.GridLayout
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -28,6 +29,14 @@ class PlatoActivity : AppCompatActivity() {
 
     // P140: la libreta de esta pantalla, construida por su fábrica
     private val viewModel: PlatoViewModel by viewModels { PlatoViewModel.Factory }
+
+    // P165 C: el guardián de Atrás. Solo está encendido cuando hay cambios sin guardar;
+    // apagado, Atrás cierra la pantalla sin preguntar
+    private val guardianAtras = object : OnBackPressedCallback(false) {
+        override fun handleOnBackPressed() {
+            preguntarSalir()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,6 +76,7 @@ class PlatoActivity : AppCompatActivity() {
             binding.textoCategoria.setSimpleItems(nombres)
             binding.textoCategoria.setOnItemClickListener { _, _, posicion, _ ->
                 viewModel.categoriaElegidaId = datos.categorias[posicion].id
+                marcarCambio()
             }
 
             // Los campos se rellenan una sola vez; después manda lo que teclee el Propietario
@@ -89,15 +99,6 @@ class PlatoActivity : AppCompatActivity() {
             actualizarGuardar()
             avisarNumeroCambiado()
         }
-
-        // Cada cambio en nombre, número o precio vuelve a mirar si Guardar se puede encender
-        binding.textoNombre.doAfterTextChanged { actualizarGuardar() }
-        binding.textoNumero.doAfterTextChanged {
-            binding.campoNumero.error = null      // al cambiar el número, se quita el «repetido»
-            actualizarGuardar()
-            avisarNumeroCambiado()
-        }
-        binding.textoPrecio.doAfterTextChanged { actualizarGuardar() }
 
         // Guardar: si se va a eliminar el plato, PRIMERO se miran las mesas (R6 en dos pasos, P128)
         binding.botonGuardar.setOnClickListener {
@@ -161,7 +162,63 @@ class PlatoActivity : AppCompatActivity() {
             }
         }
 
-        binding.botonAtras.setOnClickListener { finish() }
+        // El sobre de «¿Salir sin guardar?»: Salir cierra sin guardar; Cancelar, nada
+        supportFragmentManager.setFragmentResultListener(CLAVE_SALIR, this) { _, sobre ->
+            if (sobre.getBoolean(ConfirmacionDialog.RESPUESTA_AFIRMATIVA)) {
+                finish()
+            }
+        }
+
+        // P165 C: el guardián se apunta en la lista de Android y se enciende si ya había cambios
+        // (por ejemplo, si Android ha recreado la pantalla)
+        onBackPressedDispatcher.addCallback(this, guardianAtras)
+        guardianAtras.isEnabled = viewModel.hayCambios
+
+        // La flecha hace exactamente lo mismo que el Atrás del sistema (spec 7): pasa por el guardián
+        binding.botonAtras.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
+    }
+
+    // [Claude] Los timbres de los campos se ponen aquí y no en onCreate: onPostCreate llega DESPUÉS de que
+    // Android devuelva a los campos lo que tenían (si recrea la pantalla), y eso no debe contar como cambio
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+
+        // Cada cambio en nombre, número o precio vuelve a mirar si Guardar se puede encender
+        // (y cuenta como cambio sin guardar, P165 C)
+        binding.textoNombre.doAfterTextChanged {
+            actualizarGuardar()
+            marcarCambio()
+        }
+        binding.textoNumero.doAfterTextChanged {
+            binding.campoNumero.error = null      // al cambiar el número, se quita el «repetido»
+            actualizarGuardar()
+            avisarNumeroCambiado()
+            marcarCambio()
+        }
+        binding.textoPrecio.doAfterTextChanged {
+            actualizarGuardar()
+            marcarCambio()
+        }
+        binding.textoDescripcion.doAfterTextChanged { marcarCambio() }
+        binding.interruptorEnLaCarta.setOnCheckedChangeListener { _, _ -> marcarCambio() }
+    }
+
+    // [Claude] Apunta que hay cambios y enciende el guardián. Rellenar el formulario no cuenta
+    private fun marcarCambio() {
+        if (!viewModel.formularioRelleno) return
+        viewModel.hayCambios = true
+        guardianAtras.isEnabled = true
+    }
+
+    // «¿Salir sin guardar? Se perderán los cambios» (ficha 3: no hay nada vivo entre pantallas)
+    private fun preguntarSalir() {
+        ConfirmacionDialog.nueva(
+            titulo = getString(R.string.plato_salir_titulo),
+            texto = getString(R.string.plato_salir_cuerpo),
+            afirmativo = getString(R.string.carta_btn_salir),
+            negativo = getString(R.string.comun_cancelar),
+            clave = CLAVE_SALIR
+        ).show(supportFragmentManager, "salir")
     }
 
     // [Claude] Convierte lo que hay en pantalla en un Producto listo para guardar.
@@ -285,6 +342,7 @@ class PlatoActivity : AppCompatActivity() {
                 } else {
                     viewModel.alergenosMarcados.remove(alergeno.id)
                 }
+                marcarCambio()
             }
             // [Claude] Dos columnas del mismo ancho: ancho 0 y la columna con peso 1
             val sitio = GridLayout.LayoutParams(
@@ -327,5 +385,8 @@ class PlatoActivity : AppCompatActivity() {
         // [Claude] Los nombres de los sobres de los dos avisos 3e (cada pregunta, su sobre)
         const val CLAVE_3E_MOVER = "3e_mover"
         const val CLAVE_3E_RECUPERAR = "3e_recuperar"
+
+        // [Claude] El sobre de «¿Salir sin guardar?»
+        const val CLAVE_SALIR = "salir"
     }
 }

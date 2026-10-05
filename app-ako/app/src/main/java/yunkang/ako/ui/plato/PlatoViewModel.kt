@@ -45,6 +45,10 @@ class PlatoViewModel(private val cartaRepository: CartaRepository) : ViewModel()
     // las casillas se crean de nuevo si Android recrea la pantalla
     val alergenosMarcados = mutableSetOf<Long>()
 
+    // P165 C: true en cuanto el Propietario toca algo después de rellenar el formulario.
+    // Vive en la libreta para sobrevivir a una recreación
+    var hayCambios = false
+
     // Lee la base de datos UNA sola vez. productoId null = plato nuevo.
     // viewModelScope.launch empieza en el hilo principal; cada llamada de Room
     // se va ella sola a otro hilo y vuelve con el resultado
