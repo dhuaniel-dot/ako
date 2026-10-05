@@ -1,7 +1,6 @@
 package yunkang.ako.ui.plato
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -9,6 +8,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import yunkang.ako.R
 import yunkang.ako.databinding.ActivityPlatoBinding
+import yunkang.ako.ui.comun.Formato
 
 // 3a · Formulario del plato. Se abre desde el Panel: «+ Plato» de una caja (crear)
 // o tocando un plato (editar)
@@ -32,8 +32,9 @@ class PlatoActivity : AppCompatActivity() {
             insets
         }
 
-        // Lo que viene grapado a la nota (Intent). −1 = «no me han dado ningún plato»
+        // Lo que viene grapado a la nota (Intent). −1 = «no me han dado nada»
         val productoId = intent.getLongExtra(EXTRA_PRODUCTO_ID, -1L)
+        val categoriaDeLaCaja = intent.getLongExtra(EXTRA_CATEGORIA_ID, -1L)
 
         // Con plato es editar; sin plato, crear
         if (productoId == -1L) {
@@ -49,12 +50,49 @@ class PlatoActivity : AppCompatActivity() {
             viewModel.cargar(productoId)
         }
 
-        // PROVISIONAL (se borra en la pieza 6): enseña en Logcat lo que llega
         viewModel.datos.observe(this) { datos ->
-            Log.d("Ako", "Plato: ${datos.plato?.nombre} · categorías: ${datos.categorias.size} · alérgenos: ${datos.alergenos.size} · marcados: ${datos.alergenosDelPlato}")
+            // La lista del desplegable se monta cada vez: si Android recrea la pantalla, la vista es nueva.
+            // P61 A: todas las categorías, también las eliminadas, sin marca; la de por defecto, la última
+            val nombres = datos.categorias.map { it.nombre }.toTypedArray()
+            binding.textoCategoria.setSimpleItems(nombres)
+            binding.textoCategoria.setOnItemClickListener { _, _, posicion, _ ->
+                viewModel.categoriaElegidaId = datos.categorias[posicion].id
+            }
+
+            // Los campos se rellenan una sola vez; después manda lo que teclee el Propietario
+            if (!viewModel.formularioRelleno) {
+                rellenar(datos, categoriaDeLaCaja)
+                viewModel.formularioRelleno = true
+            }
+
+            // La categoría elegida vive en la libreta y se pinta cada vez (el campo no guarda su texto:
+            // saveEnabled="false"). false = «no filtres la lista por lo escrito»: si no, enseñaría solo esa
+            val elegida = datos.categorias.find { it.id == viewModel.categoriaElegidaId }
+            if (elegida != null) {
+                binding.textoCategoria.setText(elegida.nombre, false)
+            }
         }
 
         binding.botonAtras.setOnClickListener { finish() }
+    }
+
+    // Pone en los campos lo que hay guardado (al editar) y elige la categoría
+    private fun rellenar(datos: DatosFormulario, categoriaDeLaCaja: Long) {
+        val plato = datos.plato
+        if (plato != null) {
+            binding.textoNombre.setText(plato.nombre)
+            binding.textoNumero.setText(plato.numero.toString())
+            binding.textoPrecio.setText(Formato.precio(plato.precioCentimos))   // 150 → «1,50»
+            binding.textoDescripcion.setText(plato.descripcion)
+            binding.interruptorEnLaCarta.isChecked = plato.activo
+        }
+
+        // La categoría: la del plato; si es nuevo, la de su caja; si no llegó ninguna,
+        // la de por defecto, buscada por su columna y nunca por el nombre (ficha 3, R16)
+        val idBuscado = plato?.categoriaId ?: categoriaDeLaCaja
+        val categoria = datos.categorias.find { it.id == idBuscado }
+            ?: datos.categorias.first { it.esPorDefecto }
+        viewModel.categoriaElegidaId = categoria.id
     }
 
     // [Claude] Los nombres de lo que se grapa a la nota. Están aquí para que el Panel

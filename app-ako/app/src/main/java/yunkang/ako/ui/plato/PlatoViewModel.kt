@@ -33,6 +33,13 @@ class PlatoViewModel(private val cartaRepository: CartaRepository) : ViewModel()
     // [Claude] Para no leer dos veces: la libreta sobrevive a que Android recree la pantalla
     private var yaCargado = false
 
+    // [Claude] Lo que el Propietario va eligiendo vive en la libreta para sobrevivir a una recreación
+    // (como las casillas de alérgenos, P66 A): la categoría elegida, por su id
+    var categoriaElegidaId: Long? = null
+
+    // [Claude] true cuando los campos ya tienen lo guardado; desde ahí manda lo que se teclea
+    var formularioRelleno = false
+
     // Lee la base de datos UNA sola vez. productoId null = plato nuevo.
     // viewModelScope.launch empieza en el hilo principal; cada llamada de Room
     // se va ella sola a otro hilo y vuelve con el resultado
