@@ -67,7 +67,7 @@ Tres cosas que conviene saber:
 
 11. **[a mano] Comanda de la mesa 5.** Pedir → **mesa 5** → Flan → Añadir → pastilla del carrito → Enviar → **Enviar** → Salir → 1234 → 1a. (Mesa 5 roja con 4,50 €.)
 12. **P-M-06.** Propietario → 1234 → lápiz de **Postres** → apagar *En la carta* → Guardar → aviso **2e** con **Flan (mesa 5)** → **Eliminar** → Postres *Categoría eliminada*, Flan atenuado → Terminar → Cuenta → mesa 5 → **6b conserva 1 × Flan** → Atrás → Atrás → Pedir → mesa 7 → **ni Postres ni Flan** → Salir → 1234 → 1a.
-13. **P-M-11.** Propietario → 1234 → [+ Plato] de Postres → **Tarta**, **31**, **5,00** → Guardar → aviso 1 *«La categoría Postres está eliminada. ¿Muevo el plato a Otros?»* → **No** → aviso 2 *«¿Quieres recuperar Postres?»* con **N = 1** (Flan) → **No** → [+ Plato] de Postres → **Helado**, **32**, **5,00** → Guardar → aviso 1 → **Sí, mover** (Helado queda en **Otros**) → [+ Plato] de Postres → **Natillas**, **33**, **4,00** → Guardar → aviso 1 → **No** → aviso 2 con **N = 2** (Flan y Tarta) → **Recuperar** → Terminar → Pedir → mesa 7 → Postres con **Flan, Tarta y Natillas**; Otros con **Helado** → Salir → 1234 → 1a.
+13. **P-M-11.** Propietario → 1234 → [+ Plato] de Postres → **Tarta**, **31**, **5,00** → Guardar → aviso 1 *«La categoría Postres está eliminada. ¿Muevo el plato a Otros?»* → **No** → aviso 2 *«¿Quieres recuperar Postres?»* con **N = 1** (Flan; *«Platos que volverán a la carta: 1»*, P164 B [Claude]) → **No** → [+ Plato] de Postres → **Helado**, **32**, **5,00** → Guardar → aviso 1 → **Sí, mover** (Helado queda en **Otros**) → [+ Plato] de Postres → **Natillas**, **33**, **4,00** → Guardar → aviso 1 → **No** → aviso 2 con **N = 2** (Flan y Tarta) → **Recuperar** → Terminar → Pedir → mesa 7 → Postres con **Flan, Tarta y Natillas**; Otros con **Helado** → Salir → 1234 → 1a.
 14. **[a mano] Eliminar Postres otra vez** (lo pide el plan). Propietario → 1234 → lápiz de Postres → apagar → Guardar → aviso 2e con **Flan (mesa 5)** → **Eliminar** → Terminar → 1a. Postres queda eliminada con Flan, Tarta y Natillas.
 15. **[a mano] Comanda de la mesa 6.** Pedir → **mesa 6** → Pollo asado → Añadir → Enviar → **Enviar** → Salir → 1234 → 1a.
 16. **P-M-10.** Propietario → 1234 → tocar **Pollo asado** → apagar *En la carta* → Guardar → aviso **3d** *«Pollo asado está en una comanda pendiente de la mesa 6…»* → **Eliminar** → en el Panel, Pollo asado con ***Eliminado*** → Terminar → Pedir → mesa 7 → en Carnes **solo Entrecot** → Salir → 1234 → Cuenta → mesa 6 → **6b conserva 1 × Pollo asado 11,00** → Atrás → Atrás → 1a.
@@ -125,7 +125,7 @@ Tres cosas que conviene saber:
 6. **Las pruebas que crean datos no se repiten encima de sí mismas** (P-M-05, 07, 11: nombre y número repetidos). **Arreglo:** instalación limpia al empezar las pruebas de cada sesión (apartado 1).
 7. **«Ayer» en P-M-12** solo está vacío si el día anterior no hubo cobros. **Arreglo:** instalación limpia en la S10 y en la S13, y los pasos 30–35 el mismo día.
 8. **Posible aviso 2e al eliminar Carnes** en la preparación de P-M-14: Carnes tiene Pollo asado (ya eliminado) en la comanda de la mesa 6. Depende de si la consulta de 2e cuenta los platos ya eliminados: Daniel decidió que **solo cuenta los activos** (P55 → A), y desde la revisión del 1 oct la consulta lo cumple: `ComandaDao.mesasConCategoriaPendiente` (la de `CartaRepository.mesasAfectadasPorCategoria`) filtra `p.activo = 1` (P147), así que **no sale** el aviso por Pollo asado. Si aun así saliera, no rompe nada: **Eliminar**, y se anota en la ficha (sería un fallo).
-9. **P-M-11, paso 1: «Volverán a la carta sus 1 platos.»** Con N = 1 la cadena `recuperar_categoria_cuerpo` queda mal en español. No rompe la prueba; Daniel decidió pasarla a `<plurals>` en la S7 (P63 → A).
+9. ~~**P-M-11, paso 1: «Volverán a la carta sus 1 platos.»** Con N = 1 la cadena `recuperar_categoria_cuerpo` queda mal en español. No rompe la prueba; Daniel decidió pasarla a `<plurals>` en la S7 (P63 → A).~~ **Resuelto en la S7 por P164 B** (5 oct, sustituye a P63 A) [Claude, puesta al día]: `recuperar_categoria_cuerpo` es una cadena normal con una frase neutra que vale para cualquier número, también el 0: «Platos que volverán a la carta: %1$d» (en P-M-11, «…: 1» con Tarta y «…: 2» con Natillas).
 
 ### 2.9 Modo rápido: solo los datos
 
@@ -201,7 +201,7 @@ INSERT INTO producto (categoria_id, numero, nombre, precio_centimos, activo) VAL
 
 ### S7 — Plato sin foto
 
-Ya se crean platos con el formulario; la comanda de la mesa 6 todavía va por el inspector (Pedir llega en la S8). Los platos que la S6 metió a mano **chocarían** con P-M-07 (número 12 repetido): por eso se empieza con instalación limpia.
+Ya se crean platos con el formulario; la comanda de la mesa 6 todavía va a mano, por el inspector o con `sqlite3` (Pedir llega en la S8) [Claude, puesta al día del 5 oct: en la S7 la metió Claude con `sqlite3`, con las mismas sentencias de abajo]. Los platos que la S6 metió a mano **chocarían** con P-M-07 (número 12 repetido): por eso se empieza con instalación limpia.
 
 - **Montaje:** instalación limpia → paso **1** → paso **2** hasta el formulario ([+ Plato] → 14 alérgenos) → paso **5** en modo rápido → **6** → **7** (P-M-07) → **8** (P-M-09, solo pasos 1–2) → **9** → eliminar Postres (lápiz → apagar → Guardar; **sin aviso**, porque en la S7 no se crea la comanda de la mesa 5 [Claude]) → **13** (P-M-11, pasos 1–3) → **14** (sin aviso, por lo mismo).
 - **A mano — la comanda de la mesa 6** (para P-M-10; Pollo asado ya existe):
@@ -215,13 +215,13 @@ INSERT INTO linea_comanda (comanda_id, producto_id, cantidad, precio_unitario_ce
 ```
 
 - → **16** (P-M-10, pasos 1–3) → **17** (mirar el Panel, sin anotar).
-- **Pruebas:** P-M-07 **Pasa**. P-M-09 **Parcial** (faltan los pasos 3–4, la ficha 5b: S8). P-M-10 **Parcial** (comanda de la mesa 6 metida en el inspector; faltan la carta, S8, y 6b, S9; [Claude] en el inspector se comprueba que la línea sigue y que `activo` de Pollo asado es 0); se repite entera en la **S9**. P-M-11 **Parcial** (falta el paso 4, la carta: S8). P-M-29: una línea más en *Observaciones* si se quiere (formulario con 14 alérgenos).
+- **Pruebas:** P-M-07 **Pasa**. P-M-09 **Parcial** (faltan los pasos 3–4, la ficha 5b: S8). P-M-10 **Parcial** (comanda de la mesa 6 metida a mano —en la S7, con `sqlite3`—; faltan la carta, S8, y 6b, S9; [Claude] en la base de datos se comprueba que la línea sigue y que `activo` de Pollo asado es 0); se repite entera en la **S9**. P-M-11 **Parcial** (falta el paso 4, la carta: S8). P-M-29: una línea más en *Observaciones* si se quiere (formulario con 14 alérgenos).
 - **`estado-nivel.md`:** RF-08 → `implementado`; RF-10, RF-11, RF-12 → `implementado, no probado`.
 - **Tiempo:** ~50 min.
 
 ### S8 — Pedir (desde aquí, todo desde la app)
 
-Ya no hace falta el inspector: las comandas se envían desde Pedir. Cuenta sigue siendo la caja provisional hasta la S9.
+Ya no hace falta el inspector (ni `sqlite3`): las comandas se envían desde Pedir, también la de la mesa 6. Cuenta sigue siendo la caja provisional hasta la S9.
 
 - **Montaje:** instalación limpia → pasos **1**, **2** (sin Cuenta), **5** (entera, con la carta), **6**, **7** (rápido), **8** (entera), **9**, **10** (Cuenta aún provisional), **11**, **12** (pasos 1–2 y 4), **13** (entera), **14**, **15**, **16** (pasos 1–4), **17** (mirar), **18**, **19**, **20**, **21**, **22** (pasos 1, 3 y 5), **23**, **24**.
 - **P-M-15 en la S8 [Claude]:** se intercala **dentro del paso 22**, justo después del primer envío (mesa 4 con 42,00 €): Salir → 1234 → P-M-15 entera → y se sigue con el paso 3 de P-M-20. Las mesas 5 y 6 salen también rojas (sin Cuenta no se pueden cerrar): no afecta a lo que mira la prueba; va en *Observaciones*.
@@ -300,7 +300,7 @@ Es el orden recomendado del plan con cuatro añadidos [Claude]: la descripción 
 | 07 | RF-08 | S7 | Pasa | (S13) | 7 |
 | 08 | RF-09 | S12 | Pasa | (S13) | 36 |
 | 09 | RF-10 | S7 | Parcial (pasos 3–4, ficha 5b) | S8 | 8 |
-| 10 | RF-11 | S7 | Parcial (comanda de la mesa 6 en el inspector; carta S8, 6b S9) | S9 | 16 |
+| 10 | RF-11 | S7 | Parcial (comanda de la mesa 6 a mano, con `sqlite3`; carta S8, 6b S9) | S9 | 16 |
 | 11 | RF-12 | S7 | Parcial (paso 4, la carta) | S8 | 13 |
 | 12 | RF-20 | S10 | Pasa | (S13) | 35 |
 | 13 | RF-24 | S5 | Parcial (1d S8, 6a S9) | S9 | 10 |

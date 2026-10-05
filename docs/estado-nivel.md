@@ -7,7 +7,7 @@
 
 | Nivel | RF | Estado |
 |---|---|---|
-| 1 | 29 | 3 implementados (RF-01, RF-02, RF-03) · 5 implementados, no probados (RF-04, RF-05, RF-06, RF-24, RF-50) |
+| 1 | 29 | 4 implementados (RF-01, RF-02, RF-03, RF-08) · 8 implementados, no probados (RF-04, RF-05, RF-06, RF-10, RF-11, RF-12, RF-24, RF-50) |
 | 2 | 22 | 0 implementados |
 | 3 | 2 | 0 implementados |
 
@@ -21,11 +21,11 @@
 | RF-04 | Ver la carta en modo edición: cajas por categoría con sus platos, incluidos los **eliminados** marcados con la palabra *Eliminado* | 2 · 2a | Propietario | 1 | implementado, no probado | S6 |
 | RF-05 | Crear y editar una categoría (nombre, foto, activo); la categoría por defecto sin interruptor ni flechas | 2 · 2b | Propietario | 1 | implementado, no probado | S6 |
 | RF-06 | **Eliminar** una categoría avisando de las mesas con sus platos en comandas pendientes, sin borrar líneas | 2 · 2b, 2e | Propietario | 1 | implementado, no probado | S6 |
-| RF-08 | Crear y editar un plato: nombre, número, precio y categoría obligatorios; descripción y activo | 3 · 3a | Propietario | 1 | diseñado | — |
+| RF-08 | Crear y editar un plato: nombre, número, precio y categoría obligatorios; descripción y activo | 3 · 3a | Propietario | 1 | implementado | S7 |
 | RF-09 | Añadir foto al plato: elegir, redimensionar (~1080px), comprimir a JPEG, guardar como archivo | 3 · 3a | Propietario | 1 (última pieza) | diseñado | — |
-| RF-10 | Marcar los alérgenos del plato entre los 14 legales | 3 · 3a | Propietario | 1 | diseñado | — |
-| RF-11 | **Eliminar** un plato avisando de las mesas afectadas, sin borrar líneas | 3 · 3d | Propietario | 1 | diseñado | — |
-| RF-12 | Al guardar un plato en una categoría **eliminada**, cadena de dos avisos (mover a la categoría por defecto / recuperarla con contador) | 3 · 3e | Propietario | 1 | diseñado | — |
+| RF-10 | Marcar los alérgenos del plato entre los 14 legales | 3 · 3a | Propietario | 1 | implementado, no probado | S7 |
+| RF-11 | **Eliminar** un plato avisando de las mesas afectadas, sin borrar líneas | 3 · 3d | Propietario | 1 | implementado, no probado | S7 |
+| RF-12 | Al guardar un plato en una categoría **eliminada**, cadena de dos avisos (mover a la categoría por defecto / recuperarla con contador) | 3 · 3e | Propietario | 1 | implementado, no probado | S7 |
 | RF-20 | Resumen de ingresos: selector de fecha (por defecto, hoy); lista de las comandas PAGADAS con `fecha_cierre` en ese día, con mesa, hora e importe; abajo, cuántas comandas y el total; tocar una abre su recibo en solo lectura | 2 · 2g | Propietario | 1 | diseñado | — |
 | RF-24 | Elegir rol en el selector: Propietario, Pedir, Cuenta | 1 · 1a | Cliente (Pedir) | 1 | implementado, no probado | S5 |
 | RF-25 | Puerta de Pedir: no entrar sin ningún plato visible, con dos mensajes según el motivo | 1 | Cliente (Pedir) | 1 | diseñado | — |
@@ -143,3 +143,4 @@
 - RF-53 (agotado temporal): ~~la columna `producto.disponible` existe desde la S2 con `true` por defecto~~ → la columna `producto.disponible` **no existe en el nivel 1**: llega entera con el incremento 12, junto con la pantalla que la cambia (P115).
 - S4 (1 oct 2026): ningún RF cambia de estado (los repositorios no son un RF). Las reglas R1–R16 del nivel 1 tienen dueño en el código (repositorios, DAOs o la base de datos); comprobado por el revisor independiente.
 - S5 (1 oct 2026): RF-01, RF-02 y RF-03 → *implementado* (P-M-01, 02 y 03 pasan; el Panel al que lleva el PIN es todavía el provisional de la S5). RF-24 → *implementado, no probado*: el Selector y Propietario funcionan, pero Pedir y Cuenta abren una caja provisional hasta la S8/S9 (P-M-13 Parcial). RF-50 sigue igual (P-M-29 Parcial).
+- S7 (5 oct 2026): RF-08 → *implementado* (P-M-07 pasa entera). RF-10, RF-11 y RF-12 → *implementado, no probado*: P-M-09, 10 y 11 quedan *Parcial* porque sus últimos pasos miran la carta (S8) o la Cuenta (S9). RF-09 (foto) sigue *diseñado* hasta la S12.
