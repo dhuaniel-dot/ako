@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 5a · Una categoría en la fila de arriba de la carta (wireframe 05a): círculo con «?» (P224) y el nombre debajo.
+     La activa: nombre en negrita y raya debajo (RNF-13: no solo color) -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="96dp"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingTop="8dp">
+
+    <!-- El círculo: hoy siempre el «?»; en la S12 Glide pondrá aquí la foto de la categoría -->
+    <com.google.android.material.card.MaterialCardView
+        style="?attr/materialCardViewOutlinedStyle"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        app:cardCornerRadius="28dp"
+        app:cardElevation="0dp">
+
+        <ImageView
+            android:id="@+id/imagenCategoria"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?attr/colorSurfaceContainerHigh"
+            android:contentDescription="@string/comun_sin_foto_cd"
+            android:padding="14dp"
+            android:src="@drawable/ic_sin_foto" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- El nombre; si no cabe, se corta con «…» -->
+    <TextView
+        android:id="@+id/textoNombre"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="1"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="14sp"
+        tools:text="Carnes" />
+
+    <!-- La raya de la activa; invisible (ocupa su sitio) en las demás, para que nada salte -->
+    <View
+        android:id="@+id/rayaActiva"
+        android:layout_width="64dp"
+        android:layout_height="3dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="6dp"
+        android:background="?attr/colorOnSurface"
+        android:visibility="invisible"
+        tools:visibility="visible" />
+
+</LinearLayout>
