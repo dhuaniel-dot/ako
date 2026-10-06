@@ -14,6 +14,8 @@ import java.time.LocalDate
 import java.time.ZoneId
 import yunkang.ako.dominio.modelos.ComandaConTotal
 import yunkang.ako.dominio.modelos.ResumenIngresos
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 
 // La versión de verdad del puesto de comandas: pregunta a la base de datos (P132, P133).
 // Recibe sus herramientas por constructor (P17); la base de datos, para la transacción de Enviar (P129).
@@ -33,13 +35,14 @@ class ComandaRepositoryReal(
 
     // R3 (P123): ninguna columna dice "ocupada"; ocupada = tiene comanda pendiente.
     // Paso 1: la base de datos da solo las ocupadas. Paso 2: se pegan a las 60 mesas.
-    override suspend fun mesasConEstado(): List<MesaEstado> {
-        val ocupadas = comandaDao.pendientesConTotal()
-        return mesaDao.todas().map { mesa ->
-            val ocupada = ocupadas.find { it.mesaId == mesa.id }
-            MesaEstado(mesa, ocupada?.comandaId, ocupada?.totalCentimos)
+    // P167 A: combine junta los dos grifos; si cambia cualquiera de los dos, se vuelve a montar la rejilla
+    override fun mesasConEstado(): Flow<List<MesaEstado>> =
+        combine(mesaDao.todasObservadas(), comandaDao.pendientesConTotal()) { mesas, ocupadas ->
+            mesas.map { mesa ->
+                val ocupada = ocupadas.find { it.mesaId == mesa.id }
+                MesaEstado(mesa, ocupada?.comandaId, ocupada?.totalCentimos)
+            }
         }
-    }
 
     // R1: como mucho una comanda pendiente por mesa; vacío si está libre.
     override suspend fun comandaPendiente(mesaId: Long): Comanda? =

@@ -5,6 +5,7 @@ import yunkang.ako.datos.entidades.LineaComanda
 import yunkang.ako.dominio.modelos.MesaEstado
 import yunkang.ako.dominio.Carrito
 import java.time.LocalDate
+import kotlinx.coroutines.flow.Flow
 import yunkang.ako.dominio.modelos.ResumenIngresos
 
 // El puesto de comandas: las preguntas que otros pueden hacer sobre las comandas (P132).
@@ -18,8 +19,8 @@ interface ComandaRepository {
     // R6: números de las mesas con comanda pendiente que llevan algún plato de esta categoría.
     suspend fun mesasConCategoriaPendiente(categoriaId: Long): List<Int>
 
-    // R3: las 60 mesas, cada una libre u ocupada con su total (rejilla 1d y 6a).
-    suspend fun mesasConEstado(): List<MesaEstado>
+    // R3: las 60 mesas, cada una libre u ocupada con su total (rejilla 1d y 6a); al día solas (P167 A).
+    fun mesasConEstado(): Flow<List<MesaEstado>>
 
     // R1: la comanda pendiente de una mesa, o vacío si la mesa está libre.
     suspend fun comandaPendiente(mesaId: Long): Comanda?

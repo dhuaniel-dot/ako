@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import kotlinx.coroutines.flow.Flow
 import yunkang.ako.datos.entidades.Comanda
 import yunkang.ako.datos.entidades.LineaComanda
 import yunkang.ako.dominio.modelos.MesaConTotal
@@ -29,6 +30,7 @@ interface ComandaDao {
     suspend fun pendienteDeMesa(mesaId: Long): Comanda?
 
     // La rejilla: solo las mesas ocupadas, con su total sumado (R3, R10, P123).
+    // P167 A: Room la vuelve a mandar cada vez que cambian comanda, mesa o linea_comanda
     @Query("""
         SELECT m.id AS mesaId, m.numero AS numero, c.id AS comandaId,
                SUM(l.cantidad * l.precio_unitario_centimos) AS totalCentimos
@@ -39,7 +41,7 @@ interface ComandaDao {
         GROUP BY c.id
         ORDER BY m.numero
     """)
-    suspend fun pendientesConTotal(): List<MesaConTotal>
+    fun pendientesConTotal(): Flow<List<MesaConTotal>>
 
     // Las líneas de una comanda, en el orden en que se pidieron.
     @Query("SELECT * FROM linea_comanda WHERE comanda_id = :comandaId ORDER BY id")
