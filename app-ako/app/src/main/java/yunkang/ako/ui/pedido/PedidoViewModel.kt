@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.asLiveData
+import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
@@ -17,6 +18,7 @@ import yunkang.ako.datos.repositorios.CartaRepository
 import yunkang.ako.datos.repositorios.SeguridadRepository
 import yunkang.ako.dominio.Carrito
 import yunkang.ako.dominio.modelos.CategoriaConPlatos
+import yunkang.ako.ui.comun.LineaVista
 
 // [Claude] P170 B: lo que la ficha (5b) enseña de un plato, junto en una sola bandeja
 data class DatosFicha(
@@ -51,6 +53,12 @@ class PedidoViewModel(
     // no se guarda en ningún sitio (R10) y se pierde al salir de Pedir (RNF-24). Nace en iniciar()
     private val _carrito = MutableLiveData<Carrito>()
     val carrito: LiveData<Carrito> = _carrito
+
+    // 5c (P68 A): las líneas del carrito tal como se pintan. map las saca del carrito cada vez que suena
+    // su timbre: son LineaVista NUEVAS cada vez, así que la lista siempre ve el cambio de cantidad (P119)
+    val lineasVista: LiveData<List<LineaVista>> = carrito.map { c ->
+        c.lineas.map { linea -> LineaVista(linea.producto.id, linea.cantidad, linea.producto.nombre, linea.importe()) }
+    }
 
     // P76 A: la Activity la fija al abrirse, y con ella nace el carrito vacío de esa mesa.
     // Si Android rehace la pantalla, la libreta ya la tiene y no se repite (el carrito sigue lleno)
