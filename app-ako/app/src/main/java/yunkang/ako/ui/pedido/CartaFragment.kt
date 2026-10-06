@@ -18,8 +18,17 @@ class CartaFragment : Fragment(R.layout.fragment_carta) {
     // La libreta de la Activity, no una propia: lo que apunte 5b lo tiene que ver 5c
     private val viewModel: PedidoViewModel by activityViewModels { PedidoViewModel.Factory }
 
-    // La fila de categorías. [Claude] Tocar una todavía no hace nada: en la pieza 13 saltará a su sección
-    private val adaptadorFila = CategoriaFilaAdapter { }
+    // La fila de categorías; tocar una salta a su sección
+    private val adaptadorFila = CategoriaFilaAdapter { categoriaId -> saltarA(categoriaId) }
+
+    // [Claude] Dónde empieza cada sección en la lista: id de la categoría → posición de su cabecera
+    private var posiciones: Map<Long, Int> = emptyMap()
+
+    // [Claude] La categoría resaltada (0 = ninguna todavía: al abrir se resalta la primera)
+    private var categoriaActiva: Long = 0L
+
+    // Quien coloca las filas de la lista (y sabe llevar una posición arriba del todo)
+    private lateinit var gestorLista: LinearLayoutManager
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -39,7 +48,8 @@ class CartaFragment : Fragment(R.layout.fragment_carta) {
         binding.filaCategorias.adapter = adaptadorFila
 
         // La lista de platos, vertical
-        binding.listaPlatos.layoutManager = LinearLayoutManager(requireContext())
+        gestorLista = LinearLayoutManager(requireContext())
+        binding.listaPlatos.layoutManager = gestorLista
 
         // Cada vez que llega la carta (P167 A), se montan la fila y la lista
         viewModel.carta.observe(viewLifecycleOwner) { secciones ->
@@ -48,14 +58,34 @@ class CartaFragment : Fragment(R.layout.fragment_carta) {
 
             // La lista: por cada sección, su cabecera y sus platos, pegados en orden (P69 A, ConcatAdapter)
             val trozos = mutableListOf<RecyclerView.Adapter<out RecyclerView.ViewHolder>>()
+            val inicios = mutableMapOf<Long, Int>()
+            var posicion = 0
             for (seccion in secciones) {
+                inicios[seccion.categoria.id] = posicion
                 trozos.add(CabeceraAdapter(seccion.categoria.nombre))
                 // La misma fila de plato que el Panel (spec 7). [Claude] Tocar un plato abrirá su ficha (pieza 14)
                 val platos = FilaPlatoAdapter { }
                 platos.mostrar(seccion.platos, categoriaActiva = true)
                 trozos.add(platos)
+                posicion += 1 + seccion.platos.size   // cada sección ocupa su cabecera y sus platos
             }
+            posiciones = inicios
             binding.listaPlatos.adapter = ConcatAdapter(trozos)
+
+            // Al abrir, la primera categoría resaltada (es la que se ve arriba)
+            if (categoriaActiva == 0L && secciones.isNotEmpty()) {
+                categoriaActiva = secciones.first().categoria.id
+            }
+            adaptadorFila.resaltar(categoriaActiva)
         }
+    }
+
+    // RF-29: tocar una categoría SALTA a su sección (no filtra): su cabecera se pone arriba del todo.
+    // scrollToPosition solo la haría visible (podría quedar abajo); con «WithOffset» y 0 queda arriba
+    private fun saltarA(categoriaId: Long) {
+        val posicion = posiciones[categoriaId] ?: return
+        gestorLista.scrollToPositionWithOffset(posicion, 0)
+        categoriaActiva = categoriaId
+        adaptadorFila.resaltar(categoriaId)
     }
 }
