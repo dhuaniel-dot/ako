@@ -53,6 +53,27 @@ class CartaFragment : Fragment(R.layout.fragment_carta) {
         gestorLista = LinearLayoutManager(requireContext())
         binding.listaPlatos.layoutManager = gestorLista
 
+        // P75 A: al deslizar la lista con el dedo, se resalta la categoría de la sección que queda arriba
+        binding.listaPlatos.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                // [Claude] dy = 0: no lo ha movido el dedo, sino el salto de un toque (saltarA): no se pisa
+                if (dy == 0) return
+                // La sección de arriba es la última cuya cabecera empieza en esa posición o antes.
+                // [Claude] Al llegar al final, la última: si es corta, su cabecera nunca llega arriba
+                val arriba = gestorLista.findFirstVisibleItemPosition()
+                val categoriaId = if (!recyclerView.canScrollVertically(1)) {
+                    posiciones.keys.lastOrNull()
+                } else {
+                    posiciones.entries.lastOrNull { it.value <= arriba }?.key
+                } ?: return
+                if (categoriaId == categoriaActiva) return
+                categoriaActiva = categoriaId
+                adaptadorFila.resaltar(categoriaId)
+                // La fila se desliza sola para que la categoría resaltada se vea
+                binding.filaCategorias.smoothScrollToPosition(posiciones.keys.indexOf(categoriaId))
+            }
+        })
+
         // Cada vez que llega la carta (P167 A), se montan la fila y la lista
         viewModel.carta.observe(viewLifecycleOwner) { secciones ->
             // La fila: una categoría por sección (solo las que tienen algún plato visible, R15)
