@@ -7,7 +7,7 @@
 | **Objetivo de la sesión** | Del spec: **Pedir (1d con `RejillaMesasFragment`, 5a, 5b, 5c, Enviar, salir con PIN y aviso RF-38)**; P-M-14 a P-M-21 pasan |
 | **Tiempo dedicado** | 13:34 – 16:55; unos 30 min fuera (Daniel fue a comprar mientras Claude preparaba el emulador y los borradores): unas **2 h 50 min** de trabajo |
 | **Nivel / pieza** | Nivel 1 · pantalla 1 (puerta de Pedir, 1d con `RejillaMesasFragment`, salir de Pedir con PIN y aviso RF-38) y pantalla 5 (5a carta, 5b ficha, 5c carrito, Enviar) |
-| **Commit final** | `abc1234` — mensaje del commit |
+| **Commit final** | `693c2e3` — S8: Pedir (1d, 5a, 5b, 5c, Enviar, salir con PIN y aviso RF-38) (antes, intermedios `a1f30eb`, `1050983`, `bd3827f`, `cc59df6`, `80b01ea`, `572ada7`, `486e6cc`, `0fbe966`, `c589ddc`, `3255de5`, `21f029d`, `f991427`, `799903f`, `9fed772`, `ab9128d`, `cb06748`, `1b9140a`, `64f4e9a`, `2e583c8`, `8e5bb65`, `5aa5c08`, `bf28194`, `56e4040`) |
 | **Contexto al cerrar** | 71 % (Daniel, al cerrar); toda la sesión en un solo chat (P169 B) |
 
 ## Qué se hizo
@@ -89,7 +89,7 @@
 - Arreglos de Claude sobre lo tecleado (mismo contenido que el bloque dado, sin código nuevo): `SelectorFragment` pegado dentro del viejo (problema 1), `hayAlgunoVisible` borrada por la selección (problema 2), el clic de la pastilla dentro del `observe` (problema 3).
 - **Hecho por Claude a petición de Daniel:** la preparación del emulador, todas las comprobaciones en el emulador y la pasada de pruebas de las piezas 23–24 (con `adb` y un ayudante en Python del scratchpad, que no va al repositorio).
 - Cierre: resúmenes sencillo y normal en PDF (`docs/resumenes/`, fuera de Git) y enviados por Gmail con el visto bueno de Daniel («manda el gmail»), con el repaso entero dentro (P157). Prompt para una revisión independiente con Fable en un chat nuevo, escrito por Claude a petición de Daniel (no se ejecuta en esta sesión).
-- Documentación: Claude escribió la ficha, `decisiones-code.md`, `estado-nivel.md`, `spec+doc-pruebas.md`, `como-trabajamos` y `lecciones-claude.md`; un subagente puso al día las guías S9–S13 y `juego-de-datos.md`.
+- Documentación: Claude escribió la ficha, `decisiones-code.md`, `estado-nivel.md`, `spec+doc-pruebas.md`, `como-trabajamos` y `lecciones-claude.md`; un subagente puso al día las guías S9–S13 y `juego-de-datos.md`. Dejó tres huecos nuevos para Daniel: S9 hueco 12 (cómo añade `LineaAdapter` los usos de 6b, 6c y 2g), S9 hueco 13 (cómo recibe la rejilla de 6a las mesas al volver de 6b/6c: `rejillaVisible()?.mostrar` no hace nada mientras otro Fragment tapa el contenedor) y S12 (la foto grande de 5b y el círculo de la categoría tienen hoy un hueco pequeño para el «?»).
 
 ## Siguiente sesión
 
