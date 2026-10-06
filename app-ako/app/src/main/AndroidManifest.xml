@@ -29,6 +29,12 @@
             android:exported="false"
             android:screenOrientation="portrait" />
 
+        <!-- Pantalla 5 (Pedir: carta, ficha y carrito). Solo en vertical (RNF-15) -->
+        <activity
+            android:name=".ui.pedido.PedidoActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
         <!-- Pantalla 3 (formulario del plato). Solo en vertical (RNF-15) -->
         <activity
             android:name=".ui.plato.PlatoActivity"

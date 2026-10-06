@@ -2,7 +2,6 @@ package yunkang.ako.ui.selector
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -14,6 +13,7 @@ import yunkang.ako.databinding.ActivitySelectorBinding
 import yunkang.ako.ui.comun.ComprobadorPin
 import yunkang.ako.ui.comun.RejillaMesasFragment
 import yunkang.ako.ui.panel.PanelActivity
+import yunkang.ako.ui.pedido.PedidoActivity
 
 // Pantalla 1 (Selector de rol). Es solo el marco: dentro enseña 1a (Selector), 1b (Crear PIN) o 1d (Elegir mesa).
 // Sabe comprobar un PIN (ComprobadorPin, P145): es lo que PinDialog le pide
@@ -60,9 +60,14 @@ class SelectorActivity : AppCompatActivity(), ComprobadorPin {
             rejillaVisible()?.mostrar(mesas)
         }
 
-        // 1d: la rejilla avisa de la mesa tocada. [Claude] Provisional: en la pieza 7 aquí se abre Pedir
+        // 1d: la rejilla avisa de la mesa tocada y esta pantalla abre Pedir con esa mesa grapada (P76 A).
+        // [Claude] Antes quita 1d de la pila: al salir de Pedir se vuelve a 1a, no a la rejilla (P-M-16, P-M-21)
         supportFragmentManager.setFragmentResultListener(RejillaMesasFragment.CLAVE_MESA_TOCADA, this) { _, sobre ->
-            Log.d("Ako", "Mesa tocada: número ${sobre.getInt(RejillaMesasFragment.MESA_NUMERO)}")
+            supportFragmentManager.popBackStack()
+            val nota = Intent(this, PedidoActivity::class.java)
+            nota.putExtra(PedidoActivity.EXTRA_MESA_ID, sobre.getLong(RejillaMesasFragment.MESA_ID))
+            nota.putExtra(PedidoActivity.EXTRA_MESA_NUMERO, sobre.getInt(RejillaMesasFragment.MESA_NUMERO))
+            startActivity(nota)
         }
     }
 
