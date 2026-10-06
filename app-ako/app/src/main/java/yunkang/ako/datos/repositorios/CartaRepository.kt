@@ -110,6 +110,10 @@ class CartaRepository(
     suspend fun hayPlatoVisible(): Boolean =
         productoDao.hayAlgunoVisible()
 
+    // Puerta de Pedir (RF-25): ¿hay algún plato existente? Si no hay ninguno, «La carta está vacía».
+    suspend fun hayPlatoExistente(): Boolean =
+        productoDao.hayAlguno()
+
     // Ficha del plato (3): un plato por su id, para editarlo; vacío si no existe.
     suspend fun plato(id: Long): Producto? =
         productoDao.porId(id)

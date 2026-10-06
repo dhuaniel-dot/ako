@@ -54,6 +54,10 @@ interface ProductoDao {
     """)
     suspend fun hayAlgunoVisible(): Boolean
 
+    // ¿Hay al menos un plato existente, visible o no? (puerta de Pedir, RF-25: elige el mensaje)
+    @Query("SELECT EXISTS(SELECT 1 FROM producto)")
+    suspend fun hayAlguno(): Boolean
+
     // ¿Otro plato tiene ya ese número? (R9: avisa antes; la base de datos lo impide igualmente)
     @Query("SELECT EXISTS(SELECT 1 FROM producto WHERE numero = :numero AND id != :exceptoId)")
     suspend fun existeNumero(numero: Int, exceptoId: Long): Boolean
