@@ -11,6 +11,7 @@ import androidx.fragment.app.commit
 import yunkang.ako.R
 import yunkang.ako.databinding.ActivityPedidoBinding
 import yunkang.ako.ui.comun.ComprobadorPin
+import yunkang.ako.ui.comun.ConfirmacionDialog
 import yunkang.ako.ui.selector.PinDialog
 
 // Pantalla 5 (Pedir). Es solo el marco: dentro se apilan la carta (5a), la ficha (5b) y el carrito (5c).
@@ -64,14 +65,40 @@ class PedidoActivity : AppCompatActivity(), ComprobadorPin {
             guardianSalir.isEnabled = supportFragmentManager.backStackEntryCount == 0
         }
 
+        // RF-38: si en el aviso se pulsa «Salir», se sigue al PIN; «Cancelar» (o tocar fuera) no hace nada
+        supportFragmentManager.setFragmentResultListener(CLAVE_SALIR, this) { _, sobre ->
+            if (sobre.getBoolean(ConfirmacionDialog.RESPUESTA_AFIRMATIVA)) pedirPin()
+        }
+
         // Cuando 1c deja el sobre de «PIN correcto», se sale de Pedir: se vuelve a 1a (ficha 1)
         supportFragmentManager.setFragmentResultListener(PinDialog.CLAVE_RESULTADO, this) { _, _ ->
             finish()
         }
     }
 
-    // [Claude] Salir de Pedir: en el nivel 1 siempre pide el PIN (P41 del Project). Cancelar deja la carta abierta
+    // [Claude] Salir de Pedir (ficha 1): primero el aviso si hay platos sin enviar (RF-38), después el PIN.
+    // Con el carrito vacío, directamente el PIN
     private fun intentarSalir() {
+        val carrito = viewModel.carrito.value
+        if (carrito == null || carrito.estaVacio()) {
+            pedirPin()
+            return
+        }
+        // D16: «Hay 1 plato… Se perderá» / «Hay 3 platos… Se perderán». El número va dos veces:
+        // una para elegir la frase y otra para escribirlo en ella
+        val n = carrito.numPlatos()
+        ConfirmacionDialog.nueva(
+            titulo = getString(R.string.salir_sin_enviar_titulo),
+            texto = resources.getQuantityString(R.plurals.salir_sin_enviar_cuerpo, n, n),
+            afirmativo = getString(R.string.carta_btn_salir),
+            negativo = getString(R.string.comun_cancelar),
+            clave = CLAVE_SALIR
+        ).show(supportFragmentManager, CLAVE_SALIR)
+    }
+
+    // En el nivel 1, salir de Pedir siempre pide el PIN (P41 del Project). Cancelar deja la carta abierta.
+    // RNF-24: si se sale, el carrito no se vacía a mano: muere con la libreta al cerrarse Pedir
+    private fun pedirPin() {
         PinDialog().show(supportFragmentManager, "pin")
     }
 
@@ -82,5 +109,8 @@ class PedidoActivity : AppCompatActivity(), ComprobadorPin {
         // [Claude] Los nombres de lo que va grapado a la nota que abre Pedir
         const val EXTRA_MESA_ID = "mesa_id"
         const val EXTRA_MESA_NUMERO = "mesa_numero"
+
+        // [Claude] El nombre de la caja «¿Salir sin enviar?» y de su sobre
+        private const val CLAVE_SALIR = "salir_sin_enviar"
     }
 }
