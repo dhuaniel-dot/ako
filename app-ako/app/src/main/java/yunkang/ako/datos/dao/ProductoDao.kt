@@ -36,13 +36,14 @@ interface ProductoDao {
     fun todosObservados(): Flow<List<Producto>>
 
     // La carta: platos visibles = activos y con su categoría activa (R15).
+    // P167 A: Room la vuelve a mandar cada vez que cambian producto o categoria
     @Query("""
         SELECT p.* FROM producto p
         JOIN categoria c ON c.id = p.categoria_id
         WHERE p.activo = 1 AND c.activo = 1
         ORDER BY c.orden, p.numero
     """)
-    suspend fun visibles(): List<Producto>
+    fun visibles(): Flow<List<Producto>>
 
     // ¿Hay al menos un plato visible? (puerta de Pedir)
     @Query("""

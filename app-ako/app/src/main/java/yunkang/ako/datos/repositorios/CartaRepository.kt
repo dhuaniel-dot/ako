@@ -102,9 +102,16 @@ class CartaRepository(
     suspend fun platosDe(categoriaId: Long): List<Producto> =
         productoDao.porCategoria(categoriaId)
 
-    // R15: la carta (5) solo ve platos visibles; la regla vive en ProductoDao.visibles().
-    suspend fun platosVisibles(): List<Producto> =
-        productoDao.visibles()
+    // 5a (R15, P167 A): la carta del cliente, al día sola: cada categoría con sus platos visibles.
+    // La regla de «visible» vive en ProductoDao.visibles(). Se recorren las categorías (la de por defecto
+    // la última, R16) y se filtran sus platos: visibles() deja Otros la primera (orden 0, P136).
+    // Una categoría sin ningún plato visible no sale (ficha 5)
+    fun cartaVisible(): Flow<List<CategoriaConPlatos>> =
+        combine(categoriaDao.todasObservadas(), productoDao.visibles()) { categorias, platos ->
+            categorias.sortedBy { it.esPorDefecto }
+                .map { c -> CategoriaConPlatos(c, platos.filter { it.categoriaId == c.id }) }
+                .filter { it.platos.isNotEmpty() }
+        }
 
     // R15: puerta de Pedir (spec 6): sin ningún plato visible no se entra.
     suspend fun hayPlatoVisible(): Boolean =

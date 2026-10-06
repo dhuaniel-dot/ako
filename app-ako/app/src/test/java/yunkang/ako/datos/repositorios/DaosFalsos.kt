@@ -46,7 +46,7 @@ class ProductoDaoFalso(var guardado: Producto? = null) : ProductoDao {
     }
     override suspend fun porCategoria(categoriaId: Long): List<Producto> = TODO()
     override fun todosObservados(): Flow<List<Producto>> = TODO()
-    override suspend fun visibles(): List<Producto> = TODO()
+    override fun visibles(): Flow<List<Producto>> = TODO()
     override suspend fun hayAlgunoVisible(): Boolean = TODO()
     override suspend fun hayAlguno(): Boolean = TODO()
     override suspend fun alergenosDe(productoId: Long): List<Alergeno> = TODO()
