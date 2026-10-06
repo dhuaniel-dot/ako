@@ -5,14 +5,16 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import com.google.android.material.snackbar.Snackbar
 import yunkang.ako.R
 import yunkang.ako.databinding.FragmentFichaPlatoBinding
+import yunkang.ako.datos.entidades.Producto
 import yunkang.ako.dominio.Calculadora
 import yunkang.ako.dominio.Validacion
 import yunkang.ako.ui.comun.Formato
 
 // 5b · Ficha del plato, a pantalla completa encima de la carta (P84): sus datos, los alérgenos
-// en un desplegable y la cantidad de 1 a 99. Añadir al carrito llega en la pieza 16
+// en un desplegable, la cantidad de 1 a 99 y «Añadir» al carrito
 class FichaPlatoFragment : Fragment(R.layout.fragment_ficha_plato) {
 
     // La libreta de la Activity: la misma que la carta y el carrito
@@ -24,8 +26,8 @@ class FichaPlatoFragment : Fragment(R.layout.fragment_ficha_plato) {
     // [Claude] La cantidad elegida (de 1 a 99, R4); se guarda si Android rehace la pantalla
     private var cantidad = 1
 
-    // [Claude] El precio del plato, para el importe del botón; 0 hasta que llega el plato
-    private var precioCentimos = 0
+    // [Claude] El plato de esta ficha, para el importe del botón y para Añadir; vacío hasta que llega
+    private var plato: Producto? = null
 
     // [Claude] ¿Está abierto el desplegable de alérgenos? Plegado al abrir la ficha
     private var alergenosAbiertos = false
@@ -50,7 +52,7 @@ class FichaPlatoFragment : Fragment(R.layout.fragment_ficha_plato) {
             // Bandeja vacía o de otro plato: el nuestro todavía no ha llegado
             if (datos == null || datos.plato.id != productoId) return@observe
             val plato = datos.plato
-            precioCentimos = plato.precioCentimos
+            this.plato = plato
 
             // «12 · Entrecot» entero y «18,50 €»; la descripción solo si la tiene
             binding.textoNumeroNombre.text = getString(R.string.comun_plato_numero_nombre, plato.numero, plato.nombre)
@@ -84,6 +86,17 @@ class FichaPlatoFragment : Fragment(R.layout.fragment_ficha_plato) {
             pintarCantidad()
         }
         pintarCantidad()
+
+        // Añadir: al carrito de la libreta y de vuelta a la carta. Si ha topado en 99, se avisa (P74 A);
+        // el aviso va sobre la vista de la Activity porque la ficha se cierra en ese mismo momento
+        binding.botonAnadir.setOnClickListener {
+            val elegido = plato ?: return@setOnClickListener
+            val sinTopar = viewModel.anadir(elegido, cantidad)
+            if (!sinTopar) {
+                Snackbar.make(requireActivity().findViewById(R.id.contenedor), R.string.carrito_tope_99, Snackbar.LENGTH_LONG).show()
+            }
+            parentFragmentManager.popBackStack()
+        }
     }
 
     // Guarda la cantidad por si Android rehace la pantalla (el resto se vuelve a pintar desde la bandeja)
@@ -104,7 +117,7 @@ class FichaPlatoFragment : Fragment(R.layout.fragment_ficha_plato) {
         binding.textoCantidad.text = cantidad.toString()
         binding.botonMenos.isEnabled = cantidad > 1
         binding.botonMas.isEnabled = cantidad < Validacion.MAXIMO_POR_PLATO
-        val importe = Calculadora.importe(precioCentimos, cantidad)
+        val importe = Calculadora.importe(plato?.precioCentimos ?: 0, cantidad)
         binding.botonAnadir.text =
             getString(R.string.ficha_btn_anadir, getString(R.string.comun_precio, Formato.precio(importe)))
     }

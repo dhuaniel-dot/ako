@@ -15,6 +15,7 @@ import yunkang.ako.datos.entidades.Alergeno
 import yunkang.ako.datos.entidades.Producto
 import yunkang.ako.datos.repositorios.CartaRepository
 import yunkang.ako.datos.repositorios.SeguridadRepository
+import yunkang.ako.dominio.Carrito
 import yunkang.ako.dominio.modelos.CategoriaConPlatos
 
 // [Claude] P170 B: lo que la ficha (5b) enseña de un plato, junto en una sola bandeja
@@ -46,11 +47,28 @@ class PedidoViewModel(
     private val _ficha = MutableLiveData<DatosFicha?>()
     val ficha: LiveData<DatosFicha?> = _ficha
 
-    // P76 A: la Activity la fija al abrirse. Si Android rehace la pantalla, la libreta ya la tiene y no se repite
+    // El carrito de la mesa (spec 3): lo comparten la carta, la ficha y el carrito. Vive solo en la libreta:
+    // no se guarda en ningún sitio (R10) y se pierde al salir de Pedir (RNF-24). Nace en iniciar()
+    private val _carrito = MutableLiveData<Carrito>()
+    val carrito: LiveData<Carrito> = _carrito
+
+    // P76 A: la Activity la fija al abrirse, y con ella nace el carrito vacío de esa mesa.
+    // Si Android rehace la pantalla, la libreta ya la tiene y no se repite (el carrito sigue lleno)
     fun iniciar(mesaId: Long, mesaNumero: Int) {
         if (this.mesaNumero != 0) return
         this.mesaId = mesaId
         this.mesaNumero = mesaNumero
+        _carrito.value = Carrito(mesaId)
+    }
+
+    // 5b · Añadir: mete el plato en el carrito (si ya estaba, suma en la misma línea; tope 99, R4).
+    // Devuelve false si ha tenido que topar, para que la ficha avise (P74 A).
+    // El carrito cambia POR DENTRO: hay que volver a dejarlo en el tablón para que suene el timbre
+    fun anadir(plato: Producto, cantidad: Int): Boolean {
+        val carrito = _carrito.value ?: return false
+        val sinTopar = carrito.anadir(plato, cantidad)
+        _carrito.value = carrito
+        return sinTopar
     }
 
     // 5b (P170 B): llena la bandeja con un plato. La libreta es una para muchas fichas: primero se vacía,
