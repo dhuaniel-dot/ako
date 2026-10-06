@@ -87,6 +87,14 @@ class CartaFragment : Fragment(R.layout.fragment_carta) {
             val total = getString(R.string.comun_precio, Formato.precio(carrito.total()))
             binding.botonCarrito.text = getString(R.string.carta_carrito_pastilla, carrito.numPlatos(), total)
         }
+
+        // La pastilla abre el carrito (5c) encima de la carta, también vacío (P73 A)
+        binding.botonCarrito.setOnClickListener {
+            parentFragmentManager.commit {
+                replace(R.id.contenedor, CarritoFragment())
+                addToBackStack(null)
+            }
+        }
     }
 
     // 5b encima de la carta. addToBackStack: Atrás quita la ficha y vuelve la carta (y el guardián de Pedir,

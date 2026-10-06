@@ -79,6 +79,20 @@ class PedidoViewModel(
         return sinTopar
     }
 
+    // 5c · − y +: pone una cantidad a una línea (Carrito no deja salir de 1–99, R4) y vuelve a dejar el carrito
+    fun cambiarCantidad(productoId: Long, cantidad: Int) {
+        val carrito = _carrito.value ?: return
+        carrito.cambiarCantidad(productoId, cantidad)
+        _carrito.value = carrito
+    }
+
+    // 5c · Quitar: quita la línea entera, sin preguntar (ficha 5), y vuelve a dejar el carrito
+    fun quitar(productoId: Long) {
+        val carrito = _carrito.value ?: return
+        carrito.quitar(productoId)
+        _carrito.value = carrito
+    }
+
     // 5b (P170 B): llena la bandeja con un plato. La libreta es una para muchas fichas: primero se vacía,
     // para que al abrir Helado no se vea Entrecot un instante. Si ya tiene este plato (Android rehízo
     // la pantalla), no se vuelve a leer. viewModelScope empieza en el hilo principal; Room cambia de hilo solo
