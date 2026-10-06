@@ -1,6 +1,7 @@
 package yunkang.ako.ui.pedido
 
 import android.os.Bundle
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -9,15 +10,26 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.commit
 import yunkang.ako.R
 import yunkang.ako.databinding.ActivityPedidoBinding
+import yunkang.ako.ui.comun.ComprobadorPin
+import yunkang.ako.ui.selector.PinDialog
 
-// Pantalla 5 (Pedir). Es solo el marco: dentro se apilan la carta (5a), la ficha (5b) y el carrito (5c)
-class PedidoActivity : AppCompatActivity() {
+// Pantalla 5 (Pedir). Es solo el marco: dentro se apilan la carta (5a), la ficha (5b) y el carrito (5c).
+// Sabe comprobar un PIN (ComprobadorPin, P145): salir de Pedir lo pide (ficha 1)
+class PedidoActivity : AppCompatActivity(), ComprobadorPin {
 
     // El "mando" de las vistas de activity_pedido.xml (ViewBinding)
     private lateinit var binding: ActivityPedidoBinding
 
-    // La libreta de Pedir; sus Fragments piden la misma con activityViewModels
-    private val viewModel: PedidoViewModel by viewModels()
+    // La libreta de Pedir, hecha con su fábrica (P140); sus Fragments piden la misma con activityViewModels
+    private val viewModel: PedidoViewModel by viewModels { PedidoViewModel.Factory }
+
+    // [Claude] El guardián de Atrás: en la carta (5a), Atrás no cierra Pedir, pide el PIN.
+    // Solo está encendido con la pila vacía; en la ficha o el carrito, Atrás vuelve a la carta
+    private val guardianSalir = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            intentarSalir()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +56,27 @@ class PedidoActivity : AppCompatActivity() {
                 replace(R.id.contenedor, CartaFragment())
             }
         }
+
+        // El guardián se apunta al botón Atrás; se enciende solo cuando la pila está vacía (se ve la carta)
+        onBackPressedDispatcher.addCallback(this, guardianSalir)
+        guardianSalir.isEnabled = supportFragmentManager.backStackEntryCount == 0
+        supportFragmentManager.addOnBackStackChangedListener {
+            guardianSalir.isEnabled = supportFragmentManager.backStackEntryCount == 0
+        }
+
+        // Cuando 1c deja el sobre de «PIN correcto», se sale de Pedir: se vuelve a 1a (ficha 1)
+        supportFragmentManager.setFragmentResultListener(PinDialog.CLAVE_RESULTADO, this) { _, _ ->
+            finish()
+        }
     }
+
+    // [Claude] Salir de Pedir: en el nivel 1 siempre pide el PIN (P41 del Project). Cancelar deja la carta abierta
+    private fun intentarSalir() {
+        PinDialog().show(supportFragmentManager, "pin")
+    }
+
+    // P145: PinDialog pregunta aquí; esta pantalla delega en su libreta
+    override suspend fun comprobarPin(pin: String): Boolean = viewModel.comprobarPin(pin)
 
     companion object {
         // [Claude] Los nombres de lo que va grapado a la nota que abre Pedir
