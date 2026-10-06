@@ -28,6 +28,7 @@ Tres cosas que conviene saber:
 - Cada paso es **una P-M** (se ejecuta y se anota) o **[a mano]** (prepara datos; no se anota). Los pasos a mano que el plan pone entre paréntesis en su orden recomendado están en su sitio; los que añado yo llevan **[Claude]**.
 - «→» separa toques. «Salir → 1234» es salir de Pedir con el PIN (si hay platos en el carrito, antes sale el aviso RF-38). **Atrás** es la flecha ← de la barra o el Atrás del sistema.
 - Al final de cada paso: **dónde te quedas**, para que el siguiente empiece bien.
+- [Claude, puesta al día del 6 oct, como quedó Pedir en la S8] «Plato → Añadir» es: tocar el plato en la carta → ficha 5b → **Añadir — importe** (vuelve a la carta). «Enviar» es: **pastilla del carrito** → 5c → *Enviar* → aviso «¿Enviar el pedido?» → **Enviar**; se vuelve a la carta con el carrito vacío y el aviso «Pedido enviado a la mesa N». Donde un paso dice solo «→ Enviar», van esos toques.
 
 **Botones reales de los diálogos (P40):**
 
@@ -230,6 +231,7 @@ Ya no hace falta el inspector (ni `sqlite3`): las comandas se envían desde Pedi
 - **Siguen Parcial** (se puede anotar lo nuevo en *Observaciones*): P-M-13 (1d ya real; falta 6a), P-M-29 (1d ya real; falta Cuenta), P-M-06 y P-M-10 (la carta ya se ve; falta 6b).
 - **`estado-nivel.md`:** RF-25, RF-26, RF-28, RF-29, RF-36, RF-38 → `implementado`; RF-30, RF-37 → `implementado, no probado`; RF-05, RF-10, RF-12 → `implementado`.
 - **Tiempo:** ~75 min. Es la sesión más larga en pruebas: si se hace relevo, que sea antes del bloque de pruebas, no en medio.
+- **Hecho (6 oct 2026)** [Claude, puesta al día del 6 oct]: la pasada la **ejecutó Claude** con `adb` a petición de Daniel. App desinstalada (se borraron los datos del emulador) e instalada; **todo desde la app y los envíos desde Pedir** (sin inspector ni `sqlite3`): PIN 1234 (con «Los PIN no coinciden» antes) → P-M-29 (pasos 1, 2 y 4) → P-M-05 → Bebidas eliminada (P8) → Entrecot 12, Pollo asado (12 → «Ese número ya lo tiene otro plato» → 14), Flan 30 → P-M-09 → descripción de Entrecot → P-M-13 (Cuenta aún provisional) → envío de Flan a la mesa 5 → P-M-06 (pasos 1–2 y 4) → P-M-11 → Postres eliminada otra vez → envío de Pollo asado a la mesa 6 → P-M-10 (pasos 1–4) → P-M-04 mirada → P-M-14 → P-M-17 → P-M-18 (todo menos la foto) → P-M-19 → P-M-20 (pasos 1, 3 y 5) con P-M-15 intercalada → P-M-21 → P-M-16. Resultado en `spec+doc-pruebas.md` (06/10/2026): **Pasa** P-M-05, 09, 11, 14, 15, 16, 17, 19 y 21; **Parcial** P-M-06 y P-M-10 (falta 6b, S9), P-M-13 y P-M-29 (falta Cuenta, S9), P-M-20 (pasos 2, 4 y 6, en 6b, S9), P-M-18 y P-M-04 (la foto, S12). En P-M-19, con 96 toques de `adb` muy seguidos se perdieron algunos; con toques más pausados el + llega a 99 y se apaga (tropiezo de la herramienta, no de la app). El emulador quedó con las mesas 4 (60,50 €), 5 y 6 rojas: la S9 empieza con instalación limpia igualmente.
 
 ### S9 — Cuenta
 
@@ -237,6 +239,7 @@ P-M-29 pide app **recién instalada**, y P-M-06, P-M-10 y P-M-20 necesitan sus c
 
 - **Montaje:** instalación limpia → pasos **1–34** (pasos 3 y 4 se pueden saltar: no crean datos). Lo que ya pasó, en modo rápido pero haciendo sus toques.
 - **Decidido (P83 → A, Daniel, 25 sep):** P-M-29 **en su sitio** (paso 2) con una sola instalación limpia, como dice este apartado (en la guía de la S9, hueco 9, es la opción B). La S10 empieza con instalación limpia igualmente.
+- **Lo que recoge de la S8** [Claude, puesta al día del 6 oct]: P-M-06 (falta el paso 3, 6b de la mesa 5), P-M-10 (falta el paso 5, 6b de la mesa 6), P-M-13 (falta *Cuenta*, el paso 2), P-M-20 (faltan los pasos 2, 4 y 6, en Cuenta) y P-M-29 (falta *Cuenta*, el paso 3). Lo que ya pasó en la S8 (P-M-05, 09, 11, 14–17, 19 y 21) va en modo rápido, haciendo sus toques, y no se vuelve a anotar hasta la S13 (apartado 3.0).
 - **Primera vez:** P-M-22, 23, 26, 27 **Pasa**. P-M-24 **Parcial** (falta el paso 5, Resumen de ingresos: S10). P-M-25 **Parcial** (falta el paso 3: S10). P-M-28 **Parcial** (falta el paso 5: S10).
 - **Repetidas enteras:** P-M-13, P-M-29, P-M-06, P-M-10 y P-M-20 → **Pasa**.
 - **Siguen Parcial:** P-M-04 y P-M-18 (la foto, S12).
@@ -294,16 +297,16 @@ Es el orden recomendado del plan con cuatro añadidos [Claude]: la descripción 
 | 01 | RF-01 | S5 | Pasa | (S13) | 1 |
 | 02 | RF-02 | S5 | Pasa | (S13) | 3 |
 | 03 | RF-03 | S5 | Pasa | (S13) | 4 |
-| 04 | RF-04 | S6 | Parcial (platos en el inspector; Entrecot sin foto) | S12 | 17 (+ 37) |
+| 04 | RF-04 | S6 | Parcial (platos en el inspector; Entrecot sin foto; S7 y S8: mirada, Parcial solo por la foto [Claude, 6 oct]) | S12 | 17 (+ 37) |
 | 05 | RF-05 | S6 | Parcial (círculo «?» en la carta) | S8 | 5 |
-| 06 | RF-06 | S6 | Parcial (comanda de la mesa 5 en el inspector; sin 6b ni carta) | S9 | 12 |
+| 06 | RF-06 | S6 | Parcial (comanda de la mesa 5 en el inspector; sin 6b ni carta; S8: carta vista, falta 6b [Claude, 6 oct]) | S9 | 12 |
 | 07 | RF-08 | S7 | Pasa | (S13) | 7 |
 | 08 | RF-09 | S12 | Pasa | (S13) | 36 |
 | 09 | RF-10 | S7 | Parcial (pasos 3–4, ficha 5b) | S8 | 8 |
-| 10 | RF-11 | S7 | Parcial (comanda de la mesa 6 a mano, con `sqlite3`; carta S8, 6b S9) | S9 | 16 |
+| 10 | RF-11 | S7 | Parcial (comanda de la mesa 6 a mano, con `sqlite3`; carta S8, 6b S9; S8: carta vista, falta 6b [Claude, 6 oct]) | S9 | 16 |
 | 11 | RF-12 | S7 | Parcial (paso 4, la carta) | S8 | 13 |
 | 12 | RF-20 | S10 | Pasa | (S13) | 35 |
-| 13 | RF-24 | S5 | Parcial (1d S8, 6a S9) | S9 | 10 |
+| 13 | RF-24 | S5 | Parcial (1d S8, 6a S9; S8: 1d vista, falta 6a [Claude, 6 oct]) | S9 | 10 |
 | 14 | RF-25 | S8 | Pasa | (S13) | 18 |
 | 15 | RF-26 | S8 | Pasa (mesas 5 y 6 rojas, en *Observaciones*) | (S13) | 31 (S8: dentro del 22) |
 | 16 | RF-28 | S8 | Pasa | (S13) | 24 |
@@ -319,6 +322,6 @@ Es el orden recomendado del plan con cuatro añadidos [Claude]: la descripción 
 | 26 | RF-43 | S9 | Pasa | (S13) | 32 |
 | 27 | RF-44 | S9 | Pasa | (S13) | 33 |
 | 28 | RF-45 | S9 | Parcial (paso 5, Resumen de ingresos) | S10 | 34 |
-| 29 | RF-50 | S5 | Parcial (Panel S6, formulario S7, 1d S8, Cuenta S9) | S9 | 2 |
+| 29 | RF-50 | S5 | Parcial (Panel S6, formulario S7, 1d S8, Cuenta S9; S8: pasos 1, 2 y 4 vistos, falta Cuenta [Claude, 6 oct]) | S9 | 2 |
 
 **En la S13 pasan las 29**, en el orden del apartado 4, desde instalación limpia.
