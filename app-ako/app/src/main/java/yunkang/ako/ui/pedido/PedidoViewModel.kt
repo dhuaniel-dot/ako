@@ -15,6 +15,7 @@ import yunkang.ako.EntradaAko
 import yunkang.ako.datos.entidades.Alergeno
 import yunkang.ako.datos.entidades.Producto
 import yunkang.ako.datos.repositorios.CartaRepository
+import yunkang.ako.datos.repositorios.ComandaRepository
 import yunkang.ako.datos.repositorios.SeguridadRepository
 import yunkang.ako.dominio.Carrito
 import yunkang.ako.dominio.modelos.CategoriaConPlatos
@@ -30,6 +31,7 @@ data class DatosFicha(
 // Vive mientras dura Pedir y muere con PedidoActivity (spec 3). Crece pieza a pieza
 class PedidoViewModel(
     private val cartaRepository: CartaRepository,
+    private val comandaRepository: ComandaRepository,
     private val seguridadRepository: SeguridadRepository
 ) : ViewModel() {
 
@@ -93,6 +95,22 @@ class PedidoViewModel(
         _carrito.value = carrito
     }
 
+    // [Claude] true mientras se envía: un segundo toque no vuelve a enviar las mismas líneas
+    private var enviando = false
+
+    // 5c · Enviar: R1, R2, R4, R8 y R14 los garantiza el repositorio, todo en una transacción (P129).
+    // Si va bien, la libreta cambia el carrito por uno NUEVO y vacío de la misma mesa (P166 A) y devuelve true.
+    // Es suspend: la pantalla espera; Room hace el trabajo fuera del hilo de la pantalla
+    suspend fun enviar(): Boolean {
+        val carrito = _carrito.value ?: return false
+        if (enviando || carrito.estaVacio()) return false
+        enviando = true
+        comandaRepository.enviarCarrito(carrito)
+        _carrito.value = Carrito(mesaId)
+        enviando = false
+        return true
+    }
+
     // 5b (P170 B): llena la bandeja con un plato. La libreta es una para muchas fichas: primero se vacía,
     // para que al abrir Helado no se vea Entrecot un instante. Si ya tiene este plato (Android rehízo
     // la pantalla), no se vuelve a leer. viewModelScope empieza en el hilo principal; Room cambia de hilo solo
@@ -113,7 +131,7 @@ class PedidoViewModel(
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val app = this[APPLICATION_KEY] as EntradaAko
-                PedidoViewModel(app.cartaRepository, app.seguridadRepository)
+                PedidoViewModel(app.cartaRepository, app.comandaRepository, app.seguridadRepository)
             }
         }
     }
