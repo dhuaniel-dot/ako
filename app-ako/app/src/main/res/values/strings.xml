@@ -125,6 +125,61 @@
     <string name="recuperar_categoria_cuerpo">Platos que volverán a la carta: %1$d</string>
     <string name="recuperar_categoria_btn_recuperar">Recuperar</string>
 
+    <!-- ============ Pedir (S8): 1d, puerta, 5a, 5b, 5c y sus avisos ============ -->
+
+    <!-- Comunes que estrena Pedir (también los usarán Cuenta y el recibo) -->
+    <string name="comun_mesa">Mesa %1$d</string>
+    <string name="comun_total">TOTAL</string>
+    <!-- D13: «Quitar» en cada línea del carrito -->
+    <string name="comun_quitar">Quitar</string>
+    <!-- «2 × Entrecot»: cantidad × nombre (signo × U+00D7) -->
+    <string name="comun_linea">%1$d × %2$s</string>
+    <!-- Signo menos U+2212 (el + ya está arriba, comun_mas) -->
+    <string name="comun_menos">−</string>
+    <!-- Lo que lee el lector de pantalla en los botones − y + de 5b y 5c -->
+    <string name="comun_menos_cd">Quitar uno</string>
+    <string name="comun_mas_cd">Añadir uno</string>
+
+    <!-- 1d · rejilla en modo elegir -->
+    <string name="mesa_elegir_titulo">Elige la mesa</string>
+
+    <!-- Puerta de Pedir (RF-25) · solo el botón comun_aceptar (P15) -->
+    <string name="puerta_pedir_titulo">No se puede pedir</string>
+    <string name="puerta_pedir_carta_vacia">La carta está vacía</string>
+    <string name="puerta_pedir_categorias_eliminadas">Todas las categorías están eliminadas</string>
+
+    <!-- 5a · la carta. D7: %1$d = número de platos, %2$s = total ya con su € (comun_precio) -->
+    <string name="carta_carrito_pastilla">Carrito · %1$d · %2$s</string>
+
+    <!-- 5b · ficha del plato. D19: título del desplegable -->
+    <string name="ficha_alergenos">Alérgenos</string>
+    <!-- Una línea por alérgeno marcado -->
+    <string name="ficha_alergeno_item">• %1$s</string>
+    <string name="ficha_sin_alergenos">El restaurante no ha indicado alérgenos para este plato. Pregunta al personal.</string>
+    <string name="ficha_cantidad">Cantidad</string>
+    <!-- Guion largo U+2014; %1$s = importe ya con su € -->
+    <string name="ficha_btn_anadir">Añadir — %1$s</string>
+    <!-- [Claude] P74 A: aviso al topar en 99 al añadir (R4) -->
+    <string name="carrito_tope_99">Máximo 99 unidades por plato</string>
+
+    <!-- 5c · carrito. El botón sirve también de afirmativo en la confirmación (P40) -->
+    <string name="carrito_titulo">Carrito · Mesa %1$d</string>
+    <string name="carrito_btn_enviar">Enviar</string>
+
+    <!-- 5c · confirmación de Enviar · comun_cancelar / carrito_btn_enviar. %2$s = total ya con su € -->
+    <string name="enviar_titulo">¿Enviar el pedido?</string>
+    <string name="enviar_cuerpo">Mesa %1$d · %2$s</string>
+    <!-- [Claude] P72 A: aviso tras enviar -->
+    <string name="enviar_hecho">Pedido enviado a la mesa %1$d</string>
+
+    <!-- RF-38 · Salir con platos sin enviar, antes del PIN · comun_cancelar / carta_btn_salir (D16) -->
+    <string name="salir_sin_enviar_titulo">¿Salir sin enviar?</string>
+    <!-- %1$d = platos en el carrito: decide la forma y se escribe en la frase -->
+    <plurals name="salir_sin_enviar_cuerpo">
+        <item quantity="one">Hay %1$d plato en el carrito sin enviar. Se perderá.</item>
+        <item quantity="other">Hay %1$d platos en el carrito sin enviar. Se perderán.</item>
+    </plurals>
+
     <!-- [Claude] Provisional: la caja de Pedir y Cuenta hasta la S8/S9 y la del Resumen de ingresos hasta la S10, que la borra -->
     <string name="pendiente_sesion_posterior">Esta parte llega en una sesión posterior</string>
 

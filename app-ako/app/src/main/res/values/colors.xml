@@ -4,4 +4,8 @@
 
     <!-- P138: único color de acento (botones de acción). Nunca rojo ni verde: son mesa ocupada y mesa cobrada -->
     <color name="acento">#FFC75000</color>
+
+    <!-- Mesa ocupada en la rejilla (1d y 6a): rojo oscuro con el texto blanco encima (contraste 6,5:1, RNF-12) -->
+    <color name="mesa_ocupada">#FFB3261E</color>
+    <color name="sobre_mesa_ocupada">#FFFFFFFF</color>
 </resources>
