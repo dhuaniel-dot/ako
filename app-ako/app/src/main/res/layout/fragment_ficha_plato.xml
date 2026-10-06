@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 5b · Ficha del plato (wireframe 05b), pantalla completa (P84): barra con «← Atrás»; un scroll con la foto grande,
+     «12 · Entrecot» entero, precio, descripción, el desplegable de alérgenos y la cantidad; «Añadir — importe» fijo abajo -->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Barra superior gris, solo con «← Atrás» (vuelve a la carta, sin PIN) -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/barraSuperior"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:minHeight="64dp"
+        android:background="?attr/colorSurfaceContainer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/botonAtras"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:contentDescription="@string/comun_atras_cd"
+            android:text="@string/comun_atras"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Un solo scroll con todo dentro: aquí no hay listas que reciclen filas -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollFicha"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/botonAnadir"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/barraSuperior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- 1 · La foto grande: hoy siempre el «?»; en la S12 Glide pondrá aquí la foto del plato -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="220dp"
+                android:background="?attr/colorSurfaceContainerHigh">
+
+                <ImageView
+                    android:id="@+id/imagenPlato"
+                    android:layout_width="96dp"
+                    android:layout_height="96dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/comun_sin_foto_cd"
+                    android:src="@drawable/ic_sin_foto" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <!-- 2 · «21 · Merluza a la plancha» entero (en la ficha no se corta) y el precio -->
+                <TextView
+                    android:id="@+id/textoNumeroNombre"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    tools:text="12 · Entrecot" />
+
+                <TextView
+                    android:id="@+id/textoPrecio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    tools:text="18,50 €" />
+
+                <!-- 3 · La descripción (gone si el plato no tiene) -->
+                <TextView
+                    android:id="@+id/textoDescripcion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textSize="16sp"
+                    tools:text="Lomo de vaca a la plancha con patatas." />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="16dp"
+                    android:background="?attr/colorOutlineVariant" />
+
+                <!-- 4 · El desplegable de alérgenos: se abre y se cierra tocando su cabecera (sin gestos ocultos) -->
+                <LinearLayout
+                    android:id="@+id/cabeceraAlergenos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
+                    android:gravity="center_vertical"
+                    android:minHeight="48dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/ficha_alergenos"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <!-- La flecha: hacia abajo, abierto; girada -90°, cerrado. Solo decora: lo dice la cabecera -->
+                    <ImageView
+                        android:id="@+id/flechaAlergenos"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:importantForAccessibility="no"
+                        android:rotation="-90"
+                        android:src="@drawable/ic_desplegado" />
+                </LinearLayout>
+
+                <!-- Los alérgenos, uno por línea con «•», o el aviso «Pregunta al personal»; plegado al abrir -->
+                <TextView
+                    android:id="@+id/textoAlergenos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="0dp"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="16sp"
+                    android:visibility="gone"
+                    tools:text="• Gluten\n• Lácteos"
+                    tools:visibility="visible" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?attr/colorOutlineVariant" />
+
+                <!-- 5 · Cantidad: − 1 + (de 1 a 99, R4) -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/ficha_cantidad"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/botonMenos"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:contentDescription="@string/comun_menos_cd"
+                        android:insetTop="0dp"
+                        android:insetBottom="0dp"
+                        android:padding="0dp"
+                        android:text="@string/comun_menos"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="22sp" />
+
+                    <TextView
+                        android:id="@+id/textoCantidad"
+                        android:layout_width="56dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        tools:text="1" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/botonMas"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:contentDescription="@string/comun_mas_cd"
+                        android:insetTop="0dp"
+                        android:insetBottom="0dp"
+                        android:padding="0dp"
+                        android:text="@string/comun_mas"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="22sp" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- 6 · «Añadir — 18,50 €» fijo abajo, fuera del scroll (naranja: botón de acción, P138); el texto lo pone el código -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/botonAnadir"
+        style="@style/Widget.Material3.Button"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_margin="16dp"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="Añadir — 18,50 €" />
+</androidx.constraintlayout.widget.ConstraintLayout>

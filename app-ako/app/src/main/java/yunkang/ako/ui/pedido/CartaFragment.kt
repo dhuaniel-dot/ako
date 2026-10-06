@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.commit
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -63,8 +64,8 @@ class CartaFragment : Fragment(R.layout.fragment_carta) {
             for (seccion in secciones) {
                 inicios[seccion.categoria.id] = posicion
                 trozos.add(CabeceraAdapter(seccion.categoria.nombre))
-                // La misma fila de plato que el Panel (spec 7). [Claude] Tocar un plato abrirá su ficha (pieza 14)
-                val platos = FilaPlatoAdapter { }
+                // La misma fila de plato que el Panel (spec 7); tocar un plato abre su ficha (5b)
+                val platos = FilaPlatoAdapter { plato -> abrirFicha(plato.id) }
                 platos.mostrar(seccion.platos, categoriaActiva = true)
                 trozos.add(platos)
                 posicion += 1 + seccion.platos.size   // cada sección ocupa su cabecera y sus platos
@@ -77,6 +78,15 @@ class CartaFragment : Fragment(R.layout.fragment_carta) {
                 categoriaActiva = secciones.first().categoria.id
             }
             adaptadorFila.resaltar(categoriaActiva)
+        }
+    }
+
+    // 5b encima de la carta. addToBackStack: Atrás quita la ficha y vuelve la carta (y el guardián de Pedir,
+    // que solo vigila con la pila vacía, no pide el PIN)
+    private fun abrirFicha(productoId: Long) {
+        parentFragmentManager.commit {
+            replace(R.id.contenedor, FichaPlatoFragment.nueva(productoId))
+            addToBackStack(null)
         }
     }
 
