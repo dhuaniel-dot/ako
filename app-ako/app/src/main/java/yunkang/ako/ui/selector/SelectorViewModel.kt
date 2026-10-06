@@ -1,21 +1,30 @@
 package yunkang.ako.ui.selector
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import yunkang.ako.EntradaAko
 import yunkang.ako.R
 import yunkang.ako.datos.repositorios.CartaRepository
+import yunkang.ako.datos.repositorios.ComandaRepository
 import yunkang.ako.datos.repositorios.SeguridadRepository
+import yunkang.ako.dominio.modelos.MesaEstado
 
 // La libreta de la pantalla 1: sobrevive a que Android rehaga la pantalla.
 // Las vistas le preguntan a ella, nunca al repositorio (spec 3).
 class SelectorViewModel(
     private val seguridadRepository: SeguridadRepository,
-    private val cartaRepository: CartaRepository
+    private val cartaRepository: CartaRepository,
+    comandaRepository: ComandaRepository
 ) : ViewModel() {
+
+    // 1d (P167 A): las 60 mesas, libres u ocupadas con su total. Las escribe Room a través del puesto
+    // de comandas (el grifo, Flow); asLiveData las cuelga en el tablón. Nadie las carga a mano
+    val mesas: LiveData<List<MesaEstado>> = comandaRepository.mesasConEstado().asLiveData()
 
     // P141: ¿hay ya un PIN guardado? Leerlo es inmediato, por eso no es suspend
     fun hayPin(): Boolean = seguridadRepository.hayPin()
@@ -45,7 +54,7 @@ class SelectorViewModel(
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val app = this[APPLICATION_KEY] as EntradaAko
-                SelectorViewModel(app.seguridadRepository, app.cartaRepository)
+                SelectorViewModel(app.seguridadRepository, app.cartaRepository, app.comandaRepository)
             }
         }
     }

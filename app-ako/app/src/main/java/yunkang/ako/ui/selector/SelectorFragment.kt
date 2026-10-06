@@ -1,7 +1,6 @@
 package yunkang.ako.ui.selector
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -41,8 +40,8 @@ class SelectorFragment : Fragment(R.layout.fragment_selector) {
                         clave = "puerta_pedir"
                     ).show(parentFragmentManager, "puerta_pedir")
                 } else {
-                    // [Claude] Provisional: en la pieza 6 aquí se abre la rejilla 1d
-                    Log.d("Ako", "Puerta de Pedir abierta")
+                    // Puerta abierta: la Activity enseña 1d (la rejilla en modo elegir)
+                    (requireActivity() as SelectorActivity).abrirElegirMesa()
                 }
             }
         }
@@ -58,4 +57,4 @@ class SelectorFragment : Fragment(R.layout.fragment_selector) {
             ).show(parentFragmentManager, "pendiente")
         }
     }
-}
+}
