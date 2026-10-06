@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- 5a · La carta (wireframe 05a): barra con «Salir» y «Mesa N»; debajo, la fila de categorías FIJA
-     (scroll horizontal); debajo, la lista de platos por secciones (scroll vertical). Nunca un ScrollView con listas dentro -->
+     (scroll horizontal); debajo, la lista de platos por secciones (scroll vertical). Nunca un ScrollView con listas dentro.
+     Abajo a la derecha, flotando sobre la lista, la pastilla del carrito -->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -68,15 +70,34 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/filaCategorias" />
 
-    <!-- La lista de platos por secciones: ocupa todo lo que queda hasta abajo -->
+    <!-- La lista de platos por secciones: ocupa todo lo que queda hasta abajo. [Claude] Hueco abajo
+         (paddingBottom sin recortar, clipToPadding false) para que la pastilla no tape el último plato -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/listaPlatos"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:paddingBottom="88dp"
         android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/separador" />
+
+    <!-- D7: la pastilla «Carrito · N · total», abajo a la derecha (no una barra fija, ficha 5).
+         Gris oscuro con letras claras (los colores del texto al revés: en modo noche se invierte); el texto lo pone el código -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/botonCarrito"
+        style="@style/Widget.Material3.Button"
+        android:layout_width="wrap_content"
+        android:layout_height="56dp"
+        android:layout_margin="16dp"
+        android:backgroundTint="?attr/colorOnSurface"
+        android:textColor="?attr/colorSurface"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="Carrito · 3 · 23,40 €" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

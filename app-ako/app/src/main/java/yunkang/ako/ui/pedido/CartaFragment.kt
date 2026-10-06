@@ -11,9 +11,10 @@ import androidx.recyclerview.widget.RecyclerView
 import yunkang.ako.R
 import yunkang.ako.databinding.FragmentCartaBinding
 import yunkang.ako.ui.comun.FilaPlatoAdapter
+import yunkang.ako.ui.comun.Formato
 
-// 5a · La carta: la barra, la fila de categorías fija arriba y una sola lista de platos por secciones.
-// La pastilla del carrito llega en la pieza 17
+// 5a · La carta: la barra, la fila de categorías fija arriba, una sola lista de platos por secciones
+// y la pastilla del carrito abajo a la derecha
 class CartaFragment : Fragment(R.layout.fragment_carta) {
 
     // La libreta de la Activity, no una propia: lo que apunte 5b lo tiene que ver 5c
@@ -78,6 +79,13 @@ class CartaFragment : Fragment(R.layout.fragment_carta) {
                 categoriaActiva = secciones.first().categoria.id
             }
             adaptadorFila.resaltar(categoriaActiva)
+        }
+
+        // D7: la pastilla dice cuántos platos y cuánto suman. Se calcula cada vez (R10): nadie lo guarda.
+        // Siempre visible, también vacía (P73 A); sin animación, el número cambia sin más (ficha 5)
+        viewModel.carrito.observe(viewLifecycleOwner) { carrito ->
+            val total = getString(R.string.comun_precio, Formato.precio(carrito.total()))
+            binding.botonCarrito.text = getString(R.string.carta_carrito_pastilla, carrito.numPlatos(), total)
         }
     }
 
