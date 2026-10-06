@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 5a · La cabecera de una sección de la lista («CARNES»): el nombre en mayúsculas y gris, como 05a -->
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/textoCabecera"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingStart="16dp"
+    android:paddingTop="20dp"
+    android:paddingEnd="16dp"
+    android:paddingBottom="8dp"
+    android:textAllCaps="true"
+    android:textColor="?attr/colorOnSurfaceVariant"
+    android:textSize="16sp"
+    android:textStyle="bold"
+    tools:text="Carnes" />
