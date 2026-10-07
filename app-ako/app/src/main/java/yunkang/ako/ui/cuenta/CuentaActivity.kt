@@ -52,6 +52,12 @@ class CuentaActivity : AppCompatActivity() {
             supportFragmentManager.commit {
                 replace(R.id.contenedor, RejillaMesasFragment.nueva(R.string.cuenta_titulo))
             }
+        } else if (viewModel.comandaId == 0L) {
+            // P193 A (revisión S9, M1): Android mató la app con 6b o 6c delante y la libreta renació en blanco,
+            // sin saber qué comanda era. Se cierran las cajas que hubiera abiertas (Anular, Cobrar, R7) y
+            // se vacía la pila: vuelve la rejilla y el camarero toca otra vez la mesa
+            supportFragmentManager.fragments.filterIsInstance<ConfirmacionDialog>().forEach { it.dismiss() }
+            supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         }
 
         // 6a (P167 A): cada vez que cambian las mesas, se las da a la rejilla, si se está viendo

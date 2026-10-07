@@ -39,6 +39,13 @@ class RejillaMesasFragment : Fragment(R.layout.fragment_rejilla_mesas) {
         }
     }
 
+    // P196 A (revisión S9, B1): al quitar la vista (por ejemplo, cuando otra se pone encima en la pila),
+    // la lista suelta su adaptador; si no, el adaptador, que vive con el Fragment, seguiría sujetando la vista vieja
+    override fun onDestroyView() {
+        FragmentRejillaMesasBinding.bind(requireView()).listaMesas.adapter = null
+        super.onDestroyView()
+    }
+
     // Quien la aloja le da las mesas. El adaptador las guarda aunque la vista aún no exista
     fun mostrar(mesas: List<MesaEstado>) {
         adaptador.mostrar(mesas)

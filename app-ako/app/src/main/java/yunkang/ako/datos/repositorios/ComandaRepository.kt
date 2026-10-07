@@ -1,6 +1,5 @@
 package yunkang.ako.datos.repositorios
 
-import yunkang.ako.datos.entidades.Comanda
 import yunkang.ako.datos.entidades.LineaComanda
 import yunkang.ako.dominio.modelos.MesaEstado
 import yunkang.ako.dominio.Carrito
@@ -21,9 +20,6 @@ interface ComandaRepository {
 
     // R3: las 60 mesas, cada una libre u ocupada con su total (rejilla 1d y 6a); al día solas (P167 A).
     fun mesasConEstado(): Flow<List<MesaEstado>>
-
-    // R1: la comanda pendiente de una mesa, o vacío si la mesa está libre.
-    suspend fun comandaPendiente(mesaId: Long): Comanda?
 
     // Las líneas de una comanda, en el orden en que se pidieron (6b, 6c y 2g).
     suspend fun lineasDe(comandaId: Long): List<LineaComanda>

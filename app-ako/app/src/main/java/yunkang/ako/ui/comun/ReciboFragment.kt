@@ -79,7 +79,10 @@ class ReciboFragment : Fragment(R.layout.fragment_recibo) {
         pintarTotal()
     }
 
+    // P196 A (revisión S9, B1): al quitar la vista (por ejemplo, cuando otra se pone encima en la pila),
+    // la lista suelta su adaptador; si no, el adaptador, que vive con el Fragment, seguiría sujetando la vista vieja
     override fun onDestroyView() {
+        binding?.listaLineas?.adapter = null
         super.onDestroyView()
         binding = null
     }

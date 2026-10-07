@@ -95,6 +95,13 @@ class ComandaFragment : Fragment(R.layout.fragment_comanda) {
         }
     }
 
+    // P196 A (revisión S9, B1): al quitar la vista (por ejemplo, cuando otra se pone encima en la pila),
+    // la lista suelta su adaptador; si no, el adaptador, que vive con el Fragment, seguiría sujetando la vista vieja
+    override fun onDestroyView() {
+        FragmentComandaBinding.bind(requireView()).listaLineas.adapter = null
+        super.onDestroyView()
+    }
+
     // Quitar: sin aviso, salvo si es la última línea (R7): entonces se pregunta ANTES de quitar
     private fun pulsarQuitar(linea: LineaVista) {
         if (!cuenta.portero.permite()) return

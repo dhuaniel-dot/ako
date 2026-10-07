@@ -44,10 +44,6 @@ class ComandaRepositoryReal(
             }
         }
 
-    // R1: como mucho una comanda pendiente por mesa; vacío si está libre.
-    override suspend fun comandaPendiente(mesaId: Long): Comanda? =
-        comandaDao.pendienteDeMesa(mesaId)
-
     // Las líneas de una comanda, en el orden en que se pidieron (6b, 6c y 2g).
     override suspend fun lineasDe(comandaId: Long): List<LineaComanda> =
         comandaDao.lineasDe(comandaId)
