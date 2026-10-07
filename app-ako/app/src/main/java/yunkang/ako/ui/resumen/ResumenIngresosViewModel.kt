@@ -7,11 +7,16 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.liveData
 import androidx.lifecycle.switchMap
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import kotlinx.coroutines.launch
 import yunkang.ako.EntradaAko
 import yunkang.ako.datos.repositorios.ComandaRepository
+import yunkang.ako.dominio.Calculadora
+import yunkang.ako.dominio.modelos.ComandaConTotal
 import yunkang.ako.dominio.modelos.ResumenIngresos
+import yunkang.ako.ui.comun.LineaVista
 import java.time.LocalDate
 
 // La libreta del Resumen de ingresos (2g): qué día se mira y qué se cobró ese día.
@@ -35,6 +40,35 @@ class ResumenIngresosViewModel(
     // El calendario (pieza 6) cambia el día; el resumen se vuelve a pedir solo, por el switchMap de arriba
     fun elegirDia(dia: LocalDate) {
         _dia.value = dia
+    }
+
+    // El recibo en solo lectura: la comanda cobrada que se mira (su mesa y su total, ya calculados por
+    // resumenDelDia) y sus líneas tal como se pintan. Solo la libreta los cambia (_lineasRecibo)
+    var comandaRecibo: ComandaConTotal? = null
+        private set
+    private val _lineasRecibo = MutableLiveData<List<LineaVista>>(emptyList())
+    val lineasRecibo: LiveData<List<LineaVista>> = _lineasRecibo
+
+    // P197 A: como CuentaViewModel.abrirComanda. Primero se vacía la bandeja, para que no se vea ni un instante
+    // el recibo anterior; después se piden las líneas. viewModelScope empieza en el hilo principal; Room cambia
+    // de hilo solo. R14: nombre y precio salen de la línea, congelados al enviar, no de la carta de hoy
+    fun abrirRecibo(comanda: ComandaConTotal) {
+        comandaRecibo = comanda
+        _lineasRecibo.value = emptyList()
+        viewModelScope.launch {
+            val lineas = comandaRepository.lineasDe(comanda.comandaId)
+            // [Claude] Si mientras se esperaba a la base de datos se tocó otra comanda, estas líneas ya no valen
+            if (comandaRecibo != comanda) return@launch
+            _lineasRecibo.value = lineas.map { linea ->
+                // En una comanda, el id de LineaVista es el de la línea (P68 A)
+                LineaVista(
+                    linea.id,
+                    linea.cantidad,
+                    linea.nombreProducto,
+                    Calculadora.importe(linea.precioUnitarioCentimos, linea.cantidad)
+                )
+            }
+        }
     }
 
     companion object {

@@ -22,10 +22,13 @@ class ResumenListaFragment : Fragment(R.layout.fragment_resumen_lista) {
     // La libreta de la Activity: si Android rehace la pantalla, sigue con el mismo día
     private val viewModel: ResumenIngresosViewModel by activityViewModels { ResumenIngresosViewModel.Factory }
 
-    // P86 A: el adaptador de las filas; vive con el Fragment y se le da a cada vista nueva
-    private val adaptador = ComandaCobradaAdapter()
+    // P86 A: el adaptador de las filas; vive con el Fragment y se le da a cada vista nueva.
+    // Tocar una fila: el marco (la Activity) abre su recibo en solo lectura en el lugar de la lista (P87 B)
+    private val adaptador = ComandaCobradaAdapter { comanda ->
+        if (portero.permite()) (requireActivity() as ResumenIngresosActivity).abrirRecibo(comanda)
+    }
 
-    // H01 B (P171): su portero; un segundo toque seguido en el campo Día no abre otro calendario encima
+    // H01 B (P171): su portero; un segundo toque seguido no abre otro calendario u otro recibo encima
     private val portero = GuardaDobleToque()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
