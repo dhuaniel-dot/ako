@@ -2,20 +2,22 @@ package yunkang.ako.ui.comun
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import yunkang.ako.R
 import yunkang.ako.databinding.ItemLineaBinding
 import yunkang.ako.dominio.Validacion
 
-// Las líneas del carrito (5c): «2 × Entrecot · 37,00 €» y debajo − + y Quitar.
-// P68 A: recibe LineaVista, no las clases del dominio, para que en la S9 sirva también a las comandas.
-// [Claude] Hoy solo existe el uso del carrito; los otros modos (solo Quitar, solo lectura) llegan con la S9.
+// Las líneas de un pedido: «2 × Entrecot · 37,00 €» y, debajo, los botones que toquen.
+// P68 A: recibe LineaVista, no las clases del dominio, para servir al carrito (5c), a la comanda (6b) y al recibo (6c, 2g).
+// P185 C: sin modos. Quien lo usa pasa solo las acciones que quiere; una acción vacía (null) esconde su botón:
+// carrito − + Quitar · comanda solo Quitar · recibo ninguna (y entonces se esconde la fila de botones entera).
 // Sencillo, con notifyDataSetChanged, como los demás adaptadores
 class LineaAdapter(
-    // Qué hacer con cada botón: lo decide quien usa el adaptador
-    private val alMenos: (LineaVista) -> Unit,
-    private val alMas: (LineaVista) -> Unit,
-    private val alQuitar: (LineaVista) -> Unit
+    // Qué hacer con cada botón: lo decide quien usa el adaptador; null = ese botón no sale
+    private val alMenos: ((LineaVista) -> Unit)?,
+    private val alMas: ((LineaVista) -> Unit)?,
+    private val alQuitar: ((LineaVista) -> Unit)?
 ) : RecyclerView.Adapter<LineaAdapter.LineaViewHolder>() {
 
     private var lineas: List<LineaVista> = emptyList()
@@ -45,11 +47,17 @@ class LineaAdapter(
         holder.binding.textoImporte.text =
             contexto.getString(R.string.comun_precio, Formato.precio(linea.importeCentimos))
 
-        // R4: − apagado en 1 y + apagado en 99; Quitar quita la línea entera, sin preguntar (ficha 5)
+        // P185 C: cada botón sale solo si le dieron qué hacer; sin ninguno, fuera la fila entera (el recibo)
+        holder.binding.botonMenos.isVisible = alMenos != null
+        holder.binding.botonMas.isVisible = alMas != null
+        holder.binding.botonQuitar.isVisible = alQuitar != null
+        holder.binding.filaBotones.isVisible = alMenos != null || alMas != null || alQuitar != null
+
+        // R4: − apagado en 1 y + apagado en 99; Quitar quita la línea entera
         holder.binding.botonMenos.isEnabled = linea.cantidad > 1
         holder.binding.botonMas.isEnabled = linea.cantidad < Validacion.MAXIMO_POR_PLATO
-        holder.binding.botonMenos.setOnClickListener { alMenos(linea) }
-        holder.binding.botonMas.setOnClickListener { alMas(linea) }
-        holder.binding.botonQuitar.setOnClickListener { alQuitar(linea) }
+        holder.binding.botonMenos.setOnClickListener { alMenos?.invoke(linea) }
+        holder.binding.botonMas.setOnClickListener { alMas?.invoke(linea) }
+        holder.binding.botonQuitar.setOnClickListener { alQuitar?.invoke(linea) }
     }
 }

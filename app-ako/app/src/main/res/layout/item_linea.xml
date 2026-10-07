@@ -36,6 +36,7 @@
 
     <!-- − + y Quitar: botones de 56 dp (más de los 48 dp mínimos, RNF-11) -->
     <LinearLayout
+        android:id="@+id/filaBotones"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"

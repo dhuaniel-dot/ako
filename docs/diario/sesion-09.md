@@ -13,12 +13,16 @@
 ## Qué se hizo
 
 - Al abrir (13:27): Daniel pidió ir algo más rápido y sacar las dudas a una **S14 de preguntas y repaso** tras la S13 (**P183 → A**, idea suya): sin los 10 minutos de «explícamelo tú». Marcha: la de siempre, con menos texto. **Los ocho huecos de la guía → todas las recomendadas (P184–P191)**, `decisiones-code.md` 5.13.
+- Plan Mode: Claude leyó el código real (el puesto de comandas ya tiene todo lo que Cuenta necesita: no se toca la capa de datos) y escribió el plan de las 20 piezas; Daniel lo aprobó. Para ir más rápido, las piezas de la guía se agrupan por vistas.
+- Pieza 1: las 17 cadenas de Cuenta en `strings.xml`. Daniel, a «¿por qué Anular no dice "Sí"?»: «porque el botón dice lo que hace» (P40).
+- Piezas 2–4 (6a): `CuentaViewModel` (`mesas` con `Flow`), `CuentaActivity` (borde a borde, portero, `RejillaMesasFragment.nueva(R.string.cuenta_titulo)`, mesa blanca → snackbar), `activity_cuenta.xml`, el manifiesto y *Cuenta* en `SelectorFragment` sin la caja provisional. Probado por Claude (borrador, y otra vez lo tecleado): las mesas 4, 5 y 6 rojas con 60,50 €, 4,50 € y 11,00 €; «La mesa 7 no tiene comanda»; modo noche; Atrás → 1a. Daniel, a «¿por qué la mesa blanca no crea una comanda vacía?»: «porque la comanda nace con el primer Enviar» (R2). Commit `ab404f7`.
+- Piezas 5–7 (6b se ve): `CuentaViewModel` con `comandaId`, `mesaNumero`, `lineas`, `total`, `abrirComanda` y `recargar` (`LineaComanda` → `LineaVista` con `Calculadora.importe`, R10 y R14); `ComandaFragment` y `fragment_comanda.xml` (barra «← Atrás · Mesa N · Anular», TOTAL fijo encima de *Dar la cuenta* como el carrito [Claude]); `LineaAdapter` con acciones anulables (P185 C) y `filaBotones` en `item_linea.xml`; la mesa roja abre 6b con `addToBackStack`. Probado por Claude (borrador, y otra vez lo tecleado): mesa 4 → 2 × Entrecot 37,00 €, 1 × Helado 5,00 €, 1 × Entrecot 18,50 €, TOTAL 60,50 €; mesa 5 → 1 × Flan; mesa 6 → 1 × Pollo asado; Atrás → rejilla; el carrito de Pedir sigue con − + Quitar. Daniel pidió los pasos de cada archivo encima de su bloque y el nombre suelto (`como-trabajamos`). Daniel, a «si el Entrecot sube a 20 €, ¿qué cambia en 6b?»: «nada, porque el precio está congelado» (R14).
 
 ## Problemas y soluciones
 
 | # | Qué falló | Cómo se resolvió | Justificación (por qué esta solución y no otra) | Fuente |
 |---|---|---|---|---|
-| | | | | |
+| 1 | Piezas 5–7: `/verificar` ve en `item_linea.xml` la línea `android:id="@+id/filaBotones"` **encima** del `<LinearLayout`, entre el comentario y la etiqueta (no habría compilado) | Claude la movió dentro de la etiqueta (mismo contenido) | La indicación decía «línea 38» y «al final de esa línea»: el cursor quedó al final del comentario. Para la próxima: en una línea suelta, citar el texto exacto de la línea tras la que va («detrás de `<LinearLayout`, la segunda») y no solo su número | Propio |
 
 ## Qué entendí y qué no
 
