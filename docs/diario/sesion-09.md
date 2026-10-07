@@ -7,7 +7,7 @@
 | **Objetivo de la sesión** | Del spec: **Cuenta (6a, 6b con Quitar y R7, 6c con `ReciboFragment`, cambio, Cobrar, Anular)**; P-M-22 a P-M-28 pasan |
 | **Tiempo dedicado** | 13:27 – 16:00, sin pausas (Daniel): **2 h 33 min** |
 | **Nivel / pieza** | Nivel 1 · pantalla 6 (6a rejilla con `RejillaMesasFragment.nueva(título)`, 6b comanda, 6c recibo) |
-| **Commit final** | |
+| **Commit final** | `7d40754` — S9: Cuenta (6a, 6b con Quitar y R7, 6c con ReciboFragment, cambio, Cobrar, Anular) (antes, intermedios `ab404f7`, `c344e18`, `b9a55ff`, `0605803`, `5f1ad09`) |
 | **Contexto al cerrar** | 50 % (Daniel, al cerrar); toda la sesión en un solo chat |
 
 ## Qué se hizo
