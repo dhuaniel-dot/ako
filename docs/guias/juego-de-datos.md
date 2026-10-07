@@ -98,7 +98,7 @@ Tres cosas que conviene saber:
 33. **P-M-27.** Entregado **50** → Cambio **8,00 €** → **40** → **−2,00 €** → **42** → **0,00 €** → borrar el campo → sin cambio y **Cobrar activo**.
 34. **P-M-28.** Cobrar → *«¿Cobrar la mesa 4?»* → **Cancelar** (sigue en 6c) → Cobrar → **Cobrar** → 6a, mesa 4 **blanca** → Atrás → Pedir → mesa 4 → Helado → Añadir → Enviar → **Enviar** (comanda nueva, R1) → Salir → 1234 → Propietario → 1234 → Resumen de ingresos → **mesa 4 · 42,00 €** → Atrás → Terminar. **[a mano, después]** (lo pide el plan) Cuenta → mesa 4 (5,00 €) → Dar la cuenta → Cobrar → **Cobrar** → Atrás → 1a.
 35. **P-M-12.** Propietario → 1234 → **Resumen de ingresos** → viene con **hoy**: **mesa 4 · 42,00 €** y **mesa 4 · 5,00 €**, sin las anuladas (mesas 4, 5 y 6) → pie **2 comandas · 47,00 €** → tocar la de 42,00 → **recibo en solo lectura** (sin Cobrar, «Entrecot» congelado) → Atrás → fecha: **ayer** → lista vacía, *«No se cobró ninguna comanda ese día»*, 0,00 € → Atrás → Terminar. El Resumen no está en Cuenta (mirar 6a).
-   - **Cuidado con la fecha:** los pasos 30–35 tienen que hacerse **el mismo día** (sin cruzar la medianoche), y el día anterior no puede haber cobros. Con instalación limpia al empezar, lo segundo se cumple siempre.
+   - **Cuidado con la fecha:** los pasos 30–35 tienen que hacerse **el mismo día** (sin cruzar la medianoche), y el día anterior no puede haber cobros. Con instalación limpia al empezar, lo segundo se cumple siempre. Y la hora del emulador en Madrid (apartado 3.0) [Claude, puesta al día del 8 oct].
 
 ### 2.6 Bloque F — La foto (pasos 36–37, ~10 min)
 
@@ -155,6 +155,7 @@ P-M-14 no se repite en modo rápido: su efecto neto es cero (elimina y recupera 
 - **Qué se anota en `docs/estado-nivel.md`** (regla del brief): un RF pasa a `implementado, no probado` cuando su código existe pero su P-M queda Parcial, y a `implementado` cuando su P-M pasa entera. Se pone la sesión y se actualiza el recuento de arriba.
 - **Las que ya pasaron** en sesiones anteriores no se vuelven a anotar hasta la S13: si hay que hacerlas para montar los datos, se hacen en modo rápido.
 - **Dónde queda cada pasada** [Claude, puesta al día del 7 oct]: desde la S9, la lista de pruebas aprobada por Daniel y lo que salió de verdad se guardan en `docs/pruebas-pasadas/sNN.md` (uno por sesión, con su fila en el `LEEME.md` de la carpeta; P176 y petición de Daniel del 7 oct). El resultado oficial sigue en `spec+doc-pruebas.md`.
+- **La hora del emulador** [Claude, puesta al día del 8 oct, de la S10]: el emulador está en español de España y en la zona `Europe/Madrid` (P103 → A). **Tras un arranque en frío vuelve a GMT**, y 2g escribiría las horas de cobro en la hora de Londres (ficha S10, problema 1). Antes de cualquier prueba que mire horas o días (el Resumen de ingresos de P-M-12, 24, 25 y 28), Claude, con `adb root`: `adb shell settings put global auto_time_zone 0`, `adb shell cmd alarm set-timezone Europe/Madrid` y `adb shell setprop persist.sys.timezone Europe/Madrid`. Después, `adb shell date` tiene que dar la hora de Madrid.
 
 ### S5 — Selector y PIN
 
@@ -236,7 +237,7 @@ Ya no hace falta el inspector (ni `sqlite3`): las comandas se envían desde Pedi
 
 ### S9 — Cuenta
 
-P-M-29 pide app **recién instalada**, y P-M-06, P-M-10 y P-M-20 necesitan sus comandas reales: instalación limpia y montaje entero hasta el paso 34 (sin el Resumen de ingresos, que llega en la S10: su botón sigue en la caja provisional).
+P-M-29 pide app **recién instalada**, y P-M-06, P-M-10 y P-M-20 necesitan sus comandas reales: instalación limpia y montaje entero hasta el paso 34 (sin el Resumen de ingresos, que llega en la S10: su botón sigue en la caja provisional) [Claude, puesta al día del 8 oct: desde la S10 el botón abre 2g y la caja provisional ya no existe].
 
 - **Montaje:** instalación limpia → pasos **1–34** (pasos 3 y 4 se pueden saltar: no crean datos). Lo que ya pasó, en modo rápido pero haciendo sus toques.
 - **Decidido (P83 → A, Daniel, 25 sep):** P-M-29 **en su sitio** (paso 2) con una sola instalación limpia, como dice este apartado (en la guía de la S9, hueco 9, es la opción B). La S10 empieza con instalación limpia igualmente.
@@ -247,7 +248,7 @@ P-M-29 pide app **recién instalada**, y P-M-06, P-M-10 y P-M-20 necesitan sus c
 - **Revisión:** el `revisor` revisa el código al cerrar (P35), después de las pruebas.
 - **`estado-nivel.md`:** RF-40, RF-41, RF-43, RF-44 → `implementado`; RF-42, RF-45, RF-46 → `implementado, no probado`; RF-24, RF-50, RF-06, RF-11, RF-37 → `implementado`.
 - **Tiempo:** ~90 min.
-- **Hecho (7 oct 2026)** [Claude, puesta al día del 7 oct]: la pasada la **ejecutó Claude** con `adb` tras el visto bueno de Daniel a la lista (P176); lista y resultado en `docs/pruebas-pasadas/s09.md`. Instalación limpia y montaje en modo rápido (pasos que crean datos: 1, 2, 5–16, 22, 25–34). Resultado en `spec+doc-pruebas.md` (07/10/2026): **Pasa** P-M-06, 10, 13, 20, 22, 23, 26, 27 y 29; **Parcial** P-M-24, P-M-25 y P-M-28, **solo** por el Resumen de ingresos (pasos 5, 3 y 5; su botón aún abre la caja provisional), que se repiten enteras en la S10. El emulador quedó con las comandas 1 (mesa 5) y 2 (mesa 6) ANULADAS con sus líneas, la 3 (mesa 4) ANULADA con 0 líneas, y la 4 (mesa 4, 42,00 €) y la 5 (mesa 4, 5,00 €) PAGADAS: la S10 empieza con instalación limpia igualmente.
+- **Hecho (7 oct 2026)** [Claude, puesta al día del 7 oct]: la pasada la **ejecutó Claude** con `adb` tras el visto bueno de Daniel a la lista (P176); lista y resultado en `docs/pruebas-pasadas/s09.md`. Instalación limpia y montaje en modo rápido (pasos que crean datos: 1, 2, 5–16, 22, 25–34). Resultado en `spec+doc-pruebas.md` (07/10/2026): **Pasa** P-M-06, 10, 13, 20, 22, 23, 26, 27 y 29; **Parcial** P-M-24, P-M-25 y P-M-28, **solo** por el Resumen de ingresos (pasos 5, 3 y 5; su botón aún abría la caja provisional; desde la S10 abre 2g [Claude, puesta al día del 8 oct]), que se repiten enteras en la S10 (y pasaron enteras el 08/10/2026: apartado S10). El emulador quedó con las comandas 1 (mesa 5) y 2 (mesa 6) ANULADAS con sus líneas, la 3 (mesa 4) ANULADA con 0 líneas, y la 4 (mesa 4, 42,00 €) y la 5 (mesa 4, 5,00 €) PAGADAS: la S10 empieza con instalación limpia igualmente.
 
 ### S10 — Resumen de ingresos
 
@@ -258,6 +259,7 @@ Es el **ensayo general** de la pasada final (sin la foto). Instalación limpia p
 - **Repetidas enteras:** P-M-24, P-M-25 y P-M-28 → **Pasa** (en la S9 quedaron *Parcial* solo por el paso del Resumen de ingresos [Claude, puesta al día del 7 oct]).
 - **`estado-nivel.md`:** RF-20 → `implementado`; RF-42, RF-45, RF-46 → `implementado`.
 - **Tiempo:** ~60 min.
+- **Hecho (8 oct 2026)** [Claude, puesta al día del 8 oct]: la pasada la **ejecutó Claude** con `adb` tras el visto bueno de Daniel a la lista (P176); lista y resultado en `docs/pruebas-pasadas/s10.md`. Antes, el emulador en español y en `Europe/Madrid` (apartado 3.0). Instalación limpia (`pm clear`: se borraron también los cobros de la S9) y montaje en modo rápido (apartado 2.9, puntos 1–11, y pasos 23–26 en rápido, sin anotar); después los pasos 27–35 de un tirón, de las 00:31 a las 00:53 del 8 oct (hora de Madrid). Resultado en `spec+doc-pruebas.md` (08/10/2026): **Pasa** P-M-12 (primera vez) y P-M-24, 25 y 28 (enteras). En 2g: «Jueves, 08/10/2026»; dos filas de la mesa 4 (42,00 € cobrada a las 00:48 y 5,00 € a las 00:50), sin las anuladas (mesas 4, 5 y 6); pie 2 · 47,00 €; la fila de 42,00 € abre «Mesa 4 · Recibo» con 2 × Entrecot y 1 × Helado, sin *Entregado* ni *Cobrar*; Atrás vuelve a la lista de hoy; ayer (7 oct) vacío, con 0 y 0,00 €; Cuenta no tiene camino al Resumen. Un extra [Claude] de R14: Entrecot a 20,00 € no cambia ni el total del día ni el recibo, y se dejó otra vez a 18,50. `estado-nivel.md`: RF-20, RF-42, RF-45 y RF-46 → `implementado`. El emulador quedó con las comandas 1 (mesa 5), 2 (mesa 6) y 3 (mesa 4, 0 líneas) ANULADAS, y la 4 (mesa 4, 42,00 €) y la 5 (mesa 4, 5,00 €) PAGADAS el 8 oct: la S12 empieza con instalación limpia igualmente.
 
 ### S11 — Pruebas de Room
 
@@ -275,6 +277,7 @@ Es el **ensayo general** de la pasada final (sin la foto). Instalación limpia p
 ### S13 — Cierre: la pasada final
 
 - **Primero las once P-C** (`testDebugUnitTest` y `connectedDebugAndroidTest`): la segunda puede desinstalar la app, así que va **antes** de la pasada manual.
+- **Antes de la pasada, la hora del emulador** en `Europe/Madrid` (apartado 3.0): si se arrancó en frío, habrá vuelto a GMT [Claude, puesta al día del 8 oct].
 - **Después, la pasada final entera** del apartado 4: las 29, todas anotadas con la fecha de la S13 (*Observaciones*: «Pasada final S13» detrás del historial).
 - **`estado-nivel.md`:** los 29 RF del nivel 1 en `implementado` con su sesión; recuento de arriba a 29.
 
@@ -319,11 +322,11 @@ Es el orden recomendado del plan con cuatro añadidos [Claude]: la descripción 
 | 21 | RF-38 | S8 | Pasa | (S13) | 23 |
 | 22 | RF-40 | S9 | Pasa | (S13) | 25 |
 | 23 | RF-41 | S9 | Pasa | (S13) | 26 |
-| 24 | RF-46 | S9 | Parcial (paso 5, Resumen de ingresos) | S10 | 27 |
-| 25 | RF-42 | S9 | Parcial (paso 3, Resumen de ingresos) | S10 | 28 |
+| 24 | RF-46 | S9 | Parcial (paso 5, Resumen de ingresos); S10 08/10: entera [Claude, 8 oct]) | S10 | 27 |
+| 25 | RF-42 | S9 | Parcial (paso 3, Resumen de ingresos); S10 08/10: entera [Claude, 8 oct]) | S10 | 28 |
 | 26 | RF-43 | S9 | Pasa | (S13) | 32 |
 | 27 | RF-44 | S9 | Pasa | (S13) | 33 |
-| 28 | RF-45 | S9 | Parcial (paso 5, Resumen de ingresos) | S10 | 34 |
+| 28 | RF-45 | S9 | Parcial (paso 5, Resumen de ingresos); S10 08/10: entera [Claude, 8 oct]) | S10 | 34 |
 | 29 | RF-50 | S5 | Parcial (Panel S6, formulario S7, 1d S8, Cuenta S9; S8: pasos 1, 2 y 4 vistos, falta Cuenta [Claude, 6 oct]) | S9 | 2 |
 
 **En la S13 pasan las 29**, en el orden del apartado 4, desde instalación limpia.
