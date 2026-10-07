@@ -11,19 +11,6 @@
         <item name="textInputStyle">@style/Widget.AKO.CampoTexto</item>
     </style>
 
-    <style name="ThemeOverlay.AKO.Dialogo" parent="ThemeOverlay.Material3.MaterialAlertDialog">
-        <item name="colorPrimary">?attr/colorOnSurface</item>
-    </style>
-
-    <!-- P160: el campo de texto de siempre (con borde), con su propio retoque de colores -->
-    <style name="Widget.AKO.CampoTexto" parent="Widget.Material3.TextInputLayout.OutlinedBox">
-        <item name="materialThemeOverlay">@style/ThemeOverlay.AKO.CampoTexto</item>
-    </style>
-
-    <!-- P160: solo dentro del campo, el naranja pasa a ser el color del texto normal
-         (la etiqueta naranja sobre fondo claro no llegaba a 4,5:1). Los botones rellenos siguen naranjas -->
-    <style name="ThemeOverlay.AKO.CampoTexto" parent="ThemeOverlay.Material3.TextInputEditText.OutlinedBox">
-        <item name="colorPrimary">?attr/colorOnSurface</item>
-    </style>
-
+    <!-- H06 (revisión del 6 oct): ThemeOverlay.AKO.Dialogo, Widget.AKO.CampoTexto y ThemeOverlay.AKO.CampoTexto
+         viven solo en values/themes.xml: valen igual de día y de noche, y así no hay dos copias que mantener -->
 </resources>

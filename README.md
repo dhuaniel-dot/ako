@@ -30,7 +30,7 @@ Desde la carpeta `app-ako/` (en Windows, con PowerShell o Git Bash; en macOS o L
 - **Pruebas de la base de datos** (Room en memoria, carpeta `app/src/androidTest/`, con el emulador encendido): `./gradlew.bat connectedDebugAndroidTest`
 - **Pruebas manuales**: `docs/spec+doc-pruebas.md` — 29 casos, uno por requisito del nivel 1; el resultado y la fecha de cada uno se anotan al ejecutarlo. El orden para prepararlas está en `docs/guias/juego-de-datos.md`.
 
-El plan tiene nueve pruebas de código (seis en `test/` y tres en `androidTest/`); cuáles existen y han pasado en cada momento, con su fecha, también está en `docs/spec+doc-pruebas.md`.
+El plan tiene once pruebas de código (ocho en `test/` y tres en `androidTest/`; P-C-10 y P-C-11 las añadió la revisión del 1 oct); cuáles existen y han pasado en cada momento, con su fecha, también está en `docs/spec+doc-pruebas.md`.
 
 ## Estructura
 

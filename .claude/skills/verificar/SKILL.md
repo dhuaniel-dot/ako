@@ -41,7 +41,7 @@ Claude puede mirar el emulador sin que Daniel haga captura:
 - Ver la pantalla: `adb exec-out screencap -p > cap.png` y leer `cap.png`.
 - Ver la base de datos (S2 en adelante, sustituye al inspector para Claude): `adb exec-out run-as yunkang.ako cat databases/ako.db > ako.db` y leerla con Python (`sqlite3`): tablas, filas de la precarga.
 
-Daniel sigue haciendo las pruebas manuales con el dedo; esto es para que Claude confirme lo que Daniel cuenta.
+Las pruebas manuales las pasa Claude con `adb` tras dar la lista a Daniel y recibir su visto bueno (P176, 7 oct); Daniel revisa las capturas.
 
 ## 5. Informar, en este orden y sin más
 

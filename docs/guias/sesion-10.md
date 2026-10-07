@@ -99,6 +99,7 @@ Regla 12 de `CLAUDE.md`: explicación breve → código completo con su ruta →
 - **P-M-12 (RF-20): pasa entera** (piezas 5, 6, 7 y 9).
 - **Se repiten enteras** (eran *Parcial* desde la S9, P6): **P-M-24** (RF-46, paso 5), **P-M-25** (RF-42, paso 3) y **P-M-28** (RF-45, paso 5): pasan.
 - **Las ocho P-C de `test/`** (P-C-01 a P-C-05, P-C-09, P-C-10 y P-C-11; 21 pruebas) siguen en verde (`testDebugUnitTest`).
+- **Quién las pasa (P176, 7 oct):** Claude escribe la lista de pruebas con sus pasos, Daniel la revisa y da el visto bueno, Claude las pasa con `adb` y Daniel revisa las capturas.
 - `estado-nivel.md`: **RF-20 → implementado (S10)**; **RF-42, RF-45 y RF-46 → implementado** (su *Sesión* sigue siendo la S9, que los construyó). Recuento de arriba actualizado. Claude repasa la tabla entera: cada RF de nivel 1 que no esté en *implementado* tiene que tener apuntada la sesión que lo cierra (RF-04, RF-09 y RF-30 esperan la foto de la S12; tras esta sesión, ninguno más).
 - Cierre con `cerrar-sesion` (sin `revisor`: toca en la S13): ficha `sesion-10.md`; `decisiones-code.md` con las decisiones de la sesión (`Formato.fecha` y `Formato.hora` con el idioma del dispositivo, el día como inicio y fin en la zona del dispositivo, `DatePickerDialog` sin clase propia y sin límite de fechas, el adaptador propio de la lista, el recibo en un contenedor encima de la lista, `pendiente_sesion_posterior` y `abrirPendiente` borrados, cómo se refresca el Resumen); **dos commits**: `S10: Resumen de ingresos (2g)` y después `S10: ficha del diario`, con push.
 

@@ -161,7 +161,7 @@ Compartidos: «Mesa %1$d» de la barra de 5a → `comun_mesa` (05a #2, spec §4.
 | `cobrar_cuerpo` | Total: %1$s.\nLa comanda quedará PAGADA y no se podrá modificar. | diálogo mensaje (`%1$s` = total formateado; salto de línea tras el punto) | Confirmación de Cobrar | dialogo-cobrar.png («Total: 39,50 €. / La comanda quedará PAGADA y no se podrá modificar.») |
 | `cobrar_btn_cobrar` | Cobrar | diálogo botón (afirmativo) | Confirmación de Cobrar | dialogo-cobrar.png (ver D12: P-M-28 usa *No / Sí*) |
 
-Compartidos: «Mesa 4» de 6b → `comun_mesa` (06b, P-M-23 «6b con "Mesa 4"»); líneas «2 × Entrecot» → `comun_linea`; «Quitar» de cada línea → `comun_quitar` (06b #1; P-M-23 lo escribe en minúscula, D13); «TOTAL» → `comun_total`; importes → `comun_precio`; «Cancelar» de los diálogos → `comun_cancelar`; botón negativo de Anular → `comun_no` y afirmativo → `comun_si` según P-M-25 (D11). Número de mesa en la celda: `%1$d`.
+Compartidos: «Mesa 4» de 6b → `comun_mesa` (06b, P-M-23 «6b con "Mesa 4"»); líneas «2 × Entrecot» → `comun_linea`; «Quitar» de cada línea → `comun_quitar` (06b #1; P-M-23 lo escribe en minúscula, D13); «TOTAL» → `comun_total`; importes → `comun_precio`; «Cancelar» de los diálogos → `comun_cancelar`; botón negativo de Anular → `comun_cancelar` y afirmativo → `comanda_btn_anular` (P40 → A: el botón dice lo que hace; el «No / Sí» de P-M-25 se lee como negativo / afirmativo, D11; corregido el 7 oct, C06: `comun_si` no existe). Número de mesa en la celda: `%1$d`.
 
 ---
 

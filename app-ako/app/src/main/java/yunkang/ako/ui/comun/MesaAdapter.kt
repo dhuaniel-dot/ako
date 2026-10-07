@@ -60,8 +60,9 @@ class MesaAdapter(
             holder.binding.textoTotal.setTextColor(blanco)
             holder.binding.textoTotal.text = total
             holder.binding.textoTotal.visibility = View.VISIBLE
-            // RNF-13: el lector de pantalla dice «Mesa 4, 42,00 €»: el estado no depende solo del color
-            tarjeta.contentDescription = "$textoMesa, $total"
+            // RNF-13: el lector de pantalla dice «Mesa 4, 42,00 €»: el estado no depende solo del color.
+            // La frase (con su coma) sale de strings.xml, como todo texto (RNF-19, H07)
+            tarjeta.contentDescription = contexto.getString(R.string.mesa_ocupada_cd, textoMesa, total)
         } else {
             // Libre: vuelve a los colores con los que nació la casilla, sin total
             tarjeta.setCardBackgroundColor(holder.fondoLibre)

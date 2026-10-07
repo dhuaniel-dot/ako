@@ -12,6 +12,7 @@ import yunkang.ako.R
 import yunkang.ako.databinding.ActivityPedidoBinding
 import yunkang.ako.ui.comun.ComprobadorPin
 import yunkang.ako.ui.comun.ConfirmacionDialog
+import yunkang.ako.ui.comun.GuardaDobleToque
 import yunkang.ako.ui.selector.PinDialog
 
 // Pantalla 5 (Pedir). Es solo el marco: dentro se apilan la carta (5a), la ficha (5b) y el carrito (5c).
@@ -31,6 +32,9 @@ class PedidoActivity : AppCompatActivity(), ComprobadorPin {
             intentarSalir()
         }
     }
+
+    // H01 B (P171): el portero de Pedir; dos toques en Salir no abren dos avisos ni dos cajas del PIN
+    private val portero = GuardaDobleToque()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,6 +83,7 @@ class PedidoActivity : AppCompatActivity(), ComprobadorPin {
     // [Claude] Salir de Pedir (ficha 1): primero el aviso si hay platos sin enviar (RF-38), después el PIN.
     // Con el carrito vacío, directamente el PIN
     private fun intentarSalir() {
+        if (!portero.permite()) return
         val carrito = viewModel.carrito.value
         if (carrito == null || carrito.estaVacio()) {
             pedirPin()

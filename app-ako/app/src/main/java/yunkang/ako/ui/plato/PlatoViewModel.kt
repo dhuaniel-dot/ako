@@ -2,9 +2,11 @@ package yunkang.ako.ui.plato
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
@@ -24,30 +26,49 @@ data class DatosFormulario(
     val alergenosDelPlato: List<Long>     // los ids que el plato ya lleva marcados (vacía si es nuevo)
 )
 
-// La libreta de la pantalla 3 (formulario del plato)
-class PlatoViewModel(private val cartaRepository: CartaRepository) : ViewModel() {
+// La libreta de la pantalla 3 (formulario del plato).
+// H10 B (P174): lo que el Propietario va eligiendo se guarda en una caja fuerte (SavedStateHandle) que
+// sobrevive incluso a que Android mate la app en segundo plano; la libreta sola solo sobrevive a recrear la pantalla
+class PlatoViewModel(
+    private val cartaRepository: CartaRepository,
+    private val cajaFuerte: SavedStateHandle
+) : ViewModel() {
 
     // P162 B: un solo tablón. Solo esta libreta escribe en él (_datos); la pantalla solo lo lee (datos)
     private val _datos = MutableLiveData<DatosFormulario>()
     val datos: LiveData<DatosFormulario> = _datos
 
-    // [Claude] Para no leer dos veces: la libreta sobrevive a que Android recree la pantalla
+    // [Claude] Para no leer dos veces: la libreta sobrevive a que Android recree la pantalla.
+    // (Si Android mató la app, la libreta es nueva y vuelve a leer: es lo que toca)
     private var yaCargado = false
 
-    // [Claude] Lo que el Propietario va eligiendo vive en la libreta para sobrevivir a una recreación
-    // (como las casillas de alérgenos, P66 A): la categoría elegida, por su id
-    var categoriaElegidaId: Long? = null
+    // [Claude] La categoría elegida, por su id (en la caja fuerte, H10 B)
+    var categoriaElegidaId: Long?
+        get() = cajaFuerte[CLAVE_CATEGORIA]
+        set(valor) { cajaFuerte[CLAVE_CATEGORIA] = valor }
 
-    // [Claude] true cuando los campos ya tienen lo guardado; desde ahí manda lo que se teclea
-    var formularioRelleno = false
+    // [Claude] true cuando los campos ya tienen lo guardado; desde ahí manda lo que se teclea.
+    // En la caja fuerte: tras una muerte del proceso, Android devuelve los campos y NO se vuelven a rellenar
+    var formularioRelleno: Boolean
+        get() = cajaFuerte[CLAVE_RELLENO] ?: false
+        set(valor) { cajaFuerte[CLAVE_RELLENO] = valor }
+
+    // P165 C: true en cuanto el Propietario toca algo después de rellenar el formulario
+    var hayCambios: Boolean
+        get() = cajaFuerte[CLAVE_CAMBIOS] ?: false
+        set(valor) { cajaFuerte[CLAVE_CAMBIOS] = valor }
 
     // P66 A: los alérgenos marcados (sus ids) viven en la libreta, no en las casillas:
-    // las casillas se crean de nuevo si Android recrea la pantalla
-    val alergenosMarcados = mutableSetOf<Long>()
+    // las casillas se crean de nuevo si Android recrea la pantalla. En la caja fuerte van como lista de números
+    val alergenosMarcados: List<Long>
+        get() = (cajaFuerte.get<LongArray>(CLAVE_ALERGENOS) ?: LongArray(0)).toList()
 
-    // P165 C: true en cuanto el Propietario toca algo después de rellenar el formulario.
-    // Vive en la libreta para sobrevivir a una recreación
-    var hayCambios = false
+    // Apunta o borra un alérgeno. Se trabaja con un conjunto (sin repetidos) y se vuelve a guardar entero
+    fun marcarAlergeno(id: Long, marcado: Boolean) {
+        val ahora = alergenosMarcados.toMutableSet()
+        if (marcado) ahora.add(id) else ahora.remove(id)
+        cajaFuerte[CLAVE_ALERGENOS] = ahora.toLongArray()
+    }
 
     // Lee la base de datos UNA sola vez. productoId null = plato nuevo.
     // viewModelScope.launch empieza en el hilo principal; cada llamada de Room
@@ -71,7 +92,7 @@ class PlatoViewModel(private val cartaRepository: CartaRepository) : ViewModel()
     // las comprueba el repositorio en ese orden; la pantalla solo reacciona a la respuesta
     // aunqueCategoriaEliminada = true es la tercera salida de 3e: el Propietario dijo «No» a las dos preguntas (P130)
     suspend fun guardar(p: Producto, aunqueCategoriaEliminada: Boolean = false): ResultadoGuardado =
-        cartaRepository.guardarPlato(p, alergenosMarcados.toList(), aunqueCategoriaEliminada = aunqueCategoriaEliminada)
+        cartaRepository.guardarPlato(p, alergenosMarcados, aunqueCategoriaEliminada = aunqueCategoriaEliminada)
 
     // [Claude] 3e, segundo aviso: cuántos platos volverían a la carta al recuperar la categoría.
     // El reverso de R6: los activos de esa categoría, sin contar el que se está guardando (P-M-11)
@@ -102,12 +123,19 @@ class PlatoViewModel(private val cartaRepository: CartaRepository) : ViewModel()
     }
 
     // P140: la fábrica que construye esta libreta con el repositorio de la carta de EntradaAko
+    // y su caja fuerte (createSavedStateHandle la saca de la propia pantalla, H10 B)
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val app = this[APPLICATION_KEY] as EntradaAko
-                PlatoViewModel(app.cartaRepository)
+                PlatoViewModel(app.cartaRepository, createSavedStateHandle())
             }
         }
+
+        // [Claude] Las etiquetas de cada cosa dentro de la caja fuerte
+        private const val CLAVE_CATEGORIA = "categoria_elegida"
+        private const val CLAVE_RELLENO = "formulario_relleno"
+        private const val CLAVE_CAMBIOS = "hay_cambios"
+        private const val CLAVE_ALERGENOS = "alergenos_marcados"
     }
 }

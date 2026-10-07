@@ -9,6 +9,7 @@ import kotlinx.coroutines.launch
 import yunkang.ako.R
 import yunkang.ako.databinding.FragmentSelectorBinding
 import yunkang.ako.ui.comun.ConfirmacionDialog
+import yunkang.ako.ui.comun.GuardaDobleToque
 
 // 1a · Selector de rol: el nombre de la app y los tres botones grandes (P101)
 class SelectorFragment : Fragment(R.layout.fragment_selector) {
@@ -16,13 +17,19 @@ class SelectorFragment : Fragment(R.layout.fragment_selector) {
     // La libreta de la Activity (la misma para 1a y 1b): aquí se le pregunta por la puerta de Pedir
     private val viewModel: SelectorViewModel by activityViewModels { SelectorViewModel.Factory }
 
+    // H01 B (P171): el portero de 1a; un doble toque no abre dos cajas del PIN ni dos cajas provisionales.
+    // Pedir no lo necesita: ya se apaga mientras pregunta (P142)
+    private val portero = GuardaDobleToque()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentSelectorBinding.bind(view)
 
         // Propietario: pide el PIN (1c)
         binding.botonPropietario.setOnClickListener {
-            PinDialog().show(parentFragmentManager, "pin")
+            if (portero.permite()) {
+                PinDialog().show(parentFragmentManager, "pin")
+            }
         }
 
         // Pedir: la puerta (RF-25). Sin ningún plato visible no se entra: se avisa y se queda en 1a
@@ -49,12 +56,14 @@ class SelectorFragment : Fragment(R.layout.fragment_selector) {
         // [Claude] Provisional: Cuenta llega en la S9 (6a).
         // Hasta entonces, una caja con un solo botón que lo dice
         binding.botonCuenta.setOnClickListener {
-            ConfirmacionDialog.nueva(
-                titulo = getString(R.string.selector_btn_cuenta),
-                texto = getString(R.string.pendiente_sesion_posterior),
-                afirmativo = getString(R.string.comun_aceptar),
-                clave = "pendiente"
-            ).show(parentFragmentManager, "pendiente")
+            if (portero.permite()) {
+                ConfirmacionDialog.nueva(
+                    titulo = getString(R.string.selector_btn_cuenta),
+                    texto = getString(R.string.pendiente_sesion_posterior),
+                    afirmativo = getString(R.string.comun_aceptar),
+                    clave = "pendiente"
+                ).show(parentFragmentManager, "pendiente")
+            }
         }
     }
-}
+}

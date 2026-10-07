@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <!-- allowBackup="false" (P151): sin copia en la nube del PIN ni de la base de datos; así reinstalar
-         borra todo, como dicen el aviso de 1b, el spec 8 y el Anexo II -->
+         borra todo, como dicen el aviso de 1b, el spec 8 y el Anexo II.
+         dataExtractionRules (H05, P173 A): en Android 12+ algunos fabricantes pasan los datos de móvil a móvil
+         aunque allowBackup esté apagado; reglas_extraccion.xml excluye el PIN y la base de datos también de eso
+         (el atributo es de Android 12, API 31; en versiones anteriores se ignora: tools:targetApi) -->
     <application
         android:name=".EntradaAko"
         android:allowBackup="false"
+        android:dataExtractionRules="@xml/reglas_extraccion"
+        tools:targetApi="31"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -23,7 +29,7 @@
             </intent-filter>
         </activity>
 
-        <!-- [Claude] Pantalla 2 (Panel), provisional en la S5. Solo en vertical (RNF-15) -->
+        <!-- Pantalla 2 (Panel). Solo en vertical (RNF-15) -->
         <activity
             android:name=".ui.panel.PanelActivity"
             android:exported="false"

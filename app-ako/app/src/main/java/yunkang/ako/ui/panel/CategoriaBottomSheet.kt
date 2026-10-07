@@ -30,6 +30,9 @@ class CategoriaBottomSheet : BottomSheetDialogFragment() {
     private var _binding: SheetCategoriaBinding? = null
     private val binding get() = _binding!!
 
+    // H04 B (P172): la categoría que se edita. null = es nueva, o la lista del Panel todavía no ha llegado
+    private var categoria: Categoria? = null
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = SheetCategoriaBinding.inflate(inflater, container, false)
         return binding.root
@@ -38,34 +41,39 @@ class CategoriaBottomSheet : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // [Claude] La hoja no pregunta a la base de datos: busca la categoría en la lista que el Panel ya tiene
         val id = requireArguments().getLong(ARG_ID)
-        val categoria = viewModel.categoriasConPlatos.value
-            ?.map { it.categoria }
-            ?.firstOrNull { it.id == id }
-
-        if (categoria == null) {
+        if (id == 0L) {
             // Crear: solo nombre y foto; sin interruptor (una categoría nace en la carta, P-M-05)
             binding.textoTitulo.setText(R.string.categoria_titulo_nueva)
         } else {
             binding.textoTitulo.setText(R.string.categoria_titulo_editar)
-            // Si Android rehízo la hoja (savedInstanceState), se respeta lo que el Propietario ya tecleó
-            if (savedInstanceState == null) binding.textoNombre.setText(categoria.nombre)
-            // R16: la categoría por defecto se puede renombrar pero nunca eliminar → sin interruptor
-            if (!categoria.esPorDefecto) {
-                binding.interruptorEnLaCarta.visibility = View.VISIBLE
-                if (savedInstanceState == null) binding.interruptorEnLaCarta.isChecked = categoria.activo
+            // H04 B: la hoja no pregunta a la base de datos: escucha el tablón del Panel (P49 B).
+            // Casi siempre la lista ya está y se pinta en el acto; si Android rehízo la hoja antes de que
+            // llegara, se pinta cuando llegue. Solo se pinta una vez
+            viewModel.categoriasConPlatos.observe(viewLifecycleOwner) { cajas ->
+                if (categoria != null) return@observe
+                val encontrada = cajas.map { it.categoria }.firstOrNull { it.id == id } ?: return@observe
+                categoria = encontrada
+                // Si Android rehízo la hoja (savedInstanceState), se respeta lo que el Propietario ya tecleó
+                if (savedInstanceState == null) binding.textoNombre.setText(encontrada.nombre)
+                // R16: la categoría por defecto se puede renombrar pero nunca eliminar → sin interruptor
+                if (!encontrada.esPorDefecto) {
+                    binding.interruptorEnLaCarta.visibility = View.VISIBLE
+                    if (savedInstanceState == null) binding.interruptorEnLaCarta.isChecked = encontrada.activo
+                }
+                actualizarGuardar()
             }
         }
 
         // Guardar solo se enciende con algo escrito (en blanco no hay nombre que guardar)
-        binding.botonGuardar.isEnabled = !binding.textoNombre.text.isNullOrBlank()
+        actualizarGuardar()
         binding.textoNombre.doAfterTextChanged {
             binding.campoNombre.error = null
-            binding.botonGuardar.isEnabled = !binding.textoNombre.text.isNullOrBlank()
+            actualizarGuardar()
         }
 
         binding.botonGuardar.setOnClickListener {
+            val categoria = categoria                // la de ahora (null solo al crear: Guardar no se enciende antes)
             binding.botonGuardar.isEnabled = false   // sin doble toque mientras se trabaja (P142)
             viewLifecycleOwner.lifecycleScope.launch {
                 // R6 (P128): si se va a eliminar, PRIMERO se mira qué platos suyos están en mesas pendientes
@@ -92,6 +100,14 @@ class CategoriaBottomSheet : BottomSheetDialogFragment() {
             }
             // Cancelar (P57 A): no se guarda nada y la hoja sigue como el Propietario la dejó
         }
+    }
+
+    // [Claude] Guardar se enciende con algo escrito y, al editar, solo cuando la categoría ya ha llegado (H04 B):
+    // así nunca se guarda «como nueva» una que se estaba editando
+    private fun actualizarGuardar() {
+        val hayNombre = !binding.textoNombre.text.isNullOrBlank()
+        val esNueva = requireArguments().getLong(ARG_ID) == 0L
+        binding.botonGuardar.isEnabled = hayNombre && (esNueva || categoria != null)
     }
 
     // [Claude] ¿El Propietario ha apagado «En la carta» de una categoría que estaba en la carta?

@@ -142,6 +142,9 @@
 
     <!-- 1d · rejilla en modo elegir -->
     <string name="mesa_elegir_titulo">Elige la mesa</string>
+    <!-- H07 (revisión del 6 oct): lo que lee el lector de pantalla en una mesa ocupada: «Mesa 4, 42,00 €»
+         (%1$s = comun_mesa ya montado, %2$s = total ya con su €); la coma sale de aquí, no del código (RNF-19) -->
+    <string name="mesa_ocupada_cd">%1$s, %2$s</string>
 
     <!-- Puerta de Pedir (RF-25) · solo el botón comun_aceptar (P15) -->
     <string name="puerta_pedir_titulo">No se puede pedir</string>

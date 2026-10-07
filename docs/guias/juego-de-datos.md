@@ -151,7 +151,7 @@ P-M-14 no se repite en modo rápido: su efecto neto es cero (elimina y recupera 
 ### 3.0 Reglas comunes
 
 - **Cuándo:** el bloque de pruebas va al final de la sesión, con todas las piezas hechas, justo antes de `cerrar-sesion`. Empieza con **instalación limpia** (desde la S6, apartado 1).
-- **Qué se anota en `docs/spec+doc-pruebas.md`** (lo hace Claude en `cerrar-sesion`, paso 3, con lo que Daniel conteste a las preguntas numeradas): *Resultado* **Pasa**, **Parcial** o **Falla**; *Observaciones* con lo visto y, si es Parcial, **qué falta y en qué sesión se repite**; *Fecha* en formato dd/mm/aaaa. **Al repetirla [Claude]:** se sobrescriben *Resultado* y *Fecha*, y en *Observaciones* queda el historial en una línea («S6 02/10: Parcial, faltaba … · S8 09/10: entera»). Nunca se añade una fila nueva ni se renumera.
+- **Qué se anota en `docs/spec+doc-pruebas.md`** (lo hace Claude en `cerrar-sesion`, paso 3, con lo que Daniel confirme viendo las capturas; desde el 7 oct, P176, Claude escribe antes la lista de pruebas con sus pasos, Daniel la aprueba y Claude las pasa con `adb`): *Resultado* **Pasa**, **Parcial** o **Falla**; *Observaciones* con lo visto y, si es Parcial, **qué falta y en qué sesión se repite**; *Fecha* en formato dd/mm/aaaa. **Al repetirla [Claude]:** se sobrescriben *Resultado* y *Fecha*, y en *Observaciones* queda el historial en una línea («S6 02/10: Parcial, faltaba … · S8 09/10: entera»). Nunca se añade una fila nueva ni se renumera.
 - **Qué se anota en `docs/estado-nivel.md`** (regla del brief): un RF pasa a `implementado, no probado` cuando su código existe pero su P-M queda Parcial, y a `implementado` cuando su P-M pasa entera. Se pone la sesión y se actualiza el recuento de arriba.
 - **Las que ya pasaron** en sesiones anteriores no se vuelven a anotar hasta la S13: si hay que hacerlas para montar los datos, se hacen en modo rápido.
 
@@ -288,7 +288,7 @@ Es el orden recomendado del plan con cuatro añadidos [Claude]: la descripción 
 
 - **Se puede partir en dos** (por ejemplo, A–C un día y D–F otro): los datos se conservan si no se hace Clear storage ni se desinstala entre medias. Cortar siempre en 1a, nunca con un carrito a medias.
 - **Si una prueba falla:** se anota *Falla* con lo que se vio y se sigue si el estado de los datos sigue valiendo para las siguientes. Si el arreglo obliga a cambiar el código, al terminar se repite esa prueba (y las que dependan de ella) en su punto del montaje, en modo rápido hasta llegar.
-- **Para ir más rápido con las notas:** Daniel apunta en una línea por prueba *Pasa/Falla* y lo raro que vea; Claude lo pasa al plan en `cerrar-sesion`.
+- **Quién la pasa (P176, 7 oct):** Claude escribe la lista de las 29 con sus pasos, Daniel la revisa y da el visto bueno, Claude las pasa con `adb` bloque a bloque y Daniel revisa las capturas y confirma *Pasa/Falla*; Claude lo pasa al plan en `cerrar-sesion`.
 
 ## 5. Tabla resumen
 

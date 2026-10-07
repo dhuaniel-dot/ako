@@ -316,8 +316,8 @@ class PlatoActivity : AppCompatActivity() {
             binding.textoDescripcion.setText(plato.descripcion)
             binding.interruptorEnLaCarta.isChecked = plato.activo
         }
-        // Los alérgenos que ya lleva el plato (vacío si es nuevo)
-        viewModel.alergenosMarcados.addAll(datos.alergenosDelPlato)
+        // Los alérgenos que ya lleva el plato (vacío si es nuevo), apuntados en la libreta uno a uno
+        for (id in datos.alergenosDelPlato) viewModel.marcarAlergeno(id, true)
 
         // La categoría: la del plato; si es nuevo, la de su caja; si no llegó ninguna,
         // la de por defecto, buscada por su columna y nunca por el nombre (ficha 3, R16)
@@ -335,13 +335,9 @@ class PlatoActivity : AppCompatActivity() {
             val casilla = MaterialCheckBox(this)
             casilla.text = alergeno.nombre
             casilla.isChecked = alergeno.id in viewModel.alergenosMarcados
-            // Al tocarla, se apunta o se borra en la libreta
+            // Al tocarla, se apunta o se borra en la libreta (y en su caja fuerte, H10 B)
             casilla.setOnCheckedChangeListener { _, marcada ->
-                if (marcada) {
-                    viewModel.alergenosMarcados.add(alergeno.id)
-                } else {
-                    viewModel.alergenosMarcados.remove(alergeno.id)
-                }
+                viewModel.marcarAlergeno(alergeno.id, marcada)
                 marcarCambio()
             }
             // [Claude] Dos columnas del mismo ancho: ancho 0 y la columna con peso 1

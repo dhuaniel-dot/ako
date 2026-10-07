@@ -8,7 +8,7 @@ Proyecto Intermodular de DAM. **Es mi primer proyecto de programación**: nunca 
 2. **Nada de código «por si acaso».** Cada clase, tabla, columna, cadena o dependencia la usa algo del nivel 1 hoy. La base de datos tiene **7 tablas** (P115); lo del nivel 2 llega entero con su incremento.
 3. **Lo que se empieza se termina.** Si surge una idea a mitad de una pieza, se apunta y se sigue con la pieza.
 4. **El diseño del nivel 2 no se borra** de ningún documento: se conserva para después.
-5. **Lo decidido aquí manda sobre el spec y sobre el Project «Proyecto Intermodular» de la app de Claude** (donde se planificó todo y se escribe el doc): el doc explica el prototipo. Cada cambio va a «Para el Project» (`docs/decisiones-code.md`, apartado 6); Daniel le pide al chat del Project que lo lea y corrija el doc.
+5. **Lo decidido aquí manda sobre el spec y sobre el Project «Proyecto Intermodular» de la app de Claude** (donde se planificó todo y se escribe el doc): el doc explica el prototipo. Cada cambio va a «Para el Project» (`docs/para-el-project/`, un documento por área; regla e índice en `docs/decisiones-code.md`, apartado 6); Daniel elige qué documento lleva al chat del Project para que corrija el doc (P178).
 
 ## Lee esto antes de cada sesión
 

@@ -29,6 +29,8 @@
 
 **Lo provisional de esta sesión:** nada. La prueba de arranque de la pieza 2 (`ArranqueTest.kt`) se borra en la pieza 7.
 
+**Antes de la sesión [Claude, 7 oct, P05 de la revisión del 6 oct]:** `connectedDebugAndroidTest` no se ha ejecutado nunca en este PC; en el modo «lo intermedio hazlo tú», Claude lanza la pieza 2 (`ArranqueTest`) por su cuenta antes de abrir la S11, para saber si arranca y traer el tropiezo ya resuelto si lo hay.
+
 ## 1. Piezas
 
 Regla 12 de `CLAUDE.md`: explicación breve → código completo con su ruta → Daniel lo teclea → `/verificar` → pregunta. Rutas de Kotlin de la app bajo `app-ako/app/src/main/java/yunkang/ako/`; **las pruebas de esta sesión, bajo `app-ako/app/src/androidTest/java/yunkang/ako/`**. Ninguna prueba se debilita para que pase (el `revisor` lo mira en la S13): si una sale roja, se arregla el código o se entiende por qué, nunca se cambia el valor esperado.

@@ -105,9 +105,14 @@ class PedidoViewModel(
         val carrito = _carrito.value ?: return false
         if (enviando || carrito.estaVacio()) return false
         enviando = true
-        comandaRepository.enviarCarrito(carrito)
-        _carrito.value = Carrito(mesaId)
-        enviando = false
+        // H03 (revisión del 6 oct): finally se ejecuta siempre, también si enviarCarrito fallara a mitad;
+        // así la bandera nunca se queda encendida y Enviar sigue funcionando
+        try {
+            comandaRepository.enviarCarrito(carrito)
+            _carrito.value = Carrito(mesaId)
+        } finally {
+            enviando = false
+        }
         return true
     }
 

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import yunkang.ako.R
 import yunkang.ako.databinding.ActivityPanelBinding
 import yunkang.ako.ui.comun.ConfirmacionDialog
+import yunkang.ako.ui.comun.GuardaDobleToque
 import yunkang.ako.ui.plato.PlatoActivity
 
 // 2a · Panel del Propietario: se llega tras el PIN correcto (1c).
@@ -21,6 +22,10 @@ class PanelActivity : AppCompatActivity() {
 
     // P140: la libreta del Panel, construida por su fábrica (la misma que usa CambiarPinDialog)
     private val viewModel: PanelViewModel by viewModels { PanelViewModel.Factory }
+
+    // H01 B (P171): el portero del Panel. Un segundo toque en menos de medio segundo no abre
+    // otra pantalla del plato ni otra hoja o caja encima de la primera
+    private val portero = GuardaDobleToque()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,22 +41,31 @@ class PanelActivity : AppCompatActivity() {
         }
 
         // La lista de cajas y sus timbres: el lápiz abre 2b; «+ Plato» y tocar un plato abren
-        // el formulario del plato (3a) con una nota (Intent) que lleva grapado un id
+        // el formulario del plato (3a) con una nota (Intent) que lleva grapado un id.
+        // Cada timbre pasa antes por el portero (H01 B)
         val adaptador = CategoriaAdapter(
             estaPlegada = { id -> viewModel.estaPlegada(id) },
             alPlegar = { categoria -> viewModel.alternarPlegado(categoria.id) },
-            alEditar = { categoria -> CategoriaBottomSheet.nueva(categoria.id).show(supportFragmentManager, "categoria") },
+            alEditar = { categoria ->
+                if (portero.permite()) {
+                    CategoriaBottomSheet.nueva(categoria.id).show(supportFragmentManager, "categoria")
+                }
+            },
             alAnadirPlato = { categoria ->
-                // Crear: se grapa la categoría de la caja, que saldrá ya elegida (ficha 3)
-                val nota = Intent(this, PlatoActivity::class.java)
-                nota.putExtra(PlatoActivity.EXTRA_CATEGORIA_ID, categoria.id)
-                startActivity(nota)
+                if (portero.permite()) {
+                    // Crear: se grapa la categoría de la caja, que saldrá ya elegida (ficha 3)
+                    val nota = Intent(this, PlatoActivity::class.java)
+                    nota.putExtra(PlatoActivity.EXTRA_CATEGORIA_ID, categoria.id)
+                    startActivity(nota)
+                }
             },
             alTocarPlato = { plato ->
-                // Editar: se grapa solo el id; la pantalla lee el plato fresco de la base de datos
-                val nota = Intent(this, PlatoActivity::class.java)
-                nota.putExtra(PlatoActivity.EXTRA_PRODUCTO_ID, plato.id)
-                startActivity(nota)
+                if (portero.permite()) {
+                    // Editar: se grapa solo el id; la pantalla lee el plato fresco de la base de datos
+                    val nota = Intent(this, PlatoActivity::class.java)
+                    nota.putExtra(PlatoActivity.EXTRA_PRODUCTO_ID, plato.id)
+                    startActivity(nota)
+                }
             }
         )
         binding.listaCategorias.layoutManager = LinearLayoutManager(this)
@@ -63,12 +77,16 @@ class PanelActivity : AppCompatActivity() {
 
         // «+» de la barra: hoja 2b para crear una categoría
         binding.botonNuevaCategoria.setOnClickListener {
-            CategoriaBottomSheet.nueva().show(supportFragmentManager, "categoria")
+            if (portero.permite()) {
+                CategoriaBottomSheet.nueva().show(supportFragmentManager, "categoria")
+            }
         }
 
         // Resumen de ingresos: caja provisional hasta la S10
         binding.botonResumen.setOnClickListener {
-            abrirPendiente(getString(R.string.panel_btn_resumen_ingresos))
+            if (portero.permite()) {
+                abrirPendiente(getString(R.string.panel_btn_resumen_ingresos))
+            }
         }
 
         // Atrás y Terminar hacen lo mismo: cerrar el Panel y volver a 1a, sin pedir PIN (ficha 1)
@@ -77,7 +95,9 @@ class PanelActivity : AppCompatActivity() {
 
         // Cambiar PIN: abre 1e
         binding.botonCambiarPin.setOnClickListener {
-            CambiarPinDialog().show(supportFragmentManager, "cambiar_pin")
+            if (portero.permite()) {
+                CambiarPinDialog().show(supportFragmentManager, "cambiar_pin")
+            }
         }
     }
 

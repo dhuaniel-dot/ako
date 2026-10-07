@@ -1,0 +1,19 @@
+# Para el Project · 03 — Fichas de pantalla, wireframes, textos y requisitos
+
+Filas movidas el 7 oct 2026 desde `docs/decisiones-code.md`, apartado 6 (P178 → C) [Claude]. Se tacha cuando Daniel diga que ya está en el doc. Las fuentes para la bibliografía están en el apartado 5 de `decisiones-code.md`, junto a cada Pnnn.
+
+| Fecha | Qué cambió | Dónde tocarlo en el doc |
+|---|---|---|
+| 30 sep 2026 | P124: el aviso de nombre de categoría repetido no mira mayúsculas («Carnes» = «carnes»), salvo letras con tilde o ñ (límite de SQLite `NOCASE`) | RF-05, ficha de la pantalla 2 (2b), memoria (limitaciones) |
+| 30 sep 2026 | **Idea nueva para el nivel 2: dividir la cuenta** (Daniel): al cobrar, elegir platos y pasarlos a otra parte para calcular lo que paga cada una. Dos versiones: solo calcular (sencilla) o cobrar y guardar cada parte (toca el modelo de datos y R1) | Requisitos del nivel 2 (RF nuevo), fichas de pantalla (6c), memoria (ampliaciones) |
+| 1 oct 2026 | P104 y P105 (S1): paquete `yunkang.ako` y nombre visible `AKO` | Spec 1, wireframe 01a, diagrama de clases |
+| 1 oct 2026 | P9: «recuperar» (no «reactivar») en el aviso 3e-2 | Ficha 3, wireframe dialogo-3e-2 |
+| 1 oct 2026 | P101: botón de modo día/noche, idea nueva de Daniel fuera del diseño (pendiente de decidir si entra: revisión del plan, P04) | Requisitos, memoria |
+| 1 oct 2026 | P46 B, P139, P141, P142, P143 y P144 (S5): orden de comprobación en 1e; borde a borde con insets; `hayPin()` normal; `crearPin` suspend esperado por la pantalla; `apply` en `PinStore`; `ConfirmacionDialog` con sobre afirmativo/negativo; el Panel de la S5 fue provisional | Ficha 1, diagrama de clases, memoria (pantalla 1) |
+| 2 oct 2026 | P159: el botón de modo día/noche (P101) pasa al nivel 2 (idea para después del doc) | Requisitos (nivel 2), memoria |
+| 2 oct 2026 | P161 (S6): en el Panel, la lista de platos de cada caja hace scroll propio y, al llegar al final, pasa el dedo al Panel (`requestDisallowInterceptTouchEvent`); la caja mide ~340 dp (cuatro filas de 56 dp), no ~270 | Ficha 2 (altura de la caja), memoria (listas anidadas), bibliografía (Manage touch events in a ViewGroup) |
+| 5 oct 2026 | P164 (S7): el segundo aviso 3e dice «¿Quieres recuperar Postres? Platos que volverán a la carta: N» (frase neutra; sustituye a «Volverán a la carta sus N platos» y a P63 A) | Ficha 3 (3e), wireframe dialogo-3e-2, `textos-ui.md`, P-M-11 (resultado esperado), bibliografía (string resources, plurals) |
+| 5 oct 2026 | P165 (S7): «¿Salir sin guardar?» con un guardián de Atrás (`OnBackPressedCallback`) que solo se enciende cuando hay cambios; la flecha ← Atrás y el Atrás del sistema van por el mismo camino | Ficha 3 (validaciones), memoria (navegación), bibliografía (custom back) |
+| 5 oct 2026 | S7: el aviso 3d con una sola mesa dice «Pollo asado está en una comanda pendiente de la mesa 6. No se quitará de esa comanda.» (singular, D15); el título del primer aviso 3e es «Categoría eliminada» y los botones «No / Sí, mover» y «No / Recuperar» (P40) | Ficha 3, `textos-ui.md` |
+| 6 oct 2026 | S8: en 5c el TOTAL va fijo encima de *Enviar* (no detrás de la última línea, como el wireframe 05c); aviso «Pedido enviado a la mesa N» y «Máximo 99 unidades por plato» (textos nuevos) | Wireframe 05c, `textos-ui.md` |
+| 7 oct 2026 | H07 (revisión del 6 oct): cadena nueva `mesa_ocupada_cd` = «%1$s, %2$s», lo que lee el lector de pantalla en una mesa ocupada («Mesa 4, 42,00 €»); antes la coma estaba en el código | `textos-ui.md` (apartado de Pedir/Cuenta, cadenas de accesibilidad) |
