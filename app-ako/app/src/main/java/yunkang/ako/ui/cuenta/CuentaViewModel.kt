@@ -38,6 +38,14 @@ class CuentaViewModel(
     private val _total = MutableLiveData(0)
     val total: LiveData<Int> = _total
 
+    // P186 A: la línea que espera mientras el aviso R7 está abierto. Vive en la libreta,
+    // así sigue ahí si Android rehace la pantalla con el aviso delante
+    var lineaPorQuitar: Long? = null
+
+    // P191 B: la bandera contra el doble toque en Quitar, Anular y Cobrar (como enviando en Pedir).
+    // Mientras una de las tres trabaja, otra llamada no llega al repositorio
+    private var trabajando = false
+
     // 6a → 6b: se abre la comanda de una mesa roja. Primero se vacían las bandejas, para que no se vea
     // ni un instante la mesa anterior. viewModelScope empieza en el hilo principal; Room cambia de hilo solo
     fun abrirComanda(comandaId: Long, mesaNumero: Int) {
@@ -46,6 +54,36 @@ class CuentaViewModel(
         _lineas.value = emptyList()
         _total.value = 0
         viewModelScope.launch { recargar() }
+    }
+
+    // [Claude] R7: ¿la que se va a quitar es la única línea que queda? Se mira la lista que se ve (P186 A)
+    fun esUltimaLinea(): Boolean = lineas.value?.size == 1
+
+    // 6b · Quitar (P189 A): suspend, la pantalla espera. Devuelve true si la comanda quedó ANULADA
+    // por quitar la última línea (R7); si no, vuelve a preguntar líneas y total (R10: nunca se resta en pantalla)
+    suspend fun quitarLinea(lineaId: Long): Boolean {
+        if (trabajando) return false
+        trabajando = true
+        // H03: finally se ejecuta siempre, también si el repositorio fallara: la bandera nunca se queda encendida
+        try {
+            val anulada = comandaRepository.quitarLinea(lineaId)
+            if (!anulada) recargar()
+            return anulada
+        } finally {
+            trabajando = false
+        }
+    }
+
+    // 6b · Anular (P189 A): ANULADA con hora de cierre, sin borrar las líneas. Devuelve true si se hizo
+    suspend fun anular(): Boolean {
+        if (trabajando) return false
+        trabajando = true
+        try {
+            comandaRepository.anular(comandaId)
+        } finally {
+            trabajando = false
+        }
+        return true
     }
 
     // Vuelve a preguntar las líneas y el total a la base de datos (R10: el total se suma en SQL cada vez,

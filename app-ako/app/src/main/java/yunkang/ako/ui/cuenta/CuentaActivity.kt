@@ -6,6 +6,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
 import com.google.android.material.snackbar.Snackbar
 import yunkang.ako.R
@@ -23,8 +24,11 @@ class CuentaActivity : AppCompatActivity() {
     // La libreta de Cuenta, hecha con su fábrica (P140); sus Fragments piden la misma con activityViewModels
     private val viewModel: CuentaViewModel by viewModels { CuentaViewModel.Factory }
 
-    // H01 B (P171): el portero de Cuenta, uno para toda la pantalla; también lo usarán 6b y 6c
+    // H01 B (P171): el portero de Cuenta, uno para toda la pantalla; también lo usan 6b y 6c
     val portero = GuardaDobleToque()
+
+    // [Claude] P146: si la comanda se cerró con la app en segundo plano, la vuelta a la rejilla espera a onResume
+    private var vueltaPendiente = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +55,14 @@ class CuentaActivity : AppCompatActivity() {
             rejillaVisible()?.mostrar(mesas)
         }
 
+        // P180 B: mientras 6b o 6c tapan la rejilla, las mesas que manda Room no le llegan (no se ve).
+        // Cuando la pila se vacía y la rejilla vuelve a verse, se le dan las últimas que hay en el tablón
+        supportFragmentManager.addOnBackStackChangedListener {
+            if (supportFragmentManager.backStackEntryCount == 0) {
+                rejillaVisible()?.mostrar(viewModel.mesas.value ?: emptyList())
+            }
+        }
+
         // 6a: la rejilla avisa de la mesa tocada y esta pantalla decide qué significa el toque (ficha 6)
         supportFragmentManager.setFragmentResultListener(RejillaMesasFragment.CLAVE_MESA_TOCADA, this) { _, sobre ->
             if (!portero.permite()) return@setFragmentResultListener
@@ -74,6 +86,26 @@ class CuentaActivity : AppCompatActivity() {
                     addToBackStack(null)
                 }
             }
+        }
+    }
+
+    // [Claude] R7, Anular y Cobrar acaban aquí: la comanda ya está cerrada (R5), así que se quitan de golpe
+    // todas las vistas de encima (6b y 6c) y queda la rejilla, con la mesa ya blanca (R3).
+    // P146: llega tras esperar a la base de datos; si la app pasó mientras a segundo plano, no se puede
+    // cambiar de vista ahora y se hace al volver (onResume)
+    fun volverARejilla() {
+        if (supportFragmentManager.isStateSaved) {
+            vueltaPendiente = true
+            return
+        }
+        supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (vueltaPendiente) {
+            vueltaPendiente = false
+            volverARejilla()
         }
     }
 
