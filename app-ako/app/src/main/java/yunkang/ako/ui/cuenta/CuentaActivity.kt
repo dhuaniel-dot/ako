@@ -8,9 +8,12 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.launch
 import yunkang.ako.R
 import yunkang.ako.databinding.ActivityCuentaBinding
+import yunkang.ako.ui.comun.ConfirmacionDialog
 import yunkang.ako.ui.comun.GuardaDobleToque
 import yunkang.ako.ui.comun.ReciboFragment
 import yunkang.ako.ui.comun.RejillaMesasFragment
@@ -60,6 +63,26 @@ class CuentaActivity : AppCompatActivity() {
         // También le llegan así si Android rehace la pantalla con el recibo delante
         viewModel.lineas.observe(this) { darDatosAlRecibo() }
         viewModel.total.observe(this) { darDatosAlRecibo() }
+
+        // 6c (P192 B): el recibo avisa de lo entregado; la libreta calcula el cambio y se le devuelve al recibo.
+        // Sin céntimos en el sobre (campo vacío o que no es un importe): Cambio en blanco (P187 A)
+        supportFragmentManager.setFragmentResultListener(ReciboFragment.CLAVE_ENTREGADO, this) { _, sobre ->
+            val cambio = if (sobre.containsKey(ReciboFragment.ENTREGADO_CENTIMOS)) {
+                viewModel.cambio(sobre.getInt(ReciboFragment.ENTREGADO_CENTIMOS))
+            } else {
+                null
+            }
+            reciboVisible()?.mostrarCambio(cambio)
+        }
+
+        // 6c · Cobrar: con «Cobrar» en la caja, la libreta deja la comanda PAGADA y se vuelve a la rejilla,
+        // con la mesa blanca (el verde es nivel 3). «Cancelar» (o tocar fuera) no hace nada
+        supportFragmentManager.setFragmentResultListener(ReciboFragment.CLAVE_COBRAR, this) { _, sobre ->
+            if (!sobre.getBoolean(ConfirmacionDialog.RESPUESTA_AFIRMATIVA)) return@setFragmentResultListener
+            lifecycleScope.launch {
+                if (viewModel.cobrar()) volverARejilla()
+            }
+        }
 
         // P180 B: mientras 6b o 6c tapan la rejilla, las mesas que manda Room no le llegan (no se ve).
         // Cuando la pila se vacía y la rejilla vuelve a verse, se le dan las últimas que hay en el tablón

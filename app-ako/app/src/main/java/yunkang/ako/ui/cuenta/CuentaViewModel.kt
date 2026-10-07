@@ -86,6 +86,23 @@ class CuentaViewModel(
         return true
     }
 
+    // 6c · Cobrar (P189 A): PAGADA con hora de cierre; eso ya es el histórico que leerá el Resumen de ingresos.
+    // Devuelve true si se hizo
+    suspend fun cobrar(): Boolean {
+        if (trabajando) return false
+        trabajando = true
+        try {
+            comandaRepository.cobrar(comandaId)
+        } finally {
+            trabajando = false
+        }
+        return true
+    }
+
+    // 6c (P192 B): lo que hay que devolver si el cliente entrega esto. Negativo = falta dinero, no es un error.
+    // Es una función pura (P-C-04): no guarda nada; cerrar el recibo lo olvida (spec 4.1)
+    fun cambio(entregadoCentimos: Int): Int = Calculadora.cambio(total.value ?: 0, entregadoCentimos)
+
     // Vuelve a preguntar las líneas y el total a la base de datos (R10: el total se suma en SQL cada vez,
     // nunca se resta en la pantalla). R14: nombre y precio salen de la línea, congelados al enviar
     private suspend fun recargar() {
