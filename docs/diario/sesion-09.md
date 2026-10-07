@@ -5,10 +5,10 @@
 | **Fecha** | 2026-10-07 |
 | **Sesión nº** | 09 |
 | **Objetivo de la sesión** | Del spec: **Cuenta (6a, 6b con Quitar y R7, 6c con `ReciboFragment`, cambio, Cobrar, Anular)**; P-M-22 a P-M-28 pasan |
-| **Tiempo dedicado** | 13:27 – |
+| **Tiempo dedicado** | 13:27 – 16:00, sin pausas (Daniel): **2 h 33 min** |
 | **Nivel / pieza** | Nivel 1 · pantalla 6 (6a rejilla con `RejillaMesasFragment.nueva(título)`, 6b comanda, 6c recibo) |
 | **Commit final** | |
-| **Contexto al cerrar** | |
+| **Contexto al cerrar** | 50 % (Daniel, al cerrar); toda la sesión en un solo chat |
 
 ## Qué se hizo
 
@@ -20,6 +20,9 @@
 - Piezas 8–10 y la vuelta de la 16 (Quitar, R7, Anular): `CuentaViewModel` con `lineaPorQuitar` (P186 A), `trabajando` + `finally` (P191 B), `esUltimaLinea` [Claude], `quitarLinea` y `anular` `suspend` (P189 A); `ComandaFragment` con *Quitar*, los avisos R7 y Anular (`findFragmentByTag`, sobres en `parentFragmentManager`) y el portero de la Activity; `CuentaActivity.volverARejilla()` (`popBackStack(null, POP_BACK_STACK_INCLUSIVE)`; si `isStateSaved`, espera a `onResume` [Claude], P146) y el vigilante de la pila (P180 B). Probado por Claude con una copia de la base de datos (devuelta después): mesa 4, Helado → 55,50 €, Entrecot → 37,00 €; la última → aviso; *Cancelar* la deja; *Quitar y anular* → rejilla con la 4 blanca y la comanda ANULADA con hora de cierre y 0 líneas; mesa 5, *Anular* → blanca, ANULADA con su línea de Flan. Lo tecleado por Daniel, igual; mesa 6 por R7 → blanca. Daniel, a «¿qué queda de la comanda tras R7 y por qué la mesa sale blanca?»: «porque al no ver nada cambia» (a medias: queda ANULADA con cero líneas y hora de cierre; blanca porque R3 la calcula por la comanda PENDIENTE, no por una columna; a `pendientes-de-entender.md` al cerrar).
 - Piezas 11–13 (6c): `ReciboFragment` en `comun/` con `nuevo(mesaNumero, soloLectura)` y `mostrar(lineas, total)` (P184 A, sin `comandaId` [Claude]), `fragment_recibo.xml` (TOTAL, *Entregado* con el «€» fuera de la caja, «(opcional)», *Cambio* y *Cobrar* fijos abajo), `Formato.precio` con negativos (P188 A: `abs` y U+2212), *Dar la cuenta* → `CuentaActivity.abrirRecibo()` y los `observe` de líneas y total que alimentan al recibo. Probado por Claude: mesa 4 → «Mesa 4 · Recibo» con las tres líneas y 60,50 €; *Cobrar* por encima del teclado (H25); modo noche con el recibo delante conserva los datos; una prueba temporal (borrada) de `Formato.precio`: 800, −200, −250, 0, −5 → «8,00», «−2,00», «−2,50», «0,00», «−0,05». Lo tecleado por Daniel, igual; mesa 6 → recibo de Pollo asado. **P192 → B** (el cambio lo calcula la libreta). La pregunta «¿qué saldría en el título si `mesaNumero` fuera por el constructor?» quedó sin contestar: Claude la respondió («Mesa 0»: el constructor vacío no lo trae, los `arguments` sí) y va a la lista de la S14.
 - Piezas 14–15 (cambio y Cobrar): `CuentaViewModel.cobrar()` y `cambio(entregado)` (P192 B, con `Calculadora.cambio`); `ReciboFragment` con su portero, el sobre `CLAVE_ENTREGADO` (sin céntimos si el campo está vacío o no es un importe, P187 A), `mostrarCambio` y la caja de *Cobrar* con su sobre `CLAVE_COBRAR` hacia la Activity; `CuentaActivity` escucha los dos sobres y cobra con `lifecycleScope` → `volverARejilla()`. Probado por Claude (borrador): mesa 4 (60,50 €) → 70 → 9,50 €; 50 → −10,50 €; 40,5 → −20,00 €; vacío o «,» → en blanco; *Cobrar* → caja «¿Cobrar la mesa 4? · Total: 60,50 €…»; *Cancelar* sigue; *Cobrar* → rejilla con la 4 blanca y PAGADA; doble toque → una sola caja. Lo tecleado por Daniel, igual; mesa 6 → 20 → 9,00 € → PAGADA. Base de datos devuelta cada vez. Daniel, a «¿quién decide que la mesa se vea blanca tras cobrar?»: «nadie tiene que escribir blanco, se pone solo cuando has cobrado» (bien; el porqué: la consulta de R3 solo mira las PENDIENTE y Room avisa por el `Flow`).
+- Piezas 17–19 (pasada de pruebas, **ejecutada por Claude con `adb`** tras dar la lista a Daniel y recibir su «vale», P176): instalación limpia (**se borran los datos del emulador**) y montaje de `juego-de-datos.md`, pasos 1–34, en modo rápido lo ya probado en la S8. **Pasan** P-M-06, 10, 13, 20, 22, 23, 26, 27 y 29; **Parcial** P-M-24, 25 y 28 (solo les falta el Resumen de ingresos, S10). Daniel pidió guardar la lista aprobada y lo que salió en un archivo aparte: `docs/pruebas-pasadas/s09.md` (carpeta nueva con su `LEEME.md`). Daniel vio seis capturas y dio las pruebas por buenas («vale»).
+- Pieza 20 (revisión independiente, P35): un subagente con las instrucciones de `.claude/agents/revisor.md` revisó `app-ako/app/src/main`. **Sin hallazgos *Alta***. *Media*: M1 (con la app muerta por falta de memoria y 6b/6c abiertas, *Anular*/*Cobrar* llaman a `anular(0)`/`cobrar(0)` y la app se cierra) y M2 (`ComandaRepository.comandaPendiente` sin uso, P115): a la guía S10, apartado 0, para decidir con Daniel. *Baja*: B1 (adaptadores sin soltar en `onDestroyView`, a la S10), B2 (solo *Anular* apaga su botón: se escribe así en `decisiones-code.md` 5.13) y B3 (`textos-ui.md` con `cobrar_btn_cobrar` y `comun_no`/`comun_si`: corregido). Lo bien hecho para el vídeo: R5 en el repositorio con `abierta()`, la mesa blanca sin escribir nada (R3 + `Flow`) y un `LineaAdapter` para tres usos.
+- Cierre: `spec+doc-pruebas.md`, `estado-nivel.md` (22 RF del nivel 1 *implementados* y 5 *no probados*), `decisiones-code.md` 5.13, tres filas a `docs/para-el-project/` (01, 02 y 03), `pendientes-de-entender.md` (+3), `lecciones-claude.md` (+3), `LEEME.md`; un subagente puso al día las guías S10, S12, S13 y `juego-de-datos.md` (dos huecos para Daniel: cómo evita 2g que el recibo enseñe un instante la comanda anterior, y dónde cae la S14). Resúmenes sencillo y técnico en PDF (`docs/resumenes/`, fuera de Git) y enviados por Gmail («envía ya el gmail»), con tres preguntas de repaso para la S14 (P157 → A).
 
 ## Problemas y soluciones
 
@@ -29,24 +32,34 @@
 
 ## Qué entendí y qué no
 
-- **Entendí:** lo que ahora podría explicar sin leerlo (una línea por concepto).
-- **No entendí todavía:** lo que funciona pero no sabría explicar. Se vuelve a ello en la sesión siguiente.
+- Daniel, al cerrar: *«en general está bien, algo de lío, pero normal lo de aprender cosas nuevas»*. Las dudas se cierran en la S14 (P183).
+- **Entendí (por sus respuestas):** el botón dice lo que hace (P40); la mesa blanca no crea comanda porque nace con el primer *Enviar* (R2); el precio de la línea está congelado (R14); la mesa sale blanca sola al cobrar.
+- **A medias o no todavía (a `pendientes-de-entender.md` y al PDF):** qué queda en la base de datos tras R7 y por qué R3 pinta la mesa blanca sin tocar `mesa`; por qué los datos de un Fragment van en `arguments` (pregunta sin contestar); el sobre de ida y vuelta del cambio (P192 B).
 
 ## Para el vídeo
 
-- 
+- **Se reutiliza el componente, no la pantalla:** la rejilla en 1d y 6a (cambia quién recibe el sobre); el recibo en 6c y, en la S10, en 2g (`soloLectura`); un `LineaAdapter` para tres usos, al que se le dan solo las herramientas que necesita (P185 C).
+- **La mesa sale blanca sin que nadie la pinte (R3):** la consulta solo mira las comandas PENDIENTE y Room avisa por el `Flow`. El cartel de «ocupado» lo decide el pestillo.
+- **Nada se borra (R5, R7):** Anular deja la comanda ANULADA con sus líneas; quitar la última, ANULADA con cero líneas; cobrar, PAGADA con su hora de cierre. Eso es el histórico del Resumen de ingresos.
+- **R14 en el recibo (P-M-26):** renombrar el plato después de enviar no cambia lo pedido ni lo cobrado.
+- **El cambio es una función pura que no guarda nada (P-C-04, P192 B)** y sale negativo si falta dinero; el «−» y la trampa de la división entera (P188).
+- **La pila de platos:** 6b y 6c encima de la rejilla; las tres salidas (R7, Anular, Cobrar) la vacían de golpe.
 
 ## Pruebas
 
-- Pruebas de código que pasan al terminar: 
-- Pruebas manuales ejecutadas en esta sesión: 
+- Pruebas de código que pasan al terminar (7 oct, `testDebugUnitTest`): las 21 de `test/` (P-C-01 a 05, 09, 10 y 11). La S9 no añade pruebas de código (la guía no las pide); una prueba temporal de `Formato.precio` con negativos se ejecutó y se borró.
+- Pruebas manuales (7 oct, desde instalación limpia, ejecutadas por Claude con `adb` tras la lista aprobada por Daniel, P176; detalle en `docs/pruebas-pasadas/s09.md` y resultado en `spec+doc-pruebas.md`): **Pasan** P-M-06, 10, 13, 20, 22, 23, 26, 27 y 29. **Parcial** P-M-24, 25 y 28 (Resumen de ingresos, S10). Siguen *Parcial* P-M-04 y P-M-18 (la foto, S12).
 
 ## Uso de IA en esta sesión
 
 - **Antes de abrir (chat del 7 oct, no es sesión de código; commit `be617c1`, «S8: revisión del 6 oct aplicada», P182):** Daniel contestó las 12 preguntas de la revisión independiente del 6 oct y pidió aplicar los cambios en el mismo chat. **El código y los documentos los escribió Claude por orden de Daniel** (P171–P182: `GuardaDobleToque` y su uso en tres pantallas, `try/finally` en `PedidoViewModel.enviar`, la hoja 2b que espera a la lista, `reglas_extraccion.xml`, `SavedStateHandle` en `PlatoViewModel`, `values-night/themes.xml`, `mesa_ocupada_cd`; skills, guías, `para-el-project/` y `pendientes-de-entender.md`) y **los explicó por bloques en un correo** (PDF `2026-10-07-revision-6-oct-bloques.pdf`, fuera de Git, con código, explicación, pregunta y respuesta de cada bloque, a petición de Daniel). Detalle: `docs/revisiones/2026-10-06-cambios-aplicados.md`. Se declara aquí como se hizo el 2 oct con la S6.
 - **Nota C04 (revisión del 6 oct):** la viñeta P167 de la ficha S8 (*Qué se hizo*, y la «Consecuencia» que repite) cita tres nombres del plan que **no existen en el código**: `ComandaDao.pendientesConTotalObservadas`, `ProductoDao.visiblesObservados` y `ComandaRepository.mesasConEstadoObservadas`. Al aplicar P167 A, Claude **cambió** las consultas a `Flow` con el mismo nombre en vez de añadir otras (la viñeta siguiente de esa ficha lo dice): los nombres reales son `ComandaDao.pendientesConTotal()`, `ProductoDao.visibles()` y `ComandaRepository.mesasConEstado()` (y sí existe `MesaDao.todasObservadas()`). Comprobado con `grep` en `app-ako/app/src` el 7 oct. La ficha S8 está cerrada y no se reescribe.
-- 
+- Al abrir: Daniel eligió P183 (la S14, idea suya) y la marcha («lo de siempre, un poco más rápido»), y contestó los ocho huecos con «todas las recomendadas» (P184–P191); P192 lo eligió en la pieza 14. Los detalles menores los decidió Claude y van marcados [Claude] (`decisiones-code.md` 5.13).
+- Plan Mode: Claude leyó el código real y escribió el plan; Daniel lo aprobó.
+- Piezas 1–15: Claude dio cada bloque tras **compilarlo y probarlo en el emulador** dentro del proyecto (y deshacerlo; la base de datos del emulador se copió antes y se devolvió después de cada prueba que la cambiaba); **Daniel creó los archivos y pegó el código en Android Studio**; Claude comprobó leyendo el disco, comparando con el bloque, compilando, pasando las pruebas y probando en el emulador. Arreglos de Claude sobre lo tecleado, con el mismo contenido: la línea `filaBotones` fuera de su etiqueta (problema 1) y una línea en blanco de más en el manifiesto. Cambio mecánico de Claude: el comentario de `pendiente_sesion_posterior`.
+- **Hecho por Claude a petición de Daniel:** la pasada de pruebas (piezas 17–19) con `adb` y un ayudante en Python del scratchpad, que no va al repositorio, tras la lista aprobada; el archivo `docs/pruebas-pasadas/s09.md`; la revisión independiente (subagente) y la puesta al día de las guías (subagente).
+- Documentación: Claude escribió la ficha, `decisiones-code.md`, `estado-nivel.md`, `spec+doc-pruebas.md`, `textos-ui.md` (B3), `para-el-project/`, `pendientes-de-entender.md`, `lecciones-claude.md`, `como-trabajamos`, `abrir-sesion` (paso 4b suspendido por P183), `LEEME.md` y los dos resúmenes del correo.
 
 ## Siguiente sesión
 
-- 
+- S10 (**Resumen de ingresos**, 2g con `ReciboFragment` en solo lectura): repite enteras P-M-24, 25 y 28 y pasa P-M-12. Al abrir, con tres opciones (P112): M1 y M2 de la revisión (guía S10, apartado 0) y el hueco de 2g (que el recibo no enseñe un instante la comanda anterior). Empieza con instalación limpia.

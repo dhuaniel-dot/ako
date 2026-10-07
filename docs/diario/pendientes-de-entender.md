@@ -23,3 +23,6 @@ Creada el 7 oct 2026 [Claude] a partir de las fichas S03–S08 (lo que el inform
 | Por qué se programa «La carta está vacía» si Agua no se puede borrar | S8 | El código no da por hecho cómo empezó la base de datos (RF-25) | — |
 | **`SavedStateHandle`** (la caja fuerte de la libreta, P174) frente a recrear la pantalla | revisión 6 oct | La libreta sobrevive a girar el móvil; la caja fuerte, a que Android cierre la app por falta de memoria | — |
 | **El portero del doble toque** (`GuardaDobleToque`, P171): `elapsedRealtime` y los 500 ms | revisión 6 oct | Un portero que mira el reloj y no deja entrar dos veces al mismo en medio segundo | — |
+| Por qué la mesa sale **blanca** tras R7, Anular o Cobrar sin tocar la tabla `mesa` (R3: ocupada = tiene comanda PENDIENTE, lo calcula la consulta) | S9 | El cartel de «ocupado» no se cuelga: lo decide quien mira si hay alguien sentado | — |
+| Por qué los datos de un Fragment van en `arguments` y no en el constructor (si Android lo rehace, «Mesa 0») | S9 | La nota grapada al plato sobrevive; lo que dijiste en voz alta al camarero, no | — |
+| El **sobre de ida y vuelta** del cambio (P192 B): el recibo avisa de lo tecleado, la libreta calcula y la Activity devuelve el resultado | S9 | El camarero no hace la cuenta: se la pasa a caja y caja le devuelve el cambio | — |

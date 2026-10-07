@@ -159,7 +159,7 @@ Compartidos: «Mesa %1$d» de la barra de 5a → `comun_mesa` (05a #2, spec §4.
 | `recibo_btn_cobrar` | Cobrar | botón (acento, fijo abajo; no aparece en solo lectura) | 6c | 06c-recibo.png; leyenda 06c #5; spec §4.1; P-M-26, P-M-28 |
 | `cobrar_titulo` | ¿Cobrar la mesa %1$d? | diálogo título | Confirmación de Cobrar | dialogo-cobrar.png («¿Cobrar la mesa 4?»); leyenda dialogo-cobrar #1 |
 | `cobrar_cuerpo` | Total: %1$s.\nLa comanda quedará PAGADA y no se podrá modificar. | diálogo mensaje (`%1$s` = total formateado; salto de línea tras el punto) | Confirmación de Cobrar | dialogo-cobrar.png («Total: 39,50 €. / La comanda quedará PAGADA y no se podrá modificar.») |
-| `cobrar_btn_cobrar` | Cobrar | diálogo botón (afirmativo) | Confirmación de Cobrar | dialogo-cobrar.png (ver D12: P-M-28 usa *No / Sí*) |
+| ~~`cobrar_btn_cobrar`~~ → `recibo_btn_cobrar` | Cobrar | diálogo botón (afirmativo) | Confirmación de Cobrar | dialogo-cobrar.png (ver D12: P-M-28 usa *No / Sí*). [Claude, S9, revisión B3] No existe clave aparte: el botón del aviso usa la misma cadena que el botón de 6c (P40), como dice el borrador |
 
 Compartidos: «Mesa 4» de 6b → `comun_mesa` (06b, P-M-23 «6b con "Mesa 4"»); líneas «2 × Entrecot» → `comun_linea`; «Quitar» de cada línea → `comun_quitar` (06b #1; P-M-23 lo escribe en minúscula, D13); «TOTAL» → `comun_total`; importes → `comun_precio`; «Cancelar» de los diálogos → `comun_cancelar`; botón negativo de Anular → `comun_cancelar` y afirmativo → `comanda_btn_anular` (P40 → A: el botón dice lo que hace; el «No / Sí» de P-M-25 se lee como negativo / afirmativo, D11; corregido el 7 oct, C06: `comun_si` no existe). Número de mesa en la celda: `%1$d`.
 
@@ -171,8 +171,8 @@ Un solo componente (título, texto, botón afirmativo, botón negativo). Esta ta
 
 | Caso | Título | Texto | Botón negativo | Botón afirmativo | Fuente del dibujo |
 |---|---|---|---|---|---|
-| Cobrar | `cobrar_titulo` | `cobrar_cuerpo` | `comun_cancelar` | `cobrar_btn_cobrar` | dialogo-cobrar.png |
-| Anular | `anular_titulo` | `anular_cuerpo` | `comun_no` | `comun_si` | no dibujado (misma caja); leyenda dialogo-cobrar #1; P-M-25 |
+| Cobrar | `cobrar_titulo` | `cobrar_cuerpo` | `comun_cancelar` | `recibo_btn_cobrar` | dialogo-cobrar.png |
+| Anular | `anular_titulo` | `anular_cuerpo` | `comun_cancelar` | `comanda_btn_anular` | no dibujado (misma caja); leyenda dialogo-cobrar #1; P-M-25 |
 | Última línea (R7) | `ultima_linea_titulo` | `ultima_linea_cuerpo` | `comun_cancelar` | `ultima_linea_btn_quitar_anular` | dialogo-r7-ultima-linea.png |
 | Mesas afectadas plato (3d, R6) | `mesas_afectadas_titulo` | `mesas_afectadas_cuerpo` | `comun_cancelar` | `comun_eliminar` | dialogo-r6-mesas-afectadas.png |
 | Mesas afectadas categoría (2e, R6) | `categoria_eliminar_titulo` [propuesta] | `categoria_eliminar_cuerpo` [propuesta] | `comun_cancelar` | `comun_eliminar` | no dibujado; leyenda r6 #2 |

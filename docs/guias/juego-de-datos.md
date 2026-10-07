@@ -154,6 +154,7 @@ P-M-14 no se repite en modo rápido: su efecto neto es cero (elimina y recupera 
 - **Qué se anota en `docs/spec+doc-pruebas.md`** (lo hace Claude en `cerrar-sesion`, paso 3, con lo que Daniel confirme viendo las capturas; desde el 7 oct, P176, Claude escribe antes la lista de pruebas con sus pasos, Daniel la aprueba y Claude las pasa con `adb`): *Resultado* **Pasa**, **Parcial** o **Falla**; *Observaciones* con lo visto y, si es Parcial, **qué falta y en qué sesión se repite**; *Fecha* en formato dd/mm/aaaa. **Al repetirla [Claude]:** se sobrescriben *Resultado* y *Fecha*, y en *Observaciones* queda el historial en una línea («S6 02/10: Parcial, faltaba … · S8 09/10: entera»). Nunca se añade una fila nueva ni se renumera.
 - **Qué se anota en `docs/estado-nivel.md`** (regla del brief): un RF pasa a `implementado, no probado` cuando su código existe pero su P-M queda Parcial, y a `implementado` cuando su P-M pasa entera. Se pone la sesión y se actualiza el recuento de arriba.
 - **Las que ya pasaron** en sesiones anteriores no se vuelven a anotar hasta la S13: si hay que hacerlas para montar los datos, se hacen en modo rápido.
+- **Dónde queda cada pasada** [Claude, puesta al día del 7 oct]: desde la S9, la lista de pruebas aprobada por Daniel y lo que salió de verdad se guardan en `docs/pruebas-pasadas/sNN.md` (uno por sesión, con su fila en el `LEEME.md` de la carpeta; P176 y petición de Daniel del 7 oct). El resultado oficial sigue en `spec+doc-pruebas.md`.
 
 ### S5 — Selector y PIN
 
@@ -246,6 +247,7 @@ P-M-29 pide app **recién instalada**, y P-M-06, P-M-10 y P-M-20 necesitan sus c
 - **Revisión:** el `revisor` revisa el código al cerrar (P35), después de las pruebas.
 - **`estado-nivel.md`:** RF-40, RF-41, RF-43, RF-44 → `implementado`; RF-42, RF-45, RF-46 → `implementado, no probado`; RF-24, RF-50, RF-06, RF-11, RF-37 → `implementado`.
 - **Tiempo:** ~90 min.
+- **Hecho (7 oct 2026)** [Claude, puesta al día del 7 oct]: la pasada la **ejecutó Claude** con `adb` tras el visto bueno de Daniel a la lista (P176); lista y resultado en `docs/pruebas-pasadas/s09.md`. Instalación limpia y montaje en modo rápido (pasos que crean datos: 1, 2, 5–16, 22, 25–34). Resultado en `spec+doc-pruebas.md` (07/10/2026): **Pasa** P-M-06, 10, 13, 20, 22, 23, 26, 27 y 29; **Parcial** P-M-24, P-M-25 y P-M-28, **solo** por el Resumen de ingresos (pasos 5, 3 y 5; su botón aún abre la caja provisional), que se repiten enteras en la S10. El emulador quedó con las comandas 1 (mesa 5) y 2 (mesa 6) ANULADAS con sus líneas, la 3 (mesa 4) ANULADA con 0 líneas, y la 4 (mesa 4, 42,00 €) y la 5 (mesa 4, 5,00 €) PAGADAS: la S10 empieza con instalación limpia igualmente.
 
 ### S10 — Resumen de ingresos
 
@@ -253,7 +255,7 @@ Es el **ensayo general** de la pasada final (sin la foto). Instalación limpia p
 
 - **Montaje:** instalación limpia → modo rápido (apartado 2.9, puntos 1–11) → pasos **23–35** (del 23 al 26 sin anotar, en rápido; 27, 28, 34 y 35 con la prueba entera). Pasos 30–35 el mismo día.
 - **Primera vez:** P-M-12 **Pasa**.
-- **Repetidas enteras:** P-M-24, P-M-25 y P-M-28 → **Pasa**.
+- **Repetidas enteras:** P-M-24, P-M-25 y P-M-28 → **Pasa** (en la S9 quedaron *Parcial* solo por el paso del Resumen de ingresos [Claude, puesta al día del 7 oct]).
 - **`estado-nivel.md`:** RF-20 → `implementado`; RF-42, RF-45, RF-46 → `implementado`.
 - **Tiempo:** ~60 min.
 
@@ -288,7 +290,7 @@ Es el orden recomendado del plan con cuatro añadidos [Claude]: la descripción 
 
 - **Se puede partir en dos** (por ejemplo, A–C un día y D–F otro): los datos se conservan si no se hace Clear storage ni se desinstala entre medias. Cortar siempre en 1a, nunca con un carrito a medias.
 - **Si una prueba falla:** se anota *Falla* con lo que se vio y se sigue si el estado de los datos sigue valiendo para las siguientes. Si el arreglo obliga a cambiar el código, al terminar se repite esa prueba (y las que dependan de ella) en su punto del montaje, en modo rápido hasta llegar.
-- **Quién la pasa (P176, 7 oct):** Claude escribe la lista de las 29 con sus pasos, Daniel la revisa y da el visto bueno, Claude las pasa con `adb` bloque a bloque y Daniel revisa las capturas y confirma *Pasa/Falla*; Claude lo pasa al plan en `cerrar-sesion`.
+- **Quién la pasa (P176, 7 oct):** Claude escribe la lista de las 29 con sus pasos, Daniel la revisa y da el visto bueno, Claude las pasa con `adb` bloque a bloque y Daniel revisa las capturas y confirma *Pasa/Falla*; Claude lo pasa al plan en `cerrar-sesion`. La lista aprobada y lo que salió van a `docs/pruebas-pasadas/s13.md` (apartado 3.0) [Claude, puesta al día del 7 oct].
 
 ## 5. Tabla resumen
 
