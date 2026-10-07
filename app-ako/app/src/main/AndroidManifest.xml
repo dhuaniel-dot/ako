@@ -41,6 +41,12 @@
             android:exported="false"
             android:screenOrientation="portrait" />
 
+        <!-- Pantalla 6 (Cuenta: rejilla, comanda y recibo). Sin PIN. Solo en vertical (RNF-15) -->
+        <activity
+            android:name=".ui.cuenta.CuentaActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
         <!-- Pantalla 3 (formulario del plato). Solo en vertical (RNF-15) -->
         <activity
             android:name=".ui.plato.PlatoActivity"

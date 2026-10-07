@@ -183,7 +183,37 @@
         <item quantity="other">Hay %1$d platos en el carrito sin enviar. Se perderán.</item>
     </plurals>
 
-    <!-- [Claude] Provisional: la caja de Pedir y Cuenta hasta la S8/S9 y la del Resumen de ingresos hasta la S10, que la borra -->
+    <!-- 6 · Cuenta (6a Rejilla, 6b Comanda, 6c Recibo) -->
+    <string name="cuenta_titulo">Cuenta</string>
+    <!-- Snackbar al tocar una mesa blanca (D17) -->
+    <string name="cuenta_mesa_sin_comanda">La mesa %1$d no tiene comanda</string>
+    <!-- Barra de 6b y, por P40, también botón afirmativo del aviso de Anular -->
+    <string name="comanda_btn_anular">Anular</string>
+    <string name="comanda_btn_dar_cuenta">Dar la cuenta</string>
+    <!-- 6c y, en la S10, el recibo en solo lectura desde 2g -->
+    <string name="recibo_titulo">Mesa %1$d · Recibo</string>
+    <string name="recibo_entregado">Entregado</string>
+    <string name="recibo_opcional">(opcional)</string>
+    <!-- Sufijo a la derecha del campo Entregado -->
+    <string name="recibo_euro_sufijo">€</string>
+    <string name="recibo_cambio">Cambio</string>
+    <!-- Botón de 6c y, por P40, también botón afirmativo del aviso de Cobrar -->
+    <string name="recibo_btn_cobrar">Cobrar</string>
+
+    <!-- 6b · aviso de Anular · comun_cancelar / comanda_btn_anular (P40) -->
+    <string name="anular_titulo">¿Anular la comanda de la mesa %1$d?</string>
+    <string name="anular_cuerpo">No se puede deshacer</string>
+
+    <!-- 6b · R7 al quitar la última línea · comun_cancelar / ultima_linea_btn_quitar_anular -->
+    <string name="ultima_linea_titulo">¿Quitar la última línea?</string>
+    <string name="ultima_linea_cuerpo">La comanda se quedará vacía y se anulará. La mesa %1$d quedará libre.</string>
+    <string name="ultima_linea_btn_quitar_anular">Quitar y anular</string>
+
+    <!-- 6c · aviso de Cobrar · comun_cancelar / recibo_btn_cobrar (P40). %1$s = total ya con su € -->
+    <string name="cobrar_titulo">¿Cobrar la mesa %1$d?</string>
+    <string name="cobrar_cuerpo">Total: %1$s.\nLa comanda quedará PAGADA y no se podrá modificar.</string>
+
+    <!-- [Claude] Provisional: la caja del Resumen de ingresos hasta la S10, que la borra (Pedir y Cuenta ya no la usan) -->
     <string name="pendiente_sesion_posterior">Esta parte llega en una sesión posterior</string>
 
     <!-- Precarga: estos textos se guardan en la base de datos la primera vez que se abre la app.

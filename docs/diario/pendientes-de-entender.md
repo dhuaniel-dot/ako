@@ -2,6 +2,8 @@
 
 Una línea por concepto que salió en una sesión como «no lo entiendo» o «a medias» (apartado *Qué entendí y qué no* de las fichas) y **todavía no está explicado con las palabras de Daniel** en una ficha posterior. Se añade al cerrar cada sesión (`cerrar-sesion`, paso 4) y se cierra en la apertura siguiente: **al abrir cada sesión, 10 minutos de «explícamelo tú»** sobre **dos** conceptos que elige Daniel (`abrir-sesion`, paso 5); la respuesta va a la ficha de ese día y aquí se apunta la fecha. Los PDF del cierre (P157) explican; el chat solo comprueba (regla del 1 oct). Práctica de recuperación: recordar cuesta más que releer y por eso se queda (https://www.learningscientists.org/retrieval-practice).
 
+**Cambio del 7 oct 2026 (S9, P183 → A, Daniel):** los diez minutos al abrir se suspenden; la lista se cierra entera en una **S14 solo de preguntas y repaso**, después de la S13. Se sigue añadiendo al cerrar cada sesión.
+
 Creada el 7 oct 2026 [Claude] a partir de las fichas S03–S08 (lo que el informe `2026-10-06-riesgos.md` contó como «no sé» sin cerrar).
 
 | Concepto | Salió en | Pista de la vida real (para el PDF) | Explicado con mis palabras el |

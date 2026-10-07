@@ -1,5 +1,6 @@
 package yunkang.ako.ui.selector
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -10,6 +11,7 @@ import yunkang.ako.R
 import yunkang.ako.databinding.FragmentSelectorBinding
 import yunkang.ako.ui.comun.ConfirmacionDialog
 import yunkang.ako.ui.comun.GuardaDobleToque
+import yunkang.ako.ui.cuenta.CuentaActivity
 
 // 1a · Selector de rol: el nombre de la app y los tres botones grandes (P101)
 class SelectorFragment : Fragment(R.layout.fragment_selector) {
@@ -17,7 +19,7 @@ class SelectorFragment : Fragment(R.layout.fragment_selector) {
     // La libreta de la Activity (la misma para 1a y 1b): aquí se le pregunta por la puerta de Pedir
     private val viewModel: SelectorViewModel by activityViewModels { SelectorViewModel.Factory }
 
-    // H01 B (P171): el portero de 1a; un doble toque no abre dos cajas del PIN ni dos cajas provisionales.
+    // H01 B (P171): el portero de 1a; un doble toque no abre dos cajas del PIN ni dos veces Cuenta.
     // Pedir no lo necesita: ya se apaga mientras pregunta (P142)
     private val portero = GuardaDobleToque()
 
@@ -53,16 +55,10 @@ class SelectorFragment : Fragment(R.layout.fragment_selector) {
             }
         }
 
-        // [Claude] Provisional: Cuenta llega en la S9 (6a).
-        // Hasta entonces, una caja con un solo botón que lo dice
+        // Cuenta: abre la pantalla 6 sin PIN (ficha 1: la usa el camarero)
         binding.botonCuenta.setOnClickListener {
             if (portero.permite()) {
-                ConfirmacionDialog.nueva(
-                    titulo = getString(R.string.selector_btn_cuenta),
-                    texto = getString(R.string.pendiente_sesion_posterior),
-                    afirmativo = getString(R.string.comun_aceptar),
-                    clave = "pendiente"
-                ).show(parentFragmentManager, "pendiente")
+                startActivity(Intent(requireContext(), CuentaActivity::class.java))
             }
         }
     }
