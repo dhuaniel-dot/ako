@@ -12,6 +12,7 @@ import com.google.android.material.snackbar.Snackbar
 import yunkang.ako.R
 import yunkang.ako.databinding.ActivityCuentaBinding
 import yunkang.ako.ui.comun.GuardaDobleToque
+import yunkang.ako.ui.comun.ReciboFragment
 import yunkang.ako.ui.comun.RejillaMesasFragment
 
 // Pantalla 6 (Cuenta). Es solo el marco: dentro se apilan la rejilla (6a), la comanda (6b) y el recibo (6c).
@@ -55,6 +56,11 @@ class CuentaActivity : AppCompatActivity() {
             rejillaVisible()?.mostrar(mesas)
         }
 
+        // 6c (P184 A): cada vez que cambian las líneas o el total, se los da al recibo, si se está viendo.
+        // También le llegan así si Android rehace la pantalla con el recibo delante
+        viewModel.lineas.observe(this) { darDatosAlRecibo() }
+        viewModel.total.observe(this) { darDatosAlRecibo() }
+
         // P180 B: mientras 6b o 6c tapan la rejilla, las mesas que manda Room no le llegan (no se ve).
         // Cuando la pila se vacía y la rejilla vuelve a verse, se le dan las últimas que hay en el tablón
         supportFragmentManager.addOnBackStackChangedListener {
@@ -89,6 +95,17 @@ class CuentaActivity : AppCompatActivity() {
         }
     }
 
+    // 6b → 6c: el recibo de la comanda abierta, encima de 6b. addToBackStack: Atrás vuelve a 6b
+    fun abrirRecibo() {
+        val recibo = ReciboFragment.nuevo(viewModel.mesaNumero, soloLectura = false)
+        // Los datos que ya hay en el tablón; si cambian, llegan por los observe de onCreate
+        recibo.mostrar(viewModel.lineas.value ?: emptyList(), viewModel.total.value ?: 0)
+        supportFragmentManager.commit {
+            replace(R.id.contenedor, recibo)
+            addToBackStack(null)
+        }
+    }
+
     // [Claude] R7, Anular y Cobrar acaban aquí: la comanda ya está cerrada (R5), así que se quitan de golpe
     // todas las vistas de encima (6b y 6c) y queda la rejilla, con la mesa ya blanca (R3).
     // P146: llega tras esperar a la base de datos; si la app pasó mientras a segundo plano, no se puede
@@ -108,6 +125,15 @@ class CuentaActivity : AppCompatActivity() {
             volverARejilla()
         }
     }
+
+    // [Claude] Las líneas y el total de la libreta, al recibo, si es lo que se ve ahora
+    private fun darDatosAlRecibo() {
+        reciboVisible()?.mostrar(viewModel.lineas.value ?: emptyList(), viewModel.total.value ?: 0)
+    }
+
+    // [Claude] El recibo, si es lo que se ve ahora en el contenedor; si no, vacío
+    private fun reciboVisible(): ReciboFragment? =
+        supportFragmentManager.findFragmentById(R.id.contenedor) as? ReciboFragment
 
     // [Claude] La rejilla, si es lo que se ve ahora en el contenedor; si no, vacío
     private fun rejillaVisible(): RejillaMesasFragment? =

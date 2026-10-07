@@ -1,19 +1,24 @@
 package yunkang.ako.ui.comun
 
+import kotlin.math.abs
+
 // [Claude] Convierte datos en el texto que se ve. Funciones puras: no leen nada de fuera
 // (ni base de datos ni strings.xml); la pantalla les pasa lo que necesitan
 object Formato {
 
-    // 1850 → «18,50». La pantalla lo mete en comun_precio y sale «18,50 €».
-    // Los importes viajan siempre en céntimos (Int) y solo se convierten aquí, al pintar
+    // 1850 → «18,50» y −250 → «−2,50». La pantalla lo mete en comun_precio y sale «18,50 €».
+    // Los importes viajan siempre en céntimos (Int) y solo se convierten aquí, al pintar.
+    // El único importe negativo de la app es el cambio de 6c cuando el cliente da de menos (P188 A)
     fun precio(centimos: Int): String {
-        // [Claude] Hoy ningún precio es negativo (Validacion lo impide); el cambio negativo
-        // de Cuenta llega en la S9 y entonces se amplía esta función (nada «por si acaso»)
-        require(centimos >= 0)
-        val euros = centimos / 100          // división entera: 1805 / 100 = 18
-        val resto = centimos % 100          // lo que sobra: 1805 % 100 = 5
+        // P188 A: se trabaja con el valor sin signo, porque con negativos la división entera engaña:
+        // −250 / 100 = −2 y −250 % 100 = −50, y saldría «−2,−50». abs(−250) = 250 → «2,50»
+        val sinSigno = abs(centimos)
+        val euros = sinSigno / 100          // división entera: 1805 / 100 = 18
+        val resto = sinSigno % 100          // lo que sobra: 1805 % 100 = 5
         // padStart rellena con ceros a la izquierda hasta 2 cifras: 5 → «05»
-        return euros.toString() + "," + resto.toString().padStart(2, '0')
+        val texto = euros.toString() + "," + resto.toString().padStart(2, '0')
+        // El signo se pone delante al final: «−» (U+2212, el menos de comun_menos), no el guion «-»
+        return if (centimos < 0) "\u2212" + texto else texto
     }
 
     // Une partes con comas y el conector antes de la última: ["5", "6", "7"] y «y» → «5, 6 y 7».

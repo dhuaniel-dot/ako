@@ -52,6 +52,11 @@ class ComandaFragment : Fragment(R.layout.fragment_comanda) {
             binding.textoTotal.text = getString(R.string.comun_precio, Formato.precio(total))
         }
 
+        // Dar la cuenta: el recibo (6c) se pone encima; lo abre el marco de Cuenta, que le da los datos (P184 A)
+        binding.botonDarCuenta.setOnClickListener {
+            if (cuenta.portero.permite()) cuenta.abrirRecibo()
+        }
+
         // Anular pregunta antes (no tiene deshacer, ficha 6). Botones: «Cancelar» / «Anular» (P40)
         binding.botonAnular.setOnClickListener {
             if (!cuenta.portero.permite()) return@setOnClickListener
