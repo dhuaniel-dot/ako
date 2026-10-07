@@ -8,14 +8,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import yunkang.ako.R
 import yunkang.ako.databinding.ActivityPanelBinding
-import yunkang.ako.ui.comun.ConfirmacionDialog
 import yunkang.ako.ui.comun.GuardaDobleToque
 import yunkang.ako.ui.plato.PlatoActivity
+import yunkang.ako.ui.resumen.ResumenIngresosActivity
 
 // 2a · Panel del Propietario: se llega tras el PIN correcto (1c).
-// El Resumen de ingresos (llega en la S10) abre todavía la caja provisional
+// [Resumen de ingresos] abre 2g, que solo vive aquí, detrás del PIN (RNF-10)
 class PanelActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPanelBinding
@@ -82,10 +81,10 @@ class PanelActivity : AppCompatActivity() {
             }
         }
 
-        // Resumen de ingresos: caja provisional hasta la S10
+        // Resumen de ingresos: abre 2g (S10). Al volver con Atrás, el Panel sigue abierto: no se pide otra vez el PIN
         binding.botonResumen.setOnClickListener {
             if (portero.permite()) {
-                abrirPendiente(getString(R.string.panel_btn_resumen_ingresos))
+                startActivity(Intent(this, ResumenIngresosActivity::class.java))
             }
         }
 
@@ -99,16 +98,5 @@ class PanelActivity : AppCompatActivity() {
                 CambiarPinDialog().show(supportFragmentManager, "cambiar_pin")
             }
         }
-    }
-
-    // [Claude] La caja provisional de la S5 («Esta parte llega en una sesión posterior»), solo con Aceptar.
-    // Hoy solo la usa Resumen de ingresos, hasta la S10
-    private fun abrirPendiente(titulo: String) {
-        ConfirmacionDialog.nueva(
-            titulo = titulo,
-            texto = getString(R.string.pendiente_sesion_posterior),
-            afirmativo = getString(R.string.comun_aceptar),
-            clave = "pendiente"
-        ).show(supportFragmentManager, "pendiente")
     }
 }

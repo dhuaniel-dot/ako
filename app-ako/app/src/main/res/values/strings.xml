@@ -213,8 +213,16 @@
     <string name="cobrar_titulo">¿Cobrar la mesa %1$d?</string>
     <string name="cobrar_cuerpo">Total: %1$s.\nLa comanda quedará PAGADA y no se podrá modificar.</string>
 
-    <!-- [Claude] Provisional: la caja del Resumen de ingresos hasta la S10, que la borra (Pedir y Cuenta ya no la usan) -->
-    <string name="pendiente_sesion_posterior">Esta parte llega en una sesión posterior</string>
+    <!-- 2g · Resumen de ingresos (D5: el título dice «Resumen de ingresos»; D6: el pie en dos etiquetas).
+         La fecha del campo Día no es una cadena: la escribe Formato.fecha en el idioma del móvil -->
+    <string name="resumen_titulo">Resumen de ingresos</string>
+    <string name="resumen_dia">Día</string>
+    <string name="resumen_seccion_comandas">COMANDAS COBRADAS</string>
+    <!-- %1$s = la hora de cobro ya escrita por Formato.hora («14:32») -->
+    <string name="resumen_fila_hora">Cobrada a las %1$s</string>
+    <string name="resumen_pie_comandas">Comandas cobradas</string>
+    <string name="resumen_pie_total">Total del día</string>
+    <string name="resumen_vacio">No se cobró ninguna comanda ese día</string>
 
     <!-- Precarga: estos textos se guardan en la base de datos la primera vez que se abre la app.
          translatable="false" (P100): son datos de la carta en español, no se traducen -->

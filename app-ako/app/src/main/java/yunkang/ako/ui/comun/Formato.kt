@@ -1,9 +1,15 @@
 package yunkang.ako.ui.comun
 
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 import kotlin.math.abs
 
 // [Claude] Convierte datos en el texto que se ve. Funciones puras: no leen nada de fuera
-// (ni base de datos ni strings.xml); la pantalla les pasa lo que necesitan
+// (ni base de datos ni strings.xml); la pantalla les pasa lo que necesitan.
+// Solo fecha() y hora() miran el móvil: su idioma y su zona horaria (S10)
 object Formato {
 
     // 1850 → «18,50» y −250 → «−2,50». La pantalla lo mete en comun_precio y sale «18,50 €».
@@ -48,4 +54,21 @@ object Formato {
         val centimos = textoCentimos.padEnd(2, '0').toInt()
         return euros * 100 + centimos
     }
+
+    // 2g · el campo Día: el 17 de septiembre de 2026 → «Jueves, 17/09/2026».
+    // No es una cadena de strings.xml (textos-ui 3): es un formato, y el nombre del día lo pone Java
+    // en el idioma del móvil (EEEE = el día de la semana entero; dd/MM/yyyy = día, mes y año con ceros)
+    fun fecha(dia: LocalDate): String {
+        val idioma = Locale.getDefault()
+        val texto = dia.format(DateTimeFormatter.ofPattern("EEEE, dd/MM/yyyy", idioma))
+        // Java escribe «jueves» y el dibujo dice «Jueves»: se sube solo la primera letra
+        return texto.replaceFirstChar { it.titlecase(idioma) }
+    }
+
+    // 2g · la hora de cobro: un instante (fechaCierre, milisegundos desde 1970) → «14:32», con 24 horas.
+    // El mismo instante es las 14:32 en Madrid y las 12:32 en Londres: se escribe en la zona del móvil
+    fun hora(instante: Long): String =
+        Instant.ofEpochMilli(instante)
+            .atZone(ZoneId.systemDefault())
+            .format(DateTimeFormatter.ofPattern("HH:mm"))
 }

@@ -47,6 +47,13 @@
             android:exported="false"
             android:screenOrientation="portrait" />
 
+        <!-- Pantalla 2g (Resumen de ingresos). Solo desde el Panel, detrás del PIN (RNF-10): sin intent-filter
+             y exported="false", ninguna otra app la puede abrir. Solo en vertical (RNF-15) -->
+        <activity
+            android:name=".ui.resumen.ResumenIngresosActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
         <!-- Pantalla 3 (formulario del plato). Solo en vertical (RNF-15) -->
         <activity
             android:name=".ui.plato.PlatoActivity"
