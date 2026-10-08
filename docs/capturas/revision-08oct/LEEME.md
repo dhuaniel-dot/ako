@@ -1,6 +1,6 @@
 # docs/capturas/revision-08oct — pruebas tras aplicar la revisión del 8 oct 2026
 
-Capturas del emulador (`Pixel_6_API_34`, español de España, hora de Madrid) sacadas por Claude con `adb` el 8 oct 2026 durante la pasada de `docs/pruebas-pasadas/revision-08oct.md`. El número del nombre es el de la prueba en esa lista. **Pendiente: que Daniel las revise** (P205 B).
+Capturas del emulador (`Pixel_6_API_34`, español de España, hora de Madrid) sacadas por Claude con `adb` el 8 oct 2026 durante la pasada de `docs/pruebas-pasadas/revision-08oct.md`. El número del nombre es el de la prueba en esa lista. Revisadas por Daniel el 8 oct 2026 (lo dijo en el chat de la revisión del 8 oct) (P205 B).
 
 | Archivo | Qué enseña |
 |---|---|

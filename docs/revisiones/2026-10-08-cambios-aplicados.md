@@ -63,14 +63,13 @@ Sin cambios en `CLAUDE.md`, en las skills ni en los hooks. En la memoria de Clau
 | `docs/guias/sesion-13.md` | Tachaduras P198 en la Release (C44) y el hueco de `Formato.fecha`, decidido (C45) | Coherencia |
 | `docs/guias/strings-es-borrador.xml` · `LEEME.md` (raíz) | La ruta nueva del borrador de textos; la fila de `textos-ui.md` | P204 |
 | `docs/pruebas-pasadas/revision-08oct.md` (nuevo) y su `LEEME.md` | La lista aprobada y lo que salió, prueba a prueba; en el índice, también la fila de `s13.md`, que faltaba | P176 |
-| `docs/capturas/revision-08oct/` (nueva, 14 capturas y `LEEME.md`) y `docs/capturas/LEEME.md` | Las capturas de la pasada; **Daniel tiene que revisarlas** (P205 B) | P205 B |
+| `docs/capturas/revision-08oct/` (nueva, 14 capturas y `LEEME.md`) y `docs/capturas/LEEME.md` | Las capturas de la pasada, revisadas por Daniel el 8 oct (P205 B) | P205 B |
 | `docs/lecciones-claude.md` | Cuatro lecciones: el límite «de milisegundos» que se quedó viejo; `observe` + adaptador nuevo y dónde leer la caja fuerte en un Fragment de la pila; comprobar cada enlace antes de citarlo; relanzar lint desde cero antes de contar | Lo que costó hoy |
 | `docs/diario/pendientes-de-entender.md` | Cuatro conceptos para la S14: `isStateSaved`, el tiempo de espera de `asLiveData`, el desbordamiento del `Int`, la precarga dentro de la transacción | P177 |
 | `docs/revisiones/` | Este documento, el apartado «Aplicado» de los dos informes y `LEEME.md` | Como el 7 oct |
 
 ## E. Lo que queda abierto
 
-- **P205 B:** Daniel revisa las capturas (`docs/capturas/accesibilidad/`, `ingles/` y `revision-08oct/`) y se pone la fecha en la fila S13 de `para-el-project/02`.
 - **P228** (marcas `[Claude]`) y los comentarios históricos: en la S13.5.
 - **M1** no se pudo provocar con `adb`: queda comprobado leyendo el código.
 - La copia de seguridad de Ako que pidió Daniel se hace después del commit (zip de `C:\AKO` en su carpeta del Proyecto intermodular; no va al repositorio).

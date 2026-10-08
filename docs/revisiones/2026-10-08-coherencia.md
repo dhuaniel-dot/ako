@@ -170,7 +170,7 @@ Ya declarado y cubierto por `para-el-project/03`, verificado en el código (coin
 **8 oct 2026, el mismo día, en un chat con Opus** (detalle en `2026-10-08-cambios-aplicados.md`; decisiones en `decisiones-code.md` 5.18):
 
 - **C01 → P204 A:** `docs/textos-ui.md` regenerado desde los dos `strings.xml` (143 claves, con inglés y dónde se usan, y cómo quedaron D1–D20); el borrador, a `docs/guias/textos-ui-borrador-s00.md`.
-- **C02 → P205 B:** fila S13 en `para-el-project/02-memoria.md`; **pendiente que Daniel revise las capturas** y se ponga la fecha.
+- **C02 → P205 B:** fila S13 en `para-el-project/02-memoria.md`; Daniel revisó las capturas el 8 oct 2026 (lo dijo en el chat de la revisión del 8 oct) y la fila lo dice.
 - **C03–C16:** tachaduras y notas en el spec, incluida la del árbol del apartado 3 (C06, la C07 del 6 oct). Además, P198 en la fila S13 del spec y el límite de P201 en R8.
 - **C17–C24:** una fila «complemento S6–S13» en `para-el-project/01` (con H11).
 - **C25–C27:** en `decisiones-code.md` (AGP 9.3.3, C07 hecho, el portero en 2g y en 1d).

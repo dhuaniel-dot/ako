@@ -1,6 +1,6 @@
 # Pruebas tras aplicar la revisión del 8 oct 2026 (después de la S13; no es una sesión numerada)
 
-**Lista aprobada por Daniel («dale», 8 oct)** antes de la pasada (P176). Comprueba los cambios de código de este chat (`docs/revisiones/2026-10-08-plan-de-arreglos.md`, apartado 3) y repite las P-M que tocan. La ejecutó Claude con `adb` y un ayudante en Python del scratchpad (no va al repositorio). Las capturas están en `docs/capturas/revision-08oct/`; **Daniel tiene que revisarlas** (P205 B).
+**Lista aprobada por Daniel («dale», 8 oct)** antes de la pasada (P176). Comprueba los cambios de código de este chat (`docs/revisiones/2026-10-08-plan-de-arreglos.md`, apartado 3) y repite las P-M que tocan. La ejecutó Claude con `adb` y un ayudante en Python del scratchpad (no va al repositorio). Las capturas están en `docs/capturas/revision-08oct/`; Daniel las revisó el 8 oct 2026 (lo dijo en el chat de la revisión del 8 oct) (P205 B).
 
 **Antes de empezar:** el código, con todos los cambios del chat, incluida la P209 B; `assembleDebug`, `testDebugUnitTest` (21) y `lintDebug` (35 avisos, los de la S13) hechos. El emulador tenía el montaje de la pasada final de la S13: PIN 1234; Bebidas eliminada con Agua; Carnes con 12 Entrecot (con foto) y 14 Pollo asado eliminado; Postres eliminada con Flan, Tarta y Natillas; Otros con 32 Helado; mesa 4 libre. El bloque 1 se hizo con esos datos (`installDebug` no los borra). El bloque 2 empezó en una **instalación limpia**, que borró los datos de prueba (avisado en el chat). Español de España, hora de Madrid y modo claro.
 
