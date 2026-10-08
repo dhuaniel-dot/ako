@@ -1,16 +1,21 @@
 package yunkang.ako.ui.panel
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.os.bundleOf
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 import yunkang.ako.R
 import yunkang.ako.databinding.SheetCategoriaBinding
@@ -18,6 +23,7 @@ import yunkang.ako.datos.entidades.Categoria
 import yunkang.ako.dominio.modelos.ResultadoGuardado
 import yunkang.ako.ui.comun.ConfirmacionDialog
 import yunkang.ako.ui.comun.MesasAfectadasDialog
+import java.io.IOException
 
 // 2b · Crear o editar una categoría en una hoja inferior (P84: formulario corto → hoja).
 // Recibe el id por arguments (0 = nueva), como ConfirmacionDialog: si Android rehace la hoja, no se pierde
@@ -33,6 +39,20 @@ class CategoriaBottomSheet : BottomSheetDialogFragment() {
     // H04 B (P172): la categoría que se edita. null = es nueva, o la lista del Panel todavía no ha llegado
     private var categoria: Categoria? = null
 
+    // Decisión 4 A: la foto elegida y aún sin guardar (su dirección, «content://…»). Vive en la hoja
+    // y se olvida al cerrarla; onSaveInstanceState la guarda si Android rehace la hoja o mata la app
+    private var fotoElegida: String? = null
+
+    // El selector de fotos del sistema (spec 9), registrado al crear la hoja y no dentro del clic
+    private val selectorFotos = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+        // null = se canceló: no cambia nada
+        if (uri != null) {
+            viewModel.conservarPrestamo(uri)
+            fotoElegida = uri.toString()
+            pintarFoto()
+        }
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = SheetCategoriaBinding.inflate(inflater, container, false)
         return binding.root
@@ -40,6 +60,9 @@ class CategoriaBottomSheet : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Si Android rehízo la hoja, se recupera la foto que se había elegido
+        fotoElegida = savedInstanceState?.getString(CLAVE_FOTO)
 
         val id = requireArguments().getLong(ARG_ID)
         if (id == 0L) {
@@ -61,8 +84,17 @@ class CategoriaBottomSheet : BottomSheetDialogFragment() {
                     binding.interruptorEnLaCarta.visibility = View.VISIBLE
                     if (savedInstanceState == null) binding.interruptorEnLaCarta.isChecked = encontrada.activo
                 }
+                pintarFoto()
                 actualizarGuardar()
             }
+        }
+
+        // El hueco: al abrir, la elegida (si Android rehízo la hoja) o el «?»; al editar se repinta al llegar la categoría
+        pintarFoto()
+
+        // «+ Elegir» abre el selector del sistema, solo con fotos
+        binding.botonElegirFoto.setOnClickListener {
+            selectorFotos.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
 
         // Guardar solo se enciende con algo escrito (en blanco no hay nombre que guardar)
@@ -102,6 +134,30 @@ class CategoriaBottomSheet : BottomSheetDialogFragment() {
         }
     }
 
+    // Guarda la foto elegida por si Android rehace la hoja (lo demás lo guardan los campos o se vuelve a leer)
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(CLAVE_FOTO, fotoElegida)
+    }
+
+    // Lo que enseña el hueco redondo: la foto elegida; si no, la que ya tenía la categoría; si no, el «?».
+    // Glide entiende las dos direcciones como texto: «content://…» y «/data/…/fotos/….jpg»
+    private fun pintarFoto() {
+        val foto = fotoElegida ?: categoria?.imagen
+        Glide.with(binding.imagenCategoria)
+            .load(foto)
+            .placeholder(R.drawable.foto_cargando)
+            .error(R.drawable.ic_sin_foto)
+            .circleCrop()                       // la foto, recortada en redondo (P97 A)
+            .into(binding.imagenCategoria)
+        // Sin foto, «Sin foto» (spec 9); con foto, el nombre de la categoría
+        if (foto == null) {
+            binding.imagenCategoria.contentDescription = getString(R.string.comun_sin_foto_cd)
+        } else {
+            binding.imagenCategoria.contentDescription = binding.textoNombre.text.toString()
+        }
+    }
+
     // [Claude] Guardar se enciende con algo escrito y, al editar, solo cuando la categoría ya ha llegado (H04 B):
     // así nunca se guarda «como nueva» una que se estaba editando
     private fun actualizarGuardar() {
@@ -119,15 +175,26 @@ class CategoriaBottomSheet : BottomSheetDialogFragment() {
     private fun seVaARecuperar(categoria: Categoria): Boolean =
         !categoria.esPorDefecto && !categoria.activo && binding.interruptorEnLaCarta.isChecked
 
-    // Guarda el nombre y, si el interruptor cambió, elimina o recupera (hueco 10: activo solo cambia aquí, P150)
+    // Guarda el nombre y la foto y, si el interruptor cambió, elimina o recupera (hueco 10: activo solo cambia aquí, P150)
     private suspend fun guardar(categoria: Categoria?) {
         val nombre = binding.textoNombre.text.toString().trim()
-        // Editar: la misma categoría con el nombre nuevo (activo lo conserva el repositorio, P150).
-        // Crear: una nueva en la carta; el orden (mayor + 1) lo pone el repositorio
+        // Editar: la misma categoría con el nombre nuevo (activo lo conserva el repositorio, P150; la foto
+        // de antes va dentro, y si se eligió otra la cambia la libreta). Crear: una nueva en la carta
         val aGuardar = categoria?.copy(nombre = nombre)
             ?: Categoria(nombre = nombre, imagen = null, orden = 0, activo = true, esPorDefecto = false)
 
-        if (viewModel.guardarCategoria(aGuardar) == ResultadoGuardado.NombreRepetido) {
+        // P96 A: si la foto elegida no se puede leer, la libreta lanza el error y no se guarda nada
+        val resultado = try {
+            viewModel.guardarCategoria(aGuardar, fotoElegida?.let { Uri.parse(it) })
+        } catch (e: IOException) {
+            fotoNoUsable()
+            return
+        } catch (e: SecurityException) {
+            fotoNoUsable()          // [Claude] el préstamo de la foto ya no vale
+            return
+        }
+
+        if (resultado == ResultadoGuardado.NombreRepetido) {
             // P124: el aviso no mira mayúsculas («carnes» = «Carnes»); la hoja sigue abierta
             binding.campoNombre.error = getString(R.string.categoria_nombre_repetido)
             binding.botonGuardar.isEnabled = true
@@ -141,6 +208,14 @@ class CategoriaBottomSheet : BottomSheetDialogFragment() {
         }
         // P146: cerrar sin romper aunque mientras tanto se pulsara Inicio
         dismissAllowingStateLoss()
+    }
+
+    // [Claude] La foto elegida no se ha podido usar: se olvida, se avisa y la hoja sigue abierta
+    private fun fotoNoUsable() {
+        fotoElegida = null
+        pintarFoto()
+        Snackbar.make(binding.root, R.string.foto_error, Snackbar.LENGTH_LONG).show()
+        binding.botonGuardar.isEnabled = true
     }
 
     // [Claude] La hoja se abre desplegada del todo, para que el teclado no tape Guardar
@@ -158,6 +233,9 @@ class CategoriaBottomSheet : BottomSheetDialogFragment() {
 
     companion object {
         private const val ARG_ID = "id"
+
+        // [Claude] El nombre de la foto elegida dentro del estado guardado de la hoja
+        private const val CLAVE_FOTO = "foto_elegida"
 
         // Sin id (0) = crear; con el id de una categoría = editarla
         fun nueva(categoriaId: Long = 0L): CategoriaBottomSheet {
