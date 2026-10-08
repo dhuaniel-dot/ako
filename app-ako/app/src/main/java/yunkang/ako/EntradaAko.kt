@@ -11,6 +11,7 @@ import yunkang.ako.datos.repositorios.CartaRepository
 import yunkang.ako.datos.repositorios.ComandaRepository
 import yunkang.ako.datos.repositorios.ComandaRepositoryReal
 import yunkang.ako.datos.repositorios.SeguridadRepository
+import yunkang.ako.imagenes.ImageStore
 import yunkang.ako.seguridad.PinStore
 
 // La entrada a Ako: Android la crea antes que cualquier pantalla y vive mientras la app está abierta.
@@ -37,6 +38,11 @@ class EntradaAko : Application() {
     // [Claude] El PinStore se crea aquí dentro y no se ofrece suelto: al PIN solo se llega por este repositorio.
     val seguridadRepository: SeguridadRepository by lazy {
         SeguridadRepository(PinStore(this))
+    }
+
+    // El almacén de fotos, con el contexto de la app (vive lo mismo que la app, nunca el de una pantalla)
+    val imageStore: ImageStore by lazy {
+        ImageStore(this)
     }
 
     override fun onCreate() {
