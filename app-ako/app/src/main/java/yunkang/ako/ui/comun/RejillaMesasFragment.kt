@@ -10,7 +10,7 @@ import yunkang.ako.R
 import yunkang.ako.databinding.FragmentRejillaMesasBinding
 import yunkang.ako.dominio.modelos.MesaEstado
 
-// La rejilla de 60 mesas: 1d (elegir mesa para pedir) y, en la S9, 6a (Cuenta). Es el mismo componente (spec 7).
+// La rejilla de 60 mesas: 1d (elegir mesa para pedir) y 6a (Cuenta). Es el mismo componente (spec 7).
 // P67 A: pinta lo que le da quien la aloja (mostrar) y avisa de la mesa tocada con un sobre; no decide nada
 class RejillaMesasFragment : Fragment(R.layout.fragment_rejilla_mesas) {
 

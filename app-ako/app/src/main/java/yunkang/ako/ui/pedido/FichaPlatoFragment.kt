@@ -31,7 +31,7 @@ class FichaPlatoFragment : Fragment(R.layout.fragment_ficha_plato) {
     // [Claude] El plato de esta ficha, para el importe del botón y para Añadir; vacío hasta que llega
     private var plato: Producto? = null
 
-    // [Claude] ¿Está abierto el desplegable de alérgenos? Plegado al abrir la ficha
+    // [Claude] ¿Está abierto el desplegable de alérgenos? Plegado al abrir la ficha; se guarda como la cantidad (H07)
     private var alergenosAbiertos = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -44,8 +44,9 @@ class FichaPlatoFragment : Fragment(R.layout.fragment_ficha_plato) {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
-        // Si Android rehízo la pantalla, se recupera la cantidad que había
+        // Si Android rehízo la pantalla, se recuperan la cantidad y el desplegable como estaban
         cantidad = savedInstanceState?.getInt(CLAVE_CANTIDAD) ?: 1
+        alergenosAbiertos = savedInstanceState?.getBoolean(CLAVE_ALERGENOS_ABIERTOS) ?: false
 
         // P170 B: se pide el plato y se pinta cuando llega su bandeja
         val productoId = requireArguments().getLong(ARG_PRODUCTO_ID)
@@ -116,10 +117,12 @@ class FichaPlatoFragment : Fragment(R.layout.fragment_ficha_plato) {
         }
     }
 
-    // Guarda la cantidad por si Android rehace la pantalla (el resto se vuelve a pintar desde la bandeja)
+    // Guarda la cantidad y el desplegable por si Android rehace la pantalla (el resto se vuelve a pintar
+    // desde la bandeja)
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putInt(CLAVE_CANTIDAD, cantidad)
+        outState.putBoolean(CLAVE_ALERGENOS_ABIERTOS, alergenosAbiertos)   // H07 (revisión del 8 oct)
     }
 
     // Abierto: se ven los alérgenos y la flecha apunta abajo; cerrado: ocultos y flecha a la derecha
@@ -131,7 +134,7 @@ class FichaPlatoFragment : Fragment(R.layout.fragment_ficha_plato) {
     // R4 en la pantalla: − apagado en 1 y + apagado en 99 (el 99 está escrito solo en Validacion, P121).
     // El botón dice el importe de la cantidad elegida: precio × cantidad (R10, Calculadora)
     private fun pintarCantidad() {
-        binding.textoCantidad.text = cantidad.toString()
+        binding.textoCantidad.text = getString(R.string.comun_numero, cantidad)
         binding.botonMenos.isEnabled = cantidad > 1
         binding.botonMas.isEnabled = cantidad < Validacion.MAXIMO_POR_PLATO
         val importe = Calculadora.importe(plato?.precioCentimos ?: 0, cantidad)
@@ -140,9 +143,10 @@ class FichaPlatoFragment : Fragment(R.layout.fragment_ficha_plato) {
     }
 
     companion object {
-        // [Claude] Los nombres del id del plato dentro de los arguments y de la cantidad guardada
+        // [Claude] Los nombres del id del plato dentro de los arguments y de lo que se guarda
         private const val ARG_PRODUCTO_ID = "producto_id"
         private const val CLAVE_CANTIDAD = "cantidad"
+        private const val CLAVE_ALERGENOS_ABIERTOS = "alergenos_abiertos"
 
         // La forma de crear una ficha: se le da el id del plato (en los arguments, no en el constructor)
         fun nueva(productoId: Long): FichaPlatoFragment {

@@ -11,6 +11,7 @@ import androidx.core.view.WindowInsetsCompat
 import yunkang.ako.R
 import yunkang.ako.databinding.ActivitySelectorBinding
 import yunkang.ako.ui.comun.ComprobadorPin
+import yunkang.ako.ui.comun.GuardaDobleToque
 import yunkang.ako.ui.comun.RejillaMesasFragment
 import yunkang.ako.ui.panel.PanelActivity
 import yunkang.ako.ui.pedido.PedidoActivity
@@ -24,6 +25,10 @@ class SelectorActivity : AppCompatActivity(), ComprobadorPin {
 
     // La libreta de la pantalla 1, hecha con su fábrica (P140)
     private val viewModel: SelectorViewModel by viewModels { SelectorViewModel.Factory }
+
+    // H02 (revisión del 8 oct): el portero de la rejilla 1d, igual que en CuentaActivity (P171):
+    // dos toques rápidos en una mesa no abren Pedir dos veces
+    private val portero = GuardaDobleToque()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,6 +68,7 @@ class SelectorActivity : AppCompatActivity(), ComprobadorPin {
         // 1d: la rejilla avisa de la mesa tocada y esta pantalla abre Pedir con esa mesa grapada (P76 A).
         // [Claude] Antes quita 1d de la pila: al salir de Pedir se vuelve a 1a, no a la rejilla (P-M-16, P-M-21)
         supportFragmentManager.setFragmentResultListener(RejillaMesasFragment.CLAVE_MESA_TOCADA, this) { _, sobre ->
+            if (!portero.permite()) return@setFragmentResultListener
             supportFragmentManager.popBackStack()
             val nota = Intent(this, PedidoActivity::class.java)
             nota.putExtra(PedidoActivity.EXTRA_MESA_ID, sobre.getLong(RejillaMesasFragment.MESA_ID))

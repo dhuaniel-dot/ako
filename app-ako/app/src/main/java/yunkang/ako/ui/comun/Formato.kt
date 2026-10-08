@@ -49,6 +49,8 @@ object Formato {
         if (textoEuros.isEmpty() || !textoEuros.all { it in '0'..'9' }) return null
         if (textoCentimos.length > 2 || !textoCentimos.all { it in '0'..'9' }) return null
         // [Claude] Como mucho 7 cifras de euros (9.999.999 €): así euros × 100 siempre cabe en un Int
+        // P201 (B1, límite declarado): con un precio de siete cifras, precio × cantidad o el total de una
+        // comanda pueden pasar de 21.474.836,47 € (lo más que cabe en un Int) y saldrían mal
         if (textoEuros.length > 7) return null
         val euros = textoEuros.toInt()
         // «5» son 50 céntimos, no 5: se rellena con ceros por la derecha («5» → «50», «» → «00»)
@@ -58,7 +60,7 @@ object Formato {
 
     // 2g · el campo Día, en la forma larga del idioma del móvil (S13, 1 → B):
     // en español «Jueves, 8 de octubre de 2026» y en inglés «Thursday, October 8, 2026».
-    // No es una cadena de strings.xml (textos-ui 3): el orden de día y mes lo sabe Java para cada idioma,
+    // No es una cadena de strings.xml (textos-ui.md, «Textos que no son cadenas»): el orden de día y mes lo sabe Java para cada idioma,
     // y así nadie lee el 8 de octubre como el 10 de agosto
     fun fecha(dia: LocalDate): String {
         val idioma = Locale.getDefault()

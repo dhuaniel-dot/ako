@@ -76,7 +76,7 @@
             android:inputType="none"
             android:longClickable="false"
             android:textSize="18sp"
-            tools:text="Jueves, 17/09/2026" />
+            tools:text="Jueves, 8 de octubre de 2026" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <!-- COMANDAS COBRADAS, como las cabeceras de sección de la carta -->

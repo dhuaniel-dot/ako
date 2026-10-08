@@ -5,7 +5,7 @@ package yunkang.ako.dominio
 object Calculadora {
 
     // Lo que cuesta un renglón, en céntimos: precio × cantidad.
-    // La usan el carrito (ahora) y el recibo (S9) (P120).
+    // La usan el carrito y el recibo (P120).
     fun importe(precioCentimos: Int, cantidad: Int): Int = precioCentimos * cantidad
 
     // Lo que hay que devolver al cliente: entregado − total.

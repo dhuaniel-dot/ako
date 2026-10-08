@@ -48,7 +48,7 @@
     <string name="pin_hint_nuevo">PIN nuevo</string>
     <string name="pin_hint_repite_nuevo">Repite el PIN nuevo</string>
 
-    <!-- 2a · Panel: botón Terminar (en la S5 lo usa el Panel provisional) -->
+    <!-- 2a · Panel: botón Terminar -->
     <string name="panel_btn_terminar">Terminar</string>
     <!-- 2a · Panel -->
     <string name="panel_titulo">Categorías</string>
@@ -56,9 +56,9 @@
     <string name="panel_categoria_eliminada">Categoría eliminada</string>
     <string name="panel_plato_eliminado">Eliminado</string>
     <string name="panel_btn_mas_plato">+ Plato</string>
-    <!-- [Claude] Lo que dice el lector de pantalla en el icono de plegar/desplegar una caja (P56 A) -->
+    <!-- [Claude] El texto de partida del icono de plegar en item_categoria_caja.xml (P56 A); al pintar la caja,
+         CategoriaAdapter pone el de P202 con el nombre (panel_plegar_categoria_cd / panel_desplegar_categoria_cd) -->
     <string name="panel_plegar_cd">Plegar</string>
-    <string name="panel_desplegar_cd">Desplegar</string>
 
     <!-- 2b · Hoja de categoría. Los títulos sirven también de contentDescription del + y del lápiz -->
     <string name="categoria_titulo_nueva">Nueva categoría</string>
@@ -129,18 +129,29 @@
 
     <!-- ============ Pedir (S8): 1d, puerta, 5a, 5b, 5c y sus avisos ============ -->
 
-    <!-- Comunes que estrena Pedir (también los usarán Cuenta y el recibo) -->
+    <!-- Comunes que estrena Pedir (también los usan Cuenta y el recibo) -->
     <string name="comun_mesa">Mesa %1$d</string>
     <string name="comun_total">TOTAL</string>
     <!-- D13: «Quitar» en cada línea del carrito -->
     <string name="comun_quitar">Quitar</string>
     <!-- «2 × Entrecot»: cantidad × nombre (signo × U+00D7) -->
     <string name="comun_linea" translatable="false">%1$d × %2$s</string>
+    <!-- P209 (aviso SetTextI18n de lint): un número entero suelto (mesa, cantidad, número de plato,
+         comandas del día), escrito con los dígitos del idioma del móvil y no con toString() -->
+    <string name="comun_numero" translatable="false">%1$d</string>
     <!-- Signo menos U+2212 (el + ya está arriba, comun_mas) -->
     <string name="comun_menos" translatable="false">−</string>
     <!-- Lo que lee el lector de pantalla en los botones − y + de 5b y 5c -->
     <string name="comun_menos_cd">Quitar uno</string>
     <string name="comun_mas_cd">Añadir uno</string>
+    <!-- P202 (B4): lo que lee el lector de pantalla en los botones que se repiten, con el nombre para
+         distinguirlos: −, + y Quitar de cada línea (5c, 6b), y plegar y lápiz de cada caja del Panel (2a) -->
+    <string name="linea_menos_cd">Quitar uno de %1$s</string>
+    <string name="linea_mas_cd">Añadir uno de %1$s</string>
+    <string name="linea_quitar_cd">Quitar %1$s</string>
+    <string name="panel_plegar_categoria_cd">Plegar %1$s</string>
+    <string name="panel_desplegar_categoria_cd">Desplegar %1$s</string>
+    <string name="panel_editar_categoria_cd">Editar %1$s</string>
 
     <!-- 1d · rejilla en modo elegir -->
     <string name="mesa_elegir_titulo">Elige la mesa</string>
@@ -192,7 +203,7 @@
     <!-- Barra de 6b y, por P40, también botón afirmativo del aviso de Anular -->
     <string name="comanda_btn_anular">Anular</string>
     <string name="comanda_btn_dar_cuenta">Dar la cuenta</string>
-    <!-- 6c y, en la S10, el recibo en solo lectura desde 2g -->
+    <!-- 6c y el recibo en solo lectura de 2g -->
     <string name="recibo_titulo">Mesa %1$d · Recibo</string>
     <string name="recibo_entregado">Entregado</string>
     <string name="recibo_opcional">(opcional)</string>

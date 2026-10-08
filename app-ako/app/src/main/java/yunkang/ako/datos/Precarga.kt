@@ -1,55 +1,40 @@
 package yunkang.ako.datos
 
+import android.content.ContentValues
 import android.content.Context
+import android.database.sqlite.SQLiteDatabase
 import androidx.room.RoomDatabase
-import androidx.room.withTransaction
 import androidx.sqlite.db.SupportSQLiteDatabase
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import yunkang.ako.EntradaAko
 import yunkang.ako.R
-import yunkang.ako.datos.entidades.Alergeno
-import yunkang.ako.datos.entidades.Categoria
-import yunkang.ako.datos.entidades.Mesa
-import yunkang.ako.datos.entidades.Producto
 
 // La precarga (RF-50): lo que la app trae "de fábrica" la primera vez que se abre.
 // Room llama a onCreate UNA sola vez: cuando crea el archivo de la base de datos (P16).
+// P203 (H06, revisión del 8 oct): todo se escribe AQUÍ DENTRO, en la base "cruda" que pasa Room, y no
+// por detrás. Android crea la base dentro de una transacción que incluye este onCreate (SQLiteOpenHelper):
+// si la app muriera a mitad, no quedaría nada y la próxima vez se volvería a crear entera.
+// Fuente: https://developer.android.com/reference/android/database/sqlite/SQLiteOpenHelper
+// [Claude] Aquí no hay DAO: se escribe con los nombres de tablas y columnas de las entidades. Si uno
+// estuviera mal, fallaría al abrir la app (no al compilar); lo vigilan las pruebas de Room (P-C-06/07/08)
 class Precarga(private val context: Context) : RoomDatabase.Callback() {
 
     override fun onCreate(db: SupportSQLiteDatabase) {
         super.onCreate(db)
-        // Se hace por detrás (corrutina) para no bloquear el arranque de la app.
-        // Ojo: no usa el "db" que pasa Room (es la base cruda), sino la de EntradaAko. Las pruebas de
-        // Room (S11) con una base en memoria NO registran este callback: llaman a cargar(db) directamente.
-        CoroutineScope(Dispatchers.IO).launch {
-            cargar((context.applicationContext as EntradaAko).db)
-        }
-    }
-
-    // Todo el trabajo. Recibe la base de datos para que las pruebas de la S11 puedan usar otra.
-    // P149: todo dentro de UNA transacción: o se precarga entero o nada (si la app muriera a mitad,
-    // la base no quedaría a medias para siempre).
-    suspend fun cargar(db: AppDatabase) = db.withTransaction {
 
         // 1. La categoría por defecto, ANTES que cualquier plato (R16, P44: orden 0).
-        db.categoriaDao().insertar(
-            Categoria(
-                nombre = context.getString(R.string.precarga_categoria_por_defecto),
-                imagen = null,
-                orden = 0,
-                activo = true,
-                esPorDefecto = true
-            )
-        )
+        val otros = ContentValues()
+        otros.put("nombre", context.getString(R.string.precarga_categoria_por_defecto))
+        otros.putNull("imagen")
+        otros.put("orden", 0)
+        otros.put("activo", true)
+        otros.put("es_por_defecto", true)
+        db.insert("categoria", SQLiteDatabase.CONFLICT_ABORT, otros)
 
         // 2. Las 60 mesas, de la 1 a la 60.
-        val mesas = mutableListOf<Mesa>()
         for (numero in 1..60) {
-            mesas.add(Mesa(numero = numero))
+            val mesa = ContentValues()
+            mesa.put("numero", numero)
+            db.insert("mesa", SQLiteDatabase.CONFLICT_ABORT, mesa)
         }
-        db.mesaDao().insertarTodas(mesas)
 
         // 3. Los 14 alérgenos, en el orden de la ley (el de strings.xml).
         val textosAlergenos = listOf(
@@ -68,32 +53,30 @@ class Precarga(private val context: Context) : RoomDatabase.Callback() {
             R.string.alergeno_13_altramuces,
             R.string.alergeno_14_moluscos
         )
-        val alergenos = mutableListOf<Alergeno>()
         for (texto in textosAlergenos) {
-            alergenos.add(Alergeno(nombre = context.getString(texto)))
+            val alergeno = ContentValues()
+            alergeno.put("nombre", context.getString(texto))
+            db.insert("alergeno", SQLiteDatabase.CONFLICT_ABORT, alergeno)
         }
-        db.precargadosDao().insertarAlergenos(alergenos)
 
         // 4. El ejemplo (P7): categoría Bebidas y el plato 1 · Agua · 1,50 €.
-        val idBebidas = db.categoriaDao().insertar(
-            Categoria(
-                nombre = context.getString(R.string.precarga_categoria_ejemplo),
-                imagen = null,
-                orden = 1,
-                activo = true,
-                esPorDefecto = false
-            )
-        )
-        db.productoDao().insertar(
-            Producto(
-                categoriaId = idBebidas,   // el id que devolvió insertar al guardar Bebidas (el resguardo del guardarropa)
-                numero = 1,
-                nombre = context.getString(R.string.precarga_plato_ejemplo),
-                descripcion = null,
-                precioCentimos = 150,
-                imagen = null,
-                activo = true
-            )
-        )
+        val bebidas = ContentValues()
+        bebidas.put("nombre", context.getString(R.string.precarga_categoria_ejemplo))
+        bebidas.putNull("imagen")
+        bebidas.put("orden", 1)
+        bebidas.put("activo", true)
+        bebidas.put("es_por_defecto", false)
+        // insert devuelve el id que le ha dado la base (el resguardo del guardarropa)
+        val idBebidas = db.insert("categoria", SQLiteDatabase.CONFLICT_ABORT, bebidas)
+
+        val agua = ContentValues()
+        agua.put("categoria_id", idBebidas)
+        agua.put("numero", 1)
+        agua.put("nombre", context.getString(R.string.precarga_plato_ejemplo))
+        agua.putNull("descripcion")
+        agua.put("precio_centimos", 150)
+        agua.putNull("imagen")
+        agua.put("activo", true)
+        db.insert("producto", SQLiteDatabase.CONFLICT_ABORT, agua)
     }
 }

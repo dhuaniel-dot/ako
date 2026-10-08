@@ -117,7 +117,8 @@ class ComandaFragment : Fragment(R.layout.fragment_comanda) {
             ).show(parentFragmentManager, CLAVE_ULTIMA_LINEA)
         } else {
             viewLifecycleOwner.lifecycleScope.launch {
-                viewModel.quitarLinea(linea.id)
+                // H09: si aun así la comanda quedó ANULADA (la lista iba desfasada), a la rejilla, como arriba
+                if (viewModel.quitarLinea(linea.id)) cuenta.volverARejilla()
             }
         }
     }

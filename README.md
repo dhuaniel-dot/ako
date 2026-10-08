@@ -8,7 +8,7 @@ Proyecto Intermodular del ciclo de Desarrollo de Aplicaciones Multiplataforma (D
 - **Pedir**: se elige la mesa, se mira la carta, se añaden platos al carrito y se envía la comanda. Salir pide el PIN.
 - **Cuenta**: la rejilla de las 60 mesas, lo pedido por cada una con su total, quitar líneas, anular, el recibo con la calculadora de cambio y cobrar.
 
-Funciona **sin conexión y en un solo dispositivo** (la app no pide el permiso de Internet). Es un **prototipo académico**: el nivel 1 del diseño, que se construye por sesiones. La arquitectura cliente-servidor en red local está diseñada, no programada. Qué funciones están ya implementadas y cuáles solo diseñadas se ve en `docs/estado-nivel.md`.
+Funciona **sin conexión y en un solo dispositivo** (la app no pide el permiso de Internet). Es un **prototipo académico**: el nivel 1 del diseño, **terminado y probado el 8 oct 2026** (sesión 13); el nivel 2 está diseñado, no programado. La arquitectura cliente-servidor en red local está diseñada, no programada. Qué funciones están ya implementadas y cuáles solo diseñadas se ve en `docs/estado-nivel.md`.
 
 ## Stack
 
@@ -28,14 +28,14 @@ Desde la carpeta `app-ako/` (en Windows, con PowerShell o Git Bash; en macOS o L
 
 - **Pruebas de código sin emulador** (JUnit, carpeta `app/src/test/`): `./gradlew.bat testDebugUnitTest`
 - **Pruebas de la base de datos** (Room en memoria, carpeta `app/src/androidTest/`, con el emulador encendido): `./gradlew.bat connectedDebugAndroidTest`
-- **Pruebas manuales**: `docs/spec+doc-pruebas.md` — 29 casos, uno por requisito del nivel 1; el resultado y la fecha de cada uno se anotan al ejecutarlo. El orden para prepararlas está en `docs/guias/juego-de-datos.md`.
+- **Pruebas manuales**: `docs/spec+doc-pruebas.md` — 29 casos, uno por requisito del nivel 1, todos con resultado y fecha (pasada final del 8 oct 2026). El detalle de cada pasada está en `docs/pruebas-pasadas/` y las capturas del emulador, en `docs/capturas/`. El orden para prepararlas está en `docs/guias/juego-de-datos.md`.
 
-El plan tiene once pruebas de código (ocho en `test/` y tres en `androidTest/`; P-C-10 y P-C-11 las añadió la revisión del 1 oct); cuáles existen y han pasado en cada momento, con su fecha, también está en `docs/spec+doc-pruebas.md`.
+El plan tiene once pruebas de código (ocho en `test/` y tres en `androidTest/`; P-C-10 y P-C-11 las añadió la revisión del 1 oct); las once pasan (8 oct 2026), con su fecha en `docs/spec+doc-pruebas.md`.
 
 ## Estructura
 
-- `app-ako/` — el proyecto de Android Studio. Paquete `yunkang.ako`, por capas: `datos/` (tablas, consultas y repositorios), `dominio/` (cálculos puros que se prueban sin emulador), `seguridad/` (el PIN, guardado como hash con sal, nunca en claro), `imagenes/` (fotos) y `ui/` (pantallas).
-- `docs/` — el diseño y el seguimiento: `spec-claude-code.md` (diseño y orden de construcción), fichas de pantalla, wireframes, requisitos, diagrama de clases, plan de pruebas, `estado-nivel.md` (qué está hecho), `decisiones-code.md`, `guias/` (una guía por sesión) y `diario/` (una ficha por sesión de trabajo).
+- `app-ako/` — el proyecto de Android Studio. Paquete `yunkang.ako`, por capas: `datos/` (tablas, consultas y repositorios), `dominio/` (cálculos puros que se prueban sin emulador, el carrito y los modelos que viajan a las pantallas), `seguridad/` (el PIN, guardado como hash con sal, nunca en claro), `imagenes/` (fotos) y `ui/` (pantallas); en la raíz del paquete, `EntradaAko` (la aplicación: crea la base de datos y los repositorios).
+- `docs/` — el diseño y el seguimiento: `spec-claude-code.md` (diseño y orden de construcción), fichas de pantalla, wireframes, requisitos, diagrama de clases, plan de pruebas, `estado-nivel.md` (qué está hecho), `decisiones-code.md`, `textos-ui.md` (los textos de la interfaz en español e inglés), `guias/` (una guía por sesión), `diario/` (una ficha por sesión de trabajo), `pruebas-pasadas/` (cada pasada de pruebas manuales), `capturas/` (capturas del emulador), `revisiones/` (las revisiones independientes con IA y lo que se aplicó), `para-el-project/` (los cambios que pasan a la memoria), `resumenes/` (resúmenes de las sesiones) y `lecciones-claude.md`.
 - `CLAUDE.md` y `.claude/` — las reglas y las herramientas de trabajo con Claude Code.
 
 ## Uso de IA

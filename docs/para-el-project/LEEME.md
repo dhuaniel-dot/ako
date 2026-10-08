@@ -4,11 +4,11 @@ Creada el 7 de octubre de 2026 (P178 → C, revisión del 6 oct, R03) [Claude]. 
 
 ## Los documentos
 
-| Documento | Qué corrige en el doc | Filas (7 oct) |
+| Documento | Qué corrige en el doc | Filas (8 oct, tras la revisión; se recuentan al añadir) |
 |---|---|---|
-| `01-diagrama-de-clases-y-bd.md` | El diagrama de clases (`spec+doc-clases.md`), el modelo de datos y el E-R, los paquetes del spec (apartado 3) | 24 |
-| `02-memoria.md` | La memoria: planificación, arquitectura y reglas, seguridad, pruebas, accesibilidad, localización, uso de IA, Anexos I y II, guion del vídeo | 20 |
-| `03-pantallas-textos-y-requisitos.md` | Las fichas de pantalla, los wireframes, `textos-ui.md` y los requisitos (RF/RNF, nivel 2) | 13 |
+| `01-diagrama-de-clases-y-bd.md` | El diagrama de clases (`spec+doc-clases.md`), el modelo de datos y el E-R, los paquetes del spec (apartado 3) | 30 |
+| `02-memoria.md` | La memoria: planificación, arquitectura y reglas, seguridad, pruebas, accesibilidad, localización, uso de IA, Anexos I y II, guion del vídeo | 31 |
+| `03-pantallas-textos-y-requisitos.md` | Las fichas de pantalla, los wireframes, `textos-ui.md` y los requisitos (RF/RNF, nivel 2) | 29 |
 
 ## Cómo se usa
 

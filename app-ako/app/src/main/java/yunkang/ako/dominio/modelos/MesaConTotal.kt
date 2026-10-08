@@ -4,7 +4,6 @@ package yunkang.ako.dominio.modelos
 // (ComandaDao.pendientesConTotal): solo salen las mesas con comanda PENDIENTE (P123).
 data class MesaConTotal(
     val mesaId: Long,
-    val numero: Int,
     val comandaId: Long,
     val totalCentimos: Int
 )

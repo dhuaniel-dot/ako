@@ -59,5 +59,10 @@ class LineaAdapter(
         holder.binding.botonMenos.setOnClickListener { alMenos?.invoke(linea) }
         holder.binding.botonMas.setOnClickListener { alMas?.invoke(linea) }
         holder.binding.botonQuitar.setOnClickListener { alQuitar?.invoke(linea) }
+
+        // P202 (B4): el lector de pantalla dice de qué plato es cada botón («Quitar uno de Entrecot»)
+        holder.binding.botonMenos.contentDescription = contexto.getString(R.string.linea_menos_cd, linea.nombre)
+        holder.binding.botonMas.contentDescription = contexto.getString(R.string.linea_mas_cd, linea.nombre)
+        holder.binding.botonQuitar.contentDescription = contexto.getString(R.string.linea_quitar_cd, linea.nombre)
     }
 }

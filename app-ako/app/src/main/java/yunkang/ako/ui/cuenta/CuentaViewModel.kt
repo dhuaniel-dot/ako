@@ -17,7 +17,7 @@ import yunkang.ako.dominio.modelos.MesaEstado
 import yunkang.ako.ui.comun.LineaVista
 
 // La libreta de la pantalla 6 (Cuenta): la comparten la rejilla (6a), la comanda (6b) y el recibo (6c).
-// Vive mientras dura Cuenta y muere con CuentaActivity (P108). Crece pieza a pieza
+// Vive mientras dura Cuenta y muere con CuentaActivity (P108)
 class CuentaViewModel(
     private val comandaRepository: ComandaRepository
 ) : ViewModel() {

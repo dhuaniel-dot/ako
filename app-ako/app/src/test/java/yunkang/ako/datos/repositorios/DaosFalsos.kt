@@ -54,6 +54,5 @@ class ProductoDaoFalso(var guardado: Producto? = null) : ProductoDao {
 
 // No se usa en estas pruebas; existe porque CartaRepository lo pide al crearse.
 class PrecargadosDaoFalso : PrecargadosDao {
-    override suspend fun insertarAlergenos(alergenos: List<Alergeno>): Unit = TODO()
     override suspend fun alergenos(): List<Alergeno> = TODO()
 }

@@ -344,6 +344,12 @@ class PlatoActivity : AppCompatActivity() {
     // 3e, primer aviso: «La categoría Postres está eliminada. ¿Muevo el plato a Otros?»
     // El nombre de la de por defecto sale de la base de datos: se puede renombrar (R16, D20)
     private fun preguntarMover() {
+        // P199 (M1): llega tras copiar la foto; si mientras tanto la app pasó a segundo plano,
+        // la caja no se puede abrir: no se abre y Guardar se vuelve a encender
+        if (supportFragmentManager.isStateSaved) {
+            actualizarGuardar()
+            return
+        }
         val datos = checkNotNull(viewModel.datos.value)
         val elegida = datos.categorias.first { it.id == viewModel.categoriaElegidaId }
         val porDefecto = datos.categorias.first { it.esPorDefecto }
@@ -362,6 +368,11 @@ class PlatoActivity : AppCompatActivity() {
         val datos = checkNotNull(viewModel.datos.value)
         val elegida = datos.categorias.first { it.id == viewModel.categoriaElegidaId }
         val cuantos = viewModel.platosQueVuelven(elegida.id)
+        // P199 (M1): lo mismo, tras esperar a la cuenta de platos
+        if (supportFragmentManager.isStateSaved) {
+            actualizarGuardar()
+            return
+        }
         ConfirmacionDialog.nueva(
             titulo = getString(R.string.recuperar_categoria_titulo, elegida.nombre),
             texto = getString(R.string.recuperar_categoria_cuerpo, cuantos),
@@ -376,7 +387,7 @@ class PlatoActivity : AppCompatActivity() {
         val plato = datos.plato
         if (plato != null) {
             binding.textoNombre.setText(plato.nombre)
-            binding.textoNumero.setText(plato.numero.toString())
+            binding.textoNumero.setText(getString(R.string.comun_numero, plato.numero))
             binding.textoPrecio.setText(Formato.precio(plato.precioCentimos))   // 150 → «1,50»
             binding.textoDescripcion.setText(plato.descripcion)
             binding.interruptorEnLaCarta.isChecked = plato.activo

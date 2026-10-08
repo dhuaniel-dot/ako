@@ -16,7 +16,7 @@ import java.time.LocalDate
 
 // 2g · La lista del Resumen de ingresos (wireframe 02g): el día, las comandas cobradas y el pie.
 // [Claude] Es un Fragment (P87 B) para que el recibo la sustituya en el hueco de la Activity, como en Cuenta.
-// Crece pieza a pieza: la lista y el pie (pieza 5), el calendario (6) y tocar una comanda (7)
+// Tiene el día con su calendario, la lista de comandas cobradas con su pie y, al tocar una, su recibo
 class ResumenListaFragment : Fragment(R.layout.fragment_resumen_lista) {
 
     // La libreta de la Activity: si Android rehace la pantalla, sigue con el mismo día
@@ -47,7 +47,7 @@ class ResumenListaFragment : Fragment(R.layout.fragment_resumen_lista) {
             DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
         )
 
-        // El campo Día enseña el día que se mira, escrito por Formato.fecha («Jueves, 17/09/2026»)
+        // El campo Día enseña el día que se mira, escrito por Formato.fecha («Jueves, 8 de octubre de 2026»)
         viewModel.dia.observe(viewLifecycleOwner) { dia ->
             binding.textoDia.setText(Formato.fecha(dia))
         }
@@ -74,7 +74,7 @@ class ResumenListaFragment : Fragment(R.layout.fragment_resumen_lista) {
             val vacio = resumen.comandas.isEmpty()
             binding.textoVacio.isVisible = vacio
             binding.listaComandas.isVisible = !vacio
-            binding.textoNumComandas.text = resumen.numComandas.toString()
+            binding.textoNumComandas.text = getString(R.string.comun_numero, resumen.numComandas)
             binding.textoTotalDia.text = getString(R.string.comun_precio, Formato.precio(resumen.totalCentimos))
         }
     }

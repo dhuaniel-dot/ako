@@ -9,7 +9,6 @@ import yunkang.ako.dominio.modelos.ResumenIngresos
 
 // El puesto de comandas: las preguntas que otros pueden hacer sobre las comandas (P132).
 // Lo cumplen ComandaRepositoryReal (la app) y ComandaRepositoryFalso (las pruebas).
-// Crece pieza a pieza.
 interface ComandaRepository {
 
     // R6: números de las mesas con comanda pendiente que llevan este plato.

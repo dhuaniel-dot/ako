@@ -10,7 +10,7 @@ import yunkang.ako.databinding.ItemFilaPlatoBinding
 import yunkang.ako.datos.entidades.Producto
 import java.io.File
 
-// Las filas de plato del Panel (2a) y, en la S8, de la carta (5a): «se reutiliza el componente, no la pantalla» (spec 7).
+// Las filas de plato del Panel (2a) y de la carta (5a): «se reutiliza el componente, no la pantalla» (spec 7).
 // Adaptador sencillo con notifyDataSetChanged (P50 C): la lista es corta y el atenuado depende también
 // de la categoría, que DiffUtil no vería (Flan no cambia cuando se elimina Postres)
 class FilaPlatoAdapter(

@@ -18,7 +18,7 @@ import yunkang.ako.ui.comun.ComprobadorPin
 // deja un sobre (CLAVE_RESULTADO) para quien lo abrió. Cancelar cierra sin sobre
 class PinDialog : DialogFragment() {
 
-    // La Activity que lo abre tiene que saber comprobar un PIN (hoy SelectorActivity; en la S8, PedidoActivity)
+    // La Activity que lo abre tiene que saber comprobar un PIN (SelectorActivity o PedidoActivity)
     private val comprobador: ComprobadorPin
         get() = requireActivity() as ComprobadorPin
 

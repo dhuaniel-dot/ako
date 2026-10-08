@@ -32,7 +32,7 @@ interface ComandaDao {
     // La rejilla: solo las mesas ocupadas, con su total sumado (R3, R10, P123).
     // P167 A: Room la vuelve a mandar cada vez que cambian comanda, mesa o linea_comanda
     @Query("""
-        SELECT m.id AS mesaId, m.numero AS numero, c.id AS comandaId,
+        SELECT m.id AS mesaId, c.id AS comandaId,
                SUM(l.cantidad * l.precio_unitario_centimos) AS totalCentimos
         FROM comanda c
         JOIN mesa m ON m.id = c.mesa_id

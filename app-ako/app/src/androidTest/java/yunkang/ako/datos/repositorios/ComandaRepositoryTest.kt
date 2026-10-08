@@ -35,8 +35,9 @@ class ComandaRepositoryTest {
     fun prepararBase() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         // Igual que en CategoriaPorDefectoTest (repetido a propósito: cada clase se lee sola)
-        db = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java).build()
-        runBlocking { Precarga(context).cargar(db) }
+        db = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java)
+            .addCallback(Precarga(context))
+            .build()
         repositorio = ComandaRepositoryReal(db, db.mesaDao(), db.comandaDao())
 
         runBlocking {

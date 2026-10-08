@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- 6c · Recibo y cobro (wireframe 06c): barra «← Atrás · Mesa N · Recibo»; las líneas; abajo, fijos,
      el TOTAL, el bloque de cambio (Entregado, opcional, y Cambio) y «Cobrar».
-     En solo lectura (2g, S10) el bloque de cambio y «Cobrar» no salen -->
+     En solo lectura (2g) el bloque de cambio y «Cobrar» no salen -->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"

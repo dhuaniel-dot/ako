@@ -48,7 +48,6 @@
     <string name="panel_plato_eliminado">Removed</string>
     <string name="panel_btn_mas_plato">+ Dish</string>
     <string name="panel_plegar_cd">Collapse</string>
-    <string name="panel_desplegar_cd">Expand</string>
 
     <!-- 2b · Hoja de categoría -->
     <string name="categoria_titulo_nueva">New category</string>
@@ -109,6 +108,13 @@
     <string name="comun_quitar">Take off</string>
     <string name="comun_menos_cd">One less</string>
     <string name="comun_mas_cd">One more</string>
+    <!-- P202 (B4): with the name, so each line and each box can be told apart -->
+    <string name="linea_menos_cd">One less of %1$s</string>
+    <string name="linea_mas_cd">One more of %1$s</string>
+    <string name="linea_quitar_cd">Take off %1$s</string>
+    <string name="panel_plegar_categoria_cd">Collapse %1$s</string>
+    <string name="panel_desplegar_categoria_cd">Expand %1$s</string>
+    <string name="panel_editar_categoria_cd">Edit %1$s</string>
 
     <!-- 1d y la puerta de Pedir -->
     <string name="mesa_elegir_titulo">Choose the table</string>

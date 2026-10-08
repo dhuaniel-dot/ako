@@ -28,7 +28,7 @@ data class DatosFicha(
 )
 
 // La libreta de la pantalla 5 (Pedir): la comparten la carta (5a), la ficha (5b) y el carrito (5c).
-// Vive mientras dura Pedir y muere con PedidoActivity (spec 3). Crece pieza a pieza
+// Vive mientras dura Pedir y muere con PedidoActivity (spec 3)
 class PedidoViewModel(
     private val cartaRepository: CartaRepository,
     private val comandaRepository: ComandaRepository,

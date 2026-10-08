@@ -12,7 +12,7 @@ import yunkang.ako.R
 import yunkang.ako.databinding.FragmentReciboBinding
 
 // 6c · El recibo (wireframe 06c). En comun/ porque lo comparten dos pantallas (spec 3): Cuenta (6c, para cobrar)
-// y, en la S10, el Resumen de ingresos (2g, en solo lectura).
+// y el Resumen de ingresos (2g, en solo lectura).
 // P184 A: como la rejilla, pinta lo que le da quien lo aloja (mostrar) y no sabe en qué pantalla está.
 // Por arguments solo lleva lo que necesita para dibujarse: el número de mesa y si es de solo lectura
 class ReciboFragment : Fragment(R.layout.fragment_recibo) {

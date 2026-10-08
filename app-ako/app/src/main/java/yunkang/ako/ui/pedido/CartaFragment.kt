@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import yunkang.ako.R
 import yunkang.ako.databinding.FragmentCartaBinding
+import yunkang.ako.dominio.modelos.CategoriaConPlatos
 import yunkang.ako.ui.comun.FilaPlatoAdapter
 import yunkang.ako.ui.comun.Formato
 
@@ -31,6 +32,18 @@ class CartaFragment : Fragment(R.layout.fragment_carta) {
 
     // Quien coloca las filas de la lista (y sabe llevar una posición arriba del todo)
     private lateinit var gestorLista: LinearLayoutManager
+
+    // P200 (M2): la última carta pintada en esta vista. Room la vuelve a mandar igual al volver de segundo
+    // plano (asLiveData cierra el grifo a los 5 s sin nadie mirando); si no ha cambiado, no se repinta
+    private var ultimaCarta: List<CategoriaConPlatos>? = null
+
+    // H07: si Android rehace la pantalla (modo noche, tamaño de letra), recupera la categoría resaltada.
+    // [Claude] En onCreate y no en onViewCreated: al volver de la ficha se rehace la vista pero no el
+    // Fragment, y el resaltado ya está en el campo
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        categoriaActiva = savedInstanceState?.getLong(CLAVE_CATEGORIA_ACTIVA) ?: 0L
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -74,8 +87,15 @@ class CartaFragment : Fragment(R.layout.fragment_carta) {
             }
         })
 
+        // [Claude] Vista nueva (al abrir o al volver de la ficha): su lista está vacía y hay que pintarla
+        ultimaCarta = null
+
         // Cada vez que llega la carta (P167 A), se montan la fila y la lista
         viewModel.carta.observe(viewLifecycleOwner) { secciones ->
+            // P200 (M2): la misma carta que ya se ve → nada (un adaptador nuevo subiría la lista arriba)
+            if (secciones == ultimaCarta) return@observe
+            ultimaCarta = secciones
+
             // La fila: una categoría por sección (solo las que tienen algún plato visible, R15)
             adaptadorFila.mostrar(secciones.map { it.categoria })
 
@@ -118,6 +138,12 @@ class CartaFragment : Fragment(R.layout.fragment_carta) {
         }
     }
 
+    // H07: la categoría resaltada, a la caja fuerte de Android (como la cantidad en la ficha)
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putLong(CLAVE_CATEGORIA_ACTIVA, categoriaActiva)
+    }
+
     // 5b encima de la carta. addToBackStack: Atrás quita la ficha y vuelve la carta (y el guardián de Pedir,
     // que solo vigila con la pila vacía, no pide el PIN)
     private fun abrirFicha(productoId: Long) {
@@ -134,5 +160,10 @@ class CartaFragment : Fragment(R.layout.fragment_carta) {
         gestorLista.scrollToPositionWithOffset(posicion, 0)
         categoriaActiva = categoriaId
         adaptadorFila.resaltar(categoriaId)
+    }
+
+    companion object {
+        // [Claude] El nombre con el que se guarda en la caja fuerte
+        private const val CLAVE_CATEGORIA_ACTIVA = "categoria_activa"
     }
 }

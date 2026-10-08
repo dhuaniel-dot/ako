@@ -15,7 +15,7 @@ import yunkang.ako.datos.entidades.Producto
 import yunkang.ako.dominio.modelos.CategoriaConPlatos
 import yunkang.ako.ui.comun.FilaPlatoAdapter
 
-// 2a · El encargado de las cajas del Panel (P52 A: la fila de categorías de la carta tendrá el suyo, S8).
+// 2a · El encargado de las cajas del Panel (P52 A: la fila de categorías de la carta tiene el suyo).
 // ListAdapter: le das la lista nueva con submitList y DiffUtil repinta solo lo que cambió (P50 C)
 class CategoriaAdapter(
     private val estaPlegada: (Long) -> Boolean,
@@ -98,8 +98,10 @@ class CategoriaAdapter(
         holder.binding.listaPlatos.visibility = visibilidad
         holder.binding.botonMasPlato.visibility = visibilidad
         holder.binding.botonPlegar.rotation = if (plegada) -90f else 0f   // ⌄ desplegada, › plegada
+        // P202 (B4): con el nombre de la caja, para que el lector distinga una de otra («Plegar Postres»)
         holder.binding.botonPlegar.contentDescription = holder.itemView.context.getString(
-            if (plegada) R.string.panel_desplegar_cd else R.string.panel_plegar_cd
+            if (plegada) R.string.panel_desplegar_categoria_cd else R.string.panel_plegar_categoria_cd,
+            categoria.nombre
         )
         // Tocar el icono o el nombre pliega o despliega; después se repinta solo esta caja
         val plegar = View.OnClickListener {
@@ -108,6 +110,8 @@ class CategoriaAdapter(
         }
         holder.binding.botonPlegar.setOnClickListener(plegar)
         holder.binding.textoNombre.setOnClickListener(plegar)
+        holder.binding.botonEditar.contentDescription =
+            holder.itemView.context.getString(R.string.panel_editar_categoria_cd, categoria.nombre)
         holder.binding.botonEditar.setOnClickListener { alEditar(categoria) }
         holder.binding.botonMasPlato.setOnClickListener { alAnadirPlato(categoria) }
     }

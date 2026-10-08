@@ -25,9 +25,10 @@ class CategoriaPorDefectoTest {
     @Before
     fun prepararBase() {
         val context = ApplicationProvider.getApplicationContext<Context>()
-        // Base en memoria y SIN addCallback: la precarga la lanzamos nosotros y la esperamos
-        db = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java).build()
-        runBlocking { Precarga(context).cargar(db) }
+        // Base en memoria CON la precarga, como la app (P203): se escribe sola al abrir la base
+        db = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java)
+            .addCallback(Precarga(context))
+            .build()
 
         val comandas = ComandaRepositoryReal(db, db.mesaDao(), db.comandaDao())
         repositorio = CartaRepository(db.categoriaDao(), db.productoDao(), db.precargadosDao(), comandas)
