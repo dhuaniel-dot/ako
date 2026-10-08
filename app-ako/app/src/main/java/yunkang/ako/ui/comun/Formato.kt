@@ -4,6 +4,7 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 import java.util.Locale
 import kotlin.math.abs
 
@@ -55,12 +56,13 @@ object Formato {
         return euros * 100 + centimos
     }
 
-    // 2g · el campo Día: el 17 de septiembre de 2026 → «Jueves, 17/09/2026».
-    // No es una cadena de strings.xml (textos-ui 3): es un formato, y el nombre del día lo pone Java
-    // en el idioma del móvil (EEEE = el día de la semana entero; dd/MM/yyyy = día, mes y año con ceros)
+    // 2g · el campo Día, en la forma larga del idioma del móvil (S13, 1 → B):
+    // en español «Jueves, 8 de octubre de 2026» y en inglés «Thursday, October 8, 2026».
+    // No es una cadena de strings.xml (textos-ui 3): el orden de día y mes lo sabe Java para cada idioma,
+    // y así nadie lee el 8 de octubre como el 10 de agosto
     fun fecha(dia: LocalDate): String {
         val idioma = Locale.getDefault()
-        val texto = dia.format(DateTimeFormatter.ofPattern("EEEE, dd/MM/yyyy", idioma))
+        val texto = dia.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL).withLocale(idioma))
         // Java escribe «jueves» y el dibujo dice «Jueves»: se sube solo la primera letra
         return texto.replaceFirstChar { it.titlecase(idioma) }
     }

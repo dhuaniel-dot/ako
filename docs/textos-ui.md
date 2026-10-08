@@ -71,7 +71,7 @@ Botones de 2b y 2e: `comun_guardar`, `comun_cancelar`, `comun_eliminar` (tabla 8
 |---|---|---|---|---|
 | `resumen_titulo` | Resumen | título (barra superior, con ← Atrás) | 2g | 02g-resumen-ingresos.png (ver D5: spec y leyenda dicen *Resumen de ingresos*) |
 | `resumen_dia` | Día | etiqueta de campo (selector de fecha) | 2g, arriba | 02g-resumen-ingresos.png; leyenda 02g #1 |
-| *(formato, no cadena)* | Jueves, 17/09/2026 | valor del selector de fecha | 2g | 02g-resumen-ingresos.png (texto de ejemplo; patrón `EEEE, dd/MM/yyyy` con la primera en mayúscula) |
+| *(formato, no cadena)* | Jueves, 17 de septiembre de 2026 | valor del selector de fecha | 2g | 02g-resumen-ingresos.png dibuja «Jueves, 17/09/2026»; desde la S13 (1 → B) es la forma larga del idioma del móvil, `ofLocalizedDate(FormatStyle.FULL)`, con la primera en mayúscula (en inglés, «Thursday, September 17, 2026») |
 | `resumen_seccion_comandas` | COMANDAS COBRADAS | título de sección | 2g, sobre la lista | 02g-resumen-ingresos.png |
 | `resumen_fila_hora` | Cobrada a las %1$s | etiqueta (segunda línea de cada fila; `%1$s` = hora HH:mm) | 2g, cada comanda PAGADA del día | 02g-resumen-ingresos.png; leyenda 02g #2 |
 | `resumen_pie_comandas` | Comandas cobradas | etiqueta (pie, sobre el número) | 2g, pie izquierda | 02g-resumen-ingresos.png; leyenda 02g #3 (ver D6: P-M-12 escribe el pie como «2 comandas · 47,00 €») |
