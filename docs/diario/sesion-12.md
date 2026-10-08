@@ -5,10 +5,10 @@
 | **Fecha** | 2026-10-08 |
 | **Sesión nº** | 12 |
 | **Objetivo de la sesión** | Del spec: **Fotos** (`ImageStore`, selector de fotos, Glide en Panel, 5a y 5b); P-M-08 pasa |
-| **Tiempo dedicado** | 13:13 – … |
+| **Tiempo dedicado** | 13:13 – 14:30, **unos 77 min** (sin pausas) |
 | **Nivel / pieza** | Nivel 1 · fotos (`imagenes/ImageStore`, 3a, 2b, fila de plato de 2a y 5a, 5b y fila de categorías de 5a): la última pieza del nivel 1 |
-| **Commit final** | `abc1234` — mensaje del commit |
-| **Contexto al cerrar** | NN % (el anillo junto al modelo; P156) |
+| **Commit final** | `846b625` — S12: fotos (ImageStore, selector de fotos, Glide en Panel, 5a y 5b); P-M-08 pasa |
+| **Contexto al cerrar** | 40 % (Daniel); toda la sesión en un solo chat |
 
 ## Qué se hizo
 
@@ -41,7 +41,7 @@
 
 ## Qué entendí y qué no
 
-- Lo que sigue sale de las respuestas de Daniel a las preguntas de cada pieza (regla del 8 oct en `como-trabajamos`).
+- Daniel, al cerrar: «nada en especial» le costó. Lo que sigue sale de sus respuestas a las preguntas de cada pieza (regla del 8 oct en `como-trabajamos`).
 - **Entendí:** el gris mientras carga y el «?» si no hay foto; 48 MB sin `inSampleSize` y 12 MB con 2; con 1C, salir sin guardar no deja ningún archivo; con una foto pequeña no se ve que la app la reduce; el «?» de siempre mide 24 dp y por eso hace falta uno de 96 dp; sin Glide la fila reciclada se queda con la foto vieja; la foto de categoría sin guardar no se guarda; el «?» sale redondo porque va dentro del círculo de la tarjeta; al reinstalar, las fotos se borran.
 - **No entendí todavía:** qué permiso pide Ako para leer la foto (contestó «el de imágenes y almacenamiento»; es **ninguno**: el selector es de Android y solo le pasa la foto tocada); la pregunta de la pieza 3 (por qué en `imagen` va la ruta y no la foto) quedó sin contestar. A `pendientes-de-entender.md` y a los PDF.
 
