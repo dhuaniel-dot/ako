@@ -1,5 +1,6 @@
 package yunkang.ako.ui.plato
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -17,6 +18,7 @@ import yunkang.ako.datos.entidades.Categoria
 import yunkang.ako.datos.entidades.Producto
 import yunkang.ako.datos.repositorios.CartaRepository
 import yunkang.ako.dominio.modelos.ResultadoGuardado
+import yunkang.ako.imagenes.ImageStore
 
 // [Claude] P162 B: todo lo que el formulario lee al abrirse, junto en una sola bandeja
 data class DatosFormulario(
@@ -31,6 +33,7 @@ data class DatosFormulario(
 // sobrevive incluso a que Android mate la app en segundo plano; la libreta sola solo sobrevive a recrear la pantalla
 class PlatoViewModel(
     private val cartaRepository: CartaRepository,
+    private val imageStore: ImageStore,
     private val cajaFuerte: SavedStateHandle
 ) : ViewModel() {
 
@@ -63,11 +66,26 @@ class PlatoViewModel(
     val alergenosMarcados: List<Long>
         get() = (cajaFuerte.get<LongArray>(CLAVE_ALERGENOS) ?: LongArray(0)).toList()
 
+    // Decisión 2 A: la foto elegida y aún sin guardar (su dirección, «content://…»), en la caja fuerte.
+    // getLiveData la convierte en un tablón que la pantalla puede mirar. null = no se ha elegido ninguna
+    val fotoElegida: LiveData<String?> = cajaFuerte.getLiveData<String?>(CLAVE_FOTO, null)
+
     // Apunta o borra un alérgeno. Se trabaja con un conjunto (sin repetidos) y se vuelve a guardar entero
     fun marcarAlergeno(id: Long, marcado: Boolean) {
         val ahora = alergenosMarcados.toMutableSet()
         if (marcado) ahora.add(id) else ahora.remove(id)
         cajaFuerte[CLAVE_ALERGENOS] = ahora.toLongArray()
+    }
+
+    // P94 C: al elegir no se copia nada; se pide el préstamo largo y se apunta la dirección
+    fun elegirFoto(uri: Uri) {
+        imageStore.conservarPrestamo(uri)
+        cajaFuerte[CLAVE_FOTO] = uri.toString()
+    }
+
+    // [Claude] Se olvida la foto elegida (cuando no se ha podido usar): el hueco vuelve a la de antes
+    fun olvidarFoto() {
+        cajaFuerte[CLAVE_FOTO] = null
     }
 
     // Lee la base de datos UNA sola vez. productoId null = plato nuevo.
@@ -91,8 +109,27 @@ class PlatoViewModel(
     // Guarda el plato con los alérgenos marcados. Las reglas (R8, R9 y la categoría eliminada)
     // las comprueba el repositorio en ese orden; la pantalla solo reacciona a la respuesta
     // aunqueCategoriaEliminada = true es la tercera salida de 3e: el Propietario dijo «No» a las dos preguntas (P130)
-    suspend fun guardar(p: Producto, aunqueCategoriaEliminada: Boolean = false): ResultadoGuardado =
-        cartaRepository.guardarPlato(p, alergenosMarcados, aunqueCategoriaEliminada = aunqueCategoriaEliminada)
+    // P94 C: si se eligió una foto, se copia AHORA y el plato apunta a la copia. Si la foto no se puede
+    // leer, ImageStore lanza el error, no se guarda nada y la pantalla avisa
+    suspend fun guardar(p: Producto, aunqueCategoriaEliminada: Boolean = false): ResultadoGuardado {
+        val fotoAntes = datos.value?.plato?.imagen
+        val elegida = fotoElegida.value
+        val fotoNueva = if (elegida == null) null else imageStore.guardar(Uri.parse(elegida))
+        val plato = if (fotoNueva == null) p else p.copy(imagen = fotoNueva)
+
+        val resultado = cartaRepository.guardarPlato(plato, alergenosMarcados, aunqueCategoriaEliminada = aunqueCategoriaEliminada)
+
+        if (fotoNueva != null) {
+            if (resultado == ResultadoGuardado.Ok) {
+                // Guardado bien: la foto vieja ya no la usa ninguna fila (se borra después, nunca antes)
+                if (fotoAntes != null) imageStore.borrar(fotoAntes)
+            } else {
+                // [Claude] No se guardó (número repetido, avisos 3e): la copia sobra; al volver a guardar se hace otra
+                imageStore.borrar(fotoNueva)
+            }
+        }
+        return resultado
+    }
 
     // [Claude] 3e, segundo aviso: cuántos platos volverían a la carta al recuperar la categoría.
     // El reverso de R6: los activos de esa categoría, sin contar el que se está guardando (P-M-11)
@@ -110,7 +147,8 @@ class PlatoViewModel(
         return cartaRepository.mesasAfectadasPorPlato(plato.id)
     }
 
-    // R5: eliminar = activo false; la fila sigue y ninguna línea de comanda se toca (R6)
+    // R5: eliminar = activo false; la fila sigue y ninguna línea de comanda se toca (R6).
+    // La foto tampoco se toca: el plato se puede recuperar entero
     suspend fun eliminar() {
         val plato = datos.value?.plato ?: return
         cartaRepository.eliminarPlato(plato.id)
@@ -122,13 +160,13 @@ class PlatoViewModel(
         cartaRepository.recuperarPlato(plato.id)
     }
 
-    // P140: la fábrica que construye esta libreta con el repositorio de la carta de EntradaAko
-    // y su caja fuerte (createSavedStateHandle la saca de la propia pantalla, H10 B)
+    // P140: la fábrica que construye esta libreta con el repositorio de la carta y el almacén de fotos
+    // de EntradaAko, y su caja fuerte (createSavedStateHandle la saca de la propia pantalla, H10 B)
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val app = this[APPLICATION_KEY] as EntradaAko
-                PlatoViewModel(app.cartaRepository, createSavedStateHandle())
+                PlatoViewModel(app.cartaRepository, app.imageStore, createSavedStateHandle())
             }
         }
 
@@ -137,5 +175,6 @@ class PlatoViewModel(
         private const val CLAVE_RELLENO = "formulario_relleno"
         private const val CLAVE_CAMBIOS = "hay_cambios"
         private const val CLAVE_ALERGENOS = "alergenos_marcados"
+        private const val CLAVE_FOTO = "foto_elegida"
     }
 }

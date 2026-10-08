@@ -87,6 +87,8 @@
     <!-- 3a · Formulario del plato -->
     <string name="plato_titulo_nuevo">Nuevo plato</string>
     <string name="plato_titulo_editar">Editar plato</string>
+    <!-- P96 A: la foto elegida no se ha podido leer (archivo roto, no es una imagen) -->
+    <string name="foto_error">No se ha podido usar esa foto</string>
     <string name="plato_elegir_foto_cd">Elegir foto</string>
     <!-- Obligatorios con * -->
     <string name="plato_hint_nombre">Nombre *</string>

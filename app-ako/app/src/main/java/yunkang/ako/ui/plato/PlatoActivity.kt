@@ -4,13 +4,17 @@ import android.os.Bundle
 import android.widget.GridLayout
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
 import com.google.android.material.checkbox.MaterialCheckBox
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 import yunkang.ako.R
 import yunkang.ako.datos.entidades.Alergeno
@@ -20,6 +24,7 @@ import yunkang.ako.dominio.modelos.ResultadoGuardado
 import yunkang.ako.ui.comun.ConfirmacionDialog
 import yunkang.ako.ui.comun.Formato
 import yunkang.ako.ui.comun.MesasAfectadasDialog
+import java.io.IOException
 
 // 3a · Formulario del plato. Se abre desde el Panel: «+ Plato» de una caja (crear)
 // o tocando un plato (editar)
@@ -35,6 +40,17 @@ class PlatoActivity : AppCompatActivity() {
     private val guardianAtras = object : OnBackPressedCallback(false) {
         override fun handleOnBackPressed() {
             preguntarSalir()
+        }
+    }
+
+    // El selector de fotos del sistema (spec 9): sin permisos, la app solo recibe la foto que se toca.
+    // [Claude] Se registra al crear la pantalla y no dentro del clic: así Android puede devolver la foto
+    // aunque recree la pantalla mientras el selector está abierto
+    private val selectorFotos = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+        // null = se canceló el selector: no cambia nada
+        if (uri != null) {
+            viewModel.elegirFoto(uri)
+            marcarCambio()          // la foto elegida cuenta como cambio sin guardar (P165 C)
         }
     }
 
@@ -95,9 +111,20 @@ class PlatoActivity : AppCompatActivity() {
             // Las casillas también se crean cada vez (vista nueva tras una recreación)
             pintarAlergenos(datos.alergenos)
 
+            // La foto que ya tenía el plato (si no se ha elegido otra)
+            pintarFoto()
+
             // Con los datos ya puestos, se mira cómo queda Guardar y si el número cambió
             actualizarGuardar()
             avisarNumeroCambiado()
+        }
+
+        // La foto elegida y aún sin guardar (decisión 2 A): cada vez que cambia, se vuelve a pintar el hueco
+        viewModel.fotoElegida.observe(this) { pintarFoto() }
+
+        // El «+» de la foto abre el selector del sistema, solo con fotos (no vídeos)
+        binding.botonElegirFoto.setOnClickListener {
+            selectorFotos.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
 
         // Guardar: si se va a eliminar el plato, PRIMERO se miran las mesas (R6 en dos pasos, P128)
@@ -162,7 +189,8 @@ class PlatoActivity : AppCompatActivity() {
             }
         }
 
-        // El sobre de «¿Salir sin guardar?»: Salir cierra sin guardar; Cancelar, nada
+        // El sobre de «¿Salir sin guardar?»: Salir cierra sin guardar; Cancelar, nada.
+        // La foto elegida no se copió todavía (P94 C): al salir no queda ningún archivo que borrar
         supportFragmentManager.setFragmentResultListener(CLAVE_SALIR, this) { _, sobre ->
             if (sobre.getBoolean(ConfirmacionDialog.RESPUESTA_AFIRMATIVA)) {
                 finish()
@@ -210,6 +238,25 @@ class PlatoActivity : AppCompatActivity() {
         guardianAtras.isEnabled = true
     }
 
+    // Lo que enseña el hueco: la foto elegida y aún sin guardar; si no hay, la que ya tenía el plato;
+    // si tampoco, null, y Glide pone el «?» (error). Glide entiende las dos direcciones como texto:
+    // «content://…» (la que prestó el selector) y «/data/…/fotos/….jpg» (nuestro archivo)
+    private fun pintarFoto() {
+        val foto = viewModel.fotoElegida.value ?: viewModel.datos.value?.plato?.imagen
+        Glide.with(binding.imagenPlato)
+            .load(foto)
+            .placeholder(R.drawable.foto_cargando)    // gris mientras carga
+            .error(R.drawable.ic_sin_foto_grande)     // el «?» si no hay foto o no se puede leer
+            .centerCrop()                             // la foto llena el marco; lo que sobra se recorta
+            .into(binding.imagenPlato)
+        // Sin foto, «Sin foto» (spec 9); con foto, el nombre del plato
+        if (foto == null) {
+            binding.imagenPlato.contentDescription = getString(R.string.comun_sin_foto_cd)
+        } else {
+            binding.imagenPlato.contentDescription = binding.textoNombre.text.toString()
+        }
+    }
+
     // «¿Salir sin guardar? Se perderán los cambios» (ficha 3: no hay nada vivo entre pantallas)
     private fun preguntarSalir() {
         ConfirmacionDialog.nueva(
@@ -233,7 +280,7 @@ class PlatoActivity : AppCompatActivity() {
             nombre = binding.textoNombre.text.toString().trim(),
             descripcion = if (descripcion.isEmpty()) null else descripcion,   // vacía = sin descripción
             precioCentimos = checkNotNull(Formato.centimosDesde(binding.textoPrecio.text.toString())),
-            imagen = antes?.imagen,                               // la foto llega en la S12
+            imagen = antes?.imagen,                               // la de antes; si se eligió otra, la pone la libreta al guardar (P94 C)
             // Al editar, como estaba (P150: solo eliminar/recuperar lo cambian). Al crear, el interruptor
             activo = antes?.activo ?: binding.interruptorEnLaCarta.isChecked
         )
@@ -254,7 +301,17 @@ class PlatoActivity : AppCompatActivity() {
     // Guarda y, si el interruptor cambió, elimina o recupera (como la hoja 2b, P150).
     // aunqueCategoriaEliminada solo lo pone el «No» del segundo aviso 3e
     private suspend fun guardar(aunqueCategoriaEliminada: Boolean = false) {
-        when (viewModel.guardar(leerFormulario(), aunqueCategoriaEliminada)) {
+        // P96 A: si la foto elegida no se puede leer, la libreta lanza el error y no se guarda nada
+        val resultado = try {
+            viewModel.guardar(leerFormulario(), aunqueCategoriaEliminada)
+        } catch (e: IOException) {
+            fotoNoUsable()
+            return
+        } catch (e: SecurityException) {
+            fotoNoUsable()          // [Claude] el préstamo de la foto ya no vale
+            return
+        }
+        when (resultado) {
             ResultadoGuardado.Ok -> {
                 if (seVaAEliminar()) {
                     viewModel.eliminar()          // R5: activo = false; ninguna línea se toca (R6)
@@ -274,6 +331,14 @@ class PlatoActivity : AppCompatActivity() {
             // Solo lo devuelven las categorías: guardarPlato nunca lo da
             ResultadoGuardado.NombreRepetido -> actualizarGuardar()
         }
+    }
+
+    // [Claude] La foto elegida no se ha podido usar (archivo roto, no es una imagen, préstamo caducado):
+    // se olvida, se avisa y el formulario sigue abierto; al volver a Guardar, se guarda sin ella
+    private fun fotoNoUsable() {
+        viewModel.olvidarFoto()
+        Snackbar.make(binding.raiz, R.string.foto_error, Snackbar.LENGTH_LONG).show()
+        actualizarGuardar()
     }
 
     // 3e, primer aviso: «La categoría Postres está eliminada. ¿Muevo el plato a Otros?»

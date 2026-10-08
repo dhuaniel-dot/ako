@@ -1,6 +1,7 @@
 package yunkang.ako.imagenes
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
@@ -25,6 +26,16 @@ private const val CARPETA = "fotos"
 // Guarda las fotos elegidas como archivos JPEG en la carpeta privada de la app (spec 9: archivo, nunca BLOB).
 // Recibe el contexto de la app (EntradaAko), nunca el de una pantalla.
 class ImageStore(private val context: Context) {
+
+    // P94 C: pide a Android que el préstamo de la foto no caduque, porque se copia al guardar
+    // (documentación oficial del selector de fotos, «Persist media file access»)
+    fun conservarPrestamo(uri: Uri) {
+        try {
+            context.contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        } catch (e: SecurityException) {
+            // [Claude] Algún selector antiguo no lo permite: se sigue con el préstamo normal
+        }
+    }
 
     // Copia la foto prestada a un archivo nuestro, reducida y derecha, y devuelve su ruta.
     // Todo en Dispatchers.IO: leer y escribir fotos tarda y congelaría la pantalla (spec 9).
@@ -59,7 +70,7 @@ class ImageStore(private val context: Context) {
         archivo.absolutePath
     }
 
-    // Quita un archivo de foto que ya no usa ninguna fila (cambiar la foto, o salir sin guardar).
+    // Quita un archivo de foto que ya no usa ninguna fila (cambiar la foto, o un guardado que no salió).
     // [Claude] Solo borra dentro de fotos/: nunca un archivo de fuera.
     // [Claude] Sin Dispatchers.IO: borrar es quitar el nombre del archivo, no leer la foto; es instantáneo.
     fun borrar(ruta: String) {

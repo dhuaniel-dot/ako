@@ -67,18 +67,20 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- 1 · La foto: el «?» y el botón redondo «+», apagado hasta la S12 (como «+ Elegir» de 2b, P13) -->
+            <!-- 1 · La foto a todo el marco y el botón redondo «+» (P13, S12). Glide pinta la foto recortada
+                 (centerCrop); el gris de «cargando» y el «?» los pinta a su tamaño en el centro (scaleType center, 3 B) -->
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="180dp"
                 android:background="?attr/colorSurfaceContainerHigh">
 
                 <ImageView
-                    android:layout_width="96dp"
-                    android:layout_height="96dp"
-                    android:layout_gravity="center"
+                    android:id="@+id/imagenPlato"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:contentDescription="@string/comun_sin_foto_cd"
-                    android:src="@drawable/ic_sin_foto" />
+                    android:scaleType="center"
+                    android:src="@drawable/ic_sin_foto_grande" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/botonElegirFoto"
@@ -88,7 +90,6 @@
                     android:layout_gravity="bottom|end"
                     android:layout_margin="12dp"
                     android:contentDescription="@string/plato_elegir_foto_cd"
-                    android:enabled="false"
                     android:insetTop="0dp"
                     android:insetBottom="0dp"
                     android:padding="0dp"
