@@ -4,9 +4,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import yunkang.ako.R
 import yunkang.ako.databinding.ItemFilaPlatoBinding
 import yunkang.ako.datos.entidades.Producto
+import java.io.File
 
 // Las filas de plato del Panel (2a) y, en la S8, de la carta (5a): «se reutiliza el componente, no la pantalla» (spec 7).
 // Adaptador sencillo con notifyDataSetChanged (P50 C): la lista es corta y el atenuado depende también
@@ -45,6 +47,22 @@ class FilaPlatoAdapter(
             contexto.getString(R.string.comun_plato_numero_nombre, plato.numero, plato.nombre)
         holder.binding.textoPrecio.text =
             contexto.getString(R.string.comun_precio, Formato.precio(plato.precioCentimos))
+
+        // La miniatura (spec 9): Glide se llama SIEMPRE, también sin foto (null → el «?» de error).
+        // El RecyclerView recicla las filas: si no, una fila que llevaba la foto de Entrecot
+        // la seguiría llevando al pintar otro plato
+        Glide.with(holder.binding.imagenPlato)
+            .load(plato.imagen?.let { File(it) })
+            .placeholder(R.drawable.foto_cargando)
+            .error(R.drawable.ic_sin_foto)
+            .centerCrop()
+            .into(holder.binding.imagenPlato)
+        // Sin foto, «Sin foto» (spec 9); con foto, el nombre del plato
+        if (plato.imagen == null) {
+            holder.binding.imagenPlato.contentDescription = contexto.getString(R.string.comun_sin_foto_cd)
+        } else {
+            holder.binding.imagenPlato.contentDescription = plato.nombre
+        }
 
         // RNF-13: la palabra «Eliminado» es la información; el gris solo la refuerza.
         // En la carta nunca llega un plato eliminado, así que allí no sale sola

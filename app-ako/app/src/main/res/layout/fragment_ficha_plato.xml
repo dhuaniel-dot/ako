@@ -49,7 +49,8 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- 1 · La foto grande: hoy siempre el «?»; en la S12 Glide pondrá aquí la foto del plato -->
+            <!-- 1 · La foto grande a todo el marco. Glide pinta la foto recortada (centerCrop); el gris de
+                 «cargando» y el «?», a su tamaño en el centro (scaleType center, decisión 3 B) -->
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="220dp"
@@ -57,11 +58,11 @@
 
                 <ImageView
                     android:id="@+id/imagenPlato"
-                    android:layout_width="96dp"
-                    android:layout_height="96dp"
-                    android:layout_gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:contentDescription="@string/comun_sin_foto_cd"
-                    android:src="@drawable/ic_sin_foto" />
+                    android:scaleType="center"
+                    android:src="@drawable/ic_sin_foto_grande" />
             </FrameLayout>
 
             <LinearLayout
