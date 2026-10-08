@@ -5,10 +5,10 @@
 | **Fecha** | 2026-10-08 |
 | **Sesión nº** | 13 |
 | **Objetivo de la sesión** | Del spec: **Cierre del nivel 1**: tema (paleta, naranja), `strings.xml` EN, accesibilidad (sin Scanner, P98 B), revisión del `revisor`, pasada por las 29 manuales, `estado-nivel.md` con todo el nivel 1 en *implementado*; APK en el ordenador, sin push, etiqueta ni Release (P198) |
-| **Tiempo dedicado** | 14:35 – HH:MM (inicio – fin, descontando pausas) |
-| **Nivel / pieza** | Nivel 1 · <pantalla o capa> (p. ej. *entidades Room*, *pantalla 6c*) |
-| **Commit final** | `abc1234` — mensaje del commit |
-| **Contexto al cerrar** | NN % (el anillo junto al modelo; P156) |
+| **Tiempo dedicado** | 14:35 – 17:10, **unos 155 min** (Daniel estuvo hasta las 15:45; la pasada final de 15:36 a 16:50 y el cierre los hizo Claude solo, a petición de Daniel) |
+| **Nivel / pieza** | Nivel 1 · cierre: tema, accesibilidad, inglés, revisión del `revisor`, las 11 P-C y la pasada final de las 29 P-M |
+| **Commit final** | `efb8061` — S13: cierre del nivel 1 (tema, inglés, accesibilidad, revisor y pasada final de las 29 P-M). Sin push (P198) |
+| **Contexto al cerrar** | sin dato: Daniel no estaba para mirar el anillo (P156); toda la sesión en un solo chat |
 
 ## Qué se hizo
 
@@ -31,34 +31,50 @@
 | 2a (revisión a mano) | Platos y categorías **eliminados** atenuados al 60 %: el nombre 4,42:1 y *Eliminado* 3,12:1 de día (no llega a 4,5:1) | **Arreglado** (Daniel, 1 → A entre A/B/C: A, atenuar al 0,8, Claude · B, justificarlo como componente inactivo, excepción de WCAG 1.4.3, https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum.html; no encaja porque el plato eliminado se toca para recuperarlo · C, quitar la atenuación): `alpha` 0,6 → 0,8 en `FilaPlatoAdapter` y `CategoriaAdapter` (Claude, una línea cada uno). Medido en la captura: *Eliminado* #6D6872 sobre #FEF7FF = **5,15:1** |
 
 - **Pieza 7 (`revisor`, P35), 15:24–15:32:** subagente `general-purpose` que siguió `.claude/agents/revisor.md` (solo Read, Grep y Glob) sobre todo `src/main`, `src/test` y `src/androidTest`. **Ningún Alta ni Media**; la traducción inglesa, bien clave a clave (marcadores, `plurals`, glosario). **Cinco Baja**, comprobados por Claude: **B1** desbordamiento de `Int`: `Formato.centimosDesde` admite 9.999.999,99 € y precio × cantidad o la suma de una comanda pueden pasar de 2.147.483.647 céntimos y salir negativos (`Calculadora.importe`, `ComandaDao` `totalCentimos: Int`); arreglo propuesto: tope de 4 cifras de euros y declararlo · **B2** `COLLATE NOCASE` no iguala ñ ni tildes (ya declarado, P124) · **B3** doble toque en una mesa de 1d sin portero (P171 no cubrió 1d): **no se reproduce** (dos `input tap` seguidos con `adb`: una sola `PedidoActivity`) · **B4** en 5c y 6b los botones −, + y *Quitar* tienen la misma descripción en todas las líneas (el lector no dice de qué plato son); arreglo propuesto: descripción con el nombre del plato · **B5** comentarios desfasados («en la S8…», «crece pieza a pieza», la fecha de ejemplo vieja de `ResumenListaFragment.kt:50` y `fragment_resumen_lista.xml:79`). **Daniel: ninguno se arregla en la S13** (*«para cuando haga la sesión con Fable lo arreglamos todo»*): B1–B5 van a la lista del chat de revisión con Fable (y B5 casa con la S13.5). Bien hecho, para el vídeo según el `revisor`: dónde vive cada garantía (R9 en la base de datos y R1 en `withTransaction`, P129); `ComandaRepository` como interfaz con versión falsa para probar en el PC (P132); una sola suma de la comanda (`totalDe`, P135) con nombre y precio congelados (R14).
-- **Pieza 8 (P-C e instalación limpia), 15:32–15:34:** `testDebugUnitTest` (21 pruebas: P-C-01 a 05, 09, 10 y 11) y `connectedDebugAndroidTest` (3: P-C-06, 07 y 08) **BUILD SUCCESSFUL**, 0 fallos; Gradle desinstaló la app al terminar (como se esperaba). Emulador en español, hora de Madrid (`Thu Oct 8 15:34 CEST 2026`), letra normal, modo claro, `plato-prueba.jpg` en *Download*. `installDebug` → Ako abre en **1b**. Claude escribió la lista de la pasada final en `docs/pruebas-pasadas/s13.md` (pasos 1–37) para que Daniel la apruebe.
-- Lista de lo que existe al terminar y no existía al empezar (clases, pantallas, pruebas que pasan).
-- Qué se dejó a medias y en qué estado exacto (para retomarlo sin adivinar).
+- **Pieza 8 (P-C e instalación limpia), 15:32–15:34:** `testDebugUnitTest` (21 pruebas: P-C-01 a 05, 09, 10 y 11) y `connectedDebugAndroidTest` (3: P-C-06, 07 y 08) **BUILD SUCCESSFUL**, 0 fallos; Gradle desinstaló la app al terminar (como se esperaba). Emulador en español, hora de Madrid (`Thu Oct 8 15:34 CEST 2026`), letra normal, modo claro, `plato-prueba.jpg` en *Download*. `installDebug` → Ako abre en **1b**. Claude escribió la lista de la pasada final en `docs/pruebas-pasadas/s13.md` (pasos 1–37) para que Daniel la apruebe (la aprobó: «dale»).
+- **Piezas 9–10 (pasada final), 15:36–16:50, por Claude con `adb`** con la lista aprobada por Daniel («dale»): los 37 pasos de `juego-de-datos.md` desde instalación limpia. **Las 29 P-M pasan**, en una sola versión del código y el mismo día. Detalle y cifras en `docs/pruebas-pasadas/s13.md`. Daniel se fue a hacer ejercicio a las ~15:45 y pidió que Claude terminara la pasada y el cierre (*«cuando termines haz lo del cierre de sesión y todo eso ya que no estoy, también haz lo del gmail»*): **los resultados los anotó Claude con lo visto en cada paso; Daniel no revisó las capturas** (quedan en el ordenador). A mitad (16:13) el emulador perdió `/sdcard` y el sistema Android se reinició solo (problema 2).
+- **Pieza 11 (papeles):** `spec+doc-pruebas.md` (29 P-M y 11 P-C con fecha 2026-10-08), `s13.md`, `decisiones-code.md` 5.17, `pendientes-de-entender.md` y `estado-nivel.md` (los 29 RF siguen en *implementado*), con tres subagentes en paralelo que Claude revisó (Daniel: *«te doy permiso para usar los tokens que quieras para acelerar»*). **Pieza 12 (APK): no se hizo** (Daniel: solo cuando lo diga). Sin push, etiqueta ni Release (P198).
 
 ## Problemas y soluciones
 
 | # | Qué falló | Cómo se resolvió | Justificación (por qué esta solución y no otra) | Fuente |
 |---|---|---|---|---|
 | 1 | Pieza 4: con el idioma del emulador cambiado a inglés por consola (`setprop persist.sys.locale en-US` y reinicio de `zygote`), Android lo devolvía a español (`system_locales` = `es-ES`), y Ako seguía en español también con el idioma solo para Ako | Dos fallos distintos: (1) no se había instalado la app después de crear `values-en` (solo se pasó lint), así que el emulador tenía la versión vieja → `installDebug`; (2) el idioma del sistema lo guarda el `LocaleManager` y no se cambia con `setprop` → se usó **el idioma por app** de Android 13+ (`cmd locale set-app-locales yunkang.ako --locales en-US`), que para los recursos es lo mismo que el móvil en inglés, y al terminar se quitó | Tras crear un recurso, instalar antes de mirar el emulador (a `lecciones-claude.md`); el idioma por app no toca el resto del emulador ni hay que volver a ponerlo en español a mano. La otra vía era tocar los menús de *Settings* con `adb` | Propio; https://developer.android.com/guide/topics/resources/app-languages |
+| 2 | Pasada final, 16:13: `uiautomator dump` y `ls /sdcard` daban «Transport endpoint is not connected» y el sistema Android se reinició solo («El teléfono se está iniciando…»); después el emulador iba muy lento (pantallas que tardan ~2 s, carga de 22) y algunos toques se perdían | El volcado de pantalla se guardó en `/data/local/tmp`; se esperó a `sys.boot_completed` y a que bajara la carga; se comprobó que la hora seguía en Madrid, que los datos de la app estaban intactos (`sqlite3`) y que la foto seguía en *Download*, y **se siguió desde el punto exacto** sin repetir pruebas; el ayudante pasó a esperar cada pantalla antes de tocar | Era un fallo del emulador (horas encendido y cientos de volcados), no de la app: ningún error de Ako en `logcat`. Repetir la pasada entera habría costado una hora más sin cambiar nada | Propio |
+| 3 | El ayudante de toques falló varias veces: el gesto para subir empezaba fuera de la lista; buscaba el campo del precio cuando aún se veía el Panel (que también tiene precios) y abrió el selector de fotos; tocaba *Cuenta* o *Resumen* mientras se cerraba el diálogo del PIN | Gestos dentro de la lista, esperar el título del formulario y cada pantalla, y reintentar los botones de los diálogos; el selector de fotos se cerró sin elegir nada (Entrecot siguió sin foto y con su precio, comprobado) | Son fallos del guion, no de la app; cada vez se miró la pantalla y la base de datos antes de seguir | Propio; a `lecciones-claude.md` |
 
 ## Qué entendí y qué no
 
-- **Entendí:** lo que ahora podría explicar sin leerlo (una línea por concepto).
-- **No entendí todavía:** lo que funciona pero no sabría explicar. Se vuelve a ello en la sesión siguiente.
+- Daniel no estaba al cerrar: no se le pudo preguntar qué le costó (regla del 8 oct: se rellena con sus respuestas a las preguntas de cada pieza).
+- **Entendí:** el texto de un botón necesita 4,5:1 y se calcula con la fórmula (pieza 1); qué lee el lector en las miniaturas, «Sin foto» y «Entrecot» (pieza 2); con el móvil en francés la app sale en español porque no hay `values-fr` (pieza 3); los alérgenos siguen en español porque son datos de la precarga (pieza 4); la revisión a mano mira el contraste y los botones con la app funcionando (pieza 5).
+- **Sin contestar:** la pregunta de la pieza 7 (qué hallazgo del `revisor` explicaría en el vídeo) y las de las piezas 8–10 (no estaba). A `pendientes-de-entender.md`, con los conceptos nuevos de la sesión, para la S14.
 
 ## Para el vídeo
 
-- Lo que se ha explicado en la sesión y se podría contar en el vídeo de 10 minutos: una línea por idea, con la comparación de la vida real si la hubo y la decisión (Pnnn) que la respalda. Sirve para montar el guion al final.
+- **Un solo naranja, y solo de fondo** (spec 10, P138): el rotulador naranja sirve para pintar el fondo de un cartel con letras blancas (4,6:1), no para escribir sobre papel blanco (4,2:1). Por eso «+ Elegir», el «+» de la foto y *Anular* van en color de texto.
+- **La revisión de accesibilidad sin Scanner** (P98 B): tres herramientas (lint, el editor de diseño y la revisión a mano en el emulador) y una tabla aviso → arreglado o justificado. El editor se equivoca con un campo vacío: mide el borde, no el texto (#79747E frente a #49454F, medido en una captura).
+- **La letra al 200 %**: el total de la mesa roja se cortaba; ahora el número encoge solo (*autosizing*) para que quepa el total (RNF-13: la mesa ocupada se reconoce también por el total escrito). Como la compra en la bolsa: primero lo que no se aplasta.
+- **Los eliminados al 80 %**: de día *Eliminado* daba 3,12:1; ahora 5,15:1, medido en la captura.
+- **Las dos cartas del restaurante** (`values` y `values-en`): Android elige solo; lo que es dato del bar (platos, precarga) no se traduce (P100 A). La fecha de 2g, en la forma larga de cada idioma, para que nadie lea el 8 de octubre como el 10 de agosto.
+- **La pasada final**: las 29 pruebas enteras, desde instalación limpia, en una sola versión del código y el mismo día; las 11 P-C antes, porque `connectedDebugAndroidTest` desinstala la app.
+- **Tres cosas bien hechas según el `revisor`**: R9 en la base de datos y R1 en `withTransaction` (P129); `ComandaRepository` con una versión falsa para probar en el PC (P132); una sola suma de la comanda con nombre y precio congelados (P135, R14).
 
 ## Pruebas
 
-- Pruebas de código que pasan al terminar: P-C-nn, …
-- Pruebas manuales ejecutadas en esta sesión: P-M-nn (resultado y fecha ya apuntados en `spec+doc-pruebas.md`).
+- Pruebas de código que pasan al terminar: **las once**: `testDebugUnitTest` 21 pruebas (P-C-01 a 05, 09, 10, 11) y `connectedDebugAndroidTest` 3 (P-C-06, 07, 08), 0 fallos (8 oct, 15:32–15:34).
+- Pruebas manuales: **las 29 P-M Pasan** en la pasada final (8 oct, 15:36–16:50), anotadas en `spec+doc-pruebas.md` con fecha 2026-10-08; detalle en `docs/pruebas-pasadas/s13.md`. `estado-nivel.md`: los 29 RF del nivel 1 en *implementado*. Revisión de accesibilidad (RNF-11 a 13): la tabla de la pieza 6 y las capturas de `docs/capturas/`.
 
 ## Uso de IA en esta sesión
 
-- Qué pidió Daniel a Claude Code, qué generó, qué revisó o cambió Daniel a mano. Una línea por pieza. (Alimenta la frase de P37; **lo escrito coincide con lo hecho**.)
+- Pieza 1: Claude repasó el tema, sacó y midió las capturas de día y de noche y escribió los dos arreglos de color (Daniel: «las cosas de una línea modifícalas tú»); Daniel eligió 1 A y 2 A.
+- Pieza 2: Claude pasó lint, midió los 48 dp y la letra al 200 % con `adb` y escribió los cambios de una o dos líneas; **Daniel tecleó `item_mesa.xml`** y eligió 1 B y 2 A.
+- Pieza 3: Claude explicó los calificadores, propuso el glosario (Daniel: «vale así») y escribió el archivo en inglés; **Daniel creó `values-en/strings.xml` y lo pegó**.
+- Pieza 4: Claude miró la app en inglés en el emulador; **Daniel tecleó `Formato.kt`** y eligió B para la fecha.
+- Piezas 5–6: Daniel abrió el panel *Problems* y mandó la captura; Claude, con su permiso («HAZ»), abrió los layouts en Android Studio con el control del ordenador (solo clics) y leyó los avisos; Daniel eligió 1 A (atenuación) y A (carpeta de capturas).
+- Pieza 7: un subagente `revisor` (solo lectura) revisó el código; Claude comprobó cada hallazgo; Daniel decidió dejarlos para el chat con Fable.
+- Piezas 8–10: Claude escribió la lista de la pasada, Daniel la aprobó («dale») y Claude la pasó con `adb`; **Daniel no revisó las capturas** (se fue a hacer ejercicio y lo pidió así).
+- Cierre: Claude escribió la ficha, `s13.md`, el plan de pruebas, `decisiones-code.md`, los pendientes, las lecciones y los resúmenes con tres subagentes en paralelo, y los revisó; envió el correo y hizo los commits (Daniel: «haz lo del cierre de sesión y todo eso ya que no estoy, también haz lo del gmail»).
 
 ## Siguiente sesión
 
-- Con qué se empieza, en una línea.
+- **Chat de revisión con Fable 5.1** (Daniel, S12 y S13): revisa todo el prototipo y arregla con Daniel los hallazgos B1–B5 del `revisor` de la S13; después, la S13.5 y la S14 (preguntas y repaso). La APK, cuando Daniel lo diga.
