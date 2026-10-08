@@ -28,6 +28,7 @@
 **Lo provisional de esta sesión:** nada. Con P98 → B no hace falta un segundo emulador: todo se prueba en `Pixel_6_API_34`.
 
 - **[Claude, cierre de la S10] Hueco para Daniel, sin decidir (P112, al llegar a la pieza 4):** `Formato.fecha` escribe siempre `EEEE, dd/MM/yyyy`; con el móvil en inglés sale «Thursday, 08/10/2026», que en EE. UU. se lee como mes/día. Caminos: dejarlo así y declararlo (es un formato fijo del bar, no un texto); el formato largo del idioma del móvil (`DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL)`, https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#ofLocalizedDate-java.time.format.FormatStyle-); o un patrón por idioma en `strings.xml`. Elige Daniel.
+- **[Claude, P198, 8 oct] En la S13 no se sube nada a GitHub** (Daniel): ni push, ni etiqueta, ni Release; la APK se queda en el ordenador y la entrega la dirá Daniel. Manda sobre el objetivo del spec de arriba (`CLAUDE.md`, «El objetivo es el prototipo», 5).
 
 ## 1. Piezas
 
@@ -117,17 +118,18 @@ Regla 12 de `CLAUDE.md`: explicación breve → código completo con su ruta →
 
 - **Qué:** dejarlo todo escrito y subido.
 - **Archivos:** `docs/spec+doc-pruebas.md` (las 29 P-M y las 11 P-C con *Resultado*, *Observaciones* y *Fecha*: la fecha es la de la pasada final y *Observaciones* conserva el historial, «Parcial el … (S6); entera el … (S12); pasada final S13 el …»), `docs/estado-nivel.md` (los 29 RF del nivel 1 en `implementado`, con su sesión; recuento de arriba «29 implementados»), la ficha `sesion-13.md`, `decisiones-code.md` (lo lleva Claude en `cerrar-sesion`).
-- **Qué te explico antes:** lo que sale de aquí para la memoria (spec 15): la tabla de pruebas con fecha (apartado 7), la tabla diseñado/implementado (apartados 5 y 7), las capturas de la revisión de accesibilidad (RNF-11–13; sin Scanner, P98 → B) y del inglés (RNF-19); los **dos commits** de siempre, `S13: cierre del nivel 1` y después `S13: ficha del diario`, con push (los hace Claude; el hook exige `S13:` y que el autor sea Daniel, y los commits llevan `Co-Authored-By: Claude`, P111).
+- **Qué te explico antes:** lo que sale de aquí para la memoria (spec 15): la tabla de pruebas con fecha (apartado 7), la tabla diseñado/implementado (apartados 5 y 7), las capturas de la revisión de accesibilidad (RNF-11–13; sin Scanner, P98 → B) y del inglés (RNF-19); los **dos commits** de siempre, `S13: cierre del nivel 1` y después `S13: ficha del diario`, **sin push** [Claude, P198, 8 oct] (los hace Claude; el hook exige `S13:` y que el autor sea Daniel, y los commits llevan `Co-Authored-By: Claude`, P111).
 - **Qué comprobamos después:** en GitHub se ven los dos commits; ninguna fila del nivel 1 en `estado-nivel.md` distinta de `implementado`.
 - **Pregunta:** ¿qué fila de la memoria saldría mal si una P-M se hubiera anotado *Pasa* sin fecha?
 
-### Pieza 12 — Etiqueta `v1-nivel1`, APK y Release de GitHub (35 min)
+### Pieza 12 — La APK, en el ordenador (20 min) [Claude, P198, 8 oct: sustituye a «Etiqueta `v1-nivel1`, APK y Release de GitHub»]
 
-- **Qué:** marcar esta versión, generar la APK y publicarla (P225, P248).
-- **Archivo:** ninguno del código. La APK en `app-ako/app/build/outputs/apk/debug/` y el texto de la Release, que da Claude.
-- **Qué te explico antes:** **commit, etiqueta, Release y APK**: un commit es una foto del proyecto; una **etiqueta** es un nombre fijo pegado a una foto (`v1-nivel1`); una **Release** es la página de GitHub de esa etiqueta, donde se pueden adjuntar archivos; una **APK** es la app empaquetada para instalar en un móvil (la *debug* va firmada con la clave de pruebas de Android Studio, y para instalarla hay que permitir «apps de origen desconocido»: lo explicará el Anexo I). Los pasos: (1) **Claude** crea la etiqueta anotada `v1-nivel1` sobre el último commit (el de la ficha: así la Release lleva también el diario completo; el código es el mismo) y la sube con `git push origin v1-nivel1`; (2) **Daniel** genera la APK desde el menú **Build**, en el submenú de APK y *bundles*. Hay dos formas escritas de ese menú: **Build → Generate App Bundles or APKs → Generate APKs** (la que traen los archivos de configuración de menús del Android Studio 2026.1.3 instalado, leídos el 25 sep; no se ha visto en pantalla) y **Build → Generate Bundle(s) / APK(s) → Generate APK(s)** (la de la documentación web, que copia `android-studio-basico.md`, apartado 5); el spec (11) dice *Build → Build APK*, el nombre de versiones antiguas. **Comprobar en pantalla** cuál sale (y otra vez si Android Studio se actualizó por la duda de AGP de la S1); al terminar, el aviso trae el enlace a la carpeta; **no vale la APK de Run ▶**, que va marcada como «solo pruebas». Alternativa por consola (Claude): `./gradlew.bat assembleDebug`, misma carpeta. Se renombra `app-debug.apk` a `ako-v1-nivel1-debug.apk` [Claude]; (3) **comprobación [Claude]**: arrastrar esa APK a un emulador sin Ako (o tras desinstalarla) y ver que se instala y arranca en 1b: es lo que hará quien siga el Anexo I; (4) **Daniel**, en la web de GitHub: repositorio `ako` → *Releases* → *Draft a new release* → etiqueta `v1-nivel1` → título y descripción (el texto de Claude) → arrastrar la APK a la zona de adjuntos → *Publish release*. Publicar lo hace Daniel (P225): es su cuenta y su entrega.
-- **Qué comprobamos después:** en GitHub, *Releases* enseña `v1-nivel1` con `ako-v1-nivel1-debug.apk` adjunta; la etiqueta apunta al último commit.
-- **Pregunta:** ¿qué diferencia hay entre la etiqueta `v1-nivel1` y la Release `v1-nivel1`?
+- **Qué:** generar la APK y guardarla en el ordenador. **En esta sesión no se sube nada a GitHub** (P198, Daniel): ni push, ni etiqueta, ni Release. Cómo se entrega lo dirá Daniel cuando toque.
+- **Archivo:** ninguno del código. La APK en `app-ako/app/build/outputs/apk/debug/`.
+- **Qué te explico antes:** una **APK** es la app empaquetada para instalar en un móvil (la *debug* va firmada con la clave de pruebas de Android Studio; para instalarla hay que permitir «apps de origen desconocido»). Los pasos: (1) **Daniel** la genera desde el menú **Build**, en el submenú de APK y *bundles* (**Build → Generate App Bundles or APKs → Generate APKs**, o **Build → Generate Bundle(s) / APK(s) → Generate APK(s)**: comprobar en pantalla cuál sale); **no vale la APK de Run ▶**, que va marcada como «solo pruebas». Alternativa por consola (Claude): `./gradlew.bat assembleDebug`. Se renombra `app-debug.apk` a `ako-v1-nivel1-debug.apk` [Claude]; (2) **comprobación [Claude]**: arrastrarla a un emulador sin Ako y ver que se instala y arranca en 1b.
+- **Qué comprobamos después:** la APK está en la carpeta y se instala.
+- **Al terminar, todo listo para el zip** [Claude, P198, 8 oct]: la APK renombrada, los commits hechos en el ordenador y nada a medias. Cuando Daniel diga «haz el zip con esto», Claude lo hace con lo que diga (sin los archivos de la lista de `seguridad`: `local.properties`, keystores, `.env`, `build/`, `.gradle/`) y le dice dónde ha quedado; Daniel lo sube a Google Drive.
+- **Pregunta:** ¿por qué la APK de Run ▶ no vale para entregar?
 
 ## 2. Pruebas que cierran la sesión
 
@@ -136,7 +138,7 @@ Regla 12 de `CLAUDE.md`: explicación breve → código completo con su ruta →
 - **Accesibilidad (RNF-11 a 13):** la tabla de la pieza 6 y las capturas en `docs/capturas/accesibilidad/`; la ficha dice que se hizo con la opción B (P98: editor de diseño, lint y revisión a mano, sin Scanner).
 - `estado-nivel.md`: **los 29 RF del nivel 1 en `implementado`**; recuento «29 implementados»; el nivel 2 y el 3 siguen en `diseñado`.
 - **Revisión `revisor`** (P35): pieza 7.
-- Cierre con `cerrar-sesion`: ficha `sesion-13.md`; `decisiones-code.md` con las decisiones de la sesión (el tono del naranja ya lo fijó la S5, P138, y el botón día/noche pasó al nivel 2, P159; glosario inglés, precarga sin traducir, idioma por defecto, cómo se hizo la revisión de accesibilidad, carpeta de capturas, etiqueta sobre el commit de la ficha, nombre de la APK); **dos commits** (`S13: cierre del nivel 1` y `S13: ficha del diario`), push, etiqueta y Release (pieza 12). Recordar a Daniel subir la ficha al Project. **El primer mensaje del chat siguiente** es el de la revisión del prototipo (abajo), con **Opus 5.5, esfuerzo medio** [Claude, puesta al día del 7 oct: salvo que Daniel, al preguntarle dónde cae la S14 (P183, hueco del apartado 0), la ponga antes; entonces es el de la S14].
+- Cierre con `cerrar-sesion`: ficha `sesion-13.md`; `decisiones-code.md` con las decisiones de la sesión (el tono del naranja ya lo fijó la S5, P138, y el botón día/noche pasó al nivel 2, P159; glosario inglés, precarga sin traducir, idioma por defecto, cómo se hizo la revisión de accesibilidad, carpeta de capturas, etiqueta sobre el commit de la ficha, nombre de la APK); **dos commits** (`S13: cierre del nivel 1` y `S13: ficha del diario`), sin push, etiqueta ni Release; la APK queda en el ordenador (pieza 12) [Claude, P198, 8 oct]. Recordar a Daniel subir la ficha al Project. **El primer mensaje del chat siguiente** es el de la revisión del prototipo (abajo), con **Opus 5.5, esfuerzo medio** [Claude, puesta al día del 7 oct: salvo que Daniel, al preguntarle dónde cae la S14 (P183, hueco del apartado 0), la ponga antes; entonces es el de la S14].
 
 ### Lo que viene después de la S13 (spec 11, *qué pasa después de la S13*; P233)
 
@@ -155,7 +157,7 @@ Fechas que mandan (P2, P26): **hito interno del nivel 1, 8 de noviembre** · el 
 - **Por qué un solo naranja y nada de rojo ni verde de acento** (spec 10), y cómo se comprobó el contraste del texto de los botones.
 - **Español e inglés**: cómo elige Android el idioma (`values/`, `values-en/`), por qué todo texto vive en `strings.xml` desde la S5, y el límite honesto: los datos de la carta y los de la precarga están en español (las traducciones de la carta son el incremento 10).
 - **La pasada final desde instalación limpia**: las 29 P-M enteras, en una sola versión del código, con fecha; y las 11 P-C (o la red de seguridad P117 contada tal cual).
-- **Etiqueta, Release y APK**: qué es cada cosa y que la APK de la Release `v1-nivel1` es la que instala el Anexo I (P225, P248).
+- **La APK**: qué es, por qué la de Run ▶ no vale y que se queda en el ordenador hasta que Daniel diga cómo se entrega (P198) [Claude, 8 oct].
 
 ## 4. Riesgos típicos y qué hacer
 

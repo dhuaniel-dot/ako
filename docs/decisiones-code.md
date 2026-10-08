@@ -403,6 +403,12 @@ Cinco informes con Fable 5.1 (`docs/revisiones/2026-10-06-codigo.md`, `-coherenc
 | 8 oct · **[Claude] Las pruebas de Room de la S11, sin pregunta (nombres y preparación de la guía)** | `androidTest/java/yunkang/ako/datos/CategoriaPorDefectoTest.kt` (P-C-08) y `androidTest/java/yunkang/ako/datos/repositorios/ComandaRepositoryTest.kt` (P-C-06 y P-C-07). Cada clase con su `@Before` repetido a propósito (regla 2): `Room.inMemoryDatabaseBuilder` **sin** `addCallback` y `runBlocking { Precarga(context).cargar(db) }`; `context` con `ApplicationProvider.getApplicationContext()`. La preparación de P-C-06/07 con los DAOs (Carnes → 12 Entrecot 1850; 32 Helado 500 en la por defecto, buscada con `porDefecto()`), y la mesa 4 **por su número**. P-C-08 cuenta `esPorDefecto`, no mira el `ResultadoGuardado`. `ArranqueTest.kt` (provisional) creado en la pieza 2 y borrado en la 7 |
 | 8 oct · **[Claude] Cómo lanza Claude las pruebas de `androidTest/` sin desinstalar la app** | `./gradlew.bat installDebug installDebugAndroidTest` y `adb shell am instrument -w [-e class <clase>] yunkang.ako.test/androidx.test.runner.AndroidJUnitRunner`. `connectedDebugAndroidTest` **desinstala la app al terminar** (confirmado el 8 oct): solo al final de la sesión y en la S13 antes de la pasada manual. Las roturas a propósito las hace Claude (Daniel, S11; en `como-trabajamos`) |
 
+### 5.15 Fuera de sesión — 8 oct 2026
+
+| Fecha · decisión | Consecuencia |
+|---|---|
+| 8 oct · **P198 · Qué se sube a GitHub en la S13 → nada** (Daniel, entre A/B/C; aclaró: *«solo es para la S13, y lo del zip cuando yo lo diga»*): sin push, sin etiqueta y sin Release; la APK se queda en el ordenador | Solo la guía S13 (pieza 12 y cierre). Sustituye a P225 y P248 para la S13. Las demás sesiones siguen igual. La entrega (un zip en Google Drive) se planea cuando Daniel lo diga |
+
 ## 6. Para el Project (lo que Daniel corrige en el doc)
 
 Regla de Daniel (30 sep 2026): **lo que se decide en Claude Code tiene prioridad sobre el Project «Proyecto Intermodular» de la app de Claude** (donde se planificó todo y se escribe el doc): el doc explica el prototipo, así que manda lo que se construye aquí. Daniel le pide al chat del Project que lea la lista y corrija el doc en consecuencia; si algo del spec no hace falta o cambia, se sigue lo decidido aquí y se apunta para que Daniel lo corrija después en el Project. Se tacha cuando Daniel diga que ya está en el doc.
