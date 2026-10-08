@@ -94,7 +94,9 @@
                     android:insetBottom="0dp"
                     android:padding="0dp"
                     android:text="@string/comun_mas"
+                    android:textColor="?attr/colorOnSurface"
                     android:textSize="24sp"
+                    app:backgroundTint="?attr/colorSurface"
                     app:cornerRadius="28dp" />
             </FrameLayout>
 
