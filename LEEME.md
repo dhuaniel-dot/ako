@@ -39,6 +39,7 @@ Creada el 24 de septiembre de 2026 por el chat de la fase 5b (preparación del c
 | `docs/plantilla-diario.md` | Plantilla de la ficha de diario por sesión | `proceso-plantilla-diario-desarrollo.md`, apartados 1 y 2 |
 | `docs/diario/` | Una ficha por sesión: `sesion-00.md` a `sesion-09.md` a 7 oct 2026; `pendientes-de-entender.md` (lista viva, P177; se cierra en la S14, P183) | — |
 | `docs/pruebas-pasadas/` | Una por sesión desde la S9: la lista de pruebas manuales aprobada por Daniel y lo que salió en la pasada con `adb` (P176); el resultado oficial sigue en `spec+doc-pruebas.md` | — |
+| `docs/capturas/` | Desde la S13: capturas del emulador que prueban la accesibilidad y el tema (`accesibilidad/`) y la app en inglés (`ingles/`), cada una con su `LEEME.md`; para la memoria (RNF-11 a 13, RNF-17, RNF-19) | — |
 | `docs/para-el-project/` | Lo que Daniel corrige en el doc del Project, partido por áreas (01 diagrama y BD · 02 memoria · 03 pantallas, textos y requisitos), P178 [Claude] | Nace en el repositorio (7 oct 2026) |
 | `docs/revisiones/` | Las revisiones independientes (1 oct y 6 oct) con sus «cambios aplicados» [Claude] | Nace en el repositorio |
 
