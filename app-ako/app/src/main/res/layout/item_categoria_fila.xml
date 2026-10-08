@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 5a · Una categoría en la fila de arriba de la carta (wireframe 05a): círculo con «?» (P224) y el nombre debajo.
-     La activa: nombre en negrita y raya debajo (RNF-13: no solo color) -->
+<!-- 5a · Una categoría en la fila de arriba de la carta (wireframe 05a): círculo con su foto o con «?» (P224)
+     y el nombre debajo. La activa: nombre en negrita y raya debajo (RNF-13: no solo color) -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -11,7 +11,8 @@
     android:orientation="vertical"
     android:paddingTop="8dp">
 
-    <!-- El círculo: hoy siempre el «?»; en la S12 Glide pondrá aquí la foto de la categoría -->
+    <!-- El círculo: Glide pinta la foto recortada en redondo (circleCrop); el gris y el «?», a su tamaño
+         en el centro (scaleType center, decisión 3 B). Sin padding: encogería la foto -->
     <com.google.android.material.card.MaterialCardView
         style="?attr/materialCardViewOutlinedStyle"
         android:layout_width="56dp"
@@ -25,7 +26,7 @@
             android:layout_height="match_parent"
             android:background="?attr/colorSurfaceContainerHigh"
             android:contentDescription="@string/comun_sin_foto_cd"
-            android:padding="14dp"
+            android:scaleType="center"
             android:src="@drawable/ic_sin_foto" />
     </com.google.android.material.card.MaterialCardView>
 
