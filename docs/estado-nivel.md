@@ -7,7 +7,7 @@
 
 | Nivel | RF | Estado |
 |---|---|---|
-| 1 | 29 | **29 implementados** (todos; los tres últimos, RF-04, RF-09 y RF-30, en la S12) |
+| 1 | 29 | **29 implementados** (todos; los tres últimos, RF-04, RF-09 y RF-30, en la S12; la pasada final de la S13, 8 oct 2026, los confirmó a los 29 sin cambiar ningún estado) |
 | 2 | 22 | 0 implementados |
 | 3 | 2 | 0 implementados |
 
