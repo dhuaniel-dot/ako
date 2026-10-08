@@ -263,7 +263,7 @@ Es el **ensayo general** de la pasada final (sin la foto). Instalación limpia p
 
 ### S11 — Pruebas de Room
 
-- **Ninguna P-M.** Ojo: al terminar `connectedDebugAndroidTest`, Gradle suele **desinstalar** la app del emulador (comprobarlo en la sesión): los datos de prueba desaparecen. No pasa nada, porque la S12 empieza con instalación limpia.
+- **Ninguna P-M.** Ojo: al terminar `connectedDebugAndroidTest`, Gradle **desinstala** la app del emulador (confirmado en la S11, 8 oct): los datos de prueba desaparecen. No pasa nada, porque la S12 empieza con instalación limpia.
 
 ### S12 — Fotos
 
