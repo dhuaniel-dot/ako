@@ -89,6 +89,7 @@ La primera línea de cada fila es `comun_mesa` («Mesa 9») y el importe `comun_
 | `plato_titulo_nuevo` | Nuevo plato | título (barra superior, con ← Atrás) | 3a al crear | 03a-formulario-1.png y -2.png; croquis ficha 3 |
 | `plato_titulo_editar` | Editar plato | título (barra superior) | 3a al editar | **[no fijado — propuesta]**; ningún dibujo ni ficha da el título de la edición |
 | `plato_elegir_foto_cd` | Elegir foto | contentDescription del botón redondo «+» sobre la foto | 3a, esquina de la foto | **[no fijado — propuesta]**; leyenda 03a-1 #1; P-M-08 «[+] de la foto» |
+| `foto_error` | No se ha podido usar esa foto | Snackbar cuando la foto elegida no se puede leer al guardar (archivo roto, no es una imagen) | 3a y hoja 2b | **[Claude, S12, 8 oct]** P96 A |
 | `plato_hint_nombre` | Nombre * | etiqueta de campo | 3a | 03a-formulario-1.png; leyenda 03a-1 #2 (obligatorios con *) |
 | `plato_hint_numero` | Número * | etiqueta de campo | 3a | 03a-formulario-1.png; leyenda 03a-1 #3 |
 | `plato_hint_precio` | Precio (€) * | etiqueta de campo | 3a | 03a-formulario-1.png |

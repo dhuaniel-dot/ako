@@ -102,7 +102,7 @@ Tres cosas que conviene saber:
 
 ### 2.6 Bloque F — La foto (pasos 36–37, ~10 min)
 
-36. **P-M-08.** Antes: una foto **> 2 MB y > 3000 px** en la galería del emulador (arrastrar el archivo a la ventana del emulador: queda en *Download*). Propietario → 1234 → Entrecot → **+ de la foto** → elegir → Guardar → **miniatura** en el Panel (Pollo asado sigue con «?») → Terminar → Pedir → mesa 7 → Entrecot → **foto grande** (placeholder neutro mientras carga) → Salir → 1234. **Device Explorer:** `files/fotos/` con un JPEG de lado mayor ≤ ~1080 px que pesa una fracción del original. **Database Inspector:** `producto.imagen` guarda solo la ruta.
+36. **P-M-08.** Antes: una foto **> 2 MB y > 3000 px** en la galería del emulador. [Claude, puesta al día del 8 oct, S12] Ya está: `/sdcard/Download/plato-prueba.jpg`, que **generó Claude** (JPEG de 3,8 MB, 4000 × 3000 px, guardado tumbado con la marca EXIF de giro 6, para ver que la app lo endereza) y puso con `adb push` (no se arrastró). `pm clear`, Clear storage y desinstalar Ako no la tocan; si el emulador se reinstala desde cero, Claude la genera otra vez y la vuelve a poner con `adb push`. En el selector del sistema (se abre a media pantalla o entera), la foto es la que tiene el `content-desc` que empieza por «Foto, del». La copia a `files/fotos/` se hace al pulsar **Guardar**, no al elegirla (P94 → C). Propietario → 1234 → Entrecot → **+ de la foto** → elegir → Guardar → **miniatura** en el Panel (Pollo asado sigue con «?») → Terminar → Pedir → mesa 7 → Entrecot → **foto grande** (placeholder neutro mientras carga) → Salir → 1234. **Device Explorer:** `files/fotos/` con un JPEG de lado mayor ≤ ~1080 px que pesa una fracción del original. **Database Inspector:** `producto.imagen` guarda solo la ruta.
 37. **[a mano · Claude] Remate de P-M-04 y P-M-18** (solo en S12 y S13). Mirar el Panel (miniatura de Entrecot) y la ficha 5b de Entrecot (foto grande). Con esto, P-M-04 y P-M-18 se anotan enteras (apartado 2.8, choque 4).
 
 ### 2.7 Lo que cambia P8 (Bebidas eliminada) en tres pruebas
@@ -273,13 +273,14 @@ Es el **ensayo general** de la pasada final (sin la foto). Instalación limpia p
 - **[Claude] Fuera de las P-M:** ninguna prueba pone foto a una categoría (P13 la activa hoy). Se comprueba una vez a mano (lápiz de Carnes → + Elegir → foto → Guardar → Pedir: Carnes con su foto redonda) y se escribe en la ficha del diario, no en el plan.
 - **`estado-nivel.md`:** RF-09 → `implementado`; RF-04, RF-30 → `implementado`.
 - **Tiempo:** ~40 min.
+- **Hecho (8 oct 2026)** [Claude, puesta al día del 8 oct, S12]: la pasada la **ejecutó Claude** con `adb` tras el visto bueno de Daniel a la lista (P176); lista y resultado en `docs/pruebas-pasadas/s12.md`. La foto la generó Claude y la puso con `adb push` (paso 36); instalación limpia (`pm clear`) y el montaje mínimo de arriba. Resultado en `spec+doc-pruebas.md` (08/10/2026): **Pasa** P-M-08 (primera vez), y P-M-04 y P-M-18 (enteras). La foto guardada: un JPEG de 810 × 1080 px y 93 KB (el 2,4 % del original), derecho. Fuera de las P-M: la foto de categoría, comprobada a mano (Carnes con su foto redonda en la carta), y el manifiesto sin `INTERNET`. `estado-nivel.md`: RF-09, RF-04 y RF-30 → `implementado` (los 29 RF del nivel 1 quedan implementados). El emulador quedó con el montaje de la S12, Entrecot y Carnes con foto y sin comandas: la S13 empieza con instalación limpia igualmente.
 
 ### S13 — Cierre: la pasada final
 
 - **Primero las once P-C** (`testDebugUnitTest` y `connectedDebugAndroidTest`): la segunda puede desinstalar la app, así que va **antes** de la pasada manual.
 - **Antes de la pasada, la hora del emulador** en `Europe/Madrid` (apartado 3.0): si se arrancó en frío, habrá vuelto a GMT [Claude, puesta al día del 8 oct].
 - **Después, la pasada final entera** del apartado 4: las 29, todas anotadas con la fecha de la S13 (*Observaciones*: «Pasada final S13» detrás del historial).
-- **`estado-nivel.md`:** los 29 RF del nivel 1 en `implementado` con su sesión; recuento de arriba a 29.
+- **`estado-nivel.md`:** los 29 RF del nivel 1 en `implementado` con su sesión; recuento de arriba a 29 [Claude, puesta al día del 8 oct, S12: ya lo están desde la S12; aquí solo se comprueba que la pasada final no cambia ninguno].
 
 ## 4. La pasada final de la S13
 
@@ -302,11 +303,11 @@ Es el orden recomendado del plan con cuatro añadidos [Claude]: la descripción 
 | 01 | RF-01 | S5 | Pasa | (S13) | 1 |
 | 02 | RF-02 | S5 | Pasa | (S13) | 3 |
 | 03 | RF-03 | S5 | Pasa | (S13) | 4 |
-| 04 | RF-04 | S6 | Parcial (platos en el inspector; Entrecot sin foto; S7 y S8: mirada, Parcial solo por la foto [Claude, 6 oct]) | S12 | 17 (+ 37) |
+| 04 | RF-04 | S6 | Parcial (platos en el inspector; Entrecot sin foto; S7 y S8: mirada, Parcial solo por la foto [Claude, 6 oct]; S12 08/10: entera [Claude, puesta al día del 8 oct, S12]) | S12 | 17 (+ 37) |
 | 05 | RF-05 | S6 | Parcial (círculo «?» en la carta) | S8 | 5 |
 | 06 | RF-06 | S6 | Parcial (comanda de la mesa 5 en el inspector; sin 6b ni carta; S8: carta vista, falta 6b [Claude, 6 oct]) | S9 | 12 |
 | 07 | RF-08 | S7 | Pasa | (S13) | 7 |
-| 08 | RF-09 | S12 | Pasa | (S13) | 36 |
+| 08 | RF-09 | S12 | Pasa (08/10 [Claude, puesta al día del 8 oct, S12]) | (S13) | 36 |
 | 09 | RF-10 | S7 | Parcial (pasos 3–4, ficha 5b) | S8 | 8 |
 | 10 | RF-11 | S7 | Parcial (comanda de la mesa 6 a mano, con `sqlite3`; carta S8, 6b S9; S8: carta vista, falta 6b [Claude, 6 oct]) | S9 | 16 |
 | 11 | RF-12 | S7 | Parcial (paso 4, la carta) | S8 | 13 |
@@ -316,7 +317,7 @@ Es el orden recomendado del plan con cuatro añadidos [Claude]: la descripción 
 | 15 | RF-26 | S8 | Pasa (mesas 5 y 6 rojas, en *Observaciones*) | (S13) | 31 (S8: dentro del 22) |
 | 16 | RF-28 | S8 | Pasa | (S13) | 24 |
 | 17 | RF-29 | S8 | Pasa | (S13) | 19 |
-| 18 | RF-30 | S8 | Parcial (foto grande de Entrecot) | S12 | 20 (+ 37) |
+| 18 | RF-30 | S8 | Parcial (foto grande de Entrecot; S12 08/10: entera [Claude, puesta al día del 8 oct, S12]) | S12 | 20 (+ 37) |
 | 19 | RF-36 | S8 | Pasa | (S13) | 21 |
 | 20 | RF-37 | S8 | Parcial (pasos 2, 4 y 6 miran Cuenta) | S9 | 22 |
 | 21 | RF-38 | S8 | Pasa | (S13) | 23 |

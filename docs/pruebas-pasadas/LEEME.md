@@ -8,3 +8,4 @@ El resultado oficial de cada prueba (Pasa / Parcial / Falla, con fecha) sigue en
 |---|---|
 | `s09.md` | S9 (7 oct 2026): Cuenta. P-M-29, 13, 06, 10, 20 y 22–28, desde instalación limpia |
 | `s10.md` | S10 (8 oct 2026): Resumen de ingresos. P-M-24, 25 y 28 enteras y P-M-12, desde instalación limpia |
+| `s12.md` | S12 (8 oct 2026): Fotos. P-M-08, y P-M-04 y 18 enteras; foto de categoría a mano y manifiesto sin `INTERNET`, desde instalación limpia |

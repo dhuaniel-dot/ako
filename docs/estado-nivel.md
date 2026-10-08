@@ -7,7 +7,7 @@
 
 | Nivel | RF | Estado |
 |---|---|---|
-| 1 | 29 | 26 implementados (RF-01, RF-02, RF-03, RF-05, RF-06, RF-08, RF-10, RF-11, RF-12, RF-20, RF-24, RF-25, RF-26, RF-28, RF-29, RF-36, RF-37, RF-38, RF-40, RF-41, RF-42, RF-43, RF-44, RF-45, RF-46, RF-50) · 2 implementados, no probados (RF-04, RF-30) · 1 diseñado (RF-09, la foto: S12) |
+| 1 | 29 | **29 implementados** (todos; los tres últimos, RF-04, RF-09 y RF-30, en la S12) |
 | 2 | 22 | 0 implementados |
 | 3 | 2 | 0 implementados |
 
@@ -18,11 +18,11 @@
 | RF-01 | Crear el PIN en el primer arranque, escrito dos veces, con aviso de que no se recupera | 1 · 1b | Propietario | 1 | implementado | S5 |
 | RF-02 | Entrar en Propietario introduciendo el PIN; error con sacudida e intentos ilimitados | 1 · 1c | Propietario | 1 | implementado | S5 |
 | RF-03 | Cambiar el PIN (actual + nuevo dos veces) | 1 · 1e | Propietario | 1 | implementado | S5 |
-| RF-04 | Ver la carta en modo edición: cajas por categoría con sus platos, incluidos los **eliminados** marcados con la palabra *Eliminado* | 2 · 2a | Propietario | 1 | implementado, no probado | S6 |
+| RF-04 | Ver la carta en modo edición: cajas por categoría con sus platos, incluidos los **eliminados** marcados con la palabra *Eliminado* | 2 · 2a | Propietario | 1 | implementado | S6 |
 | RF-05 | Crear y editar una categoría (nombre, foto, activo); la categoría por defecto sin interruptor ni flechas | 2 · 2b | Propietario | 1 | implementado | S6 |
 | RF-06 | **Eliminar** una categoría avisando de las mesas con sus platos en comandas pendientes, sin borrar líneas | 2 · 2b, 2e | Propietario | 1 | implementado | S6 |
 | RF-08 | Crear y editar un plato: nombre, número, precio y categoría obligatorios; descripción y activo | 3 · 3a | Propietario | 1 | implementado | S7 |
-| RF-09 | Añadir foto al plato: elegir, redimensionar (~1080px), comprimir a JPEG, guardar como archivo | 3 · 3a | Propietario | 1 (última pieza) | diseñado | — |
+| RF-09 | Añadir foto al plato: elegir, redimensionar (~1080px), comprimir a JPEG, guardar como archivo | 3 · 3a | Propietario | 1 (última pieza) | implementado | S12 |
 | RF-10 | Marcar los alérgenos del plato entre los 14 legales | 3 · 3a | Propietario | 1 | implementado | S7 |
 | RF-11 | **Eliminar** un plato avisando de las mesas afectadas, sin borrar líneas | 3 · 3d | Propietario | 1 | implementado | S7 |
 | RF-12 | Al guardar un plato en una categoría **eliminada**, cadena de dos avisos (mover a la categoría por defecto / recuperarla con contador) | 3 · 3e | Propietario | 1 | implementado | S7 |
@@ -32,7 +32,7 @@
 | RF-26 | Elegir la mesa en la rejilla en modo *elegir* (colores y totales visibles, toda mesa elegible) | 1 · 1d | Cliente (Pedir) | 1 | implementado | S8 |
 | RF-28 | Salir de Pedir con botón visible o Atrás, pidiendo el PIN | 1 · 1c | Cliente (Pedir) | 1 | implementado | S8 |
 | RF-29 | Consultar la carta: categorías + una lista por secciones; tocar una categoría salta a su sección; solo platos visibles | 5 · 5a | Cliente (Pedir) | 1 | implementado | S8 |
-| RF-30 | Ver la ficha del plato: foto (o "?"), número, nombre, precio, descripción, alérgenos desplegables (o aviso *"pregunta al personal"*) | 5 · 5b | Cliente (Pedir) | 1 | implementado, no probado | S8 |
+| RF-30 | Ver la ficha del plato: foto (o "?"), número, nombre, precio, descripción, alérgenos desplegables (o aviso *"pregunta al personal"*) | 5 · 5b | Cliente (Pedir) | 1 | implementado | S8 |
 | RF-36 | Añadir al carrito con cantidad 1-99; +/−, quitar; líneas idénticas se suman | 5 · 5c | Cliente (Pedir) | 1 | implementado | S8 |
 | RF-37 | Enviar con confirmación (mesa y total): crea la comanda o añade líneas; congela nombre y precio | 5 · 5c | Cliente (Pedir) | 1 | implementado | S8 |
 | RF-38 | Avisar al salir con platos sin enviar | 5 / 1 | Cliente (Pedir) | 1 | implementado | S8 |
@@ -147,3 +147,4 @@
 - S8 (6 oct 2026): RF-25, RF-26, RF-28, RF-29, RF-36 y RF-38 → *implementado* (P-M-14, 15, 16, 17, 19 y 21 pasan enteras). RF-30 y RF-37 → *implementado, no probado*: P-M-18 queda *Parcial* por la foto grande (S12) y P-M-20 por los pasos que miran 6b (S9). RF-05, RF-10 y RF-12 → *implementado* (P-M-05, 09 y 11 pasan enteras con la carta). RF-06 y RF-11 siguen *no probado* (P-M-06 y 10 esperan a 6b, S9); RF-24 y RF-50 también (Cuenta, S9).
 - S9 (7 oct 2026): RF-40, RF-41, RF-43 y RF-44 → *implementado* (P-M-22, 23, 26 y 27 pasan; RF-40 solo blanco y rojo: el verde es nivel 3). RF-42, RF-45 y RF-46 → *implementado, no probado*: P-M-25, 28 y 24 quedan *Parcial* por el Resumen de ingresos (S10). RF-06, RF-11, RF-24, RF-37 y RF-50 → *implementado* (P-M-06, 10, 13, 20 y 29 pasan enteras con Cuenta). Siguen sin probar del todo RF-04 y RF-30 (la foto, S12).
 - S10 (8 oct 2026): RF-20 → *implementado* (P-M-12 pasa). RF-42, RF-45 y RF-46 → *implementado* (P-M-25, 28 y 24 pasan enteras con el Resumen de ingresos; su *Sesión* sigue siendo la S9, que los construyó). Del nivel 1 solo quedan RF-04 y RF-30 (*no probados*, la foto) y RF-09 (*diseñado*): los tres esperan la S12.
+- S12 (8 oct 2026): RF-09 → *implementado* (P-M-08 pasa, primera vez). RF-04 y RF-30 → *implementado* (P-M-04 y P-M-18 pasan enteras con la foto de Entrecot; su *Sesión* sigue siendo la S6 y la S8). **Los 29 RF del nivel 1 están implementados**; la S13 los vuelve a pasar todos en la pasada final.
