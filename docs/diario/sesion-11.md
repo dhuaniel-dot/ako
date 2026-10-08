@@ -7,7 +7,7 @@
 | **Objetivo de la sesión** | Del spec: **Pruebas de Room en `androidTest/`** (P117, con red de seguridad); P-C-06, 07 y 08 pasan, o la ficha dice por qué no |
 | **Tiempo dedicado** | 12:26 – 13:05, **unos 40 min** (sin pausas; Daniel: «esto es corto porque todas las pruebas y todo lo has hecho tú») |
 | **Nivel / pieza** | Nivel 1 · pruebas de código de Room (`androidTest/`): P-C-06, 07 y 08 |
-| **Commit final** | `abc1234` — mensaje del commit |
+| **Commit final** | `d4ad522` — S11: pruebas de Room en androidTest (P-C-06, 07 y 08 pasan) |
 | **Contexto al cerrar** | menos del 20 % (Daniel: «ni siquiera el 20»); toda la sesión en un solo chat |
 
 ## Qué se hizo
