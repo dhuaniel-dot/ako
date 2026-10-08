@@ -10,10 +10,10 @@
     <string name="comun_guardar">Guardar</string>
     <string name="comun_eliminar">Eliminar</string>
     <!-- Precio ya formateado + espacio que no se parte (&#160;) + € -->
-    <string name="comun_precio">%1$s&#160;€</string>
+    <string name="comun_precio" translatable="false">%1$s&#160;€</string>
     <!-- «12 · Entrecot»: número · nombre (punto medio) -->
-    <string name="comun_plato_numero_nombre">%1$d · %2$s</string>
-    <string name="comun_mas">+</string>
+    <string name="comun_plato_numero_nombre" translatable="false">%1$d · %2$s</string>
+    <string name="comun_mas" translatable="false">+</string>
     <string name="comun_sin_foto_cd">Sin foto</string>
     <!-- [Claude] La «y» de las listas («mesas 5, 6 y 7»); los espacios los pone el código (XML se come los de los bordes) -->
     <string name="comun_y">y</string>
@@ -135,9 +135,9 @@
     <!-- D13: «Quitar» en cada línea del carrito -->
     <string name="comun_quitar">Quitar</string>
     <!-- «2 × Entrecot»: cantidad × nombre (signo × U+00D7) -->
-    <string name="comun_linea">%1$d × %2$s</string>
+    <string name="comun_linea" translatable="false">%1$d × %2$s</string>
     <!-- Signo menos U+2212 (el + ya está arriba, comun_mas) -->
-    <string name="comun_menos">−</string>
+    <string name="comun_menos" translatable="false">−</string>
     <!-- Lo que lee el lector de pantalla en los botones − y + de 5b y 5c -->
     <string name="comun_menos_cd">Quitar uno</string>
     <string name="comun_mas_cd">Añadir uno</string>
@@ -146,7 +146,7 @@
     <string name="mesa_elegir_titulo">Elige la mesa</string>
     <!-- H07 (revisión del 6 oct): lo que lee el lector de pantalla en una mesa ocupada: «Mesa 4, 42,00 €»
          (%1$s = comun_mesa ya montado, %2$s = total ya con su €); la coma sale de aquí, no del código (RNF-19) -->
-    <string name="mesa_ocupada_cd">%1$s, %2$s</string>
+    <string name="mesa_ocupada_cd" translatable="false">%1$s, %2$s</string>
 
     <!-- Puerta de Pedir (RF-25) · solo el botón comun_aceptar (P15) -->
     <string name="puerta_pedir_titulo">No se puede pedir</string>
@@ -159,7 +159,7 @@
     <!-- 5b · ficha del plato. D19: título del desplegable -->
     <string name="ficha_alergenos">Alérgenos</string>
     <!-- Una línea por alérgeno marcado -->
-    <string name="ficha_alergeno_item">• %1$s</string>
+    <string name="ficha_alergeno_item" translatable="false">• %1$s</string>
     <string name="ficha_sin_alergenos">El restaurante no ha indicado alérgenos para este plato. Pregunta al personal.</string>
     <string name="ficha_cantidad">Cantidad</string>
     <!-- Guion largo U+2014; %1$s = importe ya con su € -->
@@ -197,7 +197,7 @@
     <string name="recibo_entregado">Entregado</string>
     <string name="recibo_opcional">(opcional)</string>
     <!-- Sufijo a la derecha del campo Entregado -->
-    <string name="recibo_euro_sufijo">€</string>
+    <string name="recibo_euro_sufijo" translatable="false">€</string>
     <string name="recibo_cambio">Cambio</string>
     <!-- Botón de 6c y, por P40, también botón afirmativo del aviso de Cobrar -->
     <string name="recibo_btn_cobrar">Cobrar</string>

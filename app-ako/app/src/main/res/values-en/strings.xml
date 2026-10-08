@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- S13 · La interfaz en inglés (RNF-19). Android la usa sola si el móvil está en inglés.
+     Lo que no está aquí sale de values/strings.xml: los datos de la precarga y los símbolos
+     llevan translatable="false" allí (P100). Glosario de la S13: Owner, Order, Bill, Receipt,
+     Menu, Remove / Restore (nunca Delete: no se borra nada), dish, Table, Income summary -->
+<resources>
+    <!-- Comunes -->
+    <string name="comun_atras">← Back</string>
+    <string name="comun_atras_cd">Back</string>
+    <string name="comun_aceptar">OK</string>
+    <string name="comun_cancelar">Cancel</string>
+    <string name="comun_guardar">Save</string>
+    <string name="comun_eliminar">Remove</string>
+    <string name="comun_sin_foto_cd">No photo</string>
+    <string name="comun_y">and</string>
+    <string name="comun_no">No</string>
+
+    <!-- 1a · Selector de rol -->
+    <string name="selector_subtitulo">Orders for bars and restaurants</string>
+    <string name="selector_btn_propietario">Owner</string>
+    <string name="selector_btn_pedir">Order</string>
+    <string name="selector_btn_cuenta">Bill</string>
+
+    <!-- 1b · Crear PIN -->
+    <string name="pin_crear_barra">Create PIN</string>
+    <string name="pin_crear_titulo">Create the Owner PIN</string>
+    <string name="pin_crear_subtitulo">It protects the Panel and the way out of Order.</string>
+    <string name="pin_hint_pin">PIN (4 digits)</string>
+    <string name="pin_hint_repite">Repeat the PIN</string>
+    <string name="pin_crear_aviso">If you forget it, it cannot be recovered: the app will have to be reinstalled.</string>
+
+    <!-- Errores del PIN -->
+    <string name="pin_no_coinciden">The PINs do not match</string>
+    <string name="pin_incorrecto">Wrong PIN</string>
+
+    <!-- 1c y 1e -->
+    <string name="pin_introducir_titulo">Enter the PIN</string>
+    <string name="pin_cambiar_titulo">Change PIN</string>
+    <string name="pin_hint_actual">Current PIN</string>
+    <string name="pin_hint_nuevo">New PIN</string>
+    <string name="pin_hint_repite_nuevo">Repeat the new PIN</string>
+
+    <!-- 2a · Panel -->
+    <string name="panel_btn_terminar">Finish</string>
+    <string name="panel_titulo">Categories</string>
+    <string name="panel_btn_resumen_ingresos">Income summary</string>
+    <string name="panel_categoria_eliminada">Category removed</string>
+    <string name="panel_plato_eliminado">Removed</string>
+    <string name="panel_btn_mas_plato">+ Dish</string>
+    <string name="panel_plegar_cd">Collapse</string>
+    <string name="panel_desplegar_cd">Expand</string>
+
+    <!-- 2b · Hoja de categoría -->
+    <string name="categoria_titulo_nueva">New category</string>
+    <string name="categoria_titulo_editar">Edit category</string>
+    <string name="categoria_hint_nombre">Name</string>
+    <string name="categoria_foto_opcional">Photo (optional)</string>
+    <string name="categoria_btn_elegir_foto">+ Choose</string>
+    <string name="plato_en_la_carta">On the menu</string>
+    <string name="categoria_nombre_repetido">A category with that name already exists</string>
+
+    <!-- 2e · Aviso al eliminar una categoría (R6) -->
+    <string name="categoria_eliminar_titulo">Remove the category?</string>
+    <plurals name="categoria_eliminar_cuerpo">
+        <item quantity="one">This dish is in pending orders: %1$s. It will not be taken off those orders.</item>
+        <item quantity="other">These dishes are in pending orders: %1$s. They will not be taken off those orders.</item>
+    </plurals>
+    <plurals name="categoria_eliminar_plato_mesas">
+        <item quantity="one">%1$s (table %2$s)</item>
+        <item quantity="other">%1$s (tables %2$s)</item>
+    </plurals>
+
+    <!-- 3a · Formulario del plato -->
+    <string name="plato_titulo_nuevo">New dish</string>
+    <string name="plato_titulo_editar">Edit dish</string>
+    <string name="foto_error">That photo could not be used</string>
+    <string name="plato_elegir_foto_cd">Choose photo</string>
+    <string name="plato_hint_nombre">Name *</string>
+    <string name="plato_hint_numero">Number *</string>
+    <string name="plato_hint_precio">Price (€) *</string>
+    <string name="plato_hint_categoria">Category *</string>
+    <string name="plato_hint_descripcion">Description</string>
+    <string name="plato_seccion_alergenos">ALLERGENS</string>
+    <string name="plato_numero_repetido">Another dish already has that number</string>
+    <string name="plato_numero_cambiado">If someone has number %1$d written down, it will no longer match</string>
+
+    <!-- 3a · Salir sin guardar -->
+    <string name="plato_salir_titulo">Leave without saving?</string>
+    <string name="plato_salir_cuerpo">The changes will be lost</string>
+    <string name="carta_btn_salir">Leave</string>
+
+    <!-- 3d · Aviso al eliminar un plato (R6) -->
+    <string name="mesas_afectadas_titulo">Remove the dish?</string>
+    <plurals name="mesas_afectadas_cuerpo">
+        <item quantity="one">%1$s is in a pending order at table %2$s. It will not be taken off that order.</item>
+        <item quantity="other">%1$s is in pending orders at tables %2$s. It will not be taken off those orders.</item>
+    </plurals>
+
+    <!-- 3e · Los dos avisos de la categoría eliminada -->
+    <string name="categoria_eliminada_cuerpo">The category %1$s is removed. Shall I move the dish to %2$s?</string>
+    <string name="categoria_eliminada_btn_mover">Yes, move</string>
+    <string name="recuperar_categoria_titulo">Do you want to restore %1$s?</string>
+    <string name="recuperar_categoria_cuerpo">Dishes that will return to the menu: %1$d</string>
+    <string name="recuperar_categoria_btn_recuperar">Restore</string>
+
+    <!-- Pedir: comunes -->
+    <string name="comun_mesa">Table %1$d</string>
+    <string name="comun_total">TOTAL</string>
+    <string name="comun_quitar">Take off</string>
+    <string name="comun_menos_cd">One less</string>
+    <string name="comun_mas_cd">One more</string>
+
+    <!-- 1d y la puerta de Pedir -->
+    <string name="mesa_elegir_titulo">Choose the table</string>
+    <string name="puerta_pedir_titulo">Ordering is not possible</string>
+    <string name="puerta_pedir_carta_vacia">The menu is empty</string>
+    <string name="puerta_pedir_categorias_eliminadas">All the categories are removed</string>
+
+    <!-- 5a, 5b y 5c -->
+    <string name="carta_carrito_pastilla">Cart · %1$d · %2$s</string>
+    <string name="ficha_alergenos">Allergens</string>
+    <string name="ficha_sin_alergenos">The restaurant has not listed any allergens for this dish. Ask the staff.</string>
+    <string name="ficha_cantidad">Quantity</string>
+    <string name="ficha_btn_anadir">Add — %1$s</string>
+    <string name="carrito_tope_99">Maximum 99 units per dish</string>
+    <string name="carrito_titulo">Cart · Table %1$d</string>
+    <string name="carrito_btn_enviar">Send</string>
+    <string name="enviar_titulo">Send the order?</string>
+    <string name="enviar_cuerpo">Table %1$d · %2$s</string>
+    <string name="enviar_hecho">Order sent to table %1$d</string>
+
+    <!-- RF-38 · Salir con platos sin enviar -->
+    <string name="salir_sin_enviar_titulo">Leave without sending?</string>
+    <plurals name="salir_sin_enviar_cuerpo">
+        <item quantity="one">There is %1$d dish in the cart not sent yet. It will be lost.</item>
+        <item quantity="other">There are %1$d dishes in the cart not sent yet. They will be lost.</item>
+    </plurals>
+
+    <!-- 6 · Cuenta -->
+    <string name="cuenta_titulo">Bill</string>
+    <string name="cuenta_mesa_sin_comanda">Table %1$d has no order</string>
+    <string name="comanda_btn_anular">Void</string>
+    <string name="comanda_btn_dar_cuenta">Give the bill</string>
+    <string name="recibo_titulo">Table %1$d · Receipt</string>
+    <string name="recibo_entregado">Given</string>
+    <string name="recibo_opcional">(optional)</string>
+    <string name="recibo_cambio">Change</string>
+    <string name="recibo_btn_cobrar">Charge</string>
+    <string name="anular_titulo">Void the order of table %1$d?</string>
+    <string name="anular_cuerpo">This cannot be undone</string>
+    <string name="ultima_linea_titulo">Take off the last line?</string>
+    <string name="ultima_linea_cuerpo">The order will be empty and will be voided. Table %1$d will be free.</string>
+    <string name="ultima_linea_btn_quitar_anular">Take off and void</string>
+    <string name="cobrar_titulo">Charge table %1$d?</string>
+    <string name="cobrar_cuerpo">Total: %1$s.\nThe order will be PAID and cannot be changed.</string>
+
+    <!-- 2g · Resumen de ingresos -->
+    <string name="resumen_titulo">Income summary</string>
+    <string name="resumen_dia">Day</string>
+    <string name="resumen_seccion_comandas">CHARGED ORDERS</string>
+    <string name="resumen_fila_hora">Charged at %1$s</string>
+    <string name="resumen_pie_comandas">Charged orders</string>
+    <string name="resumen_pie_total">Day total</string>
+    <string name="resumen_vacio">No order was charged that day</string>
+</resources>
