@@ -69,7 +69,7 @@ class FilaPlatoAdapter(
         holder.binding.textoEliminado.visibility = if (plato.activo) View.GONE else View.VISIBLE
 
         // Atenuada si el plato está eliminado o si lo está su categoría (Flan dentro de Postres eliminada)
-        holder.itemView.alpha = if (plato.activo && categoriaActiva) 1f else 0.6f
+        holder.itemView.alpha = if (plato.activo && categoriaActiva) 1f else 0.8f
 
         holder.itemView.setOnClickListener { alTocar(plato) }
     }

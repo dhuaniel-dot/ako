@@ -82,7 +82,7 @@ class CategoriaAdapter(
         // RNF-13: la etiqueta «Categoría eliminada» es la información; el gris del nombre solo la refuerza.
         // Sus platos salen atenuados sin la palabra «Eliminado» (siguen activos: R15 solo los quita de la carta)
         holder.binding.textoCategoriaEliminada.visibility = if (categoria.activo) View.GONE else View.VISIBLE
-        holder.binding.textoNombre.alpha = if (categoria.activo) 1f else 0.6f
+        holder.binding.textoNombre.alpha = if (categoria.activo) 1f else 0.8f
 
         // [Claude] Si la bandeja viene reciclada de OTRA categoría, traería su scroll: se sube arriba
         if (holder.categoriaId != categoria.id) {
