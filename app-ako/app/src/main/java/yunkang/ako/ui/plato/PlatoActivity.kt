@@ -32,10 +32,10 @@ class PlatoActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPlatoBinding
 
-    // P140: la libreta de esta pantalla, construida por su fábrica
+    // La libreta de esta pantalla, construida por su fábrica
     private val viewModel: PlatoViewModel by viewModels { PlatoViewModel.Factory }
 
-    // P165 C: el guardián de Atrás. Solo está encendido cuando hay cambios sin guardar;
+    // El guardián de Atrás. Solo está encendido cuando hay cambios sin guardar;
     // apagado, Atrás cierra la pantalla sin preguntar
     private val guardianAtras = object : OnBackPressedCallback(false) {
         override fun handleOnBackPressed() {
@@ -43,21 +43,22 @@ class PlatoActivity : AppCompatActivity() {
         }
     }
 
-    // El selector de fotos del sistema (spec 9): sin permisos, la app solo recibe la foto que se toca.
+    // El selector de fotos del sistema: sin permisos, la app solo recibe la foto que se toca.
+    // La foto elegida cuenta como cambio sin guardar.
     // [Claude] Se registra al crear la pantalla y no dentro del clic: así Android puede devolver la foto
     // aunque recree la pantalla mientras el selector está abierto
     private val selectorFotos = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         // null = se canceló el selector: no cambia nada
         if (uri != null) {
             viewModel.elegirFoto(uri)
-            marcarCambio()          // la foto elegida cuenta como cambio sin guardar (P165 C)
+            marcarCambio()
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // P139: de borde a borde, apartado de las barras del sistema y del teclado (H25)
+        // De borde a borde, apartado de las barras y del teclado (como SelectorActivity)
         enableEdgeToEdge()
         binding = ActivityPlatoBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -71,14 +72,13 @@ class PlatoActivity : AppCompatActivity() {
         val productoId = intent.getLongExtra(EXTRA_PRODUCTO_ID, -1L)
         val categoriaDeLaCaja = intent.getLongExtra(EXTRA_CATEGORIA_ID, -1L)
 
-        // Con plato es editar; sin plato, crear
         if (productoId == -1L) {
             binding.textoTitulo.setText(R.string.plato_titulo_nuevo)
         } else {
             binding.textoTitulo.setText(R.string.plato_titulo_editar)
         }
 
-        // P162 B: se pide la bandeja siempre; si la libreta ya la tiene, no vuelve a leer
+        // Se pide la bandeja siempre; si la libreta ya la tiene, no vuelve a leer
         if (productoId == -1L) {
             viewModel.cargar(null)
         } else {
@@ -87,7 +87,7 @@ class PlatoActivity : AppCompatActivity() {
 
         viewModel.datos.observe(this) { datos ->
             // La lista del desplegable se monta cada vez: si Android recrea la pantalla, la vista es nueva.
-            // P61 A: todas las categorías, también las eliminadas, sin marca; la de por defecto, la última
+            // Todas las categorías, también las eliminadas, sin marca; la de por defecto, la última
             val nombres = datos.categorias.map { it.nombre }.toTypedArray()
             binding.textoCategoria.setSimpleItems(nombres)
             binding.textoCategoria.setOnItemClickListener { _, _, posicion, _ ->
@@ -119,17 +119,17 @@ class PlatoActivity : AppCompatActivity() {
             avisarNumeroCambiado()
         }
 
-        // La foto elegida y aún sin guardar (decisión 2 A): cada vez que cambia, se vuelve a pintar el hueco
+        // La foto elegida y aún sin guardar: cada vez que cambia, se vuelve a pintar el hueco
         viewModel.fotoElegida.observe(this) { pintarFoto() }
 
-        // El «+» de la foto abre el selector del sistema, solo con fotos (no vídeos)
         binding.botonElegirFoto.setOnClickListener {
             selectorFotos.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
 
-        // Guardar: si se va a eliminar el plato, PRIMERO se miran las mesas (R6 en dos pasos, P128)
+        // Guardar: si se va a eliminar el plato, PRIMERO se miran las mesas (R6 en dos pasos).
+        // Mientras trabaja, Guardar se apaga: sin doble toque
         binding.botonGuardar.setOnClickListener {
-            binding.botonGuardar.isEnabled = false      // P142: sin doble toque mientras trabaja
+            binding.botonGuardar.isEnabled = false
             lifecycleScope.launch {
                 if (seVaAEliminar()) {
                     val mesas = viewModel.mesasAfectadas()
@@ -170,7 +170,7 @@ class PlatoActivity : AppCompatActivity() {
                 // No: segundo aviso, «¿Quieres recuperar Postres?»
                 lifecycleScope.launch { preguntarRecuperar() }
             }
-            // Cerrar sin contestar no deja sobre (P144 A): no se guarda nada
+            // Cerrar sin contestar no deja sobre: no se guarda nada
         }
 
         // El sobre del segundo aviso 3e («¿Quieres recuperar Postres?»)
@@ -190,19 +190,19 @@ class PlatoActivity : AppCompatActivity() {
         }
 
         // El sobre de «¿Salir sin guardar?»: Salir cierra sin guardar; Cancelar, nada.
-        // La foto elegida no se copió todavía (P94 C): al salir no queda ningún archivo que borrar
+        // La foto elegida no se copió todavía: al salir no queda ningún archivo que borrar
         supportFragmentManager.setFragmentResultListener(CLAVE_SALIR, this) { _, sobre ->
             if (sobre.getBoolean(ConfirmacionDialog.RESPUESTA_AFIRMATIVA)) {
                 finish()
             }
         }
 
-        // P165 C: el guardián se apunta en la lista de Android y se enciende si ya había cambios
+        // El guardián se apunta en la lista de Android y se enciende si ya había cambios
         // (por ejemplo, si Android ha recreado la pantalla)
         onBackPressedDispatcher.addCallback(this, guardianAtras)
         guardianAtras.isEnabled = viewModel.hayCambios
 
-        // La flecha hace exactamente lo mismo que el Atrás del sistema (spec 7): pasa por el guardián
+        // La flecha hace exactamente lo mismo que el Atrás del sistema: pasa por el guardián
         binding.botonAtras.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
     }
 
@@ -212,13 +212,13 @@ class PlatoActivity : AppCompatActivity() {
         super.onPostCreate(savedInstanceState)
 
         // Cada cambio en nombre, número o precio vuelve a mirar si Guardar se puede encender
-        // (y cuenta como cambio sin guardar, P165 C)
+        // (y cuenta como cambio sin guardar)
         binding.textoNombre.doAfterTextChanged {
             actualizarGuardar()
             marcarCambio()
         }
         binding.textoNumero.doAfterTextChanged {
-            binding.campoNumero.error = null      // al cambiar el número, se quita el «repetido»
+            binding.campoNumero.error = null
             actualizarGuardar()
             avisarNumeroCambiado()
             marcarCambio()
@@ -245,11 +245,11 @@ class PlatoActivity : AppCompatActivity() {
         val foto = viewModel.fotoElegida.value ?: viewModel.datos.value?.plato?.imagen
         Glide.with(binding.imagenPlato)
             .load(foto)
-            .placeholder(R.drawable.foto_cargando)    // gris mientras carga
-            .error(R.drawable.ic_sin_foto_grande)     // el «?» si no hay foto o no se puede leer
-            .centerCrop()                             // la foto llena el marco; lo que sobra se recorta
+            .placeholder(R.drawable.foto_cargando)
+            .error(R.drawable.ic_sin_foto_grande)
+            .centerCrop()
             .into(binding.imagenPlato)
-        // Sin foto, «Sin foto» (spec 9); con foto, el nombre del plato
+        // Sin foto, «Sin foto»; con foto, el nombre del plato
         if (foto == null) {
             binding.imagenPlato.contentDescription = getString(R.string.comun_sin_foto_cd)
         } else {
@@ -269,26 +269,29 @@ class PlatoActivity : AppCompatActivity() {
     }
 
     // [Claude] Convierte lo que hay en pantalla en un Producto listo para guardar.
-    // Solo se llama con Guardar encendido: los cuatro obligatorios ya se pueden leer
+    // Solo se llama con Guardar encendido: los cuatro obligatorios ya se pueden leer.
+    // Un plato nuevo va con id 0: Room le dará uno nuevo. La foto es la de antes;
+    // si se eligió otra, la pone la libreta al guardar
     private fun leerFormulario(): Producto {
-        val antes = viewModel.datos.value?.plato               // null = plato nuevo
+        val antes = viewModel.datos.value?.plato
         val descripcion = binding.textoDescripcion.text.toString().trim()
         return Producto(
-            id = antes?.id ?: 0L,                                 // 0 = Room le dará uno nuevo
+            id = antes?.id ?: 0L,
             categoriaId = checkNotNull(viewModel.categoriaElegidaId),
             numero = binding.textoNumero.text.toString().toInt(),
             nombre = binding.textoNombre.text.toString().trim(),
-            descripcion = if (descripcion.isEmpty()) null else descripcion,   // vacía = sin descripción
+            descripcion = if (descripcion.isEmpty()) null else descripcion,
             precioCentimos = checkNotNull(Formato.centimosDesde(binding.textoPrecio.text.toString())),
-            imagen = antes?.imagen,                               // la de antes; si se eligió otra, la pone la libreta al guardar (P94 C)
-            // Al editar, como estaba (P150: solo eliminar/recuperar lo cambian). Al crear, el interruptor
+            imagen = antes?.imagen,
+            // Al editar, como estaba (solo eliminar/recuperar lo cambian). Al crear, el interruptor
             activo = antes?.activo ?: binding.interruptorEnLaCarta.isChecked
         )
     }
 
     // [Claude] ¿El Propietario ha apagado «En la carta» de un plato que estaba en la carta?
+    // Al crear no hay nada que eliminar
     private fun seVaAEliminar(): Boolean {
-        val antes = viewModel.datos.value?.plato ?: return false   // al crear no hay nada que eliminar
+        val antes = viewModel.datos.value?.plato ?: return false
         return antes.activo && !binding.interruptorEnLaCarta.isChecked
     }
 
@@ -298,27 +301,29 @@ class PlatoActivity : AppCompatActivity() {
         return !antes.activo && binding.interruptorEnLaCarta.isChecked
     }
 
-    // Guarda y, si el interruptor cambió, elimina o recupera (como la hoja 2b, P150).
-    // aunqueCategoriaEliminada solo lo pone el «No» del segundo aviso 3e
+    // Guarda y, si el interruptor cambió, elimina o recupera (como la hoja 2b).
+    // aunqueCategoriaEliminada solo lo pone el «No» del segundo aviso 3e.
+    // Eliminar, R5: activo = false; ninguna línea se toca (R6)
     private suspend fun guardar(aunqueCategoriaEliminada: Boolean = false) {
-        // P96 A: si la foto elegida no se puede leer, la libreta lanza el error y no se guarda nada
+        // Si la foto elegida no se puede leer, la libreta lanza el error y no se guarda nada.
+        // [Claude] SecurityException: el préstamo de la foto ya no vale
         val resultado = try {
             viewModel.guardar(leerFormulario(), aunqueCategoriaEliminada)
         } catch (e: IOException) {
             fotoNoUsable()
             return
         } catch (e: SecurityException) {
-            fotoNoUsable()          // [Claude] el préstamo de la foto ya no vale
+            fotoNoUsable()
             return
         }
         when (resultado) {
             ResultadoGuardado.Ok -> {
                 if (seVaAEliminar()) {
-                    viewModel.eliminar()          // R5: activo = false; ninguna línea se toca (R6)
+                    viewModel.eliminar()
                 } else if (seVaARecuperar()) {
                     viewModel.recuperar()
                 }
-                // Vuelta al Panel, que ya está al día él solo (P49 B)
+                // Vuelta al Panel, que ya está al día él solo
                 finish()
             }
             // R9: error rojo en el campo y la pantalla sigue abierta
@@ -326,7 +331,7 @@ class PlatoActivity : AppCompatActivity() {
                 binding.campoNumero.error = getString(R.string.plato_numero_repetido)
                 actualizarGuardar()
             }
-            // Cadena 3e (P62): la categoría elegida está eliminada; primero se pregunta si se mueve
+            // Cadena 3e: la categoría elegida está eliminada; primero se pregunta si se mueve
             ResultadoGuardado.CategoriaEliminada -> preguntarMover()
             // Solo lo devuelven las categorías: guardarPlato nunca lo da
             ResultadoGuardado.NombreRepetido -> actualizarGuardar()
@@ -342,9 +347,9 @@ class PlatoActivity : AppCompatActivity() {
     }
 
     // 3e, primer aviso: «La categoría Postres está eliminada. ¿Muevo el plato a Otros?»
-    // El nombre de la de por defecto sale de la base de datos: se puede renombrar (R16, D20)
+    // El nombre de la de por defecto sale de la base de datos: se puede renombrar (R16)
     private fun preguntarMover() {
-        // P199 (M1): llega tras copiar la foto; si mientras tanto la app pasó a segundo plano,
+        // Llega tras copiar la foto; si mientras tanto la app pasó a segundo plano,
         // la caja no se puede abrir: no se abre y Guardar se vuelve a encender
         if (supportFragmentManager.isStateSaved) {
             actualizarGuardar()
@@ -363,12 +368,12 @@ class PlatoActivity : AppCompatActivity() {
         actualizarGuardar()
     }
 
-    // 3e, segundo aviso: «¿Quieres recuperar Postres? Platos que volverán a la carta: 2» (P164 B)
+    // 3e, segundo aviso: «¿Quieres recuperar Postres? Platos que volverán a la carta: 2»
     private suspend fun preguntarRecuperar() {
         val datos = checkNotNull(viewModel.datos.value)
         val elegida = datos.categorias.first { it.id == viewModel.categoriaElegidaId }
         val cuantos = viewModel.platosQueVuelven(elegida.id)
-        // P199 (M1): lo mismo, tras esperar a la cuenta de platos
+        // Lo mismo que en preguntarMover, tras esperar a la cuenta de platos
         if (supportFragmentManager.isStateSaved) {
             actualizarGuardar()
             return
@@ -388,7 +393,7 @@ class PlatoActivity : AppCompatActivity() {
         if (plato != null) {
             binding.textoNombre.setText(plato.nombre)
             binding.textoNumero.setText(getString(R.string.comun_numero, plato.numero))
-            binding.textoPrecio.setText(Formato.precio(plato.precioCentimos))   // 150 → «1,50»
+            binding.textoPrecio.setText(Formato.precio(plato.precioCentimos))
             binding.textoDescripcion.setText(plato.descripcion)
             binding.interruptorEnLaCarta.isChecked = plato.activo
         }
@@ -404,14 +409,14 @@ class PlatoActivity : AppCompatActivity() {
     }
 
     // Una casilla por cada alérgeno de la base de datos (no se escriben en el XML: son datos, ficha 3).
-    // Cuáles están marcadas lo dice la libreta (P66 A)
+    // Cuáles están marcadas lo dice la libreta
     private fun pintarAlergenos(alergenos: List<Alergeno>) {
         binding.rejillaAlergenos.removeAllViews()
         for (alergeno in alergenos) {
             val casilla = MaterialCheckBox(this)
             casilla.text = alergeno.nombre
             casilla.isChecked = alergeno.id in viewModel.alergenosMarcados
-            // Al tocarla, se apunta o se borra en la libreta (y en su caja fuerte, H10 B)
+            // Al tocarla, se apunta o se borra en la libreta (y en su caja fuerte)
             casilla.setOnCheckedChangeListener { _, marcada ->
                 viewModel.marcarAlergeno(alergeno.id, marcada)
                 marcarCambio()
@@ -427,10 +432,11 @@ class PlatoActivity : AppCompatActivity() {
     }
 
     // [Claude] Guardar se enciende solo con los cuatro obligatorios (ficha 3: «todo campo es opcional
-    // salvo que una regla o la base de datos lo exijan»). Descripción y alérgenos no cuentan
+    // salvo que una regla o la base de datos lo exijan»). Descripción y alérgenos no cuentan.
+    // En el número, «07» se lee como 7
     private fun actualizarGuardar() {
         val nombreBien = binding.textoNombre.text.toString().isNotBlank()
-        val numeroBien = binding.textoNumero.text.toString().toIntOrNull() != null   // «07» se lee como 7
+        val numeroBien = binding.textoNumero.text.toString().toIntOrNull() != null
         val precioBien = Formato.centimosDesde(binding.textoPrecio.text.toString()) != null
         val categoriaBien = viewModel.categoriaElegidaId != null
         binding.botonGuardar.isEnabled = nombreBien && numeroBien && precioBien && categoriaBien

@@ -20,16 +20,20 @@ import yunkang.ako.datos.repositorios.CartaRepository
 import yunkang.ako.dominio.modelos.ResultadoGuardado
 import yunkang.ako.imagenes.ImageStore
 
-// [Claude] P162 B: todo lo que el formulario lee al abrirse, junto en una sola bandeja
+// [Claude] Todo lo que el formulario lee al abrirse, junto en una sola bandeja
 data class DatosFormulario(
-    val plato: Producto?,                 // null = plato nuevo
-    val categorias: List<Categoria>,      // para el desplegable; la de por defecto, la última (R16)
-    val alergenos: List<Alergeno>,        // los 14, en el orden de la precarga
-    val alergenosDelPlato: List<Long>     // los ids que el plato ya lleva marcados (vacía si es nuevo)
+    // null = plato nuevo
+    val plato: Producto?,
+    // Para el desplegable; la de por defecto, la última (R16)
+    val categorias: List<Categoria>,
+    // Los 14, en el orden de la precarga
+    val alergenos: List<Alergeno>,
+    // Los ids que el plato ya lleva marcados (vacía si es nuevo)
+    val alergenosDelPlato: List<Long>
 )
 
 // La libreta de la pantalla 3 (formulario del plato).
-// H10 B (P174): lo que el Propietario va eligiendo se guarda en una caja fuerte (SavedStateHandle) que
+// Lo que el Propietario va eligiendo se guarda en una caja fuerte (SavedStateHandle) que
 // sobrevive incluso a que Android mate la app en segundo plano; la libreta sola solo sobrevive a recrear la pantalla
 class PlatoViewModel(
     private val cartaRepository: CartaRepository,
@@ -37,7 +41,7 @@ class PlatoViewModel(
     private val cajaFuerte: SavedStateHandle
 ) : ViewModel() {
 
-    // P162 B: un solo tablón. Solo esta libreta escribe en él (_datos); la pantalla solo lo lee (datos)
+    // Un solo tablón. Solo esta libreta escribe en él (_datos); la pantalla solo lo lee (datos)
     private val _datos = MutableLiveData<DatosFormulario>()
     val datos: LiveData<DatosFormulario> = _datos
 
@@ -45,7 +49,7 @@ class PlatoViewModel(
     // (Si Android mató la app, la libreta es nueva y vuelve a leer: es lo que toca)
     private var yaCargado = false
 
-    // [Claude] La categoría elegida, por su id (en la caja fuerte, H10 B)
+    // [Claude] La categoría elegida, por su id (en la caja fuerte)
     var categoriaElegidaId: Long?
         get() = cajaFuerte[CLAVE_CATEGORIA]
         set(valor) { cajaFuerte[CLAVE_CATEGORIA] = valor }
@@ -56,17 +60,17 @@ class PlatoViewModel(
         get() = cajaFuerte[CLAVE_RELLENO] ?: false
         set(valor) { cajaFuerte[CLAVE_RELLENO] = valor }
 
-    // P165 C: true en cuanto el Propietario toca algo después de rellenar el formulario
+    // true en cuanto el Propietario toca algo después de rellenar el formulario
     var hayCambios: Boolean
         get() = cajaFuerte[CLAVE_CAMBIOS] ?: false
         set(valor) { cajaFuerte[CLAVE_CAMBIOS] = valor }
 
-    // P66 A: los alérgenos marcados (sus ids) viven en la libreta, no en las casillas:
+    // Los alérgenos marcados (sus ids) viven en la libreta, no en las casillas:
     // las casillas se crean de nuevo si Android recrea la pantalla. En la caja fuerte van como lista de números
     val alergenosMarcados: List<Long>
         get() = (cajaFuerte.get<LongArray>(CLAVE_ALERGENOS) ?: LongArray(0)).toList()
 
-    // Decisión 2 A: la foto elegida y aún sin guardar (su dirección, «content://…»), en la caja fuerte.
+    // La foto elegida y aún sin guardar (su dirección, «content://…»), en la caja fuerte.
     // getLiveData la convierte en un tablón que la pantalla puede mirar. null = no se ha elegido ninguna
     val fotoElegida: LiveData<String?> = cajaFuerte.getLiveData<String?>(CLAVE_FOTO, null)
 
@@ -77,7 +81,7 @@ class PlatoViewModel(
         cajaFuerte[CLAVE_ALERGENOS] = ahora.toLongArray()
     }
 
-    // P94 C: al elegir no se copia nada; se pide el préstamo largo y se apunta la dirección
+    // Al elegir no se copia nada; se pide el préstamo largo y se apunta la dirección
     fun elegirFoto(uri: Uri) {
         imageStore.conservarPrestamo(uri)
         cajaFuerte[CLAVE_FOTO] = uri.toString()
@@ -89,8 +93,7 @@ class PlatoViewModel(
     }
 
     // Lee la base de datos UNA sola vez. productoId null = plato nuevo.
-    // viewModelScope.launch empieza en el hilo principal; cada llamada de Room
-    // se va ella sola a otro hilo y vuelve con el resultado
+    // Cada llamada de Room se va sola a otro hilo y vuelve con el resultado
     fun cargar(productoId: Long?) {
         if (yaCargado) return
         yaCargado = true
@@ -108,8 +111,8 @@ class PlatoViewModel(
 
     // Guarda el plato con los alérgenos marcados. Las reglas (R8, R9 y la categoría eliminada)
     // las comprueba el repositorio en ese orden; la pantalla solo reacciona a la respuesta
-    // aunqueCategoriaEliminada = true es la tercera salida de 3e: el Propietario dijo «No» a las dos preguntas (P130)
-    // P94 C: si se eligió una foto, se copia AHORA y el plato apunta a la copia. Si la foto no se puede
+    // aunqueCategoriaEliminada = true es la tercera salida de 3e: el Propietario dijo «No» a las dos preguntas
+    // Si se eligió una foto, se copia AHORA y el plato apunta a la copia. Si la foto no se puede
     // leer, ImageStore lanza el error, no se guarda nada y la pantalla avisa
     suspend fun guardar(p: Producto, aunqueCategoriaEliminada: Boolean = false): ResultadoGuardado {
         val fotoAntes = datos.value?.plato?.imagen
@@ -132,7 +135,7 @@ class PlatoViewModel(
     }
 
     // [Claude] 3e, segundo aviso: cuántos platos volverían a la carta al recuperar la categoría.
-    // El reverso de R6: los activos de esa categoría, sin contar el que se está guardando (P-M-11)
+    // El reverso de R6: los activos de esa categoría, sin contar el que se está guardando
     suspend fun platosQueVuelven(categoriaId: Long): Int {
         val idDelPlato = datos.value?.plato?.id
         return cartaRepository.platosDe(categoriaId).count { it.activo && it.id != idDelPlato }
@@ -141,9 +144,10 @@ class PlatoViewModel(
     // [Claude] Recuperar la categoría (vuelve con todos sus platos, R5)
     suspend fun recuperarCategoria(id: Long) = cartaRepository.recuperarCategoria(id)
 
-    // R6, primer paso (P128): qué mesas tienen este plato en una comanda pendiente. Solo mira, no toca nada
+    // R6, primer paso: qué mesas tienen este plato en una comanda pendiente. Solo mira, no toca nada.
+    // Un plato nuevo no está en ninguna mesa
     suspend fun mesasAfectadas(): List<Int> {
-        val plato = datos.value?.plato ?: return emptyList()      // un plato nuevo no está en ninguna mesa
+        val plato = datos.value?.plato ?: return emptyList()
         return cartaRepository.mesasAfectadasPorPlato(plato.id)
     }
 
@@ -160,8 +164,7 @@ class PlatoViewModel(
         cartaRepository.recuperarPlato(plato.id)
     }
 
-    // P140: la fábrica que construye esta libreta con el repositorio de la carta y el almacén de fotos
-    // de EntradaAko, y su caja fuerte (createSavedStateHandle la saca de la propia pantalla, H10 B)
+    // createSavedStateHandle: la caja fuerte la saca de la propia pantalla
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {

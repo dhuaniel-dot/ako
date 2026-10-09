@@ -19,17 +19,17 @@ class PanelActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPanelBinding
 
-    // P140: la libreta del Panel, construida por su fábrica (la misma que usa CambiarPinDialog)
+    // La libreta del Panel, construida por su fábrica (la misma que usa CambiarPinDialog)
     private val viewModel: PanelViewModel by viewModels { PanelViewModel.Factory }
 
-    // H01 B (P171): el portero del Panel. Un segundo toque en menos de medio segundo no abre
+    // El portero del Panel. Un segundo toque en menos de medio segundo no abre
     // otra pantalla del plato ni otra hoja o caja encima de la primera
     private val portero = GuardaDobleToque()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // P139: de borde a borde, apartado de las barras del sistema y del teclado (H25)
+        // De borde a borde, apartado de las barras y del teclado (como SelectorActivity)
         enableEdgeToEdge()
         binding = ActivityPanelBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -41,7 +41,7 @@ class PanelActivity : AppCompatActivity() {
 
         // La lista de cajas y sus timbres: el lápiz abre 2b; «+ Plato» y tocar un plato abren
         // el formulario del plato (3a) con una nota (Intent) que lleva grapado un id.
-        // Cada timbre pasa antes por el portero (H01 B)
+        // Cada timbre pasa antes por el portero
         val adaptador = CategoriaAdapter(
             estaPlegada = { id -> viewModel.estaPlegada(id) },
             alPlegar = { categoria -> viewModel.alternarPlegado(categoria.id) },
@@ -70,7 +70,7 @@ class PanelActivity : AppCompatActivity() {
         binding.listaCategorias.layoutManager = LinearLayoutManager(this)
         binding.listaCategorias.adapter = adaptador
 
-        // P49 B: se mira el tablón UNA sola vez, aquí en onCreate. Cada vez que Room manda
+        // Se mira el tablón UNA sola vez, aquí en onCreate. Cada vez que Room manda
         // una lista nueva, se le pasa al encargado; no hace falta recargar en onResume
         viewModel.categoriasConPlatos.observe(this) { cajas -> adaptador.submitList(cajas) }
 
@@ -81,7 +81,7 @@ class PanelActivity : AppCompatActivity() {
             }
         }
 
-        // Resumen de ingresos: abre 2g (S10). Al volver con Atrás, el Panel sigue abierto: no se pide otra vez el PIN
+        // Resumen de ingresos: abre 2g. Al volver con Atrás, el Panel sigue abierto: no se pide otra vez el PIN
         binding.botonResumen.setOnClickListener {
             if (portero.permite()) {
                 startActivity(Intent(this, ResumenIngresosActivity::class.java))

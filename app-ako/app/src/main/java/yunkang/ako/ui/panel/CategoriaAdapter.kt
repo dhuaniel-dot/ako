@@ -15,8 +15,8 @@ import yunkang.ako.datos.entidades.Producto
 import yunkang.ako.dominio.modelos.CategoriaConPlatos
 import yunkang.ako.ui.comun.FilaPlatoAdapter
 
-// 2a · El encargado de las cajas del Panel (P52 A: la fila de categorías de la carta tiene el suyo).
-// ListAdapter: le das la lista nueva con submitList y DiffUtil repinta solo lo que cambió (P50 C)
+// 2a · El encargado de las cajas del Panel (la fila de categorías de la carta tiene el suyo).
+// ListAdapter: le das la lista nueva con submitList y DiffUtil repinta solo lo que cambió
 class CategoriaAdapter(
     private val estaPlegada: (Long) -> Boolean,
     private val alPlegar: (Categoria) -> Unit,
@@ -29,7 +29,7 @@ class CategoriaAdapter(
     // El armario de bandejas de plato compartido por todas las cajas: la que sobra en una la aprovecha otra
     private val armario = RecyclerView.RecycledViewPool()
 
-    // La bandeja de una caja: su vista y SU encargado de filas, creado una sola vez con la bandeja
+    // Su vista y su encargado de filas, creado una sola vez
     class CajaViewHolder(
         val binding: ItemCategoriaCajaBinding,
         val filas: FilaPlatoAdapter
@@ -45,12 +45,13 @@ class CategoriaAdapter(
         binding.listaPlatos.layoutManager = LinearLayoutManager(parent.context)
         binding.listaPlatos.adapter = filas
         binding.listaPlatos.setRecycledViewPool(armario)
-        // P161 A: dos listas que se mueven en vertical. Sin esto, la de fuera (el Panel) se queda el dedo
+        // Dos listas que se mueven en vertical. Sin esto, la de fuera (el Panel) se queda el dedo
         // y la de dentro nunca baja. Mientras a la lista de platos le quede recorrido hacia donde va el dedo,
         // le pide al Panel que no se lo quite; al llegar al final, se lo deja (y el Panel sigue bajando).
+        // Devuelve false: la lista sigue recibiendo el toque como siempre.
         // Fuente: https://developer.android.com/develop/ui/views/touch-and-input/gestures/viewgroup
         binding.listaPlatos.addOnItemTouchListener(object : RecyclerView.SimpleOnItemTouchListener() {
-            private var yAnterior = 0f   // dónde estaba el dedo la última vez
+            private var yAnterior = 0f
 
             override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
                 when (e.actionMasked) {
@@ -67,7 +68,7 @@ class CategoriaAdapter(
                         yAnterior = e.y
                     }
                 }
-                return false   // la lista sigue recibiendo el toque como siempre
+                return false
             }
         })
         return CajaViewHolder(binding, filas)
@@ -92,13 +93,14 @@ class CategoriaAdapter(
 
         holder.filas.mostrar(caja.platos, categoria.activo)
 
-        // P56 A: plegada = solo la cabecera (sin lista ni «+ Plato»); es la única excepción a la altura fija
+        // Plegada = solo la cabecera (sin lista ni «+ Plato»); es la única excepción a la altura fija.
+        // La flecha: ⌄ desplegada, › plegada
         val plegada = estaPlegada(categoria.id)
         val visibilidad = if (plegada) View.GONE else View.VISIBLE
         holder.binding.listaPlatos.visibility = visibilidad
         holder.binding.botonMasPlato.visibility = visibilidad
-        holder.binding.botonPlegar.rotation = if (plegada) -90f else 0f   // ⌄ desplegada, › plegada
-        // P202 (B4): con el nombre de la caja, para que el lector distinga una de otra («Plegar Postres»)
+        holder.binding.botonPlegar.rotation = if (plegada) -90f else 0f
+        // Con el nombre de la caja, para que el lector distinga una de otra («Plegar Postres»)
         holder.binding.botonPlegar.contentDescription = holder.itemView.context.getString(
             if (plegada) R.string.panel_desplegar_categoria_cd else R.string.panel_plegar_categoria_cd,
             categoria.nombre

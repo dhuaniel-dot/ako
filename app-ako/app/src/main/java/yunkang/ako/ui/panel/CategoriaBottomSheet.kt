@@ -25,25 +25,24 @@ import yunkang.ako.ui.comun.ConfirmacionDialog
 import yunkang.ako.ui.comun.MesasAfectadasDialog
 import java.io.IOException
 
-// 2b · Crear o editar una categoría en una hoja inferior (P84: formulario corto → hoja).
+// 2b · Crear o editar una categoría en una hoja inferior (formulario corto → hoja).
 // Recibe el id por arguments (0 = nueva), como ConfirmacionDialog: si Android rehace la hoja, no se pierde
 class CategoriaBottomSheet : BottomSheetDialogFragment() {
 
-    // La misma libreta que el Panel (como CambiarPinDialog)
     private val viewModel: PanelViewModel by activityViewModels { PanelViewModel.Factory }
 
     // [Claude] La vista solo existe mientras la hoja está abierta: se guarda aquí y se suelta al cerrarla
     private var _binding: SheetCategoriaBinding? = null
     private val binding get() = _binding!!
 
-    // H04 B (P172): la categoría que se edita. null = es nueva, o la lista del Panel todavía no ha llegado
+    // La categoría que se edita. null = es nueva, o la lista del Panel todavía no ha llegado
     private var categoria: Categoria? = null
 
-    // Decisión 4 A: la foto elegida y aún sin guardar (su dirección, «content://…»). Vive en la hoja
+    // La foto elegida y aún sin guardar (su dirección, «content://…»). Vive en la hoja
     // y se olvida al cerrarla; onSaveInstanceState la guarda si Android rehace la hoja o mata la app
     private var fotoElegida: String? = null
 
-    // El selector de fotos del sistema (spec 9), registrado al crear la hoja y no dentro del clic
+    // El selector de fotos del sistema, registrado al crear la hoja y no dentro del clic
     private val selectorFotos = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         // null = se canceló: no cambia nada
         if (uri != null) {
@@ -66,11 +65,11 @@ class CategoriaBottomSheet : BottomSheetDialogFragment() {
 
         val id = requireArguments().getLong(ARG_ID)
         if (id == 0L) {
-            // Crear: solo nombre y foto; sin interruptor (una categoría nace en la carta, P-M-05)
+            // Crear: solo nombre y foto; sin interruptor (una categoría nace en la carta)
             binding.textoTitulo.setText(R.string.categoria_titulo_nueva)
         } else {
             binding.textoTitulo.setText(R.string.categoria_titulo_editar)
-            // H04 B: la hoja no pregunta a la base de datos: escucha el tablón del Panel (P49 B).
+            // La hoja no pregunta a la base de datos: escucha el tablón del Panel.
             // Casi siempre la lista ya está y se pinta en el acto; si Android rehízo la hoja antes de que
             // llegara, se pinta cuando llegue. Solo se pinta una vez
             viewModel.categoriasConPlatos.observe(viewLifecycleOwner) { cajas ->
@@ -92,7 +91,6 @@ class CategoriaBottomSheet : BottomSheetDialogFragment() {
         // El hueco: al abrir, la elegida (si Android rehízo la hoja) o el «?»; al editar se repinta al llegar la categoría
         pintarFoto()
 
-        // «+ Elegir» abre el selector del sistema, solo con fotos
         binding.botonElegirFoto.setOnClickListener {
             selectorFotos.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
@@ -104,11 +102,13 @@ class CategoriaBottomSheet : BottomSheetDialogFragment() {
             actualizarGuardar()
         }
 
+        // Mientras se trabaja, Guardar se apaga: sin doble toque. La categoría es la de ahora
+        // (null solo al crear: Guardar no se enciende antes)
         binding.botonGuardar.setOnClickListener {
-            val categoria = categoria                // la de ahora (null solo al crear: Guardar no se enciende antes)
-            binding.botonGuardar.isEnabled = false   // sin doble toque mientras se trabaja (P142)
+            val categoria = categoria
+            binding.botonGuardar.isEnabled = false
             viewLifecycleOwner.lifecycleScope.launch {
-                // R6 (P128): si se va a eliminar, PRIMERO se mira qué platos suyos están en mesas pendientes
+                // R6: si se va a eliminar, PRIMERO se mira qué platos suyos están en mesas pendientes
                 if (categoria != null && seVaAEliminar(categoria)) {
                     val afectados = viewModel.platosAfectados(categoria.id)
                     if (afectados.isNotEmpty()) {
@@ -118,7 +118,7 @@ class CategoriaBottomSheet : BottomSheetDialogFragment() {
                         return@launch
                     }
                 }
-                // Sin nada que avisar (P8: así se elimina Bebidas): se guarda directamente
+                // Sin nada que avisar: se guarda directamente
                 guardar(categoria)
             }
         }
@@ -130,7 +130,7 @@ class CategoriaBottomSheet : BottomSheetDialogFragment() {
                 binding.botonGuardar.isEnabled = false
                 viewLifecycleOwner.lifecycleScope.launch { guardar(categoria) }
             }
-            // Cancelar (P57 A): no se guarda nada y la hoja sigue como el Propietario la dejó
+            // Cancelar: no se guarda nada y la hoja sigue como el Propietario la dejó
         }
     }
 
@@ -148,9 +148,9 @@ class CategoriaBottomSheet : BottomSheetDialogFragment() {
             .load(foto)
             .placeholder(R.drawable.foto_cargando)
             .error(R.drawable.ic_sin_foto)
-            .circleCrop()                       // la foto, recortada en redondo (P97 A)
+            .circleCrop()
             .into(binding.imagenCategoria)
-        // Sin foto, «Sin foto» (spec 9); con foto, el nombre de la categoría
+        // Sin foto, «Sin foto»; con foto, el nombre de la categoría
         if (foto == null) {
             binding.imagenCategoria.contentDescription = getString(R.string.comun_sin_foto_cd)
         } else {
@@ -158,7 +158,7 @@ class CategoriaBottomSheet : BottomSheetDialogFragment() {
         }
     }
 
-    // [Claude] Guardar se enciende con algo escrito y, al editar, solo cuando la categoría ya ha llegado (H04 B):
+    // [Claude] Guardar se enciende con algo escrito y, al editar, solo cuando la categoría ya ha llegado:
     // así nunca se guarda «como nueva» una que se estaba editando
     private fun actualizarGuardar() {
         val hayNombre = !binding.textoNombre.text.isNullOrBlank()
@@ -175,38 +175,40 @@ class CategoriaBottomSheet : BottomSheetDialogFragment() {
     private fun seVaARecuperar(categoria: Categoria): Boolean =
         !categoria.esPorDefecto && !categoria.activo && binding.interruptorEnLaCarta.isChecked
 
-    // Guarda el nombre y la foto y, si el interruptor cambió, elimina o recupera (hueco 10: activo solo cambia aquí, P150)
+    // Guarda el nombre y la foto y, si el interruptor cambió, elimina o recupera (activo solo cambia aquí).
+    // Eliminar, R5: activo = false; ninguna línea se toca (R6). Recuperar: vuelve con sus platos intactos
     private suspend fun guardar(categoria: Categoria?) {
         val nombre = binding.textoNombre.text.toString().trim()
-        // Editar: la misma categoría con el nombre nuevo (activo lo conserva el repositorio, P150; la foto
+        // Editar: la misma categoría con el nombre nuevo (activo lo conserva el repositorio; la foto
         // de antes va dentro, y si se eligió otra la cambia la libreta). Crear: una nueva en la carta
         val aGuardar = categoria?.copy(nombre = nombre)
             ?: Categoria(nombre = nombre, imagen = null, orden = 0, activo = true, esPorDefecto = false)
 
-        // P96 A: si la foto elegida no se puede leer, la libreta lanza el error y no se guarda nada
+        // Si la foto elegida no se puede leer, la libreta lanza el error y no se guarda nada.
+        // [Claude] SecurityException: el préstamo de la foto ya no vale
         val resultado = try {
             viewModel.guardarCategoria(aGuardar, fotoElegida?.let { Uri.parse(it) })
         } catch (e: IOException) {
             fotoNoUsable()
             return
         } catch (e: SecurityException) {
-            fotoNoUsable()          // [Claude] el préstamo de la foto ya no vale
+            fotoNoUsable()
             return
         }
 
         if (resultado == ResultadoGuardado.NombreRepetido) {
-            // P124: el aviso no mira mayúsculas («carnes» = «Carnes»); la hoja sigue abierta
+            // El aviso no mira mayúsculas («carnes» = «Carnes»); la hoja sigue abierta
             binding.campoNombre.error = getString(R.string.categoria_nombre_repetido)
             binding.botonGuardar.isEnabled = true
             return
         }
 
         if (categoria != null && seVaAEliminar(categoria)) {
-            viewModel.eliminarCategoria(categoria.id)     // R5: activo = false; ninguna línea se toca (R6)
+            viewModel.eliminarCategoria(categoria.id)
         } else if (categoria != null && seVaARecuperar(categoria)) {
-            viewModel.recuperarCategoria(categoria.id)    // vuelve con sus platos intactos
+            viewModel.recuperarCategoria(categoria.id)
         }
-        // P146: cerrar sin romper aunque mientras tanto se pulsara Inicio
+        // Cerrar sin romper aunque mientras tanto se pulsara Inicio
         dismissAllowingStateLoss()
     }
 
