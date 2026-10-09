@@ -15,14 +15,14 @@ import yunkang.ako.dominio.Validacion
 import yunkang.ako.ui.comun.Formato
 import java.io.File
 
-// 5b · Ficha del plato, a pantalla completa encima de la carta (P84): sus datos, los alérgenos
+// 5b · Ficha del plato, a pantalla completa encima de la carta: sus datos, los alérgenos
 // en un desplegable, la cantidad de 1 a 99 y «Añadir» al carrito
 class FichaPlatoFragment : Fragment(R.layout.fragment_ficha_plato) {
 
-    // La libreta de la Activity: la misma que la carta y el carrito
+    // La misma que la carta y el carrito
     private val viewModel: PedidoViewModel by activityViewModels { PedidoViewModel.Factory }
 
-    // El "mando" de las vistas; cambia cada vez que Android vuelve a crear la vista
+    // Cambia cada vez que Android vuelve a crear la vista
     private lateinit var binding: FragmentFichaPlatoBinding
 
     // [Claude] La cantidad elegida (de 1 a 99, R4); se guarda si Android rehace la pantalla
@@ -31,15 +31,14 @@ class FichaPlatoFragment : Fragment(R.layout.fragment_ficha_plato) {
     // [Claude] El plato de esta ficha, para el importe del botón y para Añadir; vacío hasta que llega
     private var plato: Producto? = null
 
-    // [Claude] ¿Está abierto el desplegable de alérgenos? Plegado al abrir la ficha; se guarda como la cantidad (H07)
+    // [Claude] ¿Está abierto el desplegable de alérgenos? Plegado al abrir la ficha; se guarda como la cantidad
     private var alergenosAbiertos = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentFichaPlatoBinding.bind(view)
 
-        // ← Atrás hace lo mismo que el del sistema: con la ficha encima, el guardián de Pedir está apagado
-        // y Android quita la ficha de la pila: se vuelve a la carta, sin PIN
+        // ← Atrás: Android quita la ficha de la pila y se vuelve a la carta, sin PIN
         binding.botonAtras.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
@@ -48,7 +47,7 @@ class FichaPlatoFragment : Fragment(R.layout.fragment_ficha_plato) {
         cantidad = savedInstanceState?.getInt(CLAVE_CANTIDAD) ?: 1
         alergenosAbiertos = savedInstanceState?.getBoolean(CLAVE_ALERGENOS_ABIERTOS) ?: false
 
-        // P170 B: se pide el plato y se pinta cuando llega su bandeja
+        // Se pide el plato y se pinta cuando llega su bandeja
         val productoId = requireArguments().getLong(ARG_PRODUCTO_ID)
         viewModel.cargarFicha(productoId)
         viewModel.ficha.observe(viewLifecycleOwner) { datos ->
@@ -57,15 +56,15 @@ class FichaPlatoFragment : Fragment(R.layout.fragment_ficha_plato) {
             val plato = datos.plato
             this.plato = plato
 
-            // La foto grande (spec 9): Glide siempre, también sin foto (null → el «?» grande);
-            // la foto, recortada a todo el marco (decisión 3 B)
+            // La foto grande: Glide siempre, también sin foto (null → el «?» grande);
+            // la foto, recortada a todo el marco
             Glide.with(binding.imagenPlato)
                 .load(plato.imagen?.let { File(it) })
                 .placeholder(R.drawable.foto_cargando)
                 .error(R.drawable.ic_sin_foto_grande)
                 .centerCrop()
                 .into(binding.imagenPlato)
-            // Sin foto, «Sin foto» (spec 9); con foto, el nombre del plato
+            // Sin foto, «Sin foto»; con foto, el nombre del plato
             if (plato.imagen == null) {
                 binding.imagenPlato.contentDescription = getString(R.string.comun_sin_foto_cd)
             } else {
@@ -105,7 +104,7 @@ class FichaPlatoFragment : Fragment(R.layout.fragment_ficha_plato) {
         }
         pintarCantidad()
 
-        // Añadir: al carrito de la libreta y de vuelta a la carta. Si ha topado en 99, se avisa (P74 A);
+        // Añadir: al carrito de la libreta y de vuelta a la carta. Si ha topado en 99, se avisa;
         // el aviso va sobre la vista de la Activity porque la ficha se cierra en ese mismo momento
         binding.botonAnadir.setOnClickListener {
             val elegido = plato ?: return@setOnClickListener
@@ -122,7 +121,7 @@ class FichaPlatoFragment : Fragment(R.layout.fragment_ficha_plato) {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putInt(CLAVE_CANTIDAD, cantidad)
-        outState.putBoolean(CLAVE_ALERGENOS_ABIERTOS, alergenosAbiertos)   // H07 (revisión del 8 oct)
+        outState.putBoolean(CLAVE_ALERGENOS_ABIERTOS, alergenosAbiertos)
     }
 
     // Abierto: se ven los alérgenos y la flecha apunta abajo; cerrado: ocultos y flecha a la derecha
@@ -131,7 +130,7 @@ class FichaPlatoFragment : Fragment(R.layout.fragment_ficha_plato) {
         binding.flechaAlergenos.rotation = if (alergenosAbiertos) 0f else -90f
     }
 
-    // R4 en la pantalla: − apagado en 1 y + apagado en 99 (el 99 está escrito solo en Validacion, P121).
+    // R4 en la pantalla: − apagado en 1 y + apagado en 99 (el 99 está escrito solo en Validacion).
     // El botón dice el importe de la cantidad elegida: precio × cantidad (R10, Calculadora)
     private fun pintarCantidad() {
         binding.textoCantidad.text = getString(R.string.comun_numero, cantidad)

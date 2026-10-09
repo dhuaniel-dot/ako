@@ -15,19 +15,18 @@ import yunkang.ako.ui.comun.ReciboFragment
 
 // Pantalla 2g (Resumen de ingresos). Solo se llega desde el Panel, detrás del PIN (RNF-10): Cuenta no pide PIN
 // y la recaudación quedaría a la vista de cualquiera. Es solo el marco: dentro va la lista (ResumenListaFragment)
-// y, encima en la pila, el recibo en solo lectura (P87 B). Solo mira: no escribe nada en la base de datos
+// y, encima en la pila, el recibo en solo lectura. Solo mira: no escribe nada en la base de datos
 class ResumenIngresosActivity : AppCompatActivity() {
 
-    // El "mando" de las vistas de activity_resumen_ingresos.xml (ViewBinding)
     private lateinit var binding: ActivityResumenIngresosBinding
 
-    // La libreta de 2g, hecha con su fábrica (P140); la lista pide la misma con activityViewModels
+    // La libreta de 2g, la misma para la lista (como en PedidoActivity)
     private val viewModel: ResumenIngresosViewModel by viewModels { ResumenIngresosViewModel.Factory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // P139: de borde a borde, y el contenedor se aparta de las barras del sistema y del teclado (H25)
+        // De borde a borde, apartado de las barras y del teclado (como SelectorActivity)
         enableEdgeToEdge()
         binding = ActivityResumenIngresosBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -43,7 +42,7 @@ class ResumenIngresosActivity : AppCompatActivity() {
                 replace(R.id.contenedor, ResumenListaFragment())
             }
         } else if (viewModel.comandaRecibo == null) {
-            // [Claude] Como P193 A en Cuenta: Android mató la app con el recibo delante y la libreta renació
+            // [Claude] Como en Cuenta: Android mató la app con el recibo delante y la libreta renació
             // en blanco, sin saber de qué comanda era. Se quita el recibo y queda la lista
             supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         }
@@ -53,12 +52,12 @@ class ResumenIngresosActivity : AppCompatActivity() {
         viewModel.lineasRecibo.observe(this) { darDatosAlRecibo() }
     }
 
-    // Lista → recibo de una comanda cobrada, en su lugar (P87 B), sin calculadora ni Cobrar (soloLectura).
+    // Lista → recibo de una comanda cobrada, en su lugar, sin calculadora ni Cobrar (soloLectura).
     // addToBackStack: Atrás (el del sistema o la flecha) lo quita y vuelve la lista con el mismo día
     fun abrirRecibo(comanda: ComandaConTotal) {
         viewModel.abrirRecibo(comanda)
         val recibo = ReciboFragment.nuevo(comanda.mesaNumero, soloLectura = true)
-        // Lo que ya hay en el tablón (vacío, P197 A); las líneas llegan después por el observe de onCreate
+        // Lo que ya hay en el tablón (vacío); las líneas llegan después por el observe de onCreate
         recibo.mostrar(viewModel.lineasRecibo.value ?: emptyList(), comanda.totalCentimos)
         supportFragmentManager.commit {
             replace(R.id.contenedor, recibo)

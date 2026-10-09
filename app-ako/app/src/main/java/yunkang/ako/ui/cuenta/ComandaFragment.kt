@@ -15,17 +15,17 @@ import yunkang.ako.ui.comun.LineaAdapter
 import yunkang.ako.ui.comun.LineaVista
 
 // 6b · La comanda de una mesa roja (wireframe 06b): barra «← Atrás · Mesa N · Anular», las líneas con Quitar,
-// el TOTAL y «Dar la cuenta». Sin arguments (P190 A): lee la comanda abierta de la libreta de Cuenta
+// el TOTAL y «Dar la cuenta». Sin arguments: lee la comanda abierta de la libreta de Cuenta
 class ComandaFragment : Fragment(R.layout.fragment_comanda) {
 
-    // La libreta de la Activity: la misma que la rejilla y el recibo
+    // La misma que la rejilla y el recibo
     private val viewModel: CuentaViewModel by activityViewModels { CuentaViewModel.Factory }
 
-    // P185 C: en el nivel 1 no hay − ni + en 6b (incremento 9): sus acciones llegan vacías (null)
+    // En el nivel 1 no hay − ni + en 6b (llegan con el incremento 9): sus acciones llegan vacías (null)
     // y el adaptador esconde esos botones. Solo sale Quitar
     private val adaptador = LineaAdapter(alMenos = null, alMas = null, alQuitar = { linea -> pulsarQuitar(linea) })
 
-    // [Claude] El marco de Cuenta: su portero (P171) y la vuelta a la rejilla
+    // [Claude] El marco de Cuenta: su portero y la vuelta a la rejilla
     private val cuenta: CuentaActivity
         get() = requireActivity() as CuentaActivity
 
@@ -33,10 +33,9 @@ class ComandaFragment : Fragment(R.layout.fragment_comanda) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentComandaBinding.bind(view)
 
-        // «Mesa 4» en la barra
         binding.textoTitulo.text = getString(R.string.comun_mesa, viewModel.mesaNumero)
 
-        // ← Atrás: como el del sistema; quita 6b de la pila y vuelve a la rejilla
+        // ← Atrás: quita 6b de la pila y vuelve a la rejilla
         binding.botonAtras.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
@@ -52,12 +51,12 @@ class ComandaFragment : Fragment(R.layout.fragment_comanda) {
             binding.textoTotal.text = getString(R.string.comun_precio, Formato.precio(total))
         }
 
-        // Dar la cuenta: el recibo (6c) se pone encima; lo abre el marco de Cuenta, que le da los datos (P184 A)
+        // Dar la cuenta: el recibo (6c) se pone encima; lo abre el marco de Cuenta, que le da los datos
         binding.botonDarCuenta.setOnClickListener {
             if (cuenta.portero.permite()) cuenta.abrirRecibo()
         }
 
-        // Anular pregunta antes (no tiene deshacer, ficha 6). Botones: «Cancelar» / «Anular» (P40)
+        // Anular pregunta antes (no tiene deshacer, ficha 6). Botones: «Cancelar» / «Anular»
         binding.botonAnular.setOnClickListener {
             if (!cuenta.portero.permite()) return@setOnClickListener
             if (parentFragmentManager.findFragmentByTag(CLAVE_ANULAR) != null) return@setOnClickListener
@@ -71,7 +70,7 @@ class ComandaFragment : Fragment(R.layout.fragment_comanda) {
         }
 
         // Sobre del aviso de Anular: con «Anular», la libreta cierra la comanda y se vuelve a la rejilla.
-        // El botón se apaga mientras trabaja (P142)
+        // El botón se apaga mientras trabaja
         parentFragmentManager.setFragmentResultListener(CLAVE_ANULAR, viewLifecycleOwner) { _, sobre ->
             if (!sobre.getBoolean(ConfirmacionDialog.RESPUESTA_AFIRMATIVA)) return@setFragmentResultListener
             binding.botonAnular.isEnabled = false
@@ -81,7 +80,7 @@ class ComandaFragment : Fragment(R.layout.fragment_comanda) {
             }
         }
 
-        // Sobre del aviso R7: con «Quitar y anular», se quita la línea que esperaba en la libreta (P186 A);
+        // Sobre del aviso R7: con «Quitar y anular», se quita la línea que esperaba en la libreta;
         // la comanda queda ANULADA con cero líneas y se vuelve a la rejilla. Con «Cancelar», se olvida
         parentFragmentManager.setFragmentResultListener(CLAVE_ULTIMA_LINEA, viewLifecycleOwner) { _, sobre ->
             val lineaId = viewModel.lineaPorQuitar
@@ -95,8 +94,7 @@ class ComandaFragment : Fragment(R.layout.fragment_comanda) {
         }
     }
 
-    // P196 A (revisión S9, B1): al quitar la vista (por ejemplo, cuando otra se pone encima en la pila),
-    // la lista suelta su adaptador; si no, el adaptador, que vive con el Fragment, seguiría sujetando la vista vieja
+    // Al quitar la vista, la lista suelta su adaptador (como en ReciboFragment)
     override fun onDestroyView() {
         FragmentComandaBinding.bind(requireView()).listaLineas.adapter = null
         super.onDestroyView()
@@ -117,7 +115,7 @@ class ComandaFragment : Fragment(R.layout.fragment_comanda) {
             ).show(parentFragmentManager, CLAVE_ULTIMA_LINEA)
         } else {
             viewLifecycleOwner.lifecycleScope.launch {
-                // H09: si aun así la comanda quedó ANULADA (la lista iba desfasada), a la rejilla, como arriba
+                // Si aun así la comanda quedó ANULADA (la lista iba desfasada), a la rejilla, como arriba
                 if (viewModel.quitarLinea(linea.id)) cuenta.volverARejilla()
             }
         }

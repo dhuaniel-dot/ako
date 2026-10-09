@@ -15,27 +15,27 @@ import yunkang.ako.ui.comun.GuardaDobleToque
 import java.time.LocalDate
 
 // 2g · La lista del Resumen de ingresos (wireframe 02g): el día, las comandas cobradas y el pie.
-// [Claude] Es un Fragment (P87 B) para que el recibo la sustituya en el hueco de la Activity, como en Cuenta.
+// [Claude] Es un Fragment para que el recibo la sustituya en el hueco de la Activity, como en Cuenta.
 // Tiene el día con su calendario, la lista de comandas cobradas con su pie y, al tocar una, su recibo
 class ResumenListaFragment : Fragment(R.layout.fragment_resumen_lista) {
 
-    // La libreta de la Activity: si Android rehace la pantalla, sigue con el mismo día
+    // Si Android rehace la pantalla, sigue con el mismo día
     private val viewModel: ResumenIngresosViewModel by activityViewModels { ResumenIngresosViewModel.Factory }
 
-    // P86 A: el adaptador de las filas; vive con el Fragment y se le da a cada vista nueva.
-    // Tocar una fila: el marco (la Activity) abre su recibo en solo lectura en el lugar de la lista (P87 B)
+    // El adaptador de las filas; vive con el Fragment y se le da a cada vista nueva.
+    // Tocar una fila: el marco (la Activity) abre su recibo en solo lectura en el lugar de la lista
     private val adaptador = ComandaCobradaAdapter { comanda ->
         if (portero.permite()) (requireActivity() as ResumenIngresosActivity).abrirRecibo(comanda)
     }
 
-    // H01 B (P171): su portero; un segundo toque seguido no abre otro calendario u otro recibo encima
+    // Su portero: un segundo toque seguido no abre otro calendario u otro recibo encima
     private val portero = GuardaDobleToque()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentResumenListaBinding.bind(view)
 
-        // ← Atrás: como el del sistema; con la lista delante, cierra 2g y vuelve al Panel sin pedir PIN
+        // ← Atrás: con la lista delante, cierra 2g y vuelve al Panel sin pedir PIN
         binding.botonAtras.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
@@ -52,7 +52,7 @@ class ResumenListaFragment : Fragment(R.layout.fragment_resumen_lista) {
             binding.textoDia.setText(Formato.fecha(dia))
         }
 
-        // P85 A: tocar el campo Día abre el calendario estándar de Android, puesto en el día que se mira.
+        // Tocar el campo Día abre el calendario estándar de Android, puesto en el día que se mira.
         // La trampa de los meses: Android los cuenta desde 0 (enero = 0) y java.time desde 1 (enero = 1),
         // así que al abrir se resta uno y al volver se suma uno. El calendario no guarda nada: solo dice qué día mirar
         binding.textoDia.setOnClickListener {
@@ -79,7 +79,7 @@ class ResumenListaFragment : Fragment(R.layout.fragment_resumen_lista) {
         }
     }
 
-    // P196 A: al quitar la vista (el recibo se pone en su lugar, pieza 7), la lista suelta su adaptador
+    // Al quitar la vista, la lista suelta su adaptador (como en ReciboFragment)
     override fun onDestroyView() {
         FragmentResumenListaBinding.bind(requireView()).listaComandas.adapter = null
         super.onDestroyView()

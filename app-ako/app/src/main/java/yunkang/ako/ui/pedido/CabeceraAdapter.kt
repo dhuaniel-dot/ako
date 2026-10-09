@@ -6,12 +6,11 @@ import androidx.recyclerview.widget.RecyclerView
 import yunkang.ako.databinding.ItemCabeceraSeccionBinding
 
 // [Claude] 5a · La cabecera de UNA sección («CARNES»): un adaptador de un solo elemento.
-// La carta pega, por cada sección, una cabecera y un FilaPlatoAdapter con sus platos (P69 A, ConcatAdapter)
+// La carta pega, por cada sección, una cabecera y un FilaPlatoAdapter con sus platos (ConcatAdapter)
 class CabeceraAdapter(
     private val nombre: String
 ) : RecyclerView.Adapter<CabeceraAdapter.CabeceraViewHolder>() {
 
-    // La bandeja de la cabecera
     class CabeceraViewHolder(val binding: ItemCabeceraSeccionBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun getItemCount(): Int = 1

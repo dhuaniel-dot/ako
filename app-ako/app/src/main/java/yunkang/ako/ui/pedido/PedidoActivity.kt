@@ -16,13 +16,12 @@ import yunkang.ako.ui.comun.GuardaDobleToque
 import yunkang.ako.ui.selector.PinDialog
 
 // Pantalla 5 (Pedir). Es solo el marco: dentro se apilan la carta (5a), la ficha (5b) y el carrito (5c).
-// Sabe comprobar un PIN (ComprobadorPin, P145): salir de Pedir lo pide (ficha 1)
+// Sabe comprobar un PIN (ComprobadorPin): salir de Pedir lo pide (ficha 1)
 class PedidoActivity : AppCompatActivity(), ComprobadorPin {
 
-    // El "mando" de las vistas de activity_pedido.xml (ViewBinding)
     private lateinit var binding: ActivityPedidoBinding
 
-    // La libreta de Pedir, hecha con su fábrica (P140); sus Fragments piden la misma con activityViewModels
+    // La libreta de Pedir, hecha con su fábrica; sus Fragments piden la misma con activityViewModels
     private val viewModel: PedidoViewModel by viewModels { PedidoViewModel.Factory }
 
     // [Claude] El guardián de Atrás: en la carta (5a), Atrás no cierra Pedir, pide el PIN.
@@ -33,13 +32,13 @@ class PedidoActivity : AppCompatActivity(), ComprobadorPin {
         }
     }
 
-    // H01 B (P171): el portero de Pedir; dos toques en Salir no abren dos avisos ni dos cajas del PIN
+    // El portero de Pedir: dos toques en Salir no abren dos avisos ni dos cajas del PIN
     private val portero = GuardaDobleToque()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // P139: de borde a borde, y el contenedor se aparta de las barras del sistema y del teclado (H25)
+        // De borde a borde, apartado de las barras y del teclado (como SelectorActivity)
         enableEdgeToEdge()
         binding = ActivityPedidoBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -49,7 +48,7 @@ class PedidoActivity : AppCompatActivity(), ComprobadorPin {
             insets
         }
 
-        // P76 A: la mesa llega grapada a la nota (Intent) con la que 1d abrió esta pantalla
+        // La mesa llega grapada a la nota (Intent) con la que 1d abrió esta pantalla
         viewModel.iniciar(
             intent.getLongExtra(EXTRA_MESA_ID, 0L),
             intent.getIntExtra(EXTRA_MESA_NUMERO, 0)
@@ -89,7 +88,7 @@ class PedidoActivity : AppCompatActivity(), ComprobadorPin {
             pedirPin()
             return
         }
-        // D16: «Hay 1 plato… Se perderá» / «Hay 3 platos… Se perderán». El número va dos veces:
+        // «Hay 1 plato… Se perderá» / «Hay 3 platos… Se perderán». El número va dos veces:
         // una para elegir la frase y otra para escribirlo en ella
         val n = carrito.numPlatos()
         ConfirmacionDialog.nueva(
@@ -101,13 +100,13 @@ class PedidoActivity : AppCompatActivity(), ComprobadorPin {
         ).show(supportFragmentManager, CLAVE_SALIR)
     }
 
-    // En el nivel 1, salir de Pedir siempre pide el PIN (P41 del Project). Cancelar deja la carta abierta.
+    // En el nivel 1, salir de Pedir siempre pide el PIN. Cancelar deja la carta abierta.
     // RNF-24: si se sale, el carrito no se vacía a mano: muere con la libreta al cerrarse Pedir
     private fun pedirPin() {
         PinDialog().show(supportFragmentManager, "pin")
     }
 
-    // P145: PinDialog pregunta aquí; esta pantalla delega en su libreta
+    // PinDialog pregunta aquí; esta pantalla delega en su libreta
     override suspend fun comprobarPin(pin: String): Boolean = viewModel.comprobarPin(pin)
 
     companion object {

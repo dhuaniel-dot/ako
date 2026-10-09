@@ -12,7 +12,7 @@ import yunkang.ako.datos.entidades.Categoria
 import java.io.File
 
 // 5a · La fila de categorías de la carta: un círculo con el nombre por categoría, la activa resaltada.
-// No es el CategoriaAdapter del Panel (P52 A): solo comparten el dato. Sencillo, con notifyDataSetChanged
+// No es el CategoriaAdapter del Panel: solo comparten el dato. Sencillo, con notifyDataSetChanged
 class CategoriaFilaAdapter(
     // Qué hacer al tocar una categoría (saltar a su sección): lo decide la carta, no el adaptador
     private val alTocar: (Long) -> Unit
@@ -21,16 +21,15 @@ class CategoriaFilaAdapter(
     private var categorias: List<Categoria> = emptyList()
     private var activaId: Long = 0L
 
-    // La bandeja de un círculo
     class FilaViewHolder(val binding: ItemCategoriaFilaBinding) : RecyclerView.ViewHolder(binding.root)
 
-    // La carta le da sus categorías (solo las que tienen algún plato visible); se repinta todo
+    // La carta le da sus categorías (solo las que tienen algún plato visible)
     fun mostrar(categorias: List<Categoria>) {
         this.categorias = categorias
         notifyDataSetChanged()
     }
 
-    // Marca cuál es la activa; se repinta todo
+    // Marca cuál es la activa
     fun resaltar(categoriaId: Long) {
         activaId = categoriaId
         notifyDataSetChanged()
@@ -50,14 +49,14 @@ class CategoriaFilaAdapter(
 
         holder.binding.textoNombre.text = categoria.nombre
 
-        // La foto redonda (P13, P224): Glide siempre, también sin foto (null → el «?»), porque las bandejas se reciclan
+        // La foto redonda: Glide siempre, también sin foto (null → el «?»), porque las bandejas se reciclan
         Glide.with(holder.binding.imagenCategoria)
             .load(categoria.imagen?.let { File(it) })
             .placeholder(R.drawable.foto_cargando)
             .error(R.drawable.ic_sin_foto)
             .circleCrop()
             .into(holder.binding.imagenCategoria)
-        // Sin foto, «Sin foto» (spec 9); con foto, el nombre de la categoría
+        // Sin foto, «Sin foto»; con foto, el nombre de la categoría
         if (categoria.imagen == null) {
             holder.binding.imagenCategoria.contentDescription = contexto.getString(R.string.comun_sin_foto_cd)
         } else {

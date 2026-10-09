@@ -17,12 +17,12 @@ import yunkang.ako.dominio.modelos.MesaEstado
 import yunkang.ako.ui.comun.LineaVista
 
 // La libreta de la pantalla 6 (Cuenta): la comparten la rejilla (6a), la comanda (6b) y el recibo (6c).
-// Vive mientras dura Cuenta y muere con CuentaActivity (P108)
+// Vive mientras dura Cuenta y muere con CuentaActivity
 class CuentaViewModel(
     private val comandaRepository: ComandaRepository
 ) : ViewModel() {
 
-    // 6a (P167 A): las 60 mesas, libres u ocupadas con su total. Room las manda solas cada vez que
+    // 6a: las 60 mesas, libres u ocupadas con su total. Room las manda solas cada vez que
     // cambia una comanda o una línea (el grifo, Flow); asLiveData las cuelga en el tablón. Nadie las carga a mano
     val mesas: LiveData<List<MesaEstado>> = comandaRepository.mesasConEstado().asLiveData()
 
@@ -38,16 +38,16 @@ class CuentaViewModel(
     private val _total = MutableLiveData(0)
     val total: LiveData<Int> = _total
 
-    // P186 A: la línea que espera mientras el aviso R7 está abierto. Vive en la libreta,
+    // La línea que espera mientras el aviso R7 está abierto. Vive en la libreta,
     // así sigue ahí si Android rehace la pantalla con el aviso delante
     var lineaPorQuitar: Long? = null
 
-    // P191 B: la bandera contra el doble toque en Quitar, Anular y Cobrar (como enviando en Pedir).
+    // La bandera contra el doble toque en Quitar, Anular y Cobrar (como enviando en Pedir).
     // Mientras una de las tres trabaja, otra llamada no llega al repositorio
     private var trabajando = false
 
     // 6a → 6b: se abre la comanda de una mesa roja. Primero se vacían las bandejas, para que no se vea
-    // ni un instante la mesa anterior. viewModelScope empieza en el hilo principal; Room cambia de hilo solo
+    // ni un instante la mesa anterior. Room cambia de hilo solo
     fun abrirComanda(comandaId: Long, mesaNumero: Int) {
         this.comandaId = comandaId
         this.mesaNumero = mesaNumero
@@ -56,15 +56,15 @@ class CuentaViewModel(
         viewModelScope.launch { recargar() }
     }
 
-    // [Claude] R7: ¿la que se va a quitar es la única línea que queda? Se mira la lista que se ve (P186 A)
+    // [Claude] R7: ¿la que se va a quitar es la única línea que queda? Se mira la lista que se ve
     fun esUltimaLinea(): Boolean = lineas.value?.size == 1
 
-    // 6b · Quitar (P189 A): suspend, la pantalla espera. Devuelve true si la comanda quedó ANULADA
+    // 6b · Quitar: suspend, la pantalla espera. Devuelve true si la comanda quedó ANULADA
     // por quitar la última línea (R7); si no, vuelve a preguntar líneas y total (R10: nunca se resta en pantalla)
     suspend fun quitarLinea(lineaId: Long): Boolean {
         if (trabajando) return false
         trabajando = true
-        // H03: finally se ejecuta siempre, también si el repositorio fallara: la bandera nunca se queda encendida
+        // finally: la bandera nunca se queda encendida (como en PedidoViewModel)
         try {
             val anulada = comandaRepository.quitarLinea(lineaId)
             if (!anulada) recargar()
@@ -74,7 +74,7 @@ class CuentaViewModel(
         }
     }
 
-    // 6b · Anular (P189 A): ANULADA con hora de cierre, sin borrar las líneas. Devuelve true si se hizo
+    // 6b · Anular: ANULADA con hora de cierre, sin borrar las líneas. Devuelve true si se hizo
     suspend fun anular(): Boolean {
         if (trabajando) return false
         trabajando = true
@@ -86,7 +86,7 @@ class CuentaViewModel(
         return true
     }
 
-    // 6c · Cobrar (P189 A): PAGADA con hora de cierre; eso ya es el histórico que leerá el Resumen de ingresos.
+    // 6c · Cobrar: PAGADA con hora de cierre; eso ya es el histórico que leerá el Resumen de ingresos.
     // Devuelve true si se hizo
     suspend fun cobrar(): Boolean {
         if (trabajando) return false
@@ -99,8 +99,8 @@ class CuentaViewModel(
         return true
     }
 
-    // 6c (P192 B): lo que hay que devolver si el cliente entrega esto. Negativo = falta dinero, no es un error.
-    // Es una función pura (P-C-04): no guarda nada; cerrar el recibo lo olvida (spec 4.1)
+    // 6c: lo que hay que devolver si el cliente entrega esto. Negativo = falta dinero, no es un error.
+    // Es una función pura: no guarda nada; cerrar el recibo lo olvida
     fun cambio(entregadoCentimos: Int): Int = Calculadora.cambio(total.value ?: 0, entregadoCentimos)
 
     // Vuelve a preguntar las líneas y el total a la base de datos (R10: el total se suma en SQL cada vez,
@@ -108,7 +108,7 @@ class CuentaViewModel(
     private suspend fun recargar() {
         val lineas = comandaRepository.lineasDe(comandaId)
         _lineas.value = lineas.map { linea ->
-            // En una comanda, el id de LineaVista es el de la línea (P68 A)
+            // En una comanda, el id de LineaVista es el de la línea
             LineaVista(
                 linea.id,
                 linea.cantidad,
@@ -119,7 +119,6 @@ class CuentaViewModel(
         _total.value = comandaRepository.totalDe(comandaId)
     }
 
-    // P140: la fábrica que sabe construir esta libreta con el puesto de comandas de EntradaAko
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {

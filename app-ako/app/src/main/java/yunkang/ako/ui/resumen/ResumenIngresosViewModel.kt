@@ -20,7 +20,7 @@ import yunkang.ako.ui.comun.LineaVista
 import java.time.LocalDate
 
 // La libreta del Resumen de ingresos (2g): qué día se mira y qué se cobró ese día.
-// Solo habla con el puesto de comandas (ComandaRepository), nunca con un DAO (spec 3). Solo lee: no escribe nada
+// Solo habla con el puesto de comandas (ComandaRepository), nunca con un DAO. Solo lee: no escribe nada
 class ResumenIngresosViewModel(
     private val comandaRepository: ComandaRepository
 ) : ViewModel() {
@@ -30,14 +30,14 @@ class ResumenIngresosViewModel(
     private val _dia = MutableLiveData(LocalDate.now())
     val dia: LiveData<LocalDate> = _dia
 
-    // P195 C: lo cobrado el día que se mira. switchMap vigila el día: cada vez que cambia, tira la consulta
+    // Lo cobrado el día que se mira. switchMap vigila el día: cada vez que cambia, tira la consulta
     // anterior y lanza otra con liveData { }, que pide el resumen a la base de datos y lo cuelga en el tablón.
-    // liveData { } empieza en el hilo principal; Room cambia de hilo solo dentro de sus consultas
+    // Room cambia de hilo solo dentro de sus consultas
     val resumen: LiveData<ResumenIngresos> = dia.switchMap { elegido ->
         liveData { emit(comandaRepository.resumenDelDia(elegido)) }
     }
 
-    // El calendario (pieza 6) cambia el día; el resumen se vuelve a pedir solo, por el switchMap de arriba
+    // El calendario cambia el día; el resumen se vuelve a pedir solo, por el switchMap de arriba
     fun elegirDia(dia: LocalDate) {
         _dia.value = dia
     }
@@ -49,9 +49,9 @@ class ResumenIngresosViewModel(
     private val _lineasRecibo = MutableLiveData<List<LineaVista>>(emptyList())
     val lineasRecibo: LiveData<List<LineaVista>> = _lineasRecibo
 
-    // P197 A: como CuentaViewModel.abrirComanda. Primero se vacía la bandeja, para que no se vea ni un instante
-    // el recibo anterior; después se piden las líneas. viewModelScope empieza en el hilo principal; Room cambia
-    // de hilo solo. R14: nombre y precio salen de la línea, congelados al enviar, no de la carta de hoy
+    // Como CuentaViewModel.abrirComanda. Primero se vacía la bandeja, para que no se vea ni un instante
+    // el recibo anterior; después se piden las líneas. Room cambia de hilo solo.
+    // R14: nombre y precio salen de la línea, congelados al enviar, no de la carta de hoy
     fun abrirRecibo(comanda: ComandaConTotal) {
         comandaRecibo = comanda
         _lineasRecibo.value = emptyList()
@@ -60,7 +60,7 @@ class ResumenIngresosViewModel(
             // [Claude] Si mientras se esperaba a la base de datos se tocó otra comanda, estas líneas ya no valen
             if (comandaRecibo != comanda) return@launch
             _lineasRecibo.value = lineas.map { linea ->
-                // En una comanda, el id de LineaVista es el de la línea (P68 A)
+                // En una comanda, el id de LineaVista es el de la línea
                 LineaVista(
                     linea.id,
                     linea.cantidad,

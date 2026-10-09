@@ -21,14 +21,15 @@ import yunkang.ako.dominio.Carrito
 import yunkang.ako.dominio.modelos.CategoriaConPlatos
 import yunkang.ako.ui.comun.LineaVista
 
-// [Claude] P170 B: lo que la ficha (5b) enseña de un plato, junto en una sola bandeja
+// [Claude] Lo que la ficha (5b) enseña de un plato, junto en una sola bandeja.
+// La lista de alérgenos lleva solo los marcados; si va vacía, la ficha dice «Pregunta al personal»
 data class DatosFicha(
     val plato: Producto,
-    val alergenos: List<Alergeno>     // los marcados; vacía = «Pregunta al personal»
+    val alergenos: List<Alergeno>
 )
 
 // La libreta de la pantalla 5 (Pedir): la comparten la carta (5a), la ficha (5b) y el carrito (5c).
-// Vive mientras dura Pedir y muere con PedidoActivity (spec 3)
+// Vive mientras dura Pedir y muere con PedidoActivity
 class PedidoViewModel(
     private val cartaRepository: CartaRepository,
     private val comandaRepository: ComandaRepository,
@@ -42,27 +43,27 @@ class PedidoViewModel(
     var mesaNumero: Int = 0
         private set
 
-    // 5a (P167 A): la carta por secciones, solo con platos visibles (R15). La escribe Room a través
+    // 5a: la carta por secciones, solo con platos visibles (R15). La escribe Room a través
     // del repositorio (el grifo, Flow); asLiveData la cuelga en el tablón. Nadie la carga a mano
     val carta: LiveData<List<CategoriaConPlatos>> = cartaRepository.cartaVisible().asLiveData()
 
-    // 5b (P170 B): la bandeja de la ficha abierta. Solo esta libreta escribe en ella (_ficha);
+    // 5b: la bandeja de la ficha abierta. Solo esta libreta escribe en ella (_ficha);
     // la ficha solo la lee (ficha). Vacía (null) mientras llega el plato
     private val _ficha = MutableLiveData<DatosFicha?>()
     val ficha: LiveData<DatosFicha?> = _ficha
 
-    // El carrito de la mesa (spec 3): lo comparten la carta, la ficha y el carrito. Vive solo en la libreta:
+    // El carrito de la mesa: lo comparten la carta, la ficha y el carrito. Vive solo en la libreta:
     // no se guarda en ningún sitio (R10) y se pierde al salir de Pedir (RNF-24). Nace en iniciar()
     private val _carrito = MutableLiveData<Carrito>()
     val carrito: LiveData<Carrito> = _carrito
 
-    // 5c (P68 A): las líneas del carrito tal como se pintan. map las saca del carrito cada vez que suena
-    // su timbre: son LineaVista NUEVAS cada vez, así que la lista siempre ve el cambio de cantidad (P119)
+    // 5c: las líneas del carrito tal como se pintan. map las saca del carrito cada vez que suena
+    // su timbre: son LineaVista NUEVAS cada vez, así que la lista siempre ve el cambio de cantidad
     val lineasVista: LiveData<List<LineaVista>> = carrito.map { c ->
         c.lineas.map { linea -> LineaVista(linea.producto.id, linea.cantidad, linea.producto.nombre, linea.importe()) }
     }
 
-    // P76 A: la Activity la fija al abrirse, y con ella nace el carrito vacío de esa mesa.
+    // La Activity fija la mesa al abrirse, y con ella nace el carrito vacío de esa mesa.
     // Si Android rehace la pantalla, la libreta ya la tiene y no se repite (el carrito sigue lleno)
     fun iniciar(mesaId: Long, mesaNumero: Int) {
         if (this.mesaNumero != 0) return
@@ -72,7 +73,7 @@ class PedidoViewModel(
     }
 
     // 5b · Añadir: mete el plato en el carrito (si ya estaba, suma en la misma línea; tope 99, R4).
-    // Devuelve false si ha tenido que topar, para que la ficha avise (P74 A).
+    // Devuelve false si ha tenido que topar, para que la ficha avise.
     // El carrito cambia POR DENTRO: hay que volver a dejarlo en el tablón para que suene el timbre
     fun anadir(plato: Producto, cantidad: Int): Boolean {
         val carrito = _carrito.value ?: return false
@@ -98,14 +99,14 @@ class PedidoViewModel(
     // [Claude] true mientras se envía: un segundo toque no vuelve a enviar las mismas líneas
     private var enviando = false
 
-    // 5c · Enviar: R1, R2, R4, R8 y R14 los garantiza el repositorio, todo en una transacción (P129).
-    // Si va bien, la libreta cambia el carrito por uno NUEVO y vacío de la misma mesa (P166 A) y devuelve true.
+    // 5c · Enviar: R1, R2, R4, R8 y R14 los garantiza el repositorio, todo en una transacción.
+    // Si va bien, la libreta cambia el carrito por uno NUEVO y vacío de la misma mesa y devuelve true.
     // Es suspend: la pantalla espera; Room hace el trabajo fuera del hilo de la pantalla
     suspend fun enviar(): Boolean {
         val carrito = _carrito.value ?: return false
         if (enviando || carrito.estaVacio()) return false
         enviando = true
-        // H03 (revisión del 6 oct): finally se ejecuta siempre, también si enviarCarrito fallara a mitad;
+        // finally se ejecuta siempre, también si enviarCarrito fallara a mitad;
         // así la bandera nunca se queda encendida y Enviar sigue funcionando
         try {
             comandaRepository.enviarCarrito(carrito)
@@ -116,7 +117,7 @@ class PedidoViewModel(
         return true
     }
 
-    // 5b (P170 B): llena la bandeja con un plato. La libreta es una para muchas fichas: primero se vacía,
+    // 5b: llena la bandeja con un plato. La libreta es una para muchas fichas: primero se vacía,
     // para que al abrir Helado no se vea Entrecot un instante. Si ya tiene este plato (Android rehízo
     // la pantalla), no se vuelve a leer. viewModelScope empieza en el hilo principal; Room cambia de hilo solo
     fun cargarFicha(productoId: Long) {
@@ -128,10 +129,9 @@ class PedidoViewModel(
         }
     }
 
-    // Salir de Pedir (1c): ¿es este el PIN guardado? El repositorio cambia de hilo (P134)
+    // Salir de Pedir (1c): ¿es este el PIN guardado? El repositorio cambia de hilo
     suspend fun comprobarPin(pin: String): Boolean = seguridadRepository.comprobarPin(pin)
 
-    // P140: la fábrica que sabe construir esta libreta con los repositorios de EntradaAko
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {

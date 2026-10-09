@@ -18,7 +18,7 @@ import yunkang.ako.ui.comun.Formato
 // y la pastilla del carrito abajo a la derecha
 class CartaFragment : Fragment(R.layout.fragment_carta) {
 
-    // La libreta de la Activity, no una propia: lo que apunte 5b lo tiene que ver 5c
+    // Lo que apunte 5b lo tiene que ver 5c
     private val viewModel: PedidoViewModel by activityViewModels { PedidoViewModel.Factory }
 
     // La fila de categorías; tocar una salta a su sección
@@ -33,11 +33,11 @@ class CartaFragment : Fragment(R.layout.fragment_carta) {
     // Quien coloca las filas de la lista (y sabe llevar una posición arriba del todo)
     private lateinit var gestorLista: LinearLayoutManager
 
-    // P200 (M2): la última carta pintada en esta vista. Room la vuelve a mandar igual al volver de segundo
+    // La última carta pintada en esta vista. Room la vuelve a mandar igual al volver de segundo
     // plano (asLiveData cierra el grifo a los 5 s sin nadie mirando); si no ha cambiado, no se repinta
     private var ultimaCarta: List<CategoriaConPlatos>? = null
 
-    // H07: si Android rehace la pantalla (modo noche, tamaño de letra), recupera la categoría resaltada.
+    // Si Android rehace la pantalla (modo noche, tamaño de letra), recupera la categoría resaltada.
     // [Claude] En onCreate y no en onViewCreated: al volver de la ficha se rehace la vista pero no el
     // Fragment, y el resaltado ya está en el campo
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,7 +49,7 @@ class CartaFragment : Fragment(R.layout.fragment_carta) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentCartaBinding.bind(view)
 
-        // P89: la barra solo enseña la mesa, siempre a la vista (equivocarse de mesa es el error más caro)
+        // La barra solo enseña la mesa, siempre a la vista (equivocarse de mesa es el error más caro)
         binding.textoMesa.text = getString(R.string.comun_mesa, viewModel.mesaNumero)
 
         // «Salir» hace lo mismo que el Atrás del sistema: el guardián de PedidoActivity pide el PIN
@@ -57,16 +57,14 @@ class CartaFragment : Fragment(R.layout.fragment_carta) {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
-        // La fila: la misma lista de siempre, pero tumbada (horizontal)
         binding.filaCategorias.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.filaCategorias.adapter = adaptadorFila
 
-        // La lista de platos, vertical
         gestorLista = LinearLayoutManager(requireContext())
         binding.listaPlatos.layoutManager = gestorLista
 
-        // P75 A: al deslizar la lista con el dedo, se resalta la categoría de la sección que queda arriba
+        // Al deslizar la lista con el dedo, se resalta la categoría de la sección que queda arriba
         binding.listaPlatos.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 // [Claude] dy = 0: no lo ha movido el dedo, sino el salto de un toque (saltarA): no se pisa
@@ -90,27 +88,27 @@ class CartaFragment : Fragment(R.layout.fragment_carta) {
         // [Claude] Vista nueva (al abrir o al volver de la ficha): su lista está vacía y hay que pintarla
         ultimaCarta = null
 
-        // Cada vez que llega la carta (P167 A), se montan la fila y la lista
+        // Cada vez que llega la carta, se montan la fila y la lista
         viewModel.carta.observe(viewLifecycleOwner) { secciones ->
-            // P200 (M2): la misma carta que ya se ve → nada (un adaptador nuevo subiría la lista arriba)
+            // La misma carta que ya se ve → nada (un adaptador nuevo subiría la lista arriba)
             if (secciones == ultimaCarta) return@observe
             ultimaCarta = secciones
 
             // La fila: una categoría por sección (solo las que tienen algún plato visible, R15)
             adaptadorFila.mostrar(secciones.map { it.categoria })
 
-            // La lista: por cada sección, su cabecera y sus platos, pegados en orden (P69 A, ConcatAdapter)
+            // La lista: por cada sección, su cabecera y sus platos, pegados en orden (ConcatAdapter)
             val trozos = mutableListOf<RecyclerView.Adapter<out RecyclerView.ViewHolder>>()
             val inicios = mutableMapOf<Long, Int>()
             var posicion = 0
             for (seccion in secciones) {
                 inicios[seccion.categoria.id] = posicion
                 trozos.add(CabeceraAdapter(seccion.categoria.nombre))
-                // La misma fila de plato que el Panel (spec 7); tocar un plato abre su ficha (5b)
+                // La misma fila de plato que el Panel; tocar un plato abre su ficha (5b)
                 val platos = FilaPlatoAdapter { plato -> abrirFicha(plato.id) }
                 platos.mostrar(seccion.platos, categoriaActiva = true)
                 trozos.add(platos)
-                posicion += 1 + seccion.platos.size   // cada sección ocupa su cabecera y sus platos
+                posicion += 1 + seccion.platos.size
             }
             posiciones = inicios
             binding.listaPlatos.adapter = ConcatAdapter(trozos)
@@ -122,14 +120,14 @@ class CartaFragment : Fragment(R.layout.fragment_carta) {
             adaptadorFila.resaltar(categoriaActiva)
         }
 
-        // D7: la pastilla dice cuántos platos y cuánto suman. Se calcula cada vez (R10): nadie lo guarda.
-        // Siempre visible, también vacía (P73 A); sin animación, el número cambia sin más (ficha 5)
+        // La pastilla dice cuántos platos y cuánto suman. Se calcula cada vez (R10): nadie lo guarda.
+        // Siempre visible, también vacía; sin animación, el número cambia sin más (ficha 5)
         viewModel.carrito.observe(viewLifecycleOwner) { carrito ->
             val total = getString(R.string.comun_precio, Formato.precio(carrito.total()))
             binding.botonCarrito.text = getString(R.string.carta_carrito_pastilla, carrito.numPlatos(), total)
         }
 
-        // La pastilla abre el carrito (5c) encima de la carta, también vacío (P73 A)
+        // La pastilla abre el carrito (5c) encima de la carta, también vacío
         binding.botonCarrito.setOnClickListener {
             parentFragmentManager.commit {
                 replace(R.id.contenedor, CarritoFragment())
@@ -138,7 +136,7 @@ class CartaFragment : Fragment(R.layout.fragment_carta) {
         }
     }
 
-    // H07: la categoría resaltada, a la caja fuerte de Android (como la cantidad en la ficha)
+    // La categoría resaltada, a la caja fuerte de Android (como la cantidad en la ficha)
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putLong(CLAVE_CATEGORIA_ACTIVA, categoriaActiva)
