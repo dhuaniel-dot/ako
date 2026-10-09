@@ -1,3 +1,5 @@
+> Nota (9 oct 2026): esto es un registro de la sesión 00 (24 sep 2026) y se conserva tal cual; algunas cosas pueden estar desactualizadas. Lo que vale hoy es CLAUDE.md y docs/decisiones-code.md.
+
 # Ako — Análisis inicial de Claude Code
 
 > Escrito la noche del **24 al 25 de septiembre de 2026** por Claude Code (modelo Fable 5.1), tras leer entera la carpeta `C:\AKO` (CLAUDE.md, LEEME.md, spec-claude-code.md, las siete fichas, los 21 wireframes con sus leyendas, requisitos, clases, plan de pruebas, estado del nivel, plantilla del diario) y comprobar qué hay instalado en el PC. **No he preguntado nada, no he escrito código, no he instalado nada y no he tocado ningún otro archivo.** Todo lo que propongo y no estaba pedido lleva **[Claude]**.

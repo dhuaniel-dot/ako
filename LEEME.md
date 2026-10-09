@@ -1,50 +1,15 @@
-# `C:\AKO\` — la carpeta del prototipo: documentación al día para Claude Code y, desde la S1, la app
+# Qué hay en C:\AKO
 
-Creada el 24 de septiembre de 2026 por el chat de la fase 5b (preparación del código). **Se edita.** [Claude, 7 oct 2026: puesta al día tras la revisión del 6 oct (C03); lo que manda hoy es `CLAUDE.md` y `docs/decisiones-code.md`: este índice describe los archivos, no las reglas.] Es **la raíz del repositorio Git del prototipo** (decisión de Daniel, 24 sep: fuera de `Proyecto intermodular\` y fuera de OneDrive). El proyecto de Android Studio se crea aquí dentro en la S1, al lado de `docs\` y `CLAUDE.md`. Desde la S1 aquí escribe Claude Code; los chats de Claude solo actualizan `docs\` (copias) y con confirmación de Daniel.
+Esta carpeta es el repositorio del prototipo de Ako: la app y su documentación. Los registros cerrados (diarios, guías, revisiones, pruebas pasadas) no se editan; si algo de ahí está mal, se apunta en docs/para-el-project.
 
-**Manda esta carpeta, no `Proyecto intermodular\Claude Code\`** (copias del 17 sep, ya superadas: filas del registro aplicadas aquí el 24 sep). Los `.md` de `docs/` son copias corregidas de los documentos del Project de Claude; la versión de referencia sigue siendo la del Project (`claude/*.md`) y `Documentos del proyecto\`; cuando cambie un documento allí, se vuelve a copiar aquí.
+- app-ako: el proyecto de Android Studio. Se abre esta carpeta, no la raíz.
+- docs: el diseño y el seguimiento. Lo primero que se lee es spec-claude-code.md, el diseño y el orden de construcción. Después, lo que toque: spec+doc-pantallas.md y wireframes para una pantalla, spec+doc-pruebas.md para las pruebas, estado-nivel.md para saber qué está hecho, decisiones-code.md para lo que se decidió fuera del spec, textos-ui.md para los textos de la interfaz.
+- docs/diario: una ficha por sesión. La última dice qué quedó a medias.
+- docs/guias: cómo se planeó cada sesión.
+- docs/pruebas-pasadas y docs/capturas: lo que salió en cada pasada de pruebas y las capturas del emulador.
+- docs/revisiones y docs/para-el-project: las revisiones con IA y lo que hay que corregir en la memoria.
+- CLAUDE.md y .claude: las reglas y las herramientas con las que trabajo con Claude Code (skills, hooks, permisos).
+- README.md: lo que lee quien llega al repositorio desde fuera.
+- ANALISIS-INICIAL.md y PRIMER-MENSAJE-para-Claude-Code.md: el análisis y el primer mensaje de la sesión 00 (24 de septiembre de 2026). Se conservan como registro.
 
-## Orden de lectura (para Claude Code y para Daniel)
-
-1. `CLAUDE.md` — reglas de trabajo, stack fijo, vocabulario obligatorio, lo que no se hace nunca.
-2. `docs/spec-claude-code.md` — el diseño completo y el orden de construcción en 13 sesiones. **Entero, la primera vez.**
-3. `docs/spec+doc-requisitos.md` y `docs/estado-nivel.md` — qué hay que construir (53 RF) y en qué estado está cada cosa.
-4. `docs/spec+doc-clases.md` — los nombres de clases, métodos y paquetes (borrador).
-5. `docs/spec+doc-pantallas.md` y `docs/wireframes/` — al programar cada pantalla: su ficha y su dibujo.
-6. `docs/spec+doc-pruebas.md` — al cerrar cada sesión: qué pruebas la cierran.
-7. `docs/plantilla-diario.md` — al empezar y cerrar cada sesión: la ficha del diario.
-
-## Qué es cada archivo
-
-| Archivo | Qué es | Origen (Project / PC) |
-|---|---|---|
-| `ANALISIS-INICIAL.md` | El análisis de Claude Code de la noche del 24 sep (plan, sesiones, contradicciones, instalación, skills, chats y las 36 preguntas contestadas en la sesión 00) [Claude] | Escrito por Claude Code |
-| `docs/decisiones-code.md` | Registro de lo decidido en Claude Code (respuestas de la sesión 00 y decisiones de cada sesión): lo lee cada chat nuevo para no volver a preguntar. El apartado 5.2 tiene las preguntas P42–P103 de la noche del 24 al 25 sep, **ya contestadas** [Claude] | Nace en el repositorio (sesión 00) |
-| `docs/textos-ui.md` | Inventario de los textos de la interfaz: las 143 claves de `strings.xml` con su español, su inglés y dónde se usan, y cómo quedaron las 20 dudas de la sesión 00. Regenerado desde `strings.xml` el 8 oct (P204 A); el borrador de la sesión 00 está en `docs/guias/textos-ui-borrador-s00.md` [Claude] | Nace en el repositorio (sesión 00) |
-| `docs/guias/` | Guías por sesión: `sesion-01.md` paso a paso (comprobada contra developer.android.com el 25 sep) y **`sesion-02.md` a `sesion-13.md`** como planes de piezas sin código (S6, S8 y S9, las difíciles, con los huecos de su Plan Mode); **`juego-de-datos.md`** (cómo montar los datos de las pruebas desde instalación limpia y el orden de las 29 pruebas manuales sesión por sesión, con qué queda *Parcial* y hasta cuándo); **`readme-borrador.md`** (el `README.md` que Daniel lee y pega en la S1); `android-studio-basico.md` (la herramienta para quien nunca la ha abierto, comprobada contra la documentación oficial; apartado 10 con los atajos y casos de uso «quiero… → hago…», ampliado en la S4); `strings-es-borrador.xml` (129 cadenas y 2 plurals del nivel 1 listos para pegar en su sesión) y `stack-verificado/` (los archivos de Gradle comprobados compilando el 24 sep; ver P42 y P43 antes de usarlos) [Claude] | Nace en el repositorio (sesión 00; S6–S13, juego de datos y README la noche del 24 al 25) |
-| `docs/plantilla-en-curso.md` · `docs/plantilla-readme.md` | Plantillas del `EN-CURSO.md` (relevo entre chats) y del `README.md` de la S1 [Claude] | Nace en el repositorio (sesión 00) |
-| `.claude/` | Skills del repositorio (`abrir-sesion`, `cerrar-sesion`, `relevo`, `verificar`, `como-trabajamos`, `seguridad`), el subagente `agents/revisor.md`, la skill `seguridad` (antes de cada commit), los hooks `comprobar-commit.sh` (bloquea commits sin `S<N>:`, sin ficha, con una clave con forma de clave en lo cambiado o sin el coautor `Co-Authored-By: Claude`, P111) y `al-empezar.sh` (mete EN-CURSO y la última ficha en el contexto), y `settings.json` (hooks y comandos destructivos prohibidos). Se suben al repositorio [Claude] | Escrito por Claude Code en la sesión 00 |
-| `.gitignore` · `.gitattributes` | Lo que no se sube (build, .idea, local.properties…) y los finales de línea (sh en LF, bat en CRLF) [Claude] | Sesión 00 |
-| `PRIMER-MENSAJE-para-Claude-Code.md` | El mensaje que Daniel pega en la primera sesión de Claude Code (con la nota de cómo abrirla: sesión Local con `C:\AKO` como carpeta del proyecto) | Escrito en la 5b |
-| `LEEME.md` | Este índice | Escrito en la 5b |
-| `CLAUDE.md` | Reglas de trabajo entre Daniel y Claude Code. Claude Code lo lee solo en cada sesión | `spec-claude-md.md`, desde la línea `# Ako` (versión 5b: eliminar ≠ desactivar, Resumen de ingresos); desde el 29 sep los commits llevan el coautor Claude (P111) |
-| `docs/spec-claude-code.md` | Diseño completo y orden de construcción: stack, paquetes, niveles e incrementos, 14 tablas, 15 reglas, seguridad, imágenes, estilo, 13 sesiones, pruebas, diario, Git, qué pasa después de la S13. **Desde el 30 sep la base de datos tiene 7 tablas (P115) y el spec se edita a mano con tachaduras; si discrepa, manda `decisiones-code.md` (P158)** | `spec-claude-code.md` (versión 5b, con las filas 3, 5, 7, 34-36, 38, 39, 43, 48, 51 y 53 del registro aplicadas) |
-| `docs/spec+doc-pantallas.md` | Fichas de las siete pantallas | `spec+doc-pantallas.md` (fila 32: P224) |
-| `docs/wireframes/*.png` | Los 21 dibujos del nivel 1 (14 vistas y 7 diálogos). `02g-resumen-ingresos.png` es el que en `Imágenes\Wireframes\` todavía se llama `02g-resumen-por-dia` (fila 6: lo renombra Daniel) | `Imágenes\Wireframes\` (versión del 23 sep: `02a`, `02b` y `05a` redibujados por P223 y P224) |
-| `docs/wireframes/spec+doc-wireframes.md` | Las 21 leyendas numeradas y las decisiones de disposición; enlaza cada PNG | `spec+doc-wireframes.md` (filas 6, 10 y 30) |
-| `docs/spec+doc-requisitos.md` | 53 RF (29 · 22 · 2) y 25 RNF | `spec+doc-requisitos.md` (recuento del nivel 2 corregido a 22) |
-| `docs/spec+doc-clases.md` | Borrador del diagrama de clases: 58 clases, cinco figuras, código PlantUML | `spec+doc-clases.md` (filas 10, 47, 49 y 52: `ResumenIngresos…`, `Validacion`, repositorios en `datos/`) |
-| `docs/spec+doc-pruebas.md` | Plan de pruebas: 29 P-M + 9 P-C, con las columnas de resultado vacías | `spec+doc-pruebas.md` (fila 31: P224) |
-| `docs/estado-nivel.md` | Tabla diseñado / implementado, 53 filas en *diseñado* | Generada en la 5b desde los RF (P247 → A) [Claude] |
-| `docs/plantilla-diario.md` | Plantilla de la ficha de diario por sesión | `proceso-plantilla-diario-desarrollo.md`, apartados 1 y 2 |
-| `docs/diario/` | Una ficha por sesión: `sesion-00.md` a `sesion-09.md` a 7 oct 2026; `pendientes-de-entender.md` (lista viva, P177; se cierra en la S14, P183) | — |
-| `docs/pruebas-pasadas/` | Una por sesión desde la S9: la lista de pruebas manuales aprobada por Daniel y lo que salió en la pasada con `adb` (P176); el resultado oficial sigue en `spec+doc-pruebas.md` | — |
-| `docs/capturas/` | Desde la S13: capturas del emulador que prueban la accesibilidad y el tema (`accesibilidad/`) y la app en inglés (`ingles/`), cada una con su `LEEME.md`; para la memoria (RNF-11 a 13, RNF-17, RNF-19) | — |
-| `docs/para-el-project/` | Lo que Daniel corrige en el doc del Project, partido por áreas (01 diagrama y BD · 02 memoria · 03 pantallas, textos y requisitos), P178 [Claude] | Nace en el repositorio (7 oct 2026) |
-| `docs/revisiones/` | Las revisiones independientes (1 oct y 6 oct) con sus «cambios aplicados» [Claude] | Nace en el repositorio |
-
-## Lo que NO está aquí, a propósito
-
-- `spec+doc-diseno-app.md` (el spec principal) y las figuras del E-R (P134): lo que Claude Code necesita de ellos está en `docs/spec-claude-code.md`; una sola fuente evita contradicciones. Si Claude Code pregunta por algo que no encuentra, se busca en el Project y se le copia aquí.
-- El registro de decisiones (`diario+doc-decisiones.md`) y los documentos de proceso: viven en el Project de Claude.
-- Los PDF oficiales de la FP: en `FP\`.
+El spec principal de la memoria y el registro de decisiones del Project no están aquí: viven en el Project de Claude. Lo que Claude Code necesita de ellos está copiado en docs/spec-claude-code.md.

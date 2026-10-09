@@ -1,49 +1,54 @@
-# Ako — app Android de pedidos para bares y restaurantes
+# Ako
 
-Proyecto Intermodular del ciclo de Desarrollo de Aplicaciones Multiplataforma (DAM), curso 2026-2027. Autor: Yunkang Daniel Huzhou.
+Ako es una app Android para tomar pedidos en un bar o un restaurante. Es mi Proyecto Intermodular del ciclo de DAM, curso 2026-2027. La hice yo, Yunkang Daniel Huzhou, con Claude Code de apoyo; abajo explico cómo.
 
-**Qué es:** una app para un móvil del restaurante, en vertical, con tres roles desde una pantalla de tres botones:
+Funciona en un solo móvil, en vertical y sin internet (la app no pide el permiso de Internet). Al abrirla hay tres botones:
 
-- **Propietario** (detrás de un PIN de cuatro cifras): crea la carta —categorías y platos con precio, alérgenos y foto— y consulta el Resumen de ingresos de cada día.
-- **Pedir**: se elige la mesa, se mira la carta, se añaden platos al carrito y se envía la comanda. Salir pide el PIN.
-- **Cuenta**: la rejilla de las 60 mesas, lo pedido por cada una con su total, quitar líneas, anular, el recibo con la calculadora de cambio y cobrar.
+Propietario. Pide un PIN de cuatro cifras. Desde ahí se hace la carta (categorías y platos, con su precio, sus alérgenos y su foto) y se mira el resumen de ingresos de cada día.
 
-Funciona **sin conexión y en un solo dispositivo** (la app no pide el permiso de Internet). Es un **prototipo académico**: el nivel 1 del diseño, **terminado y probado el 8 oct 2026** (sesión 13); el nivel 2 está diseñado, no programado. La arquitectura cliente-servidor en red local está diseñada, no programada. Qué funciones están ya implementadas y cuáles solo diseñadas se ve en `docs/estado-nivel.md`.
+Pedir. Eliges la mesa, miras la carta, añades platos al carrito y envías la comanda. Para salir hay que poner el PIN.
 
-## Stack
+Cuenta. La rejilla de las 60 mesas. En cada mesa roja se ve lo pedido con su total; se pueden quitar líneas, anular, sacar el recibo, calcular el cambio y cobrar.
 
-Kotlin · Android nativo con vistas XML (Activities y Fragments, ViewBinding; sin Compose) · Room sobre SQLite · MVVM sencillo (ViewModel + repositorio, corrutinas y LiveData) · Glide para las fotos · `minSdk 26` (Android 8.0), `compileSdk` y `targetSdk` 37. Las versiones de las librerías y de los plugins de Gradle están en un solo sitio, `app-ako/gradle/libs.versions.toml`; `minSdk`, `compileSdk` y `targetSdk`, en `app-ako/app/build.gradle.kts`.
+Es un prototipo de clase, no un producto. El nivel 1 del diseño está terminado y probado (8 de octubre de 2026, sesión 13). El nivel 2 y la versión cliente-servidor en red local están diseñados pero no programados. En docs/estado-nivel.md está qué hay hecho y qué no.
+
+## Con qué está hecho
+
+Kotlin. Android nativo con vistas XML (Activities y Fragments, ViewBinding; nada de Compose). Room sobre SQLite. MVVM sencillo: ViewModel y repositorio, con corrutinas y LiveData. Glide para las fotos. minSdk 26 (Android 8.0), compileSdk y targetSdk 37. Las versiones de las librerías y de los plugins están en app-ako/gradle/libs.versions.toml; los SDK, en app-ako/app/build.gradle.kts.
 
 ## Cómo abrirlo
 
-1. Android Studio compatible con la versión del plugin de Android (AGP) que fija `app-ako/gradle/libs.versions.toml` (tabla de compatibilidad de developer.android.com; el proyecto se desarrolló con Android Studio 2026.1), con el SDK de Android (plataforma 37 para compilar; una imagen del emulador de API 26 o superior).
-2. *File → Open* → la carpeta `app-ako/` (no la raíz del repositorio).
-3. Esperar a que termine la sincronización de Gradle.
-4. Emulador: Pixel 6 con API 34 (o cualquier Android 8.0 o superior).
-5. *Run ▶*. En el primer arranque la app pide crear el PIN del Propietario: **si se olvida, no se puede recuperar** y hay que reinstalar (se pierden la carta, las comandas y las fotos).
+1. Android Studio que admita la versión del plugin de Android (AGP) que marca libs.versions.toml (yo usé Android Studio 2026.1), con la plataforma 37 del SDK y una imagen de emulador de API 26 o superior.
+2. File → Open → la carpeta app-ako (no la raíz del repositorio).
+3. Esperar a que termine de sincronizar Gradle.
+4. Un emulador Pixel 6 con API 34, o cualquier Android 8.0 o superior.
+5. Run. La primera vez pide crear el PIN del Propietario. Si se olvida no se puede recuperar: hay que reinstalar y se pierde todo (la carta, las comandas y las fotos).
 
-## Cómo pasar las pruebas
+## Pruebas
 
-Desde la carpeta `app-ako/` (en Windows, con PowerShell o Git Bash; en macOS o Linux, `./gradlew` en vez de `./gradlew.bat`):
+Desde la carpeta app-ako (en Windows con PowerShell o Git Bash; en macOS o Linux, ./gradlew):
 
-- **Pruebas de código sin emulador** (JUnit, carpeta `app/src/test/`): `./gradlew.bat testDebugUnitTest`
-- **Pruebas de la base de datos** (Room en memoria, carpeta `app/src/androidTest/`, con el emulador encendido): `./gradlew.bat connectedDebugAndroidTest`
-- **Pruebas manuales**: `docs/spec+doc-pruebas.md` — 29 casos, uno por requisito del nivel 1, todos con resultado y fecha (pasada final del 8 oct 2026). El detalle de cada pasada está en `docs/pruebas-pasadas/` y las capturas del emulador, en `docs/capturas/`. El orden para prepararlas está en `docs/guias/juego-de-datos.md`.
+- ./gradlew.bat testDebugUnitTest pasa las pruebas de código sin emulador (app/src/test).
+- ./gradlew.bat connectedDebugAndroidTest pasa las de la base de datos (Room en memoria, app/src/androidTest); hace falta el emulador encendido.
 
-El plan tiene once pruebas de código (ocho en `test/` y tres en `androidTest/`; P-C-10 y P-C-11 las añadió la revisión del 1 oct); las once pasan (8 oct 2026), con su fecha en `docs/spec+doc-pruebas.md`.
+Las pruebas manuales están en docs/spec+doc-pruebas.md: 29 casos, uno por requisito del nivel 1, todos pasados el 8 de octubre de 2026. El detalle de cada pasada está en docs/pruebas-pasadas y las capturas del emulador en docs/capturas. Cómo montar los datos para repetirlas: docs/guias/juego-de-datos.md.
 
-## Estructura
+Hay 40 pruebas de código, 29 en test y 11 en androidTest, y todas pasan (9 de octubre de 2026).
 
-- `app-ako/` — el proyecto de Android Studio. Paquete `yunkang.ako`, por capas: `datos/` (tablas, consultas y repositorios), `dominio/` (cálculos puros que se prueban sin emulador, el carrito y los modelos que viajan a las pantallas), `seguridad/` (el PIN, guardado como hash con sal, nunca en claro), `imagenes/` (fotos) y `ui/` (pantallas); en la raíz del paquete, `EntradaAko` (la aplicación: crea la base de datos y los repositorios).
-- `docs/` — el diseño y el seguimiento: `spec-claude-code.md` (diseño y orden de construcción), fichas de pantalla, wireframes, requisitos, diagrama de clases, plan de pruebas, `estado-nivel.md` (qué está hecho), `decisiones-code.md`, `textos-ui.md` (los textos de la interfaz en español e inglés), `guias/` (una guía por sesión), `diario/` (una ficha por sesión de trabajo), `pruebas-pasadas/` (cada pasada de pruebas manuales), `capturas/` (capturas del emulador), `revisiones/` (las revisiones independientes con IA y lo que se aplicó), `para-el-project/` (los cambios que pasan a la memoria) y `lecciones-claude.md`.
-- `CLAUDE.md` y `.claude/` — las reglas y las herramientas de trabajo con Claude Code.
+## Cómo está organizado
 
-## Uso de IA
+app-ako es el proyecto de Android Studio. El paquete yunkang.ako va por capas: datos (tablas, consultas y repositorios), dominio (los cálculos que se prueban sin emulador, el carrito y los modelos que llegan a las pantallas), seguridad (el PIN, guardado como hash con sal, nunca en claro), imagenes (las fotos) y ui (las pantallas). En la raíz del paquete está EntradaAko, la Application: crea la base de datos y los repositorios.
 
-El código se construye con **Claude Code** (Anthropic) como apoyo, siguiendo las reglas de `CLAUDE.md`: el autor pide cada pieza, Claude Code la explica y da el código, y el autor lo teclea (o lo revisa, si en algún tramo Claude Code lo escribe directamente: cada ficha dice cuál de las dos), lo prueba y responde preguntas de comprensión antes de seguir. **Qué pidió el autor, qué generó la IA y qué revisó, tecleó o cambió el autor está en cada ficha de `docs/diario/`.** Desde el 29 de septiembre de 2026, los commits en los que ha trabajado Claude Code llevan además la línea `Co-Authored-By: Claude`. Lo propuesto por la IA y no pedido lleva la marca `[Claude]`.
+docs es el diseño y el seguimiento: spec-claude-code.md (el diseño y el orden de construcción), las fichas de pantalla, los wireframes, los requisitos, el diagrama de clases, el plan de pruebas, estado-nivel.md, decisiones-code.md, textos-ui.md (los textos de la interfaz en español e inglés), guias (una por sesión), diario (una ficha por sesión), pruebas-pasadas, capturas, revisiones (las revisiones con IA y lo que se aplicó), para-el-project (lo que paso a la memoria) y lecciones-claude.md.
 
-El uso de la IA se consultó con el profesor del módulo antes de empezar a programar, y lo aprobó (29 de septiembre de 2026).
+CLAUDE.md y .claude son las reglas y las herramientas con las que trabajé con Claude Code.
+
+## Cómo usé la IA
+
+El código lo hice con Claude Code (Anthropic) de apoyo, con las reglas de CLAUDE.md: yo pedía cada pieza, Claude la explicaba y me daba el código, y yo lo tecleaba en Android Studio (o lo revisaba, cuando en algún tramo lo escribió él directamente; cada ficha del diario dice cuál de las dos cosas pasó), lo probaba y contestaba preguntas de comprensión antes de seguir. En cada ficha de docs/diario está qué pedí yo, qué generó la IA y qué revisé, tecleé o cambié. Desde el 29 de septiembre de 2026 los commits en los que trabajó Claude Code llevan la línea Co-Authored-By: Claude. Lo que propuso la IA sin que yo lo pidiera lleva la marca [Claude].
+
+Lo consulté con el profesor del módulo antes de empezar a programar y lo aprobó (29 de septiembre de 2026).
 
 ## Licencia
 
-Trabajo académico. Sin licencia de uso más allá de la evaluación.
+Trabajo académico. Solo para la evaluación.
