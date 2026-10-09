@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- 2g · Resumen de ingresos (wireframe 02g): barra «← Atrás · Resumen de ingresos», el campo Día,
-     COMANDAS COBRADAS con la lista (scroll propio) y el pie gris fijo abajo con cuántas y el total (D6) -->
+     COMANDAS COBRADAS con la lista (scroll propio) y el pie gris fijo abajo con cuántas y el total -->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Barra superior gris, como la de la rejilla y la del Panel -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/barraSuperior"
         android:layout_width="0dp"
@@ -51,8 +50,8 @@
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- El campo Día (leyenda 02g #1): parece un desplegable, pero no se escribe en él; tocarlo abre el
-         calendario (pieza 6). [Claude] La flecha ▾ es solo dibujo (drawableEnd): todo el campo es el botón -->
+    <!-- El campo Día: parece un desplegable, pero no se escribe en él; tocarlo abre el
+         calendario. [Claude] La flecha ▾ es solo dibujo (drawableEnd): todo el campo es el botón -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/campoDia"
         android:layout_width="0dp"
@@ -121,7 +120,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textoSeccion" />
 
-    <!-- El pie gris fijo abajo, fuera de la lista (D6): cuántas a la izquierda, el total a la derecha -->
+    <!-- El pie gris fijo abajo, fuera de la lista: cuántas a la izquierda, el total a la derecha -->
     <LinearLayout
         android:id="@+id/pie"
         android:layout_width="0dp"

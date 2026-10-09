@@ -42,7 +42,7 @@
         android:textColor="?attr/colorOnSurfaceVariant"
         android:textSize="14sp" />
 
-    <!-- Foto (P13): el hueco redondo, como en la carta (P97 A), y «+ Elegir» -->
+    <!-- Foto: el hueco redondo, como en la carta, y «+ Elegir» -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -51,7 +51,7 @@
         android:orientation="horizontal">
 
         <!-- El círculo: Glide pinta la foto recortada en redondo (circleCrop); el gris y el «?»,
-             a su tamaño en el centro (scaleType center, decisión 3 B) -->
+             a su tamaño en el centro (scaleType center) -->
         <com.google.android.material.card.MaterialCardView
             style="?attr/materialCardViewOutlinedStyle"
             android:layout_width="80dp"
@@ -80,7 +80,7 @@
             android:text="@string/categoria_btn_elegir_foto" />
     </LinearLayout>
 
-    <!-- «En la carta» (P41): solo al editar y nunca en la categoría por defecto (R16) -->
+    <!-- «En la carta»: solo al editar y nunca en la categoría por defecto (R16) -->
     <com.google.android.material.materialswitch.MaterialSwitch
         android:id="@+id/interruptorEnLaCarta"
         android:layout_width="match_parent"

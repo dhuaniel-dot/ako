@@ -8,7 +8,7 @@
     android:layout_height="match_parent">
 
     <!-- Barra superior gris: «← Atrás» a la izquierda, «Categorías» en el centro y «+» a la derecha.
-         [Claude] Pieza 20: el título va atado entre los dos botones para no pisarlos con la letra grande (RNF-11) -->
+         [Claude] El título va atado entre los dos botones para no pisarlos con la letra grande (RNF-11) -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/barraSuperior"
         android:layout_width="0dp"
@@ -84,7 +84,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/barraSuperior" />
 
-    <!-- La lista de cajas: alto 0dp atado arriba (al Resumen) y abajo (a los botones) = «lo que quede en medio» -->
+    <!-- La lista de cajas: ocupa lo que queda entre el Resumen y los botones -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/listaCategorias"
         android:layout_width="0dp"

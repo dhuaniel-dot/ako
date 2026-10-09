@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- S13 · La interfaz en inglés (RNF-19). Android la usa sola si el móvil está en inglés.
+<!-- La interfaz en inglés (RNF-19). Android la usa sola si el móvil está en inglés.
      Lo que no está aquí sale de values/strings.xml: los datos de la precarga y los símbolos
-     llevan translatable="false" allí (P100). Glosario de la S13: Owner, Order, Bill, Receipt,
+     llevan translatable="false" allí. Glosario: Owner, Order, Bill, Receipt,
      Menu, Remove / Restore (nunca Delete: no se borra nada), dish, Table, Income summary -->
 <resources>
     <!-- Comunes -->
@@ -108,7 +108,7 @@
     <string name="comun_quitar">Take off</string>
     <string name="comun_menos_cd">One less</string>
     <string name="comun_mas_cd">One more</string>
-    <!-- P202 (B4): with the name, so each line and each box can be told apart -->
+    <!-- With the name, so each line and each box can be told apart -->
     <string name="linea_menos_cd">One less of %1$s</string>
     <string name="linea_mas_cd">One more of %1$s</string>
     <string name="linea_quitar_cd">Take off %1$s</string>

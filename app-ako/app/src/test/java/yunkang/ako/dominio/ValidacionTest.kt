@@ -7,10 +7,10 @@ import org.junit.Test
 
 class ValidacionTest {
 
-    // P-C-09: 1850 y 0 son válidos; -1 lanza un error
+    // 1850 y 0 son válidos (si lanzaran, la prueba saldría roja); -1 lanza un error
     @Test
     fun precioNegativo() {
-        Validacion.precioValido(1850)   // si lanzara, la prueba saldría roja
+        Validacion.precioValido(1850)
         Validacion.precioValido(0)
         assertThrows(IllegalArgumentException::class.java) {
             Validacion.precioValido(-1)

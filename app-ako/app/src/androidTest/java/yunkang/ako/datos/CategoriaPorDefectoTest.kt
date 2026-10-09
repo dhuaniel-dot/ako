@@ -15,7 +15,7 @@ import yunkang.ako.datos.entidades.Categoria
 import yunkang.ako.datos.repositorios.CartaRepository
 import yunkang.ako.datos.repositorios.ComandaRepositoryReal
 
-// P-C-08 (R16): siempre hay exactamente una categoría por defecto; no se elimina y no se crea otra.
+// Siempre hay exactamente una categoría por defecto; no se elimina y no se crea otra (R16).
 @RunWith(AndroidJUnit4::class)
 class CategoriaPorDefectoTest {
 
@@ -25,7 +25,7 @@ class CategoriaPorDefectoTest {
     @Before
     fun prepararBase() {
         val context = ApplicationProvider.getApplicationContext<Context>()
-        // Base en memoria CON la precarga, como la app (P203): se escribe sola al abrir la base
+        // Base en memoria CON la precarga, como la app: se escribe sola al abrir la base
         db = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java)
             .addCallback(Precarga(context))
             .build()
@@ -45,16 +45,16 @@ class CategoriaPorDefectoTest {
 
     @Test
     fun siempreHayUnaSolaCategoriaPorDefecto() {
-        // 1. Tras la precarga: una sola, y activa
+        // Tras la precarga: una sola, y activa
         assertEquals(1, contarPorDefecto())
         val porDefecto = runBlocking { db.categoriaDao().porDefecto() }
         assertTrue(porDefecto.activo)
 
-        // 2. Intentar eliminarla: sigue activa
+        // Intentar eliminarla: sigue activa
         runBlocking { repositorio.eliminarCategoria(porDefecto.id) }
         assertTrue(runBlocking { db.categoriaDao().porDefecto() }.activo)
 
-        // 3. Intentar crear otra por defecto: sigue habiendo una sola
+        // Intentar crear otra por defecto: sigue habiendo una sola
         val varios = Categoria(nombre = "Varios", imagen = null, orden = 0, activo = true, esPorDefecto = true)
         runBlocking { repositorio.guardarCategoria(varios) }
         assertEquals(1, contarPorDefecto())

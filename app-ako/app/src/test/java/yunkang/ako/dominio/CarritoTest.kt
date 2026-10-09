@@ -14,14 +14,14 @@ class CarritoTest {
     private val agua = Producto(id = 2, categoriaId = 1, numero = 1, nombre = "Agua",
         descripcion = null, precioCentimos = 500, imagen = null, activo = true)
 
-    // P-C-01: importe de una línea
+    // Importe de una línea
     @Test
     fun importeDeUnaLinea() {
         val linea = LineaCarrito(entrecot, 3)
         assertEquals(5550, linea.importe())
     }
 
-    // P-C-02: total del carrito, vacío y con líneas
+    // Total del carrito, vacío y con líneas
     @Test
     fun totalDelCarrito() {
         val carrito = Carrito(mesaId = 4)
@@ -38,7 +38,7 @@ class CarritoTest {
         assertFalse(carrito.estaVacio())
     }
 
-    // P-C-03: líneas idénticas se suman y el tope es 99
+    // Líneas idénticas se suman y el tope es 99 (si no cabe, anadir avisa con false)
     @Test
     fun lineasIdenticasSeSumanYTope99() {
         val carrito = Carrito(mesaId = 4)
@@ -51,10 +51,10 @@ class CarritoTest {
         carrito.cambiarCantidad(entrecot.id, 99)
         val cupo = carrito.anadir(entrecot, 1)
         assertEquals(99, carrito.lineas[0].cantidad)
-        assertFalse(cupo)   // P74: avisa de que no cabía
+        assertFalse(cupo)
     }
 
-    // P-C-11 [Claude, revisión 1 oct]: el mínimo de R4 (P148): con 0 o menos no se añade nada
+    // [Claude] El mínimo de R4: con 0 o menos no se añade nada
     @Test
     fun cantidadMenorQueUnoNoEntra() {
         val carrito = Carrito(mesaId = 4)
@@ -67,7 +67,8 @@ class CarritoTest {
         assertEquals(3, carrito.lineas[0].cantidad)
     }
 
-    // P-C-11: cambiarCantidad fuera de 1–99 o de un plato que no está no hace nada; quitar vacía el renglón
+    // cambiarCantidad fuera de 1–99 o de un plato que no está no hace nada; quitar vacía el renglón,
+    // y quitarlo dos veces no rompe
     @Test
     fun cambiarCantidadYQuitar() {
         val carrito = Carrito(mesaId = 4)
@@ -77,12 +78,12 @@ class CarritoTest {
         carrito.cambiarCantidad(entrecot.id, 100)
         assertEquals(3, carrito.lineas[0].cantidad)
 
-        carrito.cambiarCantidad(agua.id, 5)   // el agua no está en el carrito
+        carrito.cambiarCantidad(agua.id, 5)
         assertEquals(1, carrito.lineas.size)
 
         carrito.quitar(entrecot.id)
         assertTrue(carrito.estaVacio())
-        carrito.quitar(entrecot.id)           // quitar dos veces no rompe
+        carrito.quitar(entrecot.id)
         assertTrue(carrito.estaVacio())
     }
 }

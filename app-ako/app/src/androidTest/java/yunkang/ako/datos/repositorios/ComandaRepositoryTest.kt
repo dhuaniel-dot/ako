@@ -21,7 +21,7 @@ import yunkang.ako.datos.entidades.EstadoComanda
 import yunkang.ako.datos.entidades.Producto
 import yunkang.ako.dominio.Carrito
 
-// P-C-06 y P-C-07: enviar y quitar líneas con Room de verdad (base en memoria con la precarga hecha).
+// Enviar y quitar líneas con Room de verdad (base en memoria con la precarga hecha).
 @RunWith(AndroidJUnit4::class)
 class ComandaRepositoryTest {
 
@@ -69,7 +69,7 @@ class ComandaRepositoryTest {
         db.close()
     }
 
-    // P-C-06 (R1, R2, R14): dos envíos a la mesa 4 → una sola comanda con dos líneas copiadas
+    // Dos envíos a la mesa 4 → una sola comanda con dos líneas copiadas (R1, R2, R14)
     @Test
     fun dosEnviosALaMismaMesaVanALaMismaComanda() {
         val primero = Carrito(mesa4Id)
@@ -97,7 +97,7 @@ class ComandaRepositoryTest {
         assertEquals(1, lineas[1].cantidad)
     }
 
-    // P-C-07 (R7, R3): quitar la última línea deja la comanda ANULADA y la mesa libre
+    // Quitar la última línea deja la comanda ANULADA y la mesa libre (R7, R3)
     @Test
     fun quitarLaUltimaLineaAnulaLaComanda() {
         val carrito = Carrito(mesa4Id)

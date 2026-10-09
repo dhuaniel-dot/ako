@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 5a · Una categoría en la fila de arriba de la carta (wireframe 05a): círculo con su foto o con «?» (P224)
+<!-- 5a · Una categoría en la fila de arriba de la carta (wireframe 05a): círculo con su foto o con «?»
      y el nombre debajo. La activa: nombre en negrita y raya debajo (RNF-13: no solo color) -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -12,7 +12,7 @@
     android:paddingTop="8dp">
 
     <!-- El círculo: Glide pinta la foto recortada en redondo (circleCrop); el gris y el «?», a su tamaño
-         en el centro (scaleType center, decisión 3 B). Sin padding: encogería la foto -->
+         en el centro (scaleType center). Sin padding: encogería la foto -->
     <com.google.android.material.card.MaterialCardView
         style="?attr/materialCardViewOutlinedStyle"
         android:layout_width="56dp"
@@ -30,7 +30,6 @@
             android:src="@drawable/ic_sin_foto" />
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- El nombre; si no cabe, se corta con «…» -->
     <TextView
         android:id="@+id/textoNombre"
         android:layout_width="match_parent"

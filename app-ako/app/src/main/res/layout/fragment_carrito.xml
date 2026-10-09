@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 5c · Carrito (wireframe 05c), pantalla completa (P84): barra «← Atrás · Carrito · Mesa N»; las líneas;
+<!-- 5c · Carrito (wireframe 05c), pantalla completa: barra «← Atrás · Carrito · Mesa N»; las líneas;
      TOTAL y «Enviar» fijos abajo -->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Barra superior gris: «← Atrás» (vuelve a la carta) y «Carrito · Mesa 4» (la mesa, siempre a la vista) -->
+    <!-- Barra superior: «← Atrás» vuelve a la carta; la mesa, siempre a la vista -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/barraSuperior"
         android:layout_width="0dp"
@@ -51,7 +51,6 @@
             tools:text="Carrito · Mesa 4" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- Las líneas: ocupan lo que queda entre la barra y el total -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/listaLineas"
         android:layout_width="0dp"
@@ -95,7 +94,7 @@
             tools:text="39,50 €" />
     </LinearLayout>
 
-    <!-- «Enviar» fijo abajo (naranja: botón de acción, P138); apagado con el carrito vacío (R4) -->
+    <!-- «Enviar» fijo abajo (naranja: botón de acción); apagado con el carrito vacío (R4) -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/botonEnviar"
         style="@style/Widget.Material3.Button"

@@ -25,7 +25,7 @@
             android:paddingStart="4dp"
             android:paddingEnd="4dp">
 
-            <!-- P56 A: icono visible para plegar (no un gesto oculto); gira cuando la caja está plegada -->
+            <!-- Icono visible para plegar (no un gesto oculto); gira cuando la caja está plegada -->
             <ImageButton
                 android:id="@+id/botonPlegar"
                 android:layout_width="48dp"
@@ -67,13 +67,12 @@
                 android:src="@drawable/ic_editar" />
         </LinearLayout>
 
-        <!-- Raya fina bajo la cabecera -->
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="?attr/colorOutlineVariant" />
 
-        <!-- Los platos: altura FIJA (cuatro filas, P51 B / P99). Nunca wrap_content ni un ScrollView alrededor -->
+        <!-- Los platos: altura FIJA (cuatro filas). Nunca wrap_content ni un ScrollView alrededor -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/listaPlatos"
             android:layout_width="match_parent"

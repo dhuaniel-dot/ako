@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 5b · Ficha del plato (wireframe 05b), pantalla completa (P84): barra con «← Atrás»; un scroll con la foto grande,
+<!-- 5b · Ficha del plato (wireframe 05b), pantalla completa: barra con «← Atrás»; un scroll con la foto grande,
      «12 · Entrecot» entero, precio, descripción, el desplegable de alérgenos y la cantidad; «Añadir — importe» fijo abajo -->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Barra superior gris, solo con «← Atrás» (vuelve a la carta, sin PIN) -->
+    <!-- Barra superior solo con «← Atrás» (vuelve a la carta, sin PIN) -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/barraSuperior"
         android:layout_width="0dp"
@@ -49,8 +49,8 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- 1 · La foto grande a todo el marco. Glide pinta la foto recortada (centerCrop); el gris de
-                 «cargando» y el «?», a su tamaño en el centro (scaleType center, decisión 3 B) -->
+            <!-- La foto grande a todo el marco. Glide pinta la foto recortada (centerCrop); el gris de
+                 «cargando» y el «?», a su tamaño en el centro (scaleType center) -->
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="220dp"
@@ -71,7 +71,7 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <!-- 2 · «21 · Merluza a la plancha» entero (en la ficha no se corta) y el precio -->
+                <!-- «21 · Merluza a la plancha» entero (en la ficha no se corta) y el precio -->
                 <TextView
                     android:id="@+id/textoNumeroNombre"
                     android:layout_width="match_parent"
@@ -90,7 +90,7 @@
                     android:textStyle="bold"
                     tools:text="18,50 €" />
 
-                <!-- 3 · La descripción (gone si el plato no tiene) -->
+                <!-- La descripción (gone si el plato no tiene) -->
                 <TextView
                     android:id="@+id/textoDescripcion"
                     android:layout_width="match_parent"
@@ -106,7 +106,7 @@
                     android:layout_marginTop="16dp"
                     android:background="?attr/colorOutlineVariant" />
 
-                <!-- 4 · El desplegable de alérgenos: se abre y se cierra tocando su cabecera (sin gestos ocultos) -->
+                <!-- El desplegable de alérgenos: se abre y se cierra tocando su cabecera (sin gestos ocultos) -->
                 <LinearLayout
                     android:id="@+id/cabeceraAlergenos"
                     android:layout_width="match_parent"
@@ -154,7 +154,7 @@
                     android:layout_height="1dp"
                     android:background="?attr/colorOutlineVariant" />
 
-                <!-- 5 · Cantidad: − 1 + (de 1 a 99, R4) -->
+                <!-- Cantidad: − 1 + (de 1 a 99, R4) -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -211,7 +211,7 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- 6 · «Añadir — 18,50 €» fijo abajo, fuera del scroll (naranja: botón de acción, P138); el texto lo pone el código -->
+    <!-- «Añadir — 18,50 €» fijo abajo, fuera del scroll (naranja: botón de acción); el texto lo pone el código -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/botonAnadir"
         style="@style/Widget.Material3.Button"

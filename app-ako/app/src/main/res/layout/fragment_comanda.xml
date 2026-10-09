@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Barra superior gris: «← Atrás», «Mesa 4» en el centro y «Anular» a la derecha -->
+    <!-- Barra superior con «Anular» a la derecha -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/barraSuperior"
         android:layout_width="0dp"
@@ -64,7 +64,6 @@
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- Las líneas: ocupan lo que queda entre la barra y el total -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/listaLineas"
         android:layout_width="0dp"

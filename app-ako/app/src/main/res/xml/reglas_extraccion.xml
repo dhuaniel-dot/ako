@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- H05 (P173 A, revisión del 6 oct): ni el PIN (sharedpref «pin.xml») ni la base de datos («ako.db»)
-     salen nunca del móvil. allowBackup="false" ya apaga la copia en la nube (P151), pero en Android 12+
+<!-- Ni el PIN (sharedpref «pin.xml») ni la base de datos («ako.db»)
+     salen nunca del móvil. allowBackup="false" ya apaga la copia en la nube, pero en Android 12+
      algunos fabricantes pasan igualmente los datos de móvil a móvil al estrenar uno: aquí se excluye de las dos
      cosas todo lo de esos dos cajones (path="." = el cajón entero), que es todo lo que la app guarda.
      Fuente: https://developer.android.com/identity/data/autobackup -->

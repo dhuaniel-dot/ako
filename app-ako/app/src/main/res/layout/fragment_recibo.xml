@@ -8,7 +8,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Barra superior gris: «← Atrás» y «Mesa 4 · Recibo» -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/barraSuperior"
         android:layout_width="0dp"
@@ -52,7 +51,6 @@
             tools:text="Mesa 4 · Recibo" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- Las líneas (sin botones): ocupan lo que queda entre la barra y el total -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/listaLineas"
         android:layout_width="0dp"
@@ -112,7 +110,7 @@
             android:layout_height="8dp"
             android:background="?attr/colorSurfaceContainer" />
 
-        <!-- Entregado [ 50,00 ] €: teclado numérico con decimales; digits deja escribir coma o punto (S7) -->
+        <!-- Entregado [ 50,00 ] €: teclado numérico con decimales; digits deja escribir coma o punto -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -167,7 +165,7 @@
             android:textColor="?attr/colorOnSurfaceVariant"
             android:textSize="14sp" />
 
-        <!-- Cambio: en blanco mientras no hay un importe entregado (P187 A) -->
+        <!-- Cambio: en blanco mientras no hay un importe entregado -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -196,7 +194,7 @@
         </LinearLayout>
     </LinearLayout>
 
-    <!-- «Cobrar» fijo abajo (naranja: botón de acción). Con el teclado abierto sube por encima (H25) -->
+    <!-- «Cobrar» fijo abajo (naranja: botón de acción). Con el teclado abierto sube por encima -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/botonCobrar"
         style="@style/Widget.Material3.Button"

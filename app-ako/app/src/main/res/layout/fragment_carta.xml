@@ -8,7 +8,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Barra superior gris, como las demás -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/barraSuperior"
         android:layout_width="0dp"
@@ -34,7 +33,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- «Mesa N» en el centro de la barra (P89); lo escribe el código -->
+        <!-- «Mesa N» en el centro de la barra; lo escribe el código -->
         <TextView
             android:id="@+id/textoMesa"
             android:layout_width="wrap_content"
@@ -48,7 +47,7 @@
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- La fila de categorías: fija bajo la barra, fuera de la lista (P86); solo crece lo que miden sus círculos -->
+    <!-- La fila de categorías: fija bajo la barra, fuera de la lista; solo crece lo que miden sus círculos -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/filaCategorias"
         android:layout_width="0dp"
@@ -60,7 +59,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/barraSuperior" />
 
-    <!-- Una raya fina que separa la fila de la lista -->
     <View
         android:id="@+id/separador"
         android:layout_width="0dp"
@@ -84,7 +82,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/separador" />
 
-    <!-- D7: la pastilla «Carrito · N · total», abajo a la derecha (no una barra fija, ficha 5).
+    <!-- La pastilla «Carrito · N · total», abajo a la derecha (no una barra fija, ficha 5).
          Gris oscuro con letras claras (los colores del texto al revés: en modo noche se invierte); el texto lo pone el código -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/botonCarrito"

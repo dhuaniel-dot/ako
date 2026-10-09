@@ -12,7 +12,7 @@
     android:paddingBottom="4dp">
 
     <!-- Miniatura: Glide pinta la foto recortada a todo el hueco; el gris de «cargando» y el «?»,
-         a su tamaño en el centro (scaleType center, decisión 3 B). Sin padding: encogería la foto -->
+         a su tamaño en el centro (scaleType center). Sin padding: encogería la foto -->
     <ImageView
         android:id="@+id/imagenPlato"
         android:layout_width="44dp"
@@ -25,7 +25,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- «12 · Entrecot» en una línea; si no cabe, se corta con «…» -->
     <TextView
         android:id="@+id/textoNumeroNombre"
         android:layout_width="0dp"

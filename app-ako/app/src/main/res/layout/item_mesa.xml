@@ -18,7 +18,7 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <!-- S13 (1 → B): el número ocupa el hueco que deja el total y encoge su letra si no cabe
+        <!-- El número ocupa el hueco que deja el total y encoge su letra si no cabe
              (con la letra del móvil al máximo); como mucho 24 sp y nunca menos de 12 sp -->
         <TextView
             android:id="@+id/textoNumero"
@@ -33,7 +33,7 @@
             android:textStyle="bold"
             tools:text="4" />
 
-        <!-- P130 del Project: 12 sp, el mínimo; solo se ve si la mesa tiene comanda -->
+        <!-- 12 sp, el mínimo; solo se ve si la mesa tiene comanda -->
         <TextView
             android:id="@+id/textoTotal"
             android:layout_width="wrap_content"

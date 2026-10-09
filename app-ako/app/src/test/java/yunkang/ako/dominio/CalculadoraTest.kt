@@ -5,7 +5,7 @@ import org.junit.Test
 
 class CalculadoraTest {
 
-    // P-C-04: el cambio es entregado − total, y puede salir negativo
+    // El cambio es entregado − total, y puede salir negativo
     @Test
     fun cambio() {
         assertEquals(800, Calculadora.cambio(totalCentimos = 4200, entregadoCentimos = 5000))

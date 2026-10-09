@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- 3a · Formulario del plato (wireframes 03a-formulario-1 y -2): barra arriba, un scroll único
-     con todo el formulario y Guardar fijo abajo, fuera del scroll (leyenda 03a-1 #5) -->
+     con todo el formulario y Guardar fijo abajo, fuera del scroll -->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/raiz"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Barra superior gris, como la del Panel: «← Atrás» y el título, que pone el código
-         («Nuevo plato» o «Editar plato») -->
+    <!-- Barra superior: el título lo pone el código («Nuevo plato» o «Editar plato») -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/barraSuperior"
         android:layout_width="0dp"
@@ -67,8 +66,8 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- 1 · La foto a todo el marco y el botón redondo «+» (P13, S12). Glide pinta la foto recortada
-                 (centerCrop); el gris de «cargando» y el «?» los pinta a su tamaño en el centro (scaleType center, 3 B) -->
+            <!-- La foto a todo el marco y el botón redondo «+». Glide pinta la foto recortada
+                 (centerCrop); el gris de «cargando» y el «?» los pinta a su tamaño en el centro (scaleType center) -->
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="180dp"
@@ -100,7 +99,7 @@
                     app:cornerRadius="28dp" />
             </FrameLayout>
 
-            <!-- 2 · Nombre (el estilo de todos los campos lo pone el tema, P160) -->
+            <!-- Nombre (el estilo de todos los campos lo pone el tema) -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/campoNombre"
                 android:layout_width="match_parent"
@@ -116,7 +115,7 @@
                     android:maxLines="1" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- 3 · Número y precio en la misma fila -->
+            <!-- Número y precio en la misma fila -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -159,8 +158,8 @@
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
-            <!-- 4 · Categoría: desplegable (se elige, no se escribe). [Claude] android:theme le pone
-                 el mismo retoque de color que al resto de campos (P160), que su estilo propio pierde -->
+            <!-- Categoría: desplegable (se elige, no se escribe). [Claude] android:theme le pone
+                 el mismo retoque de color que al resto de campos, que su estilo propio pierde -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/campoCategoria"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
@@ -195,7 +194,7 @@
                     android:minLines="3" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- ALÉRGENOS: título y raya; las 14 casillas las crea el código (pieza 7) -->
+            <!-- ALÉRGENOS: título y raya; las 14 casillas las crea el código -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -222,7 +221,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp" />
 
-            <!-- «En la carta»: también al crear, encendido (P60 A). Apagarlo y guardar ELIMINA el plato (3d) -->
+            <!-- «En la carta»: también al crear, encendido. Apagarlo y guardar ELIMINA el plato (3d) -->
             <com.google.android.material.materialswitch.MaterialSwitch
                 android:id="@+id/interruptorEnLaCarta"
                 android:layout_width="match_parent"
@@ -235,7 +234,7 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- 5 · Guardar fijo abajo, fuera del scroll; apagado hasta que estén los cuatro obligatorios (pieza 8) -->
+    <!-- Guardar fijo abajo, fuera del scroll; apagado hasta que estén los cuatro obligatorios -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/botonGuardar"
         style="@style/Widget.Material3.Button"

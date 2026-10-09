@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- [Claude] Lo que se ve en un hueco de foto mientras Glide la carga: un rectángulo gris liso (spec 9, «placeholder neutro») -->
+<!-- [Claude] Lo que se ve en un hueco de foto mientras Glide la carga: un rectángulo gris liso -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
     <solid android:color="?attr/colorSurfaceContainerHighest" />

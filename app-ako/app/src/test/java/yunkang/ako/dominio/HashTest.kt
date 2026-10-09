@@ -5,7 +5,7 @@ import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
-// P-C-05: el hash del PIN
+// El hash del PIN
 class HashTest {
 
     @Test
@@ -29,7 +29,7 @@ class HashTest {
         assertNotEquals(hash1, hash2)
     }
 
-    // [Claude] Con una sal fija la prueba da siempre lo mismo (sin azar, H22)
+    // [Claude] Con una sal fija la prueba da siempre lo mismo (sin azar)
     @Test
     fun elHashNoContieneElPin() {
         val salFija = java.util.Base64.getEncoder().encodeToString(ByteArray(16))

@@ -10,7 +10,7 @@ import org.junit.Test
 import yunkang.ako.datos.entidades.Producto
 import yunkang.ako.dominio.modelos.ResultadoGuardado
 
-// P-C-09 (segunda mitad) y P-C-10: guardarPlato con actores en vez de base de datos, sin emulador.
+// guardarPlato con actores en vez de base de datos, sin emulador.
 class CartaRepositoryTest {
 
     // Un plato nuevo (id 0) con el precio que diga cada prueba.
@@ -25,7 +25,7 @@ class CartaRepositoryTest {
         categoriaDao: CategoriaDaoFalso = CategoriaDaoFalso()
     ) = CartaRepository(categoriaDao, productoDao, PrecargadosDaoFalso(), ComandaRepositoryFalso())
 
-    // P-C-09: 18,50 € se guarda, y se guarda con ese precio
+    // 18,50 € se guarda, y se guarda con ese precio
     @Test
     fun precioNormalSeGuarda() {
         val productoDao = ProductoDaoFalso()
@@ -36,7 +36,7 @@ class CartaRepositoryTest {
         assertEquals(1850, productoDao.productoRecibido?.precioCentimos)
     }
 
-    // P-C-09: 0 € se guarda (un plato gratis es válido)
+    // 0 € se guarda (un plato gratis es válido)
     @Test
     fun precioCeroSeGuarda() {
         val productoDao = ProductoDaoFalso()
@@ -46,7 +46,7 @@ class CartaRepositoryTest {
         assertEquals(0, productoDao.productoRecibido?.precioCentimos)
     }
 
-    // P-C-09: −1,00 € lanza un error y el DAO no recibe nada: ni el plato ni sus alérgenos
+    // −1,00 € lanza un error y el DAO no recibe nada: ni el plato ni sus alérgenos
     @Test
     fun precioNegativoLanzaYNoGuarda() {
         val productoDao = ProductoDaoFalso()
@@ -59,7 +59,7 @@ class CartaRepositoryTest {
         assertNull(productoDao.marcasRecibidas)
     }
 
-    // ---- P-C-10 [Claude, revisión 1 oct]: la cadena 3e (P62 → A) solo salta al crear o mover ----
+    // [Claude] La cadena 3e solo salta al crear o mover
 
     // Plato ya guardado en la categoría 2, para las pruebas de editar
     private val entrecotGuardado = platoConPrecio(1850).copy(id = 7)
@@ -85,7 +85,7 @@ class CartaRepositoryTest {
         assertNull(productoDao.productoRecibido)
     }
 
-    // Plato que se edita SIN moverlo, aunque su categoría esté eliminada → Ok (P62 A)
+    // Plato que se edita SIN moverlo, aunque su categoría esté eliminada → Ok
     @Test
     fun editadoSinMoverSeGuarda() {
         val productoDao = ProductoDaoFalso(guardado = entrecotGuardado)
@@ -96,7 +96,7 @@ class CartaRepositoryTest {
         assertEquals("Entrecot de ternera", productoDao.productoRecibido?.nombre)
     }
 
-    // Tercera salida de la cadena (P130): «guárdalo ahí aunque esté eliminada» → Ok, con sus alérgenos
+    // Tercera salida de la cadena: «guárdalo ahí aunque esté eliminada» → Ok, con sus alérgenos
     @Test
     fun aunqueCategoriaEliminadaSeGuarda() {
         val productoDao = ProductoDaoFalso()
@@ -108,7 +108,7 @@ class CartaRepositoryTest {
         assertEquals(listOf(1L, 7L), productoDao.marcasRecibidas?.map { it.alergenoId })
     }
 
-    // P150: al editar, «activo» se queda como estaba guardado: guardarPlato no elimina ni recupera
+    // Al editar, «activo» se queda como estaba guardado: guardarPlato no elimina ni recupera
     @Test
     fun editarNoCambiaActivo() {
         val eliminado = entrecotGuardado.copy(activo = false)

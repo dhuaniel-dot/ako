@@ -26,6 +26,7 @@ class CategoriaDaoFalso(var activa: Boolean = true) : CategoriaDao {
 
 // Apunta qué plato y qué marcas de alérgeno le llegan; el número siempre está libre.
 // "guardado" es el plato que la prueba dice que ya existe (para editar); vacío si no hay ninguno.
+// borrarAlergenosDe e insertarAlergenosDe no llevan TODO(): las usa guardarAlergenos.
 class ProductoDaoFalso(var guardado: Producto? = null) : ProductoDao {
     var seLlamoInsertar = false
     var productoRecibido: Producto? = null
@@ -40,7 +41,7 @@ class ProductoDaoFalso(var guardado: Producto? = null) : ProductoDao {
     }
     override suspend fun porId(id: Long): Producto? = guardado?.takeIf { it.id == id }
     override suspend fun existeNumero(numero: Int, exceptoId: Long): Boolean = false
-    override suspend fun borrarAlergenosDe(productoId: Long) {}                  // las usa guardarAlergenos
+    override suspend fun borrarAlergenosDe(productoId: Long) {}
     override suspend fun insertarAlergenosDe(marcas: List<ProductoAlergeno>) {
         marcasRecibidas = marcas
     }
