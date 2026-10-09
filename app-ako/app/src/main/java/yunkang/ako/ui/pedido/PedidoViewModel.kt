@@ -43,7 +43,7 @@ class PedidoViewModel(
     var mesaNumero: Int = 0
         private set
 
-    // 5a: la carta por secciones, solo con platos visibles (R15). La escribe Room a través
+    // 5a: la carta por secciones, solo con platos visibles. La escribe Room a través
     // del repositorio (el grifo, Flow); asLiveData la cuelga en el tablón. Nadie la carga a mano
     val carta: LiveData<List<CategoriaConPlatos>> = cartaRepository.cartaVisible().asLiveData()
 
@@ -53,7 +53,7 @@ class PedidoViewModel(
     val ficha: LiveData<DatosFicha?> = _ficha
 
     // El carrito de la mesa: lo comparten la carta, la ficha y el carrito. Vive solo en la libreta:
-    // no se guarda en ningún sitio (R10) y se pierde al salir de Pedir (RNF-24). Nace en iniciar()
+    // no se guarda en ningún sitio y se pierde al salir de Pedir. Nace en iniciar()
     private val _carrito = MutableLiveData<Carrito>()
     val carrito: LiveData<Carrito> = _carrito
 
@@ -72,7 +72,7 @@ class PedidoViewModel(
         _carrito.value = Carrito(mesaId)
     }
 
-    // 5b · Añadir: mete el plato en el carrito (si ya estaba, suma en la misma línea; tope 99, R4).
+    // 5b · Añadir: mete el plato en el carrito (si ya estaba, suma en la misma línea; tope 99).
     // Devuelve false si ha tenido que topar, para que la ficha avise.
     // El carrito cambia POR DENTRO: hay que volver a dejarlo en el tablón para que suene el timbre
     fun anadir(plato: Producto, cantidad: Int): Boolean {
@@ -82,7 +82,7 @@ class PedidoViewModel(
         return sinTopar
     }
 
-    // 5c · − y +: pone una cantidad a una línea (Carrito no deja salir de 1–99, R4) y vuelve a dejar el carrito
+    // 5c · − y +: pone una cantidad a una línea (Carrito no deja salir de 1–99) y vuelve a dejar el carrito
     fun cambiarCantidad(productoId: Long, cantidad: Int) {
         val carrito = _carrito.value ?: return
         carrito.cambiarCantidad(productoId, cantidad)
@@ -99,7 +99,8 @@ class PedidoViewModel(
     // [Claude] true mientras se envía: un segundo toque no vuelve a enviar las mismas líneas
     private var enviando = false
 
-    // 5c · Enviar: R1, R2, R4, R8 y R14 los garantiza el repositorio, todo en una transacción.
+    // 5c · Enviar: el repositorio, todo en una transacción, crea la comanda o le añade líneas y garantiza una sola
+    // comanda abierta por mesa, de 1 a 99 unidades, ningún precio negativo y nombre y precio congelados al enviar.
     // Si va bien, la libreta cambia el carrito por uno NUEVO y vacío de la misma mesa y devuelve true.
     // Es suspend: la pantalla espera; Room hace el trabajo fuera del hilo de la pantalla
     suspend fun enviar(): Boolean {

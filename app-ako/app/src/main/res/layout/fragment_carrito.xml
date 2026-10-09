@@ -94,7 +94,7 @@
             tools:text="39,50 €" />
     </LinearLayout>
 
-    <!-- «Enviar» fijo abajo (naranja: botón de acción); apagado con el carrito vacío (R4) -->
+    <!-- «Enviar» fijo abajo (naranja: botón de acción); apagado con el carrito vacío -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/botonEnviar"
         style="@style/Widget.Material3.Button"

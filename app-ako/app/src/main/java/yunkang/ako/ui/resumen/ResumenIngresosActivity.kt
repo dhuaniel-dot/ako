@@ -12,7 +12,7 @@ import yunkang.ako.dominio.modelos.ComandaConTotal
 import yunkang.ako.ui.comun.ReciboFragment
 import yunkang.ako.ui.comun.apartarDeLasBarras
 
-// Pantalla 2g (Resumen de ingresos). Solo se llega desde el Panel, detrás del PIN (RNF-10): Cuenta no pide PIN
+// Pantalla 2g (Resumen de ingresos). Solo se llega desde el Panel, detrás del PIN: Cuenta no pide PIN
 // y la recaudación quedaría a la vista de cualquiera. Es solo el marco: dentro va la lista (ResumenListaFragment)
 // y, encima en la pila, el recibo en solo lectura. Solo mira: no escribe nada en la base de datos
 class ResumenIngresosActivity : AppCompatActivity() {
@@ -69,7 +69,6 @@ class ResumenIngresosActivity : AppCompatActivity() {
         reciboVisible()?.mostrar(viewModel.lineasRecibo.value ?: emptyList(), comanda.totalCentimos)
     }
 
-    // [Claude] El recibo, si es lo que se ve ahora en el contenedor; si no, vacío
     private fun reciboVisible(): ReciboFragment? =
         supportFragmentManager.findFragmentById(R.id.contenedor) as? ReciboFragment
 }

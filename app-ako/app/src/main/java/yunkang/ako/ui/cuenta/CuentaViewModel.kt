@@ -38,7 +38,7 @@ class CuentaViewModel(
     private val _total = MutableLiveData(0)
     val total: LiveData<Int> = _total
 
-    // La línea que espera mientras el aviso R7 está abierto. Vive en la libreta,
+    // La línea que espera mientras está abierto el aviso de la última línea. Vive en la libreta,
     // así sigue ahí si Android rehace la pantalla con el aviso delante
     var lineaPorQuitar: Long? = null
 
@@ -56,11 +56,11 @@ class CuentaViewModel(
         viewModelScope.launch { recargar() }
     }
 
-    // [Claude] R7: ¿la que se va a quitar es la única línea que queda? Se mira la lista que se ve
+    // [Claude] Sin líneas = anulada: ¿la que se va a quitar es la única línea que queda? Se mira la lista que se ve
     fun esUltimaLinea(): Boolean = lineas.value?.size == 1
 
     // 6b · Quitar: suspend, la pantalla espera. Devuelve true si la comanda quedó ANULADA
-    // por quitar la última línea (R7); si no, vuelve a preguntar líneas y total (R10: nunca se resta en pantalla)
+    // por quitar la última línea; si no, vuelve a preguntar líneas y total (nunca se resta en pantalla)
     suspend fun quitarLinea(lineaId: Long): Boolean {
         if (trabajando) return false
         trabajando = true
@@ -103,8 +103,8 @@ class CuentaViewModel(
     // Es una función pura: no guarda nada; cerrar el recibo lo olvida
     fun cambio(entregadoCentimos: Int): Int = Calculadora.cambio(total.value ?: 0, entregadoCentimos)
 
-    // Vuelve a preguntar las líneas y el total a la base de datos (R10: el total se suma en SQL cada vez,
-    // nunca se resta en la pantalla). R14: nombre y precio salen de la línea, congelados al enviar
+    // Vuelve a preguntar las líneas y el total a la base de datos (el total se suma en SQL cada vez,
+    // nunca se resta en la pantalla). Nombre y precio salen de la línea, congelados al enviar
     private suspend fun recargar() {
         val lineas = comandaRepository.lineasDe(comandaId)
         _lineas.value = lineas.map { LineaVista.de(it) }

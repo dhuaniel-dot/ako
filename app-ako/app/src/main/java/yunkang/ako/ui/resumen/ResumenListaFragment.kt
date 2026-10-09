@@ -71,7 +71,7 @@ class ResumenListaFragment : Fragment(R.layout.fragment_resumen_lista) {
             ).show()
         }
 
-        // Lo cobrado ese día: las filas, cuántas y el total del pie (R10: calculados, no guardados).
+        // Lo cobrado ese día: las filas, cuántas y el total del pie (calculados, no guardados).
         // Un día sin cobros no es un error (ficha 2g): el aviso en lugar de la lista, y el pie a 0 y 0,00 €
         viewModel.resumen.observe(viewLifecycleOwner) { resumen ->
             adaptador.mostrar(resumen.comandas)

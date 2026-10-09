@@ -37,8 +37,8 @@ class SelectorViewModel(
     // 1c: ¿es este el PIN guardado? También suspend; el repositorio cambia de hilo
     suspend fun comprobarPin(pin: String): Boolean = seguridadRepository.comprobarPin(pin)
 
-    // Puerta de Pedir (RF-25): vacío si se puede entrar; si no, el texto que dice por qué.
-    // La regla («¿hay algún plato visible?», R15) la sabe el repositorio; la libreta solo elige el mensaje
+    // Puerta de Pedir: vacío si se puede entrar; si no, el texto que dice por qué.
+    // La regla («¿hay algún plato visible?») la sabe el repositorio; la libreta solo elige el mensaje
     suspend fun motivoPuertaCerrada(): Int? {
         if (cartaRepository.hayPlatoVisible()) return null
         return if (cartaRepository.hayPlatoExistente()) {

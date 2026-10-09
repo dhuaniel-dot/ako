@@ -48,7 +48,7 @@ class FilaPlatoAdapter(
 
         pintarFoto(holder.binding.imagenPlato, plato.imagen?.let { File(it) }, plato.nombre)
 
-        // RNF-13: la palabra «Eliminado» es la información; el gris solo la refuerza.
+        // La palabra «Eliminado» es la información; el gris solo la refuerza.
         // En la carta nunca llega un plato eliminado, así que allí no sale sola
         holder.binding.textoEliminado.visibility = if (plato.activo) View.GONE else View.VISIBLE
 
@@ -60,7 +60,7 @@ class FilaPlatoAdapter(
 
     companion object {
         // Lo eliminado se ve apagado al 80 %: se nota, pero la palabra «Eliminado» se sigue leyendo
-        // (contraste 5,15:1, RNF-12)
+        // (contraste 5,15:1)
         const val ALFA_ELIMINADO = 0.8f
     }
 }

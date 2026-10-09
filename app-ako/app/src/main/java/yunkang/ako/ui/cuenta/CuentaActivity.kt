@@ -18,7 +18,7 @@ import yunkang.ako.ui.comun.RejillaMesasFragment
 import yunkang.ako.ui.comun.apartarDeLasBarras
 
 // Pantalla 6 (Cuenta). Es solo el marco: dentro se apilan la rejilla (6a), la comanda (6b) y el recibo (6c).
-// No pide PIN: la usa el camarero (ficha 1). El Resumen de ingresos no vive aquí, sino detrás del PIN (RNF-10)
+// No pide PIN: la usa el camarero (ficha 1). El Resumen de ingresos no vive aquí, sino detrás del PIN
 class CuentaActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityCuentaBinding
@@ -48,7 +48,7 @@ class CuentaActivity : AppCompatActivity() {
             }
         } else if (viewModel.comandaId == 0L) {
             // Android mató la app con 6b o 6c delante y la libreta renació en blanco,
-            // sin saber qué comanda era. Se cierran las cajas que hubiera abiertas (Anular, Cobrar, R7) y
+            // sin saber qué comanda era. Se cierran las cajas que hubiera abiertas (Anular, Cobrar, última línea) y
             // se vacía la pila: vuelve la rejilla y el camarero toca otra vez la mesa
             supportFragmentManager.fragments.filterIsInstance<ConfirmacionDialog>().forEach { it.dismiss() }
             supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
@@ -97,10 +97,10 @@ class CuentaActivity : AppCompatActivity() {
             if (!portero.permite()) return@setFragmentResultListener
             val mesaId = sobre.getLong(RejillaMesasFragment.MESA_ID)
             val numero = sobre.getInt(RejillaMesasFragment.MESA_NUMERO)
-            // El sobre no lleva la comanda: se busca la mesa en el tablón (R3: roja = tiene comanda pendiente)
+            // El sobre no lleva la comanda: se busca la mesa en el tablón (roja = tiene comanda pendiente)
             val comandaId = viewModel.mesas.value?.find { it.mesa.id == mesaId }?.comandaId
             if (comandaId == null) {
-                // Mesa blanca (nivel 1): solo un aviso. No se crea nada: la comanda nace con el primer Enviar (R2)
+                // Mesa blanca (nivel 1): solo un aviso. No se crea nada: la comanda nace con el primer Enviar
                 Snackbar.make(
                     binding.contenedor,
                     getString(R.string.cuenta_mesa_sin_comanda, numero),
@@ -129,8 +129,8 @@ class CuentaActivity : AppCompatActivity() {
         }
     }
 
-    // [Claude] R7, Anular y Cobrar acaban aquí: la comanda ya está cerrada (R5), así que se quitan de golpe
-    // todas las vistas de encima (6b y 6c) y queda la rejilla, con la mesa ya blanca (R3).
+    // [Claude] Quitar la última línea, Anular y Cobrar acaban aquí: la comanda ya está cerrada y no se toca,
+    // así que se quitan de golpe todas las vistas de encima (6b y 6c) y queda la rejilla, con la mesa ya blanca.
     // Llega tras esperar a la base de datos; si la app pasó mientras a segundo plano, no se puede
     // cambiar de vista ahora y se hace al volver (onResume)
     fun volverARejilla() {
@@ -154,11 +154,9 @@ class CuentaActivity : AppCompatActivity() {
         reciboVisible()?.mostrar(viewModel.lineas.value ?: emptyList(), viewModel.total.value ?: 0)
     }
 
-    // [Claude] El recibo, si es lo que se ve ahora en el contenedor; si no, vacío
     private fun reciboVisible(): ReciboFragment? =
         supportFragmentManager.findFragmentById(R.id.contenedor) as? ReciboFragment
 
-    // [Claude] La rejilla, si es lo que se ve ahora en el contenedor; si no, vacío
     private fun rejillaVisible(): RejillaMesasFragment? =
         supportFragmentManager.findFragmentById(R.id.contenedor) as? RejillaMesasFragment
 }

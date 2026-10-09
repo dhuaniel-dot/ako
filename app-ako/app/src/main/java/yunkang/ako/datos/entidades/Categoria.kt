@@ -11,7 +11,7 @@ import androidx.room.PrimaryKey
 // imagen: ruta de la foto; vacía si no tiene.
 // orden: posición en la carta.
 // activo: false = eliminada (no se borra nunca).
-// esPorDefecto: true solo en "Otros" (R16).
+// esPorDefecto: true solo en "Otros".
 @Entity(
     tableName = "categoria",
     indices = [Index(value = ["nombre"], unique = true)]

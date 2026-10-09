@@ -7,7 +7,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 
 // Una línea de la comanda: "2 × Agua a 1,50 €". Tabla "linea_comanda".
-// Copia el nombre y el precio del plato en el momento de pedir (R14).
+// Copia el nombre y el precio del plato en el momento de pedir.
 // [Claude] Los dos índices los pide Room para las claves foráneas.
 @Entity(
     tableName = "linea_comanda",

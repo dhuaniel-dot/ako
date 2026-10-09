@@ -14,7 +14,6 @@ class CarritoTest {
     private val agua = Producto(id = 2, categoriaId = 1, numero = 1, nombre = "Agua",
         descripcion = null, precioCentimos = 500, imagen = null, activo = true)
 
-    // Importe de una línea
     @Test
     fun importeDeUnaLinea() {
         val linea = LineaCarrito(entrecot, 3)
@@ -54,7 +53,7 @@ class CarritoTest {
         assertFalse(cupo)
     }
 
-    // [Claude] El mínimo de R4: con 0 o menos no se añade nada
+    // [Claude] El mínimo (de 1 a 99 unidades): con 0 o menos no se añade nada
     @Test
     fun cantidadMenorQueUnoNoEntra() {
         val carrito = Carrito(mesaId = 4)

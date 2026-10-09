@@ -8,7 +8,7 @@
     android:layout_height="match_parent">
 
     <!-- Barra superior gris: «← Atrás» a la izquierda, «Categorías» en el centro y «+» a la derecha.
-         [Claude] El título va atado entre los dos botones para no pisarlos con la letra grande (RNF-11) -->
+         [Claude] El título va atado entre los dos botones para no pisarlos con la letra grande (accesibilidad) -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/barraSuperior"
         android:layout_width="0dp"

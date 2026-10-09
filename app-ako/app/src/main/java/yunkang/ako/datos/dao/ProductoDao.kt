@@ -27,12 +27,12 @@ interface ProductoDao {
     @Query("SELECT * FROM producto WHERE categoria_id = :categoriaId ORDER BY numero")
     suspend fun porCategoria(categoriaId: Long): List<Producto>
 
-    // Todos los platos existentes (también los eliminados: el Panel los ve todos, R15), por número.
+    // Todos los platos existentes (también los eliminados: el Panel los ve todos), por número.
     // Room vuelve a mandar la lista cada vez que cambia la tabla producto
     @Query("SELECT * FROM producto ORDER BY numero")
     fun todosObservados(): Flow<List<Producto>>
 
-    // La carta: platos visibles = activos y con su categoría activa (R15).
+    // La carta: platos visibles = activos y con su categoría activa.
     // Room la vuelve a mandar cada vez que cambian producto o categoria
     @Query("""
         SELECT p.* FROM producto p
@@ -52,11 +52,11 @@ interface ProductoDao {
     """)
     suspend fun hayAlgunoVisible(): Boolean
 
-    // ¿Hay al menos un plato existente, visible o no? (puerta de Pedir, RF-25: elige el mensaje)
+    // ¿Hay al menos un plato existente, visible o no? (puerta de Pedir: elige el mensaje)
     @Query("SELECT EXISTS(SELECT 1 FROM producto)")
     suspend fun hayAlguno(): Boolean
 
-    // ¿Otro plato tiene ya ese número? (R9: avisa antes; la base de datos lo impide igualmente)
+    // ¿Otro plato tiene ya ese número? (avisa antes; la base de datos lo impide igualmente)
     @Query("SELECT EXISTS(SELECT 1 FROM producto WHERE numero = :numero AND id != :exceptoId)")
     suspend fun existeNumero(numero: Int, exceptoId: Long): Boolean
 

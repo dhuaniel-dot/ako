@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- La interfaz en inglés (RNF-19). Android la usa sola si el móvil está en inglés.
+<!-- La interfaz en inglés. Android la usa sola si el móvil está en inglés.
      Lo que no está aquí sale de values/strings.xml: los datos de la precarga y los símbolos
      llevan translatable="false" allí. Glosario: Owner, Order, Bill, Receipt,
      Menu, Remove / Restore (nunca Delete: no se borra nada), dish, Table, Income summary -->
@@ -58,7 +58,7 @@
     <string name="plato_en_la_carta">On the menu</string>
     <string name="categoria_nombre_repetido">A category with that name already exists</string>
 
-    <!-- 2e · Aviso al eliminar una categoría (R6) -->
+    <!-- 2e · Aviso al eliminar una categoría -->
     <string name="categoria_eliminar_titulo">Remove the category?</string>
     <plurals name="categoria_eliminar_cuerpo">
         <item quantity="one">This dish is in pending orders: %1$s. It will not be taken off those orders.</item>
@@ -88,7 +88,7 @@
     <string name="plato_salir_cuerpo">The changes will be lost</string>
     <string name="carta_btn_salir">Leave</string>
 
-    <!-- 3d · Aviso al eliminar un plato (R6) -->
+    <!-- 3d · Aviso al eliminar un plato -->
     <string name="mesas_afectadas_titulo">Remove the dish?</string>
     <plurals name="mesas_afectadas_cuerpo">
         <item quantity="one">%1$s is in a pending order at table %2$s. It will not be taken off that order.</item>
@@ -135,7 +135,7 @@
     <string name="enviar_cuerpo">Table %1$d · %2$s</string>
     <string name="enviar_hecho">Order sent to table %1$d</string>
 
-    <!-- RF-38 · Salir con platos sin enviar -->
+    <!-- Salir con platos sin enviar -->
     <string name="salir_sin_enviar_titulo">Leave without sending?</string>
     <plurals name="salir_sin_enviar_cuerpo">
         <item quantity="one">There is %1$d dish in the cart not sent yet. It will be lost.</item>

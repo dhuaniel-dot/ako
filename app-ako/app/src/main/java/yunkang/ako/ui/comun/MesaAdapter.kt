@@ -47,9 +47,9 @@ class MesaAdapter(
 
         holder.binding.textoNumero.text = contexto.getString(R.string.comun_numero, estado.mesa.numero)
 
-        // R3: ocupada = tiene comanda pendiente. No hay ninguna columna «ocupada»: lo dice el comandaId
+        // Ocupada = tiene comanda pendiente. No hay ninguna columna «ocupada»: lo dice el comandaId
         if (estado.comandaId != null) {
-            // Roja (también el borde, para que no se vea), letras blancas y el total (R10: lo suma la base de datos, nadie lo guarda)
+            // Roja (también el borde, para que no se vea), letras blancas y el total (lo suma la base de datos, nadie lo guarda)
             val total = contexto.getString(R.string.comun_precio, Formato.precio(estado.totalCentimos ?: 0))
             val rojo = ContextCompat.getColor(contexto, R.color.mesa_ocupada)
             val blanco = ContextCompat.getColor(contexto, R.color.sobre_mesa_ocupada)
@@ -59,8 +59,8 @@ class MesaAdapter(
             holder.binding.textoTotal.setTextColor(blanco)
             holder.binding.textoTotal.text = total
             holder.binding.textoTotal.visibility = View.VISIBLE
-            // RNF-13: el lector de pantalla dice «Mesa 4, 42,00 €»: el estado no depende solo del color.
-            // La frase (con su coma) sale de strings.xml, como todo texto (RNF-19)
+            // El lector de pantalla dice «Mesa 4, 42,00 €»: el estado no depende solo del color.
+            // La frase (con su coma) sale de strings.xml, como todo texto (en español y en inglés)
             tarjeta.contentDescription = contexto.getString(R.string.mesa_ocupada_cd, textoMesa, total)
         } else {
             // Libre: vuelve a los colores con los que nació la casilla, sin total

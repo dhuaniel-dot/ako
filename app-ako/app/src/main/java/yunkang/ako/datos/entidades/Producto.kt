@@ -7,7 +7,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 
 // Un plato de la carta. Tabla "producto".
-// No se puede borrar una categoría con platos (R11).
+// No se puede borrar una categoría con platos.
 // No puede haber dos platos con el mismo número.
 // [Claude] El índice de categoria_id: Room lo pide para las claves foráneas.
 // numero: el número que ve el cliente en la carta.

@@ -79,7 +79,7 @@ class CategoriaBottomSheet : BottomSheetDialogFragment() {
                 categoria = encontrada
                 // Si Android rehízo la hoja (savedInstanceState), se respeta lo que el Propietario ya tecleó
                 if (savedInstanceState == null) binding.textoNombre.setText(encontrada.nombre)
-                // R16: la categoría por defecto se puede renombrar pero nunca eliminar → sin interruptor
+                // La categoría por defecto se puede renombrar pero nunca eliminar → sin interruptor
                 if (!encontrada.esPorDefecto) {
                     binding.interruptorEnLaCarta.visibility = View.VISIBLE
                     if (savedInstanceState == null) binding.interruptorEnLaCarta.isChecked = encontrada.activo
@@ -109,7 +109,7 @@ class CategoriaBottomSheet : BottomSheetDialogFragment() {
             val categoria = categoria
             binding.botonGuardar.isEnabled = false
             viewLifecycleOwner.lifecycleScope.launch {
-                // R6: si se va a eliminar, PRIMERO se mira qué platos suyos están en mesas pendientes
+                // Si se va a eliminar, PRIMERO se mira qué platos suyos están en mesas pendientes
                 if (categoria != null && seVaAEliminar(categoria)) {
                     val afectados = viewModel.platosAfectados(categoria.id)
                     if (afectados.isNotEmpty()) {
@@ -159,7 +159,7 @@ class CategoriaBottomSheet : BottomSheetDialogFragment() {
     }
 
     // [Claude] ¿El Propietario ha apagado «En la carta» de una categoría que estaba en la carta?
-    // (La de por defecto nunca: su interruptor ni se ve, R16)
+    // (La de por defecto nunca: su interruptor ni se ve)
     private fun seVaAEliminar(categoria: Categoria): Boolean {
         val binding = binding ?: return false
         return !categoria.esPorDefecto && categoria.activo && !binding.interruptorEnLaCarta.isChecked
@@ -172,7 +172,7 @@ class CategoriaBottomSheet : BottomSheetDialogFragment() {
     }
 
     // Guarda el nombre y la foto y, si el interruptor cambió, elimina o recupera (activo solo cambia aquí).
-    // Eliminar, R5: activo = false; ninguna línea se toca (R6). Recuperar: vuelve con sus platos intactos
+    // Eliminar: activo = false (nada se borra); ninguna línea se toca. Recuperar: vuelve con sus platos intactos
     private suspend fun guardar(categoria: Categoria?) {
         val binding = binding ?: return
         val nombre = binding.textoNombre.text.toString().trim()

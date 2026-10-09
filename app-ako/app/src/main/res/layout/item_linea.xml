@@ -34,7 +34,7 @@
             tools:text="37,00 €" />
     </LinearLayout>
 
-    <!-- − + y Quitar: botones de 56 dp (más de los 48 dp mínimos, RNF-11) -->
+    <!-- − + y Quitar: botones de 56 dp (más de los 48 dp mínimos de accesibilidad) -->
     <LinearLayout
         android:id="@+id/filaBotones"
         android:layout_width="match_parent"

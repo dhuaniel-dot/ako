@@ -15,10 +15,10 @@ import java.io.IOException
 import java.util.UUID
 import kotlin.math.roundToInt
 
-// Lado mayor de las fotos guardadas (RNF-18)
+// Lado mayor de las fotos, que se guardan reducidas
 private const val LADO_FINAL = 1080
 
-// Calidad del JPEG: mucho menos peso sin que se note a simple vista (RNF-18)
+// Calidad del JPEG: mucho menos peso sin que se note a simple vista
 private const val CALIDAD_JPEG = 85
 
 // La carpeta de las fotos dentro del almacenamiento privado de la app

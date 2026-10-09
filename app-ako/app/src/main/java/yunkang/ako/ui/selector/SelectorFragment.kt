@@ -33,7 +33,7 @@ class SelectorFragment : Fragment(R.layout.fragment_selector) {
             }
         }
 
-        // Pedir: la puerta (RF-25). Sin ningún plato visible no se entra: se avisa y se queda en 1a
+        // Pedir: la puerta. Sin ningún plato visible no se entra: se avisa y se queda en 1a
         binding.botonPedir.setOnClickListener {
             binding.botonPedir.isEnabled = false
             viewLifecycleOwner.lifecycleScope.launch {

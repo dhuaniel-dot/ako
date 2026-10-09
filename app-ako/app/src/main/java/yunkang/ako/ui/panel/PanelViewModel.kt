@@ -72,7 +72,7 @@ class PanelViewModel(
     // 1e: primero se comprueba el PIN actual, antes de mirar los nuevos
     suspend fun comprobarPin(pin: String): Boolean = seguridadRepository.comprobarPin(pin)
 
-    // 1e: guarda el PIN nuevo. El repositorio vuelve a mirar el actual y cambia de hilo
+    // 1e: el repositorio vuelve a mirar el actual y cambia de hilo
     suspend fun cambiarPin(actual: String, nuevo: String): Boolean =
         seguridadRepository.cambiarPin(actual, nuevo)
 

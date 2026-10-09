@@ -15,7 +15,7 @@ import yunkang.ako.datos.entidades.Categoria
 import yunkang.ako.datos.repositorios.CartaRepository
 import yunkang.ako.datos.repositorios.ComandaRepositoryReal
 
-// Siempre hay exactamente una categoría por defecto; no se elimina y no se crea otra (R16).
+// Siempre hay exactamente una categoría por defecto; no se elimina y no se crea otra.
 @RunWith(AndroidJUnit4::class)
 class CategoriaPorDefectoTest {
 
@@ -39,7 +39,7 @@ class CategoriaPorDefectoTest {
         db.close()
     }
 
-    // Cuántas categorías tienen esPorDefecto = true (nunca se busca por el nombre, R16)
+    // Cuántas categorías tienen esPorDefecto = true (nunca se busca por el nombre)
     private fun contarPorDefecto(): Int =
         runBlocking { db.categoriaDao().todas().count { it.esPorDefecto } }
 

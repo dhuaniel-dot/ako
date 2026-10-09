@@ -22,11 +22,11 @@ interface ComandaDao {
     @Query("SELECT * FROM comanda WHERE id = :id")
     suspend fun porId(id: Long): Comanda?
 
-    // R1: la comanda PENDIENTE de una mesa (como mucho hay una); vacío si la mesa está libre.
+    // La comanda PENDIENTE de una mesa (como mucho hay una); vacío si la mesa está libre.
     @Query("SELECT * FROM comanda WHERE mesa_id = :mesaId AND estado = 'PENDIENTE' LIMIT 1")
     suspend fun pendienteDeMesa(mesaId: Long): Comanda?
 
-    // La rejilla: solo las mesas ocupadas, con su total sumado (R3, R10).
+    // La rejilla: solo las mesas ocupadas (con comanda pendiente), con su total sumado.
     // Room la vuelve a mandar cada vez que cambian comanda, mesa o linea_comanda
     @Query("""
         SELECT m.id AS mesaId, c.id AS comandaId,
@@ -49,7 +49,7 @@ interface ComandaDao {
     @Query("DELETE FROM linea_comanda WHERE id = :lineaId")
     suspend fun borrarLinea(lineaId: Long)
 
-    // Cuántas líneas le quedan a una comanda (R7: si llega a 0, se anula).
+    // Cuántas líneas le quedan a una comanda (si llega a 0, se anula).
     @Query("SELECT COUNT(*) FROM linea_comanda WHERE comanda_id = :comandaId")
     suspend fun contarLineas(comandaId: Long): Int
 
@@ -61,7 +61,7 @@ interface ComandaDao {
     """)
     suspend fun pagadasEntre(inicio: Long, fin: Long): List<Comanda>
 
-    // R6: números de las mesas con comanda PENDIENTE que llevan este plato.
+    // Para el aviso al eliminar un plato: números de las mesas con comanda PENDIENTE que llevan este plato.
     @Query("""
         SELECT DISTINCT m.numero FROM mesa m
         JOIN comanda c ON c.mesa_id = m.id
@@ -71,8 +71,8 @@ interface ComandaDao {
     """)
     suspend fun mesasConProductoPendiente(productoId: Long): List<Int>
 
-    // R6: números de las mesas con comanda PENDIENTE que llevan algún plato de esta categoría
-    // que siga en la carta (solo los activos, lo que de verdad se elimina).
+    // Para el aviso al eliminar una categoría: números de las mesas con comanda PENDIENTE que llevan algún plato
+    // de esta categoría que siga en la carta (solo los activos, lo que de verdad se elimina).
     @Query("""
         SELECT DISTINCT m.numero FROM mesa m
         JOIN comanda c ON c.mesa_id = m.id
@@ -83,7 +83,7 @@ interface ComandaDao {
     """)
     suspend fun mesasConCategoriaPendiente(categoriaId: Long): List<Int>
 
-    // R10: el total de una comanda, sumando sus líneas; sin líneas, 0.
+    // El total de una comanda, sumando sus líneas; sin líneas, 0.
     @Query("SELECT COALESCE(SUM(cantidad * precio_unitario_centimos), 0) FROM linea_comanda WHERE comanda_id = :comandaId")
     suspend fun totalDe(comandaId: Long): Int
 

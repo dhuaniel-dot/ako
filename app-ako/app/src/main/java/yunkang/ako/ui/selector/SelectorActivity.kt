@@ -21,7 +21,6 @@ class SelectorActivity : AppCompatActivity(), ComprobadorPin {
 
     private lateinit var binding: ActivitySelectorBinding
 
-    // La libreta de la pantalla 1, hecha con su fábrica
     private val viewModel: SelectorViewModel by viewModels { SelectorViewModel.Factory }
 
     // El portero de la rejilla 1d, como en CuentaActivity: dos toques rápidos en una mesa no abren Pedir dos veces

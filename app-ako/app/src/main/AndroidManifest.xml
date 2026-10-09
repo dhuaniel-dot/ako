@@ -17,7 +17,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AKO">
-        <!-- Pantalla 1: arranca aquí (LAUNCHER). Solo en vertical (RNF-15) -->
+        <!-- Pantalla 1: arranca aquí (LAUNCHER). Solo en vertical -->
         <activity
             android:name=".ui.selector.SelectorActivity"
             android:exported="true"
@@ -29,32 +29,32 @@
             </intent-filter>
         </activity>
 
-        <!-- Pantalla 2 (Panel). Solo en vertical (RNF-15) -->
+        <!-- Pantalla 2 (Panel). Solo en vertical -->
         <activity
             android:name=".ui.panel.PanelActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
 
-        <!-- Pantalla 5 (Pedir: carta, ficha y carrito). Solo en vertical (RNF-15) -->
+        <!-- Pantalla 5 (Pedir: carta, ficha y carrito). Solo en vertical -->
         <activity
             android:name=".ui.pedido.PedidoActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
 
-        <!-- Pantalla 6 (Cuenta: rejilla, comanda y recibo). Sin PIN. Solo en vertical (RNF-15) -->
+        <!-- Pantalla 6 (Cuenta: rejilla, comanda y recibo). Sin PIN. Solo en vertical -->
         <activity
             android:name=".ui.cuenta.CuentaActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
 
-        <!-- Pantalla 2g (Resumen de ingresos). Solo desde el Panel, detrás del PIN (RNF-10): sin intent-filter
-             y exported="false", ninguna otra app la puede abrir. Solo en vertical (RNF-15) -->
+        <!-- Pantalla 2g (Resumen de ingresos). Solo desde el Panel, detrás del PIN: sin intent-filter
+             y exported="false", ninguna otra app la puede abrir. Solo en vertical -->
         <activity
             android:name=".ui.resumen.ResumenIngresosActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
 
-        <!-- Pantalla 3 (formulario del plato). Solo en vertical (RNF-15) -->
+        <!-- Pantalla 3 (formulario del plato). Solo en vertical -->
         <activity
             android:name=".ui.plato.PlatoActivity"
             android:exported="false"

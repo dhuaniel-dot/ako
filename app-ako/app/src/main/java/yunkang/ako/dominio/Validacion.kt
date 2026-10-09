@@ -4,13 +4,13 @@ package yunkang.ako.dominio
 // así que se comprueban aquí antes de guardar.
 object Validacion {
 
-    // Máximo de unidades de un mismo plato (R4). Solo está escrito aquí.
+    // Máximo de unidades de un mismo plato. Solo está escrito aquí.
     const val MAXIMO_POR_PLATO = 99
 
     // Cifras del PIN (ficha 1). Solo está escrito aquí
     const val LONGITUD_PIN = 4
 
-    // R8: un precio no puede ser negativo; 0 sí vale.
+    // Un precio no puede ser negativo; 0 sí vale.
     // Si es negativo, para en seco con un error.
     fun precioValido(centimos: Int) {
         if (centimos < 0) {
@@ -18,7 +18,7 @@ object Validacion {
         }
     }
 
-    // R4: una cantidad vale si está entre 1 y 99
+    // Una cantidad vale si está entre 1 y 99
     fun cantidadValida(cantidad: Int): Boolean = cantidad in 1..MAXIMO_POR_PLATO
 
     // El PIN son exactamente cuatro cifras del 0 al 9

@@ -94,7 +94,7 @@ class CartaFragment : Fragment(R.layout.fragment_carta) {
             if (secciones == ultimaCarta) return@observe
             ultimaCarta = secciones
 
-            // La fila: una categoría por sección (solo las que tienen algún plato visible, R15)
+            // La fila: una categoría por sección (solo las que tienen algún plato visible)
             adaptadorFila.mostrar(secciones.map { it.categoria })
 
             // La lista: por cada sección, su cabecera y sus platos, pegados en orden (ConcatAdapter)
@@ -120,7 +120,7 @@ class CartaFragment : Fragment(R.layout.fragment_carta) {
             adaptadorFila.resaltar(categoriaActiva)
         }
 
-        // La pastilla dice cuántos platos y cuánto suman. Se calcula cada vez (R10): nadie lo guarda.
+        // La pastilla dice cuántos platos y cuánto suman. Se calcula cada vez: nadie lo guarda.
         // Siempre visible, también vacía; sin animación, el número cambia sin más (ficha 5)
         viewModel.carrito.observe(viewLifecycleOwner) { carrito ->
             val total = getString(R.string.comun_precio, Formato.precio(carrito.total()))
@@ -151,7 +151,7 @@ class CartaFragment : Fragment(R.layout.fragment_carta) {
         }
     }
 
-    // RF-29: tocar una categoría SALTA a su sección (no filtra): su cabecera se pone arriba del todo.
+    // Tocar una categoría SALTA a su sección (no filtra): su cabecera se pone arriba del todo.
     // scrollToPosition solo la haría visible (podría quedar abajo); con «WithOffset» y 0 queda arriba
     private fun saltarA(categoriaId: Long) {
         val posicion = posiciones[categoriaId] ?: return

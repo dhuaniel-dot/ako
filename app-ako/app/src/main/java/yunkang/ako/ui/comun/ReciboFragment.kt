@@ -85,7 +85,7 @@ class ReciboFragment : Fragment(R.layout.fragment_recibo) {
         binding = null
     }
 
-    // Quien lo aloja le da las líneas (ya convertidas) y el TOTAL (R10: calculado por la base de datos).
+    // Quien lo aloja le da las líneas (ya convertidas) y el TOTAL (calculado por la base de datos).
     // El adaptador las guarda aunque la vista aún no exista
     fun mostrar(lineas: List<LineaVista>, total: Int) {
         this.total = total

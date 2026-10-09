@@ -86,7 +86,7 @@ class CambiarPinDialog : DialogFragment() {
         aceptar.isEnabled = actualCompleto && nuevoCompleto && repiteCompleto
     }
 
-    // PIN actual incorrecto: se vacía, se avisa y se sacude, como en 1c (RNF-13)
+    // PIN actual incorrecto: se vacía, se avisa y se sacude, como en 1c (no solo con color)
     private fun avisarActualIncorrecto(binding: DialogCambiarPinBinding) {
         binding.textoActual.text?.clear()
         binding.campoActual.error = getString(R.string.pin_incorrecto)

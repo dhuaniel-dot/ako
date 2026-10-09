@@ -43,7 +43,7 @@ class CarritoFragment : Fragment(R.layout.fragment_carrito) {
         binding.listaLineas.layoutManager = LinearLayoutManager(requireContext())
         binding.listaLineas.adapter = adaptador
 
-        // Cada vez que cambia el carrito: las líneas, el TOTAL (R10, calculado) y Enviar apagado si está vacío (R4)
+        // Cada vez que cambia el carrito: las líneas, el TOTAL (calculado) y Enviar apagado si está vacío
         viewModel.lineasVista.observe(viewLifecycleOwner) { lineas ->
             adaptador.mostrar(lineas)
         }
@@ -72,7 +72,7 @@ class CarritoFragment : Fragment(R.layout.fragment_carrito) {
             if (!sobre.getBoolean(ConfirmacionDialog.RESPUESTA_AFIRMATIVA)) return@setFragmentResultListener
             viewLifecycleOwner.lifecycleScope.launch {
                 if (viewModel.enviar()) {
-                    // Aviso y vuelta a la carta con el carrito vacío; se puede seguir pidiendo (R2).
+                    // Aviso y vuelta a la carta con el carrito vacío; se puede seguir pidiendo en la misma comanda.
                     // El aviso va sobre la vista de la Activity porque el carrito se cierra ahora mismo
                     Snackbar.make(
                         requireActivity().findViewById(R.id.contenedor),

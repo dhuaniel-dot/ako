@@ -25,7 +25,7 @@ interface CategoriaDao {
     @Query("SELECT * FROM categoria ORDER BY orden")
     fun todasObservadas(): Flow<List<Categoria>>
 
-    // La categoría por defecto (Otros): se reconoce por esPorDefecto, nunca por el nombre (R16).
+    // La categoría por defecto (Otros): se reconoce por esPorDefecto, nunca por el nombre.
     @Query("SELECT * FROM categoria WHERE es_por_defecto = 1 LIMIT 1")
     suspend fun porDefecto(): Categoria
 

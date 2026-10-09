@@ -13,7 +13,7 @@ import yunkang.ako.ui.resumen.ResumenIngresosActivity
 import yunkang.ako.ui.comun.apartarDeLasBarras
 
 // 2a · Panel del Propietario: se llega tras el PIN correcto (1c).
-// [Resumen de ingresos] abre 2g, que solo vive aquí, detrás del PIN (RNF-10)
+// [Resumen de ingresos] abre 2g, que solo vive aquí, detrás del PIN
 class PanelActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPanelBinding

@@ -17,7 +17,7 @@ class ValidacionTest {
         }
     }
 
-    // [Claude] Cantidad entre 1 y 99 (R4)
+    // [Claude] Cantidad entre 1 y 99
     @Test
     fun cantidadEntre1y99() {
         assertFalse(Validacion.cantidadValida(0))

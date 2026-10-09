@@ -63,7 +63,8 @@ class PedidoActivity : AppCompatActivity(), ComprobadorPin {
             guardianSalir.isEnabled = supportFragmentManager.backStackEntryCount == 0
         }
 
-        // RF-38: si en el aviso se pulsa «Salir», se sigue al PIN; «Cancelar» (o tocar fuera) no hace nada
+        // Si en el aviso de platos sin enviar se pulsa «Salir», se sigue al PIN;
+        // «Cancelar» (o tocar fuera) no hace nada
         supportFragmentManager.setFragmentResultListener(CLAVE_SALIR, this) { _, sobre ->
             if (sobre.getBoolean(ConfirmacionDialog.RESPUESTA_AFIRMATIVA)) pedirPin()
         }
@@ -74,7 +75,7 @@ class PedidoActivity : AppCompatActivity(), ComprobadorPin {
         }
     }
 
-    // [Claude] Salir de Pedir (ficha 1): primero el aviso si hay platos sin enviar (RF-38), después el PIN.
+    // [Claude] Salir de Pedir (ficha 1): primero el aviso si hay platos sin enviar, después el PIN.
     // Con el carrito vacío, directamente el PIN
     private fun intentarSalir() {
         if (!portero.permite()) return
@@ -96,7 +97,7 @@ class PedidoActivity : AppCompatActivity(), ComprobadorPin {
     }
 
     // En el nivel 1, salir de Pedir siempre pide el PIN. Cancelar deja la carta abierta.
-    // RNF-24: si se sale, el carrito no se vacía a mano: muere con la libreta al cerrarse Pedir
+    // Si se sale, el carrito no se vacía a mano: muere con la libreta al cerrarse Pedir
     private fun pedirPin() {
         PinDialog().show(supportFragmentManager, "pin")
     }

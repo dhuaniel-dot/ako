@@ -40,7 +40,7 @@ class LineaAdapter(
         val linea = lineas[position]
         val contexto = holder.itemView.context
 
-        // «2 × Entrecot» y su importe (R10: precio × cantidad, calculado)
+        // «2 × Entrecot» y su importe (precio × cantidad, calculado)
         holder.binding.textoLinea.text = contexto.getString(R.string.comun_linea, linea.cantidad, linea.nombre)
         holder.binding.textoImporte.text =
             contexto.getString(R.string.comun_precio, Formato.precio(linea.importeCentimos))
@@ -51,7 +51,7 @@ class LineaAdapter(
         holder.binding.botonQuitar.isVisible = alQuitar != null
         holder.binding.filaBotones.isVisible = alMenos != null || alMas != null || alQuitar != null
 
-        // R4: − apagado en 1 y + apagado en 99; Quitar quita la línea entera
+        // − apagado en 1 y + apagado en 99; Quitar quita la línea entera
         holder.binding.botonMenos.isEnabled = linea.cantidad > 1
         holder.binding.botonMas.isEnabled = linea.cantidad < Validacion.MAXIMO_POR_PLATO
         holder.binding.botonMenos.setOnClickListener { alMenos?.invoke(linea) }

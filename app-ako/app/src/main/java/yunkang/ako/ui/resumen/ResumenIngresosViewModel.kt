@@ -50,7 +50,7 @@ class ResumenIngresosViewModel(
 
     // Como CuentaViewModel.abrirComanda. Primero se vacía la bandeja, para que no se vea ni un instante
     // el recibo anterior; después se piden las líneas. Room cambia de hilo solo.
-    // R14: nombre y precio salen de la línea, congelados al enviar, no de la carta de hoy
+    // Nombre y precio salen de la línea, congelados al enviar, no de la carta de hoy
     fun abrirRecibo(comanda: ComandaConTotal) {
         comandaRecibo = comanda
         _lineasRecibo.value = emptyList()

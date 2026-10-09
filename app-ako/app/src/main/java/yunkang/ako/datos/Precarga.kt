@@ -10,7 +10,7 @@ import yunkang.ako.R
 // Las mesas del bar: de la 1 a la 60. Solo está escrito aquí
 private const val NUM_MESAS = 60
 
-// La precarga (RF-50): lo que la app trae "de fábrica" la primera vez que se abre.
+// La precarga: lo que la app trae "de fábrica" la primera vez que se abre.
 // Room llama a onCreate UNA sola vez: cuando crea el archivo de la base de datos.
 // Todo se escribe aquí dentro, en la base «cruda» que pasa Room, y no por detrás: Android crea la base
 // dentro de una transacción que incluye este onCreate; si la app muriera a mitad, no quedaría nada y la
@@ -23,7 +23,7 @@ class Precarga(private val context: Context) : RoomDatabase.Callback() {
     override fun onCreate(db: SupportSQLiteDatabase) {
         super.onCreate(db)
 
-        // La categoría por defecto va antes que cualquier plato (R16): orden 0.
+        // La categoría por defecto va antes que cualquier plato: orden 0.
         val otros = ContentValues()
         otros.put("nombre", context.getString(R.string.precarga_categoria_por_defecto))
         otros.putNull("imagen")

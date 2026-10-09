@@ -28,7 +28,6 @@ class CategoriaFilaAdapter(
         notifyDataSetChanged()
     }
 
-    // Marca cuál es la activa
     fun resaltar(categoriaId: Long) {
         activaId = categoriaId
         notifyDataSetChanged()
@@ -49,7 +48,7 @@ class CategoriaFilaAdapter(
 
         pintarFoto(holder.binding.imagenCategoria, categoria.imagen?.let { File(it) }, categoria.nombre, redonda = true)
 
-        // RNF-13: la activa no se distingue solo por el color: negrita y raya debajo.
+        // La activa no se distingue solo por el color: negrita y raya debajo.
         // isSelected hace que el lector de pantalla diga «seleccionado»
         holder.binding.textoNombre.setTypeface(null, if (activa) Typeface.BOLD else Typeface.NORMAL)
         holder.binding.rayaActiva.visibility = if (activa) View.VISIBLE else View.INVISIBLE

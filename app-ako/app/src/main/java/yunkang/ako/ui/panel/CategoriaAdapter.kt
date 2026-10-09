@@ -29,7 +29,7 @@ class CategoriaAdapter(
     // El armario de bandejas de plato compartido por todas las cajas: la que sobra en una la aprovecha otra
     private val armario = RecyclerView.RecycledViewPool()
 
-    // Su vista y su encargado de filas, creado una sola vez
+    // Su encargado de filas, creado una sola vez
     class CajaViewHolder(
         val binding: ItemCategoriaCajaBinding,
         val filas: FilaPlatoAdapter
@@ -80,8 +80,8 @@ class CategoriaAdapter(
         val categoria = caja.categoria
         holder.binding.textoNombre.text = categoria.nombre
 
-        // RNF-13: la etiqueta «Categoría eliminada» es la información; el gris del nombre solo la refuerza.
-        // Sus platos salen atenuados sin la palabra «Eliminado» (siguen activos: R15 solo los quita de la carta)
+        // La etiqueta «Categoría eliminada» es la información; el gris del nombre solo la refuerza.
+        // Sus platos salen atenuados sin la palabra «Eliminado» (siguen activos; solo dejan de ser visibles en la carta)
         holder.binding.textoCategoriaEliminada.visibility = if (categoria.activo) View.GONE else View.VISIBLE
         holder.binding.textoNombre.alpha = if (categoria.activo) 1f else FilaPlatoAdapter.ALFA_ELIMINADO
 

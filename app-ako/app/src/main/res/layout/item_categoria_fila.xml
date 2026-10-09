@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- 5a · Una categoría en la fila de arriba de la carta (wireframe 05a): círculo con su foto o con «?»
-     y el nombre debajo. La activa: nombre en negrita y raya debajo (RNF-13: no solo color) -->
+     y el nombre debajo. La activa: nombre en negrita y raya debajo (no solo color) -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"

@@ -37,7 +37,7 @@ class ComandaCobradaAdapter(
         val comanda = comandas[position]
         val contexto = holder.itemView.context
 
-        // «Mesa 9» (el número que ve el camarero, no el id), «Cobrada a las 14:32» y el importe (R10: calculado)
+        // «Mesa 9» (el número que ve el camarero, no el id), «Cobrada a las 14:32» y el importe (calculado)
         holder.binding.textoMesa.text = contexto.getString(R.string.comun_mesa, comanda.mesaNumero)
         holder.binding.textoHora.text =
             contexto.getString(R.string.resumen_fila_hora, Formato.hora(comanda.fechaCierre))

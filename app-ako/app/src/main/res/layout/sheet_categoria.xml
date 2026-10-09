@@ -80,7 +80,7 @@
             android:text="@string/categoria_btn_elegir_foto" />
     </LinearLayout>
 
-    <!-- «En la carta»: solo al editar y nunca en la categoría por defecto (R16) -->
+    <!-- «En la carta»: solo al editar y nunca en la categoría por defecto -->
     <com.google.android.material.materialswitch.MaterialSwitch
         android:id="@+id/interruptorEnLaCarta"
         android:layout_width="match_parent"

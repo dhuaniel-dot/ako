@@ -41,7 +41,7 @@ class ComandaRepositoryTest {
         repositorio = ComandaRepositoryReal(db, db.mesaDao(), db.comandaDao())
 
         runBlocking {
-            // Carnes ANTES que Entrecot: un plato tiene que apuntar a una categoría que ya existe (R11)
+            // Carnes ANTES que Entrecot: un plato tiene que apuntar a una categoría que ya existe
             val carnesId = db.categoriaDao().insertar(
                 Categoria(nombre = "Carnes", imagen = null, orden = 1, activo = true, esPorDefecto = false)
             )
@@ -69,7 +69,7 @@ class ComandaRepositoryTest {
         db.close()
     }
 
-    // Dos envíos a la mesa 4 → una sola comanda con dos líneas copiadas (R1, R2, R14)
+    // Dos envíos a la mesa 4 → una sola comanda con dos líneas copiadas
     @Test
     fun dosEnviosALaMismaMesaVanALaMismaComanda() {
         val primero = Carrito(mesa4Id)
@@ -80,14 +80,14 @@ class ComandaRepositoryTest {
         segundo.anadir(helado, 1)
         val id2 = runBlocking { repositorio.enviarCarrito(segundo) }
 
-        // R1: la misma comanda, y es la pendiente de la mesa 4
+        // La misma comanda, y es la pendiente de la mesa 4
         assertEquals(id1, id2)
         assertEquals(id1, runBlocking { db.comandaDao().pendienteDeMesa(mesa4Id) }?.id)
 
-        // R2: dos líneas, una por envío
+        // Dos líneas, una por envío
         assertEquals(2, runBlocking { db.comandaDao().contarLineas(id1) })
 
-        // R14: cada línea lleva el nombre, el precio y la cantidad copiados al enviar
+        // Cada línea lleva el nombre, el precio y la cantidad copiados al enviar
         val lineas = runBlocking { db.comandaDao().lineasDe(id1) }
         assertEquals("Entrecot", lineas[0].nombreProducto)
         assertEquals(1850, lineas[0].precioUnitarioCentimos)
@@ -97,7 +97,7 @@ class ComandaRepositoryTest {
         assertEquals(1, lineas[1].cantidad)
     }
 
-    // Quitar la última línea deja la comanda ANULADA y la mesa libre (R7, R3)
+    // Quitar la última línea deja la comanda ANULADA y la mesa libre
     @Test
     fun quitarLaUltimaLineaAnulaLaComanda() {
         val carrito = Carrito(mesa4Id)
@@ -108,13 +108,13 @@ class ComandaRepositoryTest {
         // true = era la última línea (la pantalla de Cuenta vuelve entonces a la rejilla)
         assertTrue(runBlocking { repositorio.quitarLinea(linea.id) })
 
-        // R7: la comanda no se borra; queda ANULADA, con su hora de cierre y sin líneas
+        // La comanda no se borra; queda ANULADA, con su hora de cierre y sin líneas
         val comanda = checkNotNull(runBlocking { db.comandaDao().porId(comandaId) })
         assertEquals(EstadoComanda.ANULADA, comanda.estado)
         assertNotNull(comanda.fechaCierre)
         assertEquals(0, runBlocking { db.comandaDao().contarLineas(comandaId) })
 
-        // R3: la mesa 4 sale libre en la rejilla (first = una foto del grifo, no se queda escuchando)
+        // La mesa 4 sale libre en la rejilla (first = una foto del grifo, no se queda escuchando)
         val rejilla = runBlocking { repositorio.mesasConEstado().first() }
         val mesa4 = rejilla.single { it.mesa.numero == 4 }
         assertNull(mesa4.comandaId)

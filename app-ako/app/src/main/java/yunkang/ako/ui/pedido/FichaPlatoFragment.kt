@@ -25,7 +25,7 @@ class FichaPlatoFragment : Fragment(R.layout.fragment_ficha_plato) {
     // Lo usan las funciones de pintar; solo existe mientras hay vista (como en ReciboFragment)
     private var binding: FragmentFichaPlatoBinding? = null
 
-    // [Claude] La cantidad elegida (de 1 a 99, R4); se guarda si Android rehace la pantalla
+    // [Claude] La cantidad elegida (de 1 a 99); se guarda si Android rehace la pantalla
     private var cantidad = 1
 
     // [Claude] El plato de esta ficha, para el importe del botón y para Añadir; vacío hasta que llega
@@ -125,8 +125,8 @@ class FichaPlatoFragment : Fragment(R.layout.fragment_ficha_plato) {
         binding.flechaAlergenos.rotation = if (alergenosAbiertos) 0f else -90f
     }
 
-    // R4 en la pantalla: − apagado en 1 y + apagado en 99 (el 99 está escrito solo en Validacion).
-    // El botón dice el importe de la cantidad elegida: precio × cantidad (R10, Calculadora)
+    // De 1 a 99 en la pantalla: − apagado en 1 y + apagado en 99 (el 99 está escrito solo en Validacion).
+    // El botón dice el importe de la cantidad elegida: precio × cantidad (Calculadora)
     private fun pintarCantidad() {
         val binding = binding ?: return
         binding.textoCantidad.text = getString(R.string.comun_numero, cantidad)
@@ -143,7 +143,7 @@ class FichaPlatoFragment : Fragment(R.layout.fragment_ficha_plato) {
         private const val CLAVE_CANTIDAD = "cantidad"
         private const val CLAVE_ALERGENOS_ABIERTOS = "alergenos_abiertos"
 
-        // La forma de crear una ficha: se le da el id del plato (en los arguments, no en el constructor)
+        // El id del plato va en los arguments, no en el constructor
         fun nueva(productoId: Long): FichaPlatoFragment {
             val ficha = FichaPlatoFragment()
             ficha.arguments = bundleOf(ARG_PRODUCTO_ID to productoId)

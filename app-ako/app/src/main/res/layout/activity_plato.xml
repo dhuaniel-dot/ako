@@ -123,7 +123,7 @@
                 android:baselineAligned="false"
                 android:orientation="horizontal">
 
-                <!-- Solo cifras y sin signo: «number» no deja entrar el «−» (R8 y R9) -->
+                <!-- Solo cifras y sin signo: «number» no deja entrar el «−» -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/campoNumero"
                     android:layout_width="0dp"
@@ -140,7 +140,7 @@
                         android:maxLines="1" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Teclado numérico con decimales; digits deja escribir coma o punto y ningún signo (R8) -->
+                <!-- Teclado numérico con decimales; digits deja escribir coma o punto y ningún signo -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/campoPrecio"
                     android:layout_width="0dp"

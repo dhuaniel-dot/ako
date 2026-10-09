@@ -31,7 +31,6 @@ class PlatoActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPlatoBinding
 
-    // La libreta de esta pantalla, construida por su fábrica
     private val viewModel: PlatoViewModel by viewModels { PlatoViewModel.Factory }
 
     // El guardián de Atrás. Solo está encendido cuando hay cambios sin guardar;
@@ -121,7 +120,7 @@ class PlatoActivity : AppCompatActivity() {
             selectorFotos.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
 
-        // Guardar: si se va a eliminar el plato, PRIMERO se miran las mesas (R6 en dos pasos).
+        // Guardar: si se va a eliminar el plato, PRIMERO se miran las mesas para avisar; después se elimina.
         // Mientras trabaja, Guardar se apaga: sin doble toque
         binding.botonGuardar.setOnClickListener {
             binding.botonGuardar.isEnabled = false
@@ -155,7 +154,7 @@ class PlatoActivity : AppCompatActivity() {
         // El sobre del primer aviso 3e («¿Muevo el plato a Otros?»), también escuchado desde onCreate
         supportFragmentManager.setFragmentResultListener(CLAVE_3E_MOVER, this) { _, sobre ->
             if (sobre.getBoolean(ConfirmacionDialog.RESPUESTA_AFIRMATIVA)) {
-                // Sí, mover: el plato pasa a la categoría por defecto (R16: por la columna) y se vuelve a guardar
+                // Sí, mover: el plato pasa a la categoría por defecto (buscada por la columna) y se vuelve a guardar
                 val porDefecto = checkNotNull(viewModel.datos.value).categorias.first { it.esPorDefecto }
                 viewModel.categoriaElegidaId = porDefecto.id
                 binding.textoCategoria.setText(porDefecto.nombre, false)
@@ -179,7 +178,7 @@ class PlatoActivity : AppCompatActivity() {
                     guardar()
                 }
             } else {
-                // No: «ya es decisión del propietario» (ficha 3). Se guarda ahí, invisible (R15)
+                // No: «ya es decisión del propietario» (ficha 3). Se guarda ahí, invisible
                 lifecycleScope.launch { guardar(aunqueCategoriaEliminada = true) }
             }
         }
@@ -287,7 +286,7 @@ class PlatoActivity : AppCompatActivity() {
 
     // Guarda y, si el interruptor cambió, elimina o recupera (como la hoja 2b).
     // aunqueCategoriaEliminada solo lo pone el «No» del segundo aviso 3e.
-    // Eliminar, R5: activo = false; ninguna línea se toca (R6)
+    // Eliminar: activo = false (nada se borra); ninguna línea se toca
     private suspend fun guardar(aunqueCategoriaEliminada: Boolean = false) {
         // Si la foto elegida no se puede leer, la libreta lanza el error y no se guarda nada.
         // [Claude] SecurityException: el préstamo de la foto ya no vale
@@ -310,7 +309,7 @@ class PlatoActivity : AppCompatActivity() {
                 // Vuelta al Panel, que ya está al día él solo
                 finish()
             }
-            // R9: error rojo en el campo y la pantalla sigue abierta
+            // El número ya es de otro plato: error rojo en el campo y la pantalla sigue abierta
             ResultadoGuardado.NumeroRepetido -> {
                 binding.campoNumero.error = getString(R.string.plato_numero_repetido)
                 actualizarGuardar()
@@ -331,7 +330,7 @@ class PlatoActivity : AppCompatActivity() {
     }
 
     // 3e, primer aviso: «La categoría Postres está eliminada. ¿Muevo el plato a Otros?»
-    // El nombre de la de por defecto sale de la base de datos: se puede renombrar (R16)
+    // El nombre de la de por defecto sale de la base de datos: se puede renombrar
     private fun preguntarMover() {
         // Llega tras copiar la foto; si mientras tanto la app pasó a segundo plano,
         // la caja no se puede abrir: no se abre y Guardar se vuelve a encender
@@ -385,7 +384,7 @@ class PlatoActivity : AppCompatActivity() {
         for (id in datos.alergenosDelPlato) viewModel.marcarAlergeno(id, true)
 
         // La categoría: la del plato; si es nuevo, la de su caja; si no llegó ninguna,
-        // la de por defecto, buscada por su columna y nunca por el nombre (ficha 3, R16)
+        // la de por defecto, buscada por su columna y nunca por el nombre (ficha 3)
         val idBuscado = plato?.categoriaId ?: categoriaDeLaCaja
         val categoria = datos.categorias.find { it.id == idBuscado }
             ?: datos.categorias.first { it.esPorDefecto }

@@ -47,7 +47,7 @@ class ComandaFragment : Fragment(R.layout.fragment_comanda) {
         binding.listaLineas.layoutManager = LinearLayoutManager(requireContext())
         binding.listaLineas.adapter = adaptador
 
-        // Las líneas y el TOTAL, tal como los deja la libreta (R10: el total lo calcula la base de datos)
+        // Las líneas y el TOTAL, tal como los deja la libreta (el total lo calcula la base de datos)
         viewModel.lineas.observe(viewLifecycleOwner) { lineas ->
             adaptador.mostrar(lineas)
         }
@@ -84,7 +84,7 @@ class ComandaFragment : Fragment(R.layout.fragment_comanda) {
             }
         }
 
-        // Sobre del aviso R7: con «Quitar y anular», se quita la línea que esperaba en la libreta;
+        // Sobre del aviso de la última línea: con «Quitar y anular», se quita la línea que esperaba en la libreta;
         // la comanda queda ANULADA con cero líneas y se vuelve a la rejilla. Con «Cancelar», se olvida
         parentFragmentManager.setFragmentResultListener(CLAVE_ULTIMA_LINEA, viewLifecycleOwner) { _, sobre ->
             val lineaId = viewModel.lineaPorQuitar
@@ -105,7 +105,7 @@ class ComandaFragment : Fragment(R.layout.fragment_comanda) {
         binding = null
     }
 
-    // Quitar: sin aviso, salvo si es la última línea (R7): entonces se pregunta ANTES de quitar
+    // Quitar: sin aviso, salvo si es la última línea (sin líneas = anulada): entonces se pregunta ANTES de quitar
     private fun pulsarQuitar(linea: LineaVista) {
         if (!cuenta.portero.permite()) return
         if (viewModel.esUltimaLinea()) {

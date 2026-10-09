@@ -5,7 +5,7 @@ import androidx.fragment.app.FragmentManager
 import yunkang.ako.R
 import yunkang.ako.dominio.modelos.PlatoConMesas
 
-// Los avisos de R6: montan el texto y abren la caja de siempre (ConfirmacionDialog).
+// Los avisos de las mesas afectadas (ninguna línea se quita): montan el texto y abren la caja de siempre (ConfirmacionDialog).
 // 2e al eliminar una categoría (Panel) y 3d al eliminar un plato (formulario). Vive en comun porque lo usan dos pantallas.
 // [Claude] Es un object (no guarda nada): solo sabe escribir los avisos
 object MesasAfectadasDialog {

@@ -13,7 +13,8 @@ import yunkang.ako.dominio.modelos.PlatoConMesas
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 
-// La carta: categorías, platos y alérgenos. Garantiza R5, R6, R8, R9, R15 y R16.
+// La carta: categorías, platos y alérgenos. Garantiza: nada se borra; se avisa de las mesas y ninguna línea se quita;
+// ningún precio negativo; número de plato sin repetir; plato visible; la categoría por defecto.
 // Recibe sus herramientas por constructor.
 // De las comandas solo puede preguntar lo que ofrece el puesto ComandaRepository.
 class CartaRepository(
@@ -23,7 +24,7 @@ class CartaRepository(
     private val comandaRepository: ComandaRepository
 ) {
 
-    // R16: todas las categorías por su orden; la de por defecto, siempre la última.
+    // Todas las categorías por su orden; la de por defecto, siempre la última.
     suspend fun categorias(): List<Categoria> =
         porDefectoAlFinal(categoriaDao.todas())
 
@@ -32,12 +33,12 @@ class CartaRepository(
     fun categoriasConPlatos(): Flow<List<CategoriaConPlatos>> =
         combine(categoriaDao.todasObservadas(), productoDao.todosObservados()) { categorias, platos ->
             porDefectoAlFinal(categorias).map { c ->
-                // R15 no se aplica aquí: el Panel ve todos los platos, también los eliminados
+                // El Panel ve todos los platos, también los eliminados
                 CategoriaConPlatos(c, platos.filter { it.categoriaId == c.id })
             }
         }
 
-    // R16: nunca una segunda por defecto ni la por defecto eliminada; nombre sin repetir.
+    // Nunca una segunda por defecto ni la por defecto eliminada; nombre sin repetir.
     suspend fun guardarCategoria(c: Categoria): ResultadoGuardado {
         // [Claude] Sin espacios por los lados y nunca vacío (la hoja 2b ya lo impide; aquí se asegura)
         val nombre = c.nombre.trim()
@@ -51,7 +52,7 @@ class CartaRepository(
             categoriaDao.insertar(c.copy(nombre = nombre, orden = ordenMaximo + 1, esPorDefecto = false))
         } else {
             // Editada: "por defecto" y "activo" se quedan como están guardados: eliminar y recuperar
-            // solo se hace por eliminarCategoria / recuperarCategoria, que es donde la pantalla avisa (R6).
+            // solo se hace por eliminarCategoria / recuperarCategoria, que es donde la pantalla avisa.
             val guardada = checkNotNull(categoriaDao.porId(c.id)) { "La categoría ${c.id} no existe" }
             categoriaDao.actualizar(
                 c.copy(
@@ -64,11 +65,11 @@ class CartaRepository(
         return ResultadoGuardado.Ok
     }
 
-    // R6: mesas con comanda pendiente que llevan algún plato de esta categoría (aviso 2e, antes de confirmar).
+    // Mesas con comanda pendiente que llevan algún plato de esta categoría (aviso 2e, antes de confirmar).
     private suspend fun mesasAfectadasPorCategoria(id: Long): List<Int> =
         comandaRepository.mesasConCategoriaPendiente(id)
 
-    // R6: ANTES de eliminar una categoría, qué platos suyos están en comandas pendientes
+    // ANTES de eliminar una categoría, qué platos suyos están en comandas pendientes
     // y en qué mesas. Solo lee: no toca ninguna línea. Solo cuenta los platos activos:
     // un plato ya eliminado no se vuelve a eliminar y no se avisa
     suspend fun platosAfectadosPorCategoria(categoriaId: Long): List<PlatoConMesas> {
@@ -85,8 +86,8 @@ class CartaRepository(
         return afectados
     }
 
-    // R5: eliminar y recuperar son lo mismo con activo false o true; la fila no se borra nunca
-    // y ninguna línea de comanda se toca (R6). R16: la categoría por defecto no se elimina.
+    // Eliminar y recuperar son lo mismo con activo false o true; la fila no se borra nunca
+    // y ninguna línea de comanda se toca. La categoría por defecto no se elimina.
     // Un id inexistente no hace nada, como en los platos
     private suspend fun cambiarActivoCategoria(id: Long, activo: Boolean) {
         val categoria = categoriaDao.porId(id) ?: return
@@ -102,9 +103,9 @@ class CartaRepository(
     suspend fun platosDe(categoriaId: Long): List<Producto> =
         productoDao.porCategoria(categoriaId)
 
-    // 5a (R15): la carta del cliente, al día sola: cada categoría con sus platos visibles.
+    // 5a: la carta del cliente, al día sola: cada categoría con sus platos visibles.
     // La regla de «visible» vive en ProductoDao.visibles(). Se recorren las categorías (la de por defecto
-    // la última, R16) y se filtran sus platos: visibles() deja Otros la primera (orden 0).
+    // la última) y se filtran sus platos: visibles() deja Otros la primera (orden 0).
     // Una categoría sin ningún plato visible no sale (ficha 5)
     fun cartaVisible(): Flow<List<CategoriaConPlatos>> =
         combine(categoriaDao.todasObservadas(), productoDao.visibles()) { categorias, platos ->
@@ -113,11 +114,11 @@ class CartaRepository(
                 .filter { it.platos.isNotEmpty() }
         }
 
-    // R15: puerta de Pedir: sin ningún plato visible no se entra.
+    // Puerta de Pedir: sin ningún plato visible no se entra.
     suspend fun hayPlatoVisible(): Boolean =
         productoDao.hayAlgunoVisible()
 
-    // Puerta de Pedir (RF-25): ¿hay algún plato existente? Si no hay ninguno, «La carta está vacía».
+    // Puerta de Pedir: ¿hay algún plato existente? Si no hay ninguno, «La carta está vacía».
     suspend fun hayPlatoExistente(): Boolean =
         productoDao.hayAlguno()
 
@@ -133,15 +134,16 @@ class CartaRepository(
     suspend fun alergenosDe(productoId: Long): List<Alergeno> =
         productoDao.alergenosDe(productoId)
 
-    // R8, R9 y cadena 3e: comprueba en este orden y solo entonces guarda el plato y sus alérgenos.
+    // Ningún precio negativo, número de plato sin repetir y cadena 3e: comprueba en este orden y solo entonces
+    // guarda el plato y sus alérgenos.
     suspend fun guardarPlato(
         p: Producto,
         alergenos: List<Long>,
         aunqueCategoriaEliminada: Boolean = false
     ): ResultadoGuardado {
-        // R8: precio negativo = fallo de programación: excepción y no se guarda nada.
+        // Precio negativo = fallo de programación: excepción y no se guarda nada.
         Validacion.precioValido(p.precioCentimos)
-        // R9: avisar antes; la base de datos lo impide igualmente (UNIQUE).
+        // Número de plato sin repetir: avisar antes; la base de datos lo impide igualmente (UNIQUE).
         if (productoDao.existeNumero(p.numero, p.id)) {
             return ResultadoGuardado.NumeroRepetido
         }
@@ -164,12 +166,12 @@ class CartaRepository(
         return ResultadoGuardado.Ok
     }
 
-    // R6: mesas con comanda pendiente que llevan este plato (aviso antes de confirmar).
+    // Mesas con comanda pendiente que llevan este plato (aviso antes de confirmar).
     suspend fun mesasAfectadasPorPlato(id: Long): List<Int> =
         comandaRepository.mesasConPlatoPendiente(id)
 
-    // R5: eliminar y recuperar un plato son lo mismo con activo false o true; la fila no se borra
-    // nunca y ninguna línea de comanda se toca (R6). Un id inexistente no hace nada
+    // Eliminar y recuperar un plato son lo mismo con activo false o true; la fila no se borra
+    // nunca y ninguna línea de comanda se toca. Un id inexistente no hace nada
     private suspend fun cambiarActivoPlato(id: Long, activo: Boolean) {
         val plato = productoDao.porId(id) ?: return
         productoDao.actualizar(plato.copy(activo = activo))
@@ -179,6 +181,6 @@ class CartaRepository(
 
     suspend fun recuperarPlato(id: Long) = cambiarActivoPlato(id, activo = true)
 
-    // R16: la categoría por defecto siempre la última; se reconoce por esPorDefecto, nunca por el nombre
+    // La categoría por defecto, siempre la última; se reconoce por esPorDefecto, nunca por el nombre
     private fun porDefectoAlFinal(categorias: List<Categoria>) = categorias.sortedBy { it.esPorDefecto }
 }

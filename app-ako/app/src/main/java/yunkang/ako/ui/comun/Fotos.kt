@@ -8,7 +8,7 @@ import yunkang.ako.R
 // fotos/) o un String (la dirección content://… que prestó el selector); null = sin foto.
 // Glide se llama siempre, también sin foto (null → el «?»), porque las vistas se reciclan y una
 // que llevaba la foto de Entrecot la seguiría llevando al pintar otro plato.
-// El lector de pantalla dice el nombre si hay foto y «Sin foto» si no (RNF-13)
+// El lector de pantalla dice el nombre si hay foto y «Sin foto» si no
 fun pintarFoto(hueco: ImageView, foto: Any?, nombre: String, redonda: Boolean = false, grande: Boolean = false) {
     val peticion = Glide.with(hueco)
         .load(foto)
