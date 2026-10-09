@@ -59,6 +59,7 @@
         app:layout_constraintStart_toStartOf="@id/textoTitulo"
         app:layout_constraintTop_toBottomOf="@id/textoSubtitulo">
 
+        <!-- 4 cifras: el mismo número que Validacion.LONGITUD_PIN -->
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/textoPin"
             android:layout_width="match_parent"

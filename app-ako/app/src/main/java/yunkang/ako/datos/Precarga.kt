@@ -7,6 +7,9 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import yunkang.ako.R
 
+// Las mesas del bar: de la 1 a la 60. Solo está escrito aquí
+private const val NUM_MESAS = 60
+
 // La precarga (RF-50): lo que la app trae "de fábrica" la primera vez que se abre.
 // Room llama a onCreate UNA sola vez: cuando crea el archivo de la base de datos.
 // Todo se escribe aquí dentro, en la base «cruda» que pasa Room, y no por detrás: Android crea la base
@@ -29,7 +32,7 @@ class Precarga(private val context: Context) : RoomDatabase.Callback() {
         otros.put("es_por_defecto", true)
         db.insert("categoria", SQLiteDatabase.CONFLICT_ABORT, otros)
 
-        for (numero in 1..60) {
+        for (numero in 1..NUM_MESAS) {
             val mesa = ContentValues()
             mesa.put("numero", numero)
             db.insert("mesa", SQLiteDatabase.CONFLICT_ABORT, mesa)

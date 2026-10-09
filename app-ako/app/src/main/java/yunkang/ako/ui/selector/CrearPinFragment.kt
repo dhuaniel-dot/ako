@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import yunkang.ako.R
 import yunkang.ako.databinding.FragmentCrearPinBinding
+import yunkang.ako.dominio.Validacion
 
 // 1b · Crear PIN: solo en el primer arranque y obligatoria (ficha 1)
 class CrearPinFragment : Fragment(R.layout.fragment_crear_pin) {
@@ -61,8 +62,8 @@ class CrearPinFragment : Fragment(R.layout.fragment_crear_pin) {
 
     // Aceptar solo se enciende cuando los dos campos tienen 4 cifras (ficha 1)
     private fun revisarBoton(binding: FragmentCrearPinBinding) {
-        val pinCompleto = binding.textoPin.text?.length == 4
-        val repiteCompleto = binding.textoRepite.text?.length == 4
+        val pinCompleto = binding.textoPin.text?.length == Validacion.LONGITUD_PIN
+        val repiteCompleto = binding.textoRepite.text?.length == Validacion.LONGITUD_PIN
         binding.botonAceptar.isEnabled = pinCompleto && repiteCompleto
     }
 }

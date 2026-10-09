@@ -69,7 +69,8 @@
         app:layout_constraintTop_toBottomOf="@id/filaCategorias" />
 
     <!-- La lista de platos por secciones: ocupa todo lo que queda hasta abajo. [Claude] Hueco abajo
-         (paddingBottom sin recortar, clipToPadding false) para que la pastilla no tape el último plato -->
+         (paddingBottom sin recortar, clipToPadding false) para que la pastilla no tape el último plato.
+         88 dp = los 56 de la pastilla y sus dos márgenes de 16 -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/listaPlatos"
         android:layout_width="0dp"

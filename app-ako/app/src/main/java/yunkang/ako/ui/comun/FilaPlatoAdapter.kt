@@ -68,8 +68,14 @@ class FilaPlatoAdapter(
         holder.binding.textoEliminado.visibility = if (plato.activo) View.GONE else View.VISIBLE
 
         // Atenuada si el plato está eliminado o si lo está su categoría (Flan dentro de Postres eliminada)
-        holder.itemView.alpha = if (plato.activo && categoriaActiva) 1f else 0.8f
+        holder.itemView.alpha = if (plato.activo && categoriaActiva) 1f else ALFA_ELIMINADO
 
         holder.itemView.setOnClickListener { alTocar(plato) }
+    }
+
+    companion object {
+        // Lo eliminado se ve apagado al 80 %: se nota, pero la palabra «Eliminado» se sigue leyendo
+        // (contraste 5,15:1, RNF-12)
+        const val ALFA_ELIMINADO = 0.8f
     }
 }

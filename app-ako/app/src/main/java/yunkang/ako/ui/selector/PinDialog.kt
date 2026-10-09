@@ -11,6 +11,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
 import yunkang.ako.R
 import yunkang.ako.databinding.DialogPinBinding
+import yunkang.ako.dominio.Validacion
 import android.animation.ObjectAnimator
 import yunkang.ako.ui.comun.ComprobadorPin
 
@@ -37,12 +38,12 @@ class PinDialog : DialogFragment() {
         // para que con un PIN incorrecto el diálogo siga abierto
         dialogo.setOnShowListener {
             val aceptar = dialogo.getButton(AlertDialog.BUTTON_POSITIVE)
-            aceptar.isEnabled = binding.textoPin.text?.length == 4
+            aceptar.isEnabled = binding.textoPin.text?.length == Validacion.LONGITUD_PIN
 
             // Aceptar solo se enciende con 4 cifras (ficha 1)
             binding.textoPin.doAfterTextChanged {
                 binding.campoPin.error = null
-                aceptar.isEnabled = binding.textoPin.text?.length == 4
+                aceptar.isEnabled = binding.textoPin.text?.length == Validacion.LONGITUD_PIN
             }
 
             aceptar.setOnClickListener {

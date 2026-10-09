@@ -13,6 +13,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
 import yunkang.ako.R
 import yunkang.ako.databinding.DialogCambiarPinBinding
+import yunkang.ako.dominio.Validacion
 
 // 1e · Cambiar PIN: actual, nuevo y repetido a la vez.
 // Orden al Aceptar: primero el actual; después, que los nuevos coincidan; por último se guarda.
@@ -79,9 +80,9 @@ class CambiarPinDialog : DialogFragment() {
 
     // Aceptar solo se enciende con 4 cifras en los tres campos (ficha 1)
     private fun revisarBoton(binding: DialogCambiarPinBinding, aceptar: Button) {
-        val actualCompleto = binding.textoActual.text?.length == 4
-        val nuevoCompleto = binding.textoNuevo.text?.length == 4
-        val repiteCompleto = binding.textoRepite.text?.length == 4
+        val actualCompleto = binding.textoActual.text?.length == Validacion.LONGITUD_PIN
+        val nuevoCompleto = binding.textoNuevo.text?.length == Validacion.LONGITUD_PIN
+        val repiteCompleto = binding.textoRepite.text?.length == Validacion.LONGITUD_PIN
         aceptar.isEnabled = actualCompleto && nuevoCompleto && repiteCompleto
     }
 

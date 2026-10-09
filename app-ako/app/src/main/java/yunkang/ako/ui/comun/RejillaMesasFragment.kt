@@ -29,8 +29,7 @@ class RejillaMesasFragment : Fragment(R.layout.fragment_rejilla_mesas) {
         // El título llega en los arguments (se conservan si Android rehace el Fragment)
         binding.textoTitulo.setText(requireArguments().getInt(ARG_TITULO))
 
-        // 4 columnas: 60 mesas caben en 15 filas con scroll (wireframe 01d).
-        binding.listaMesas.layoutManager = GridLayoutManager(requireContext(), 4)
+        binding.listaMesas.layoutManager = GridLayoutManager(requireContext(), COLUMNAS)
         binding.listaMesas.adapter = adaptador
 
         // ← Atrás hace lo mismo que el Atrás del sistema [Claude]
@@ -57,6 +56,9 @@ class RejillaMesasFragment : Fragment(R.layout.fragment_rejilla_mesas) {
         const val MESA_NUMERO = "mesa_numero"
 
         private const val ARG_TITULO = "titulo"
+
+        // 4 columnas: 60 mesas en 15 filas con scroll (wireframe 01d)
+        private const val COLUMNAS = 4
 
         // La forma de crear una rejilla: se le da el título que enseña su barra
         fun nueva(titulo: Int): RejillaMesasFragment {

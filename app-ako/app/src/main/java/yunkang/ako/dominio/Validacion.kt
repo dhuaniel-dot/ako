@@ -7,6 +7,9 @@ object Validacion {
     // Máximo de unidades de un mismo plato (R4). Solo está escrito aquí.
     const val MAXIMO_POR_PLATO = 99
 
+    // Cifras del PIN (ficha 1). Solo está escrito aquí
+    const val LONGITUD_PIN = 4
+
     // R8: un precio no puede ser negativo; 0 sí vale.
     // Si es negativo, para en seco con un error.
     fun precioValido(centimos: Int) {
@@ -19,5 +22,5 @@ object Validacion {
     fun cantidadValida(cantidad: Int): Boolean = cantidad in 1..MAXIMO_POR_PLATO
 
     // El PIN son exactamente cuatro cifras del 0 al 9
-    fun pinValido(pin: String): Boolean = pin.length == 4 && pin.all { it in '0'..'9' }
+    fun pinValido(pin: String): Boolean = pin.length == LONGITUD_PIN && pin.all { it in '0'..'9' }
 }
