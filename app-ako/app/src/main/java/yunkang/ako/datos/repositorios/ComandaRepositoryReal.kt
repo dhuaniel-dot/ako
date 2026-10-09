@@ -105,21 +105,15 @@ class ComandaRepositoryReal(
         }
     }
 
-    // R5: anula una comanda abierta (ANULADA, con hora de cierre); la mesa queda libre (R3).
-    override suspend fun anular(comandaId: Long) {
+    // R5: anular y cobrar cierran una comanda abierta con su hora de cierre; la mesa queda libre (R3)
+    private suspend fun cerrar(comandaId: Long, estado: EstadoComanda) {
         val comanda = abierta(comandaId)
-        comandaDao.actualizar(
-            comanda.copy(estado = EstadoComanda.ANULADA, fechaCierre = System.currentTimeMillis())
-        )
+        comandaDao.actualizar(comanda.copy(estado = estado, fechaCierre = System.currentTimeMillis()))
     }
 
-    // R5: cobra una comanda abierta (PAGADA, con hora de cierre); la mesa queda libre (R3).
-    override suspend fun cobrar(comandaId: Long) {
-        val comanda = abierta(comandaId)
-        comandaDao.actualizar(
-            comanda.copy(estado = EstadoComanda.PAGADA, fechaCierre = System.currentTimeMillis())
-        )
-    }
+    override suspend fun anular(comandaId: Long) = cerrar(comandaId, EstadoComanda.ANULADA)
+
+    override suspend fun cobrar(comandaId: Long) = cerrar(comandaId, EstadoComanda.PAGADA)
 
     // R10: las comandas cobradas en un día, cada una con su total calculado.
     override suspend fun resumenDelDia(dia: LocalDate): ResumenIngresos {

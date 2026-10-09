@@ -13,7 +13,6 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import kotlinx.coroutines.launch
 import yunkang.ako.EntradaAko
 import yunkang.ako.datos.repositorios.ComandaRepository
-import yunkang.ako.dominio.Calculadora
 import yunkang.ako.dominio.modelos.ComandaConTotal
 import yunkang.ako.dominio.modelos.ResumenIngresos
 import yunkang.ako.ui.comun.LineaVista
@@ -59,15 +58,7 @@ class ResumenIngresosViewModel(
             val lineas = comandaRepository.lineasDe(comanda.comandaId)
             // [Claude] Si mientras se esperaba a la base de datos se tocó otra comanda, estas líneas ya no valen
             if (comandaRecibo != comanda) return@launch
-            _lineasRecibo.value = lineas.map { linea ->
-                // En una comanda, el id de LineaVista es el de la línea
-                LineaVista(
-                    linea.id,
-                    linea.cantidad,
-                    linea.nombreProducto,
-                    Calculadora.importe(linea.precioUnitarioCentimos, linea.cantidad)
-                )
-            }
+            _lineasRecibo.value = lineas.map { LineaVista.de(it) }
         }
     }
 

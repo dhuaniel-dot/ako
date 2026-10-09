@@ -25,14 +25,13 @@ class CartaRepository(
 
     // R16: todas las categorías por su orden; la de por defecto, siempre la última.
     suspend fun categorias(): List<Categoria> =
-        categoriaDao.todas().sortedBy { it.esPorDefecto }
+        porDefectoAlFinal(categoriaDao.todas())
 
     // Panel: las cajas con sus platos, al día solas.
     // combine junta los dos grifos: si cambia cualquiera de las dos tablas, se vuelve a montar la lista
     fun categoriasConPlatos(): Flow<List<CategoriaConPlatos>> =
         combine(categoriaDao.todasObservadas(), productoDao.todosObservados()) { categorias, platos ->
-            // R16: la de por defecto la última (se reconoce por esPorDefecto, nunca por el nombre), como en categorias()
-            categorias.sortedBy { it.esPorDefecto }.map { c ->
+            porDefectoAlFinal(categorias).map { c ->
                 // R15 no se aplica aquí: el Panel ve todos los platos, también los eliminados
                 CategoriaConPlatos(c, platos.filter { it.categoriaId == c.id })
             }
@@ -86,19 +85,18 @@ class CartaRepository(
         return afectados
     }
 
-    // R5, R6, R16: eliminar = activo false, sin borrar ni tocar platos ni líneas; la por defecto no se elimina.
-    // Un id inexistente no hace nada, como en los platos.
-    suspend fun eliminarCategoria(id: Long) {
+    // R5: eliminar y recuperar son lo mismo con activo false o true; la fila no se borra nunca
+    // y ninguna línea de comanda se toca (R6). R16: la categoría por defecto no se elimina.
+    // Un id inexistente no hace nada, como en los platos
+    private suspend fun cambiarActivoCategoria(id: Long, activo: Boolean) {
         val categoria = categoriaDao.porId(id) ?: return
-        if (categoria.esPorDefecto) return
-        categoriaDao.actualizar(categoria.copy(activo = false))
+        if (!activo && categoria.esPorDefecto) return
+        categoriaDao.actualizar(categoria.copy(activo = activo))
     }
 
-    // R5: recuperar = vuelve a la carta (activo true), con sus platos tal como estaban.
-    suspend fun recuperarCategoria(id: Long) {
-        val categoria = categoriaDao.porId(id) ?: return
-        categoriaDao.actualizar(categoria.copy(activo = true))
-    }
+    suspend fun eliminarCategoria(id: Long) = cambiarActivoCategoria(id, activo = false)
+
+    suspend fun recuperarCategoria(id: Long) = cambiarActivoCategoria(id, activo = true)
 
     // Panel (2a): todos los platos de una categoría, también los eliminados (para poder recuperarlos).
     suspend fun platosDe(categoriaId: Long): List<Producto> =
@@ -110,7 +108,7 @@ class CartaRepository(
     // Una categoría sin ningún plato visible no sale (ficha 5)
     fun cartaVisible(): Flow<List<CategoriaConPlatos>> =
         combine(categoriaDao.todasObservadas(), productoDao.visibles()) { categorias, platos ->
-            categorias.sortedBy { it.esPorDefecto }
+            porDefectoAlFinal(categorias)
                 .map { c -> CategoriaConPlatos(c, platos.filter { it.categoriaId == c.id }) }
                 .filter { it.platos.isNotEmpty() }
         }
@@ -170,15 +168,17 @@ class CartaRepository(
     suspend fun mesasAfectadasPorPlato(id: Long): List<Int> =
         comandaRepository.mesasConPlatoPendiente(id)
 
-    // R5, R6: eliminar = activo false; no se borra la fila ni se toca ninguna línea de comanda.
-    suspend fun eliminarPlato(id: Long) {
+    // R5: eliminar y recuperar un plato son lo mismo con activo false o true; la fila no se borra
+    // nunca y ninguna línea de comanda se toca (R6). Un id inexistente no hace nada
+    private suspend fun cambiarActivoPlato(id: Long, activo: Boolean) {
         val plato = productoDao.porId(id) ?: return
-        productoDao.actualizar(plato.copy(activo = false))
+        productoDao.actualizar(plato.copy(activo = activo))
     }
 
-    // R5: recuperar = vuelve a la carta (activo true).
-    suspend fun recuperarPlato(id: Long) {
-        val plato = productoDao.porId(id) ?: return
-        productoDao.actualizar(plato.copy(activo = true))
-    }
+    suspend fun eliminarPlato(id: Long) = cambiarActivoPlato(id, activo = false)
+
+    suspend fun recuperarPlato(id: Long) = cambiarActivoPlato(id, activo = true)
+
+    // R16: la categoría por defecto siempre la última; se reconoce por esPorDefecto, nunca por el nombre
+    private fun porDefectoAlFinal(categorias: List<Categoria>) = categorias.sortedBy { it.esPorDefecto }
 }

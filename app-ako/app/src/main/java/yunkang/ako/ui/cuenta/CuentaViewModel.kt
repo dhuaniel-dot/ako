@@ -107,15 +107,7 @@ class CuentaViewModel(
     // nunca se resta en la pantalla). R14: nombre y precio salen de la línea, congelados al enviar
     private suspend fun recargar() {
         val lineas = comandaRepository.lineasDe(comandaId)
-        _lineas.value = lineas.map { linea ->
-            // En una comanda, el id de LineaVista es el de la línea
-            LineaVista(
-                linea.id,
-                linea.cantidad,
-                linea.nombreProducto,
-                Calculadora.importe(linea.precioUnitarioCentimos, linea.cantidad)
-            )
-        }
+        _lineas.value = lineas.map { LineaVista.de(it) }
         _total.value = comandaRepository.totalDe(comandaId)
     }
 
