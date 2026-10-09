@@ -8,7 +8,7 @@ import yunkang.ako.dominio.Hash
 private const val CLAVE_SAL = "sal"
 private const val CLAVE_HASH = "hash"
 
-// El cajón privado del PIN: guarda la sal y el hash, nunca el PIN (P122).
+// El cajón privado del PIN: guarda la sal y el hash, nunca el PIN.
 // Son SharedPreferences privadas de la app: se borran al desinstalarla.
 class PinStore(context: Context) {
 
@@ -32,7 +32,7 @@ class PinStore(context: Context) {
     fun coincide(pin: String): Boolean {
         val sal = preferencias.getString(CLAVE_SAL, null) ?: return false
         val hash = preferencias.getString(CLAVE_HASH, null) ?: return false
-        // [Claude] Si el archivo está roto (la sal no es Base64), es «no coincide», no un cierre de la app (H15)
+        // [Claude] Si el archivo está roto (la sal no es Base64), es «no coincide», no un cierre de la app
         return try {
             Hash.coincide(pin, sal, hash)
         } catch (e: IllegalArgumentException) {

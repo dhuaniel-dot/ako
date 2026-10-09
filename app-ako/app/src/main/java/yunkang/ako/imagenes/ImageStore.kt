@@ -14,20 +14,20 @@ import java.io.IOException
 import java.util.UUID
 import kotlin.math.roundToInt
 
-// Lado mayor de las fotos guardadas (spec 9, RNF-18)
+// Lado mayor de las fotos guardadas (RNF-18)
 private const val LADO_FINAL = 1080
 
-// Calidad del JPEG: mucho menos peso sin que se note a simple vista (spec 9, RNF-18)
+// Calidad del JPEG: mucho menos peso sin que se note a simple vista (RNF-18)
 private const val CALIDAD_JPEG = 85
 
 // La carpeta de las fotos dentro del almacenamiento privado de la app
 private const val CARPETA = "fotos"
 
-// Guarda las fotos elegidas como archivos JPEG en la carpeta privada de la app (spec 9: archivo, nunca BLOB).
+// Guarda las fotos elegidas como archivos JPEG en la carpeta privada de la app (archivo, nunca BLOB).
 // Recibe el contexto de la app (EntradaAko), nunca el de una pantalla.
 class ImageStore(private val context: Context) {
 
-    // P94 C: pide a Android que el préstamo de la foto no caduque, porque se copia al guardar
+    // Pide a Android que el préstamo de la foto no caduque, porque se copia al guardar
     // (documentación oficial del selector de fotos, «Persist media file access»)
     fun conservarPrestamo(uri: Uri) {
         try {
@@ -38,7 +38,7 @@ class ImageStore(private val context: Context) {
     }
 
     // Copia la foto prestada a un archivo nuestro, reducida y derecha, y devuelve su ruta.
-    // Todo en Dispatchers.IO: leer y escribir fotos tarda y congelaría la pantalla (spec 9).
+    // Todo en Dispatchers.IO: leer y escribir fotos tarda y congelaría la pantalla.
     suspend fun guardar(uri: Uri): String = withContext(Dispatchers.IO) {
         val giro = leerGiro(uri)
         var foto = leerReducida(uri)
@@ -81,15 +81,14 @@ class ImageStore(private val context: Context) {
         }
     }
 
-    // Lee la foto ya reducida, sin cargarla entera en memoria (guía «Loading Large Bitmaps Efficiently»)
+    // Lee la foto ya reducida, sin cargarla entera en memoria (guía «Loading Large Bitmaps Efficiently»).
+    // La lee dos veces: primero solo las medidas, sin píxeles; después los píxeles, quedándose con uno de cada N
     private fun leerReducida(uri: Uri): Bitmap {
-        // Primera pasada: solo las medidas, sin píxeles
         val medidas = BitmapFactory.Options()
         medidas.inJustDecodeBounds = true
         abrir(uri).use { BitmapFactory.decodeStream(it, null, medidas) }
         if (medidas.outWidth <= 0 || medidas.outHeight <= 0) throw IOException("No es una imagen")
 
-        // Segunda pasada: los píxeles, quedándose con uno de cada N
         val opciones = BitmapFactory.Options()
         opciones.inSampleSize = calcularMuestreo(medidas.outWidth, medidas.outHeight)
         return abrir(uri).use { BitmapFactory.decodeStream(it, null, opciones) }
@@ -106,7 +105,7 @@ class ImageStore(private val context: Context) {
         return muestreo
     }
 
-    // Cuántos grados hay que girar la foto para verla derecha (marca EXIF del móvil, P95 B)
+    // Cuántos grados hay que girar la foto para verla derecha (marca EXIF del móvil)
     private fun leerGiro(uri: Uri): Int {
         val orientacion = abrir(uri).use {
             ExifInterface(it).getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)

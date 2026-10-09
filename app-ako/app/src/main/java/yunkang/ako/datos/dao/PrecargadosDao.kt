@@ -8,7 +8,6 @@ import yunkang.ako.datos.entidades.Alergeno
 @Dao
 interface PrecargadosDao {
 
-    // Los 14 alérgenos, en el orden en que se precargaron.
     @Query("SELECT * FROM alergeno ORDER BY id")
     suspend fun alergenos(): List<Alergeno>
 }

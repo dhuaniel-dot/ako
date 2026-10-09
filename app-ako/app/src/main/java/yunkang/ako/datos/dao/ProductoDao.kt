@@ -14,15 +14,12 @@ import yunkang.ako.datos.entidades.ProductoAlergeno
 @Dao
 interface ProductoDao {
 
-    // Guarda un plato nuevo y devuelve el id que le ha dado Room.
     @Insert
     suspend fun insertar(producto: Producto): Long
 
-    // Guarda los cambios de un plato que ya existe.
     @Update
     suspend fun actualizar(producto: Producto)
 
-    // Un plato por su id (vacío si no existe).
     @Query("SELECT * FROM producto WHERE id = :id")
     suspend fun porId(id: Long): Producto?
 
@@ -30,13 +27,13 @@ interface ProductoDao {
     @Query("SELECT * FROM producto WHERE categoria_id = :categoriaId ORDER BY numero")
     suspend fun porCategoria(categoriaId: Long): List<Producto>
 
-    // P49 B: todos los platos existentes (también los eliminados: el Panel los ve todos, R15), por número.
+    // Todos los platos existentes (también los eliminados: el Panel los ve todos, R15), por número.
     // Room vuelve a mandar la lista cada vez que cambia la tabla producto
     @Query("SELECT * FROM producto ORDER BY numero")
     fun todosObservados(): Flow<List<Producto>>
 
     // La carta: platos visibles = activos y con su categoría activa (R15).
-    // P167 A: Room la vuelve a mandar cada vez que cambian producto o categoria
+    // Room la vuelve a mandar cada vez que cambian producto o categoria
     @Query("""
         SELECT p.* FROM producto p
         JOIN categoria c ON c.id = p.categoria_id
@@ -63,7 +60,6 @@ interface ProductoDao {
     @Query("SELECT EXISTS(SELECT 1 FROM producto WHERE numero = :numero AND id != :exceptoId)")
     suspend fun existeNumero(numero: Int, exceptoId: Long): Boolean
 
-    // Los alérgenos marcados de un plato.
     @Query("""
         SELECT a.* FROM alergeno a
         JOIN producto_alergeno pa ON pa.alergeno_id = a.id
@@ -81,14 +77,14 @@ interface ProductoDao {
     suspend fun insertarAlergenosDe(marcas: List<ProductoAlergeno>)
 
     // Cambia los alérgenos de un plato: borrar las marcas viejas y poner las nuevas,
-    // las dos cosas o ninguna (P125).
+    // las dos cosas o ninguna.
     @Transaction
     suspend fun guardarAlergenos(productoId: Long, alergenoIds: List<Long>) {
         borrarAlergenosDe(productoId)
         insertarAlergenosDe(alergenoIds.map { ProductoAlergeno(productoId, it) })
     }
 
-    // Guarda un plato (nuevo o editado) y sus alérgenos, las dos cosas o ninguna (P137); devuelve su id.
+    // Guarda un plato (nuevo o editado) y sus alérgenos, las dos cosas o ninguna; devuelve su id.
     @Transaction
     suspend fun guardarConAlergenos(producto: Producto, alergenoIds: List<Long>): Long {
         val productoId = if (producto.id == 0L) {

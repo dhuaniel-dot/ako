@@ -7,19 +7,26 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 
 // Un plato de la carta. Tabla "producto".
+// No se puede borrar una categoría con platos (R11).
+// No puede haber dos platos con el mismo número.
+// [Claude] El índice de categoria_id: Room lo pide para las claves foráneas.
+// numero: el número que ve el cliente en la carta.
+// precioCentimos: 1,50 € se guarda como 150.
+// imagen: ruta de la foto.
+// activo: false = eliminado (no se borra nunca).
 @Entity(
     tableName = "producto",
     foreignKeys = [
         ForeignKey(
-            entity = Categoria::class,          // apunta a una categoría…
-            parentColumns = ["id"],             // …por su carné…
-            childColumns = ["categoria_id"],    // …guardado en esta columna
-            onDelete = ForeignKey.RESTRICT      // no se puede borrar una categoría con platos (R11)
+            entity = Categoria::class,
+            parentColumns = ["id"],
+            childColumns = ["categoria_id"],
+            onDelete = ForeignKey.RESTRICT
         )
     ],
     indices = [
-        Index(value = ["numero"], unique = true),  // no puede haber dos platos con el mismo número
-        Index(value = ["categoria_id"])            // [Claude] Room lo pide para las claves foráneas
+        Index(value = ["numero"], unique = true),
+        Index(value = ["categoria_id"])
     ]
 )
 data class Producto(
@@ -29,13 +36,13 @@ data class Producto(
     @ColumnInfo(name = "categoria_id")
     val categoriaId: Long,
 
-    val numero: Int,               // el número que ve el cliente en la carta
+    val numero: Int,
     val nombre: String,
-    val descripcion: String?,      // opcional
+    val descripcion: String?,
 
     @ColumnInfo(name = "precio_centimos")
-    val precioCentimos: Int,       // 1,50 € se guarda como 150
+    val precioCentimos: Int,
 
-    val imagen: String?,           // ruta de la foto (S12)
-    val activo: Boolean            // false = eliminado (no se borra nunca)
+    val imagen: String?,
+    val activo: Boolean
 )

@@ -16,7 +16,7 @@ import yunkang.ako.datos.dao.ProductoDao
 import yunkang.ako.datos.dao.ComandaDao
 
 // La base de datos de Ako: el archivador con sus 7 cajones.
-// La única instancia la guarda EntradaAko (P116).
+// La única instancia la guarda EntradaAko.
 @Database(
     entities = [
         Categoria::class,
@@ -27,8 +27,8 @@ import yunkang.ako.datos.dao.ComandaDao
         Comanda::class,
         LineaComanda::class
     ],
-    version = 1,             // se sube si algún día cambian las tablas
-    exportSchema = false     // no guardamos una copia del esquema en un archivo aparte
+    version = 1,
+    exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
 

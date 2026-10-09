@@ -15,22 +15,22 @@ import yunkang.ako.imagenes.ImageStore
 import yunkang.ako.seguridad.PinStore
 
 // La entrada a Ako: Android la crea antes que cualquier pantalla y vive mientras la app está abierta.
-// Guarda lo que es único en toda la app: la base de datos y los repositorios (P17, P116).
+// Guarda lo que es único en toda la app: la base de datos y los repositorios.
 class EntradaAko : Application() {
 
-    // "by lazy": se crea la primera vez que alguien la pide; después, siempre la misma.
+    // Se crea la primera vez que alguien la pide y después es siempre la misma.
     val db: AppDatabase by lazy {
         Room.databaseBuilder(this, AppDatabase::class.java, "ako.db")
-            .addCallback(Precarga(this))   // la primera vez que se crea, salta la precarga
+            .addCallback(Precarga(this))
             .build()
     }
 
-    // El puesto de comandas: quien lo pida solo ve sus preguntas, no la versión real (P132).
+    // El puesto de comandas: quien lo pida solo ve sus preguntas, no la versión real.
     val comandaRepository: ComandaRepository by lazy {
         ComandaRepositoryReal(db, db.mesaDao(), db.comandaDao())
     }
 
-    // La carta pregunta a comandas por el puesto, nunca por su DAO (P127).
+    // La carta pregunta a comandas por el puesto, nunca por su DAO.
     val cartaRepository: CartaRepository by lazy {
         CartaRepository(db.categoriaDao(), db.productoDao(), db.precargadosDao(), comandaRepository)
     }
@@ -47,7 +47,7 @@ class EntradaAko : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        // Al arrancar, abre la base de datos por detrás; si es la primera vez, salta la precarga (P118).
+        // Al arrancar, abre la base de datos por detrás; si es la primera vez, salta la precarga.
         CoroutineScope(Dispatchers.IO).launch {
             db.openHelper.writableDatabase
         }

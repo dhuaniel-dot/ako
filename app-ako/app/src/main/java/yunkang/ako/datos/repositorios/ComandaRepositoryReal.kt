@@ -17,8 +17,8 @@ import yunkang.ako.dominio.modelos.ResumenIngresos
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 
-// La versión de verdad del puesto de comandas: pregunta a la base de datos (P132, P133).
-// Recibe sus herramientas por constructor (P17); la base de datos, para la transacción de Enviar (P129).
+// La versión de verdad del puesto de comandas: pregunta a la base de datos.
+// Recibe sus herramientas por constructor; la base de datos, para la transacción de Enviar.
 class ComandaRepositoryReal(
     private val db: AppDatabase,
     private val mesaDao: MesaDao,
@@ -33,9 +33,9 @@ class ComandaRepositoryReal(
     override suspend fun mesasConCategoriaPendiente(categoriaId: Long): List<Int> =
         comandaDao.mesasConCategoriaPendiente(categoriaId)
 
-    // R3 (P123): ninguna columna dice "ocupada"; ocupada = tiene comanda pendiente.
-    // Paso 1: la base de datos da solo las ocupadas. Paso 2: se pegan a las 60 mesas.
-    // P167 A: combine junta los dos grifos; si cambia cualquiera de los dos, se vuelve a montar la rejilla
+    // R3: ninguna columna dice "ocupada"; ocupada = tiene comanda pendiente.
+    // La base de datos da solo las ocupadas, y aquí se pegan a las 60 mesas.
+    // combine junta los dos grifos; si cambia cualquiera de los dos, se vuelve a montar la rejilla
     override fun mesasConEstado(): Flow<List<MesaEstado>> =
         combine(mesaDao.todasObservadas(), comandaDao.pendientesConTotal()) { mesas, ocupadas ->
             mesas.map { mesa ->
@@ -48,11 +48,11 @@ class ComandaRepositoryReal(
     override suspend fun lineasDe(comandaId: Long): List<LineaComanda> =
         comandaDao.lineasDe(comandaId)
 
-    // R10 (P131): el total se suma en SQL cada vez; la comanda no tiene columna "total".
+    // R10: el total se suma en SQL cada vez; la comanda no tiene columna "total".
     override suspend fun totalDe(comandaId: Long): Int =
         comandaDao.totalDe(comandaId)
 
-    // R1, R2, R4, R8, R14 (P129): todo el envío en una transacción: se guarda entero o nada.
+    // R1, R2, R4, R8, R14: todo el envío en una transacción: se guarda entero o nada.
     override suspend fun enviarCarrito(carrito: Carrito): Long = db.withTransaction {
         // R4: nunca una comanda vacía (la pantalla ya lo impide; aquí se asegura).
         require(!carrito.estaVacio()) { "No se envía un carrito vacío" }
@@ -71,7 +71,7 @@ class ComandaRepositoryReal(
             )
         }
         // R14: cada línea copia nombre y precio del plato (congelados); R8: nunca un precio negativo.
-        // [Claude] toList(): se trabaja sobre una copia por si la pantalla toca el carrito mientras se envía (H11)
+        // [Claude] toList(): se trabaja sobre una copia por si la pantalla toca el carrito mientras se envía
         val lineas = carrito.lineas.toList().map { linea ->
             Validacion.precioValido(linea.producto.precioCentimos)
             // R4: cada línea, de 1 a 99 unidades.
@@ -91,7 +91,7 @@ class ComandaRepositoryReal(
 
     // R5, R7: quita una línea de una comanda abierta; si era la última, la comanda queda ANULADA (true).
     override suspend fun quitarLinea(lineaId: Long): Boolean = db.withTransaction {
-        // P152: si la línea ya no existe (doble toque en Quitar), no se hace nada y no se anula
+        // Si la línea ya no existe (doble toque en Quitar), no se hace nada y no se anula
         val linea = comandaDao.lineaPorId(lineaId) ?: return@withTransaction false
         val comanda = abierta(linea.comandaId)
         comandaDao.borrarLinea(lineaId)
@@ -121,7 +121,7 @@ class ComandaRepositoryReal(
         )
     }
 
-    // R10 (P126, P135): las comandas cobradas en un día, cada una con su total calculado.
+    // R10: las comandas cobradas en un día, cada una con su total calculado.
     override suspend fun resumenDelDia(dia: LocalDate): ResumenIngresos {
         // El día va de las 0:00:00,000 a las 23:59:59,999 en la hora del móvil.
         val zona = ZoneId.systemDefault()

@@ -13,15 +13,12 @@ import yunkang.ako.dominio.modelos.MesaConTotal
 @Dao
 interface ComandaDao {
 
-    // Guarda una comanda nueva y devuelve el id que le ha dado Room.
     @Insert
     suspend fun insertar(comanda: Comanda): Long
 
-    // Guarda los cambios de una comanda (estado, fecha de cierre).
     @Update
     suspend fun actualizar(comanda: Comanda)
 
-    // Una comanda por su id (vacío si no existe).
     @Query("SELECT * FROM comanda WHERE id = :id")
     suspend fun porId(id: Long): Comanda?
 
@@ -29,8 +26,8 @@ interface ComandaDao {
     @Query("SELECT * FROM comanda WHERE mesa_id = :mesaId AND estado = 'PENDIENTE' LIMIT 1")
     suspend fun pendienteDeMesa(mesaId: Long): Comanda?
 
-    // La rejilla: solo las mesas ocupadas, con su total sumado (R3, R10, P123).
-    // P167 A: Room la vuelve a mandar cada vez que cambian comanda, mesa o linea_comanda
+    // La rejilla: solo las mesas ocupadas, con su total sumado (R3, R10).
+    // Room la vuelve a mandar cada vez que cambian comanda, mesa o linea_comanda
     @Query("""
         SELECT m.id AS mesaId, c.id AS comandaId,
                SUM(l.cantidad * l.precio_unitario_centimos) AS totalCentimos
@@ -43,15 +40,12 @@ interface ComandaDao {
     """)
     fun pendientesConTotal(): Flow<List<MesaConTotal>>
 
-    // Las líneas de una comanda, en el orden en que se pidieron.
     @Query("SELECT * FROM linea_comanda WHERE comanda_id = :comandaId ORDER BY id")
     suspend fun lineasDe(comandaId: Long): List<LineaComanda>
 
-    // Guarda las líneas de un envío de golpe.
     @Insert
     suspend fun insertarLineas(lineas: List<LineaComanda>)
 
-    // Quita una línea de una comanda abierta.
     @Query("DELETE FROM linea_comanda WHERE id = :lineaId")
     suspend fun borrarLinea(lineaId: Long)
 
@@ -59,7 +53,7 @@ interface ComandaDao {
     @Query("SELECT COUNT(*) FROM linea_comanda WHERE comanda_id = :comandaId")
     suspend fun contarLineas(comandaId: Long): Int
 
-    // Resumen de ingresos: las comandas cobradas entre dos instantes (P126).
+    // Resumen de ingresos: las comandas cobradas entre dos instantes.
     @Query("""
         SELECT * FROM comanda
         WHERE estado = 'PAGADA' AND fecha_cierre BETWEEN :inicio AND :fin
@@ -78,7 +72,7 @@ interface ComandaDao {
     suspend fun mesasConProductoPendiente(productoId: Long): List<Int>
 
     // R6: números de las mesas con comanda PENDIENTE que llevan algún plato de esta categoría
-    // que siga en la carta (P55: solo los activos, lo que de verdad se elimina; P147).
+    // que siga en la carta (solo los activos, lo que de verdad se elimina).
     @Query("""
         SELECT DISTINCT m.numero FROM mesa m
         JOIN comanda c ON c.mesa_id = m.id
@@ -89,11 +83,11 @@ interface ComandaDao {
     """)
     suspend fun mesasConCategoriaPendiente(categoriaId: Long): List<Int>
 
-    // R10: el total de una comanda, sumando sus líneas (P131); sin líneas, 0.
+    // R10: el total de una comanda, sumando sus líneas; sin líneas, 0.
     @Query("SELECT COALESCE(SUM(cantidad * precio_unitario_centimos), 0) FROM linea_comanda WHERE comanda_id = :comandaId")
     suspend fun totalDe(comandaId: Long): Int
 
-    // Una línea por su id (para saber de qué comanda es antes de quitarla); vacío si ya no existe (P152).
+    // Una línea por su id (para saber de qué comanda es antes de quitarla); vacío si ya no existe.
     @Query("SELECT * FROM linea_comanda WHERE id = :lineaId")
     suspend fun lineaPorId(lineaId: Long): LineaComanda?
 }

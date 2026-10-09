@@ -8,6 +8,7 @@ import androidx.room.PrimaryKey
 
 // Una línea de la comanda: "2 × Agua a 1,50 €". Tabla "linea_comanda".
 // Copia el nombre y el precio del plato en el momento de pedir (R14).
+// [Claude] Los dos índices los pide Room para las claves foráneas.
 @Entity(
     tableName = "linea_comanda",
     foreignKeys = [
@@ -25,8 +26,8 @@ import androidx.room.PrimaryKey
         )
     ],
     indices = [
-        Index(value = ["comanda_id"]),     // [Claude] Room lo pide para las claves foráneas
-        Index(value = ["producto_id"])     // [Claude] ídem
+        Index(value = ["comanda_id"]),
+        Index(value = ["producto_id"])
     ]
 )
 data class LineaComanda(
@@ -42,8 +43,8 @@ data class LineaComanda(
     val cantidad: Int,
 
     @ColumnInfo(name = "precio_unitario_centimos")
-    val precioUnitarioCentimos: Int,   // precio del plato al pedirlo (congelado)
+    val precioUnitarioCentimos: Int,
 
     @ColumnInfo(name = "nombre_producto")
-    val nombreProducto: String         // nombre del plato al pedirlo (congelado)
+    val nombreProducto: String
 )

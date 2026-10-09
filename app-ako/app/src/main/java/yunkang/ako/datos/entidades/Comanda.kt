@@ -8,6 +8,9 @@ import androidx.room.PrimaryKey
 
 // El pedido de una mesa, de principio a fin. Tabla "comanda".
 // No guarda el total: se calcula sumando sus líneas (R10).
+// [Claude] El índice de mesa_id: Room lo pide para las claves foráneas.
+// fechaCreacion: cuándo se envió el primer pedido (instante en milisegundos).
+// fechaCierre: cuándo se cobró o se anuló; vacío mientras está PENDIENTE.
 @Entity(
     tableName = "comanda",
     foreignKeys = [
@@ -18,7 +21,7 @@ import androidx.room.PrimaryKey
             onDelete = ForeignKey.RESTRICT
         )
     ],
-    indices = [Index(value = ["mesa_id"])]     // [Claude] Room lo pide para las claves foráneas
+    indices = [Index(value = ["mesa_id"])]
 )
 data class Comanda(
     @PrimaryKey(autoGenerate = true)
@@ -27,11 +30,11 @@ data class Comanda(
     @ColumnInfo(name = "mesa_id")
     val mesaId: Long,
 
-    val estado: EstadoComanda,     // PENDIENTE, PAGADA o ANULADA (Room lo guarda como texto, P113)
+    val estado: EstadoComanda,
 
     @ColumnInfo(name = "fecha_creacion")
-    val fechaCreacion: Long,       // instante en milisegundos: cuándo se envió el primer pedido
+    val fechaCreacion: Long,
 
     @ColumnInfo(name = "fecha_cierre")
-    val fechaCierre: Long?         // cuándo se cobró o se anuló; vacío mientras está PENDIENTE
+    val fechaCierre: Long?
 )

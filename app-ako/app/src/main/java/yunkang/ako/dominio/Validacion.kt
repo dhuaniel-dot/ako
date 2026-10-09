@@ -4,11 +4,11 @@ package yunkang.ako.dominio
 // así que se comprueban aquí antes de guardar.
 object Validacion {
 
-    // Máximo de unidades de un mismo plato (R4). Solo está escrito aquí (P121).
+    // Máximo de unidades de un mismo plato (R4). Solo está escrito aquí.
     const val MAXIMO_POR_PLATO = 99
 
     // R8: un precio no puede ser negativo; 0 sí vale.
-    // Si es negativo, para en seco con un error (P11).
+    // Si es negativo, para en seco con un error.
     fun precioValido(centimos: Int) {
         if (centimos < 0) {
             throw IllegalArgumentException("El precio no puede ser negativo: $centimos")

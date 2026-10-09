@@ -7,7 +7,7 @@ import java.time.LocalDate
 import kotlinx.coroutines.flow.Flow
 import yunkang.ako.dominio.modelos.ResumenIngresos
 
-// El puesto de comandas: las preguntas que otros pueden hacer sobre las comandas (P132).
+// El puesto de comandas: las preguntas que otros pueden hacer sobre las comandas.
 // Lo cumplen ComandaRepositoryReal (la app) y ComandaRepositoryFalso (las pruebas).
 interface ComandaRepository {
 
@@ -17,7 +17,7 @@ interface ComandaRepository {
     // R6: números de las mesas con comanda pendiente que llevan algún plato de esta categoría.
     suspend fun mesasConCategoriaPendiente(categoriaId: Long): List<Int>
 
-    // R3: las 60 mesas, cada una libre u ocupada con su total (rejilla 1d y 6a); al día solas (P167 A).
+    // R3: las 60 mesas, cada una libre u ocupada con su total (rejilla 1d y 6a); al día solas.
     fun mesasConEstado(): Flow<List<MesaEstado>>
 
     // Las líneas de una comanda, en el orden en que se pidieron (6b, 6c y 2g).
