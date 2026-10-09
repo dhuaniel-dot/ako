@@ -16,7 +16,7 @@ class ConfirmacionDialog : DialogFragment() {
         // Los textos llegan en «arguments», no por el constructor:
         // si Android rehace el diálogo, los arguments se conservan y el constructor no se vuelve a llamar
         val argumentos = requireArguments()
-        val clave = argumentos.getString(ARG_CLAVE)!!
+        val clave = checkNotNull(argumentos.getString(ARG_CLAVE)) { "La caja necesita una clave" }
         val negativo = argumentos.getString(ARG_NEGATIVO)
 
         val caja = MaterialAlertDialogBuilder(requireContext())

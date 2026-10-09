@@ -8,8 +8,6 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
@@ -24,6 +22,7 @@ import yunkang.ako.dominio.modelos.ResultadoGuardado
 import yunkang.ako.ui.comun.ConfirmacionDialog
 import yunkang.ako.ui.comun.Formato
 import yunkang.ako.ui.comun.MesasAfectadasDialog
+import yunkang.ako.ui.comun.apartarDeLasBarras
 import java.io.IOException
 
 // 3a · Formulario del plato. Se abre desde el Panel: «+ Plato» de una caja (crear)
@@ -62,11 +61,7 @@ class PlatoActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityPlatoBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        ViewCompat.setOnApplyWindowInsetsListener(binding.raiz) { vista, insets ->
-            val barras = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.ime())
-            vista.setPadding(barras.left, barras.top, barras.right, barras.bottom)
-            insets
-        }
+        binding.raiz.apartarDeLasBarras()
 
         // Lo que viene grapado a la nota (Intent). −1 = «no me han dado nada»
         val productoId = intent.getLongExtra(EXTRA_PRODUCTO_ID, -1L)
@@ -265,7 +260,7 @@ class PlatoActivity : AppCompatActivity() {
             afirmativo = getString(R.string.carta_btn_salir),
             negativo = getString(R.string.comun_cancelar),
             clave = CLAVE_SALIR
-        ).show(supportFragmentManager, "salir")
+        ).show(supportFragmentManager, CLAVE_SALIR)
     }
 
     // [Claude] Convierte lo que hay en pantalla en un Producto listo para guardar.
@@ -364,7 +359,7 @@ class PlatoActivity : AppCompatActivity() {
             afirmativo = getString(R.string.categoria_eliminada_btn_mover),
             negativo = getString(R.string.comun_no),
             clave = CLAVE_3E_MOVER
-        ).show(supportFragmentManager, "3e_mover")
+        ).show(supportFragmentManager, CLAVE_3E_MOVER)
         actualizarGuardar()
     }
 
@@ -384,7 +379,7 @@ class PlatoActivity : AppCompatActivity() {
             afirmativo = getString(R.string.recuperar_categoria_btn_recuperar),
             negativo = getString(R.string.comun_no),
             clave = CLAVE_3E_RECUPERAR
-        ).show(supportFragmentManager, "3e_recuperar")
+        ).show(supportFragmentManager, CLAVE_3E_RECUPERAR)
     }
 
     // Pone en los campos lo que hay guardado (al editar) y elige la categoría

@@ -39,7 +39,7 @@ object MesasAfectadasDialog {
             afirmativo = contexto.getString(R.string.comun_eliminar),
             negativo = contexto.getString(R.string.comun_cancelar),
             clave = CLAVE_CATEGORIA
-        ).show(gestor, "mesas_afectadas")
+        ).show(gestor, CLAVE_CATEGORIA)
     }
 
     // 3d · «Pollo asado está en una comanda pendiente de la mesa 6. No se quitará de esa comanda.»
@@ -60,6 +60,6 @@ object MesasAfectadasDialog {
             afirmativo = contexto.getString(R.string.comun_eliminar),
             negativo = contexto.getString(R.string.comun_cancelar),
             clave = CLAVE_PLATO
-        ).show(gestor, "mesas_afectadas")
+        ).show(gestor, CLAVE_PLATO)
     }
 }

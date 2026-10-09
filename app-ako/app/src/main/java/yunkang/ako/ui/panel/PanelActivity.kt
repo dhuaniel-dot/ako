@@ -5,13 +5,12 @@ import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import yunkang.ako.databinding.ActivityPanelBinding
 import yunkang.ako.ui.comun.GuardaDobleToque
 import yunkang.ako.ui.plato.PlatoActivity
 import yunkang.ako.ui.resumen.ResumenIngresosActivity
+import yunkang.ako.ui.comun.apartarDeLasBarras
 
 // 2a · Panel del Propietario: se llega tras el PIN correcto (1c).
 // [Resumen de ingresos] abre 2g, que solo vive aquí, detrás del PIN (RNF-10)
@@ -33,11 +32,7 @@ class PanelActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityPanelBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        ViewCompat.setOnApplyWindowInsetsListener(binding.raiz) { vista, insets ->
-            val barras = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.ime())
-            vista.setPadding(barras.left, barras.top, barras.right, barras.bottom)
-            insets
-        }
+        binding.raiz.apartarDeLasBarras()
 
         // La lista de cajas y sus timbres: el lápiz abre 2b; «+ Plato» y tocar un plato abren
         // el formulario del plato (3a) con una nota (Intent) que lleva grapado un id.

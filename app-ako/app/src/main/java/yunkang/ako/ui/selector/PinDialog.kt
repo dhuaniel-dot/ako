@@ -12,8 +12,8 @@ import kotlinx.coroutines.launch
 import yunkang.ako.R
 import yunkang.ako.databinding.DialogPinBinding
 import yunkang.ako.dominio.Validacion
-import android.animation.ObjectAnimator
 import yunkang.ako.ui.comun.ComprobadorPin
+import yunkang.ako.ui.comun.sacudir
 
 // 1c · Introducir PIN. No decide nada: pregunta a quien lo abrió (un ComprobadorPin) y, si es correcto,
 // deja un sobre (CLAVE_RESULTADO) para quien lo abrió. Cancelar cierra sin sobre.
@@ -58,10 +58,7 @@ class PinDialog : DialogFragment() {
                     } else {
                         binding.textoPin.text?.clear()
                         binding.campoPin.error = getString(R.string.pin_incorrecto)
-                        // Sacudida: el campo se mueve a los lados y vuelve a su sitio (RNF-13)
-                        ObjectAnimator.ofFloat(binding.campoPin, "translationX", 0f, 20f, -20f, 15f, -15f, 0f)
-                            .setDuration(400)
-                            .start()
+                        sacudir(binding.campoPin)
                     }
                 }
             }

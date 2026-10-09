@@ -1,6 +1,5 @@
 package yunkang.ako.ui.panel
 
-import android.animation.ObjectAnimator
 import android.app.Dialog
 import android.os.Bundle
 import android.widget.Button
@@ -14,6 +13,7 @@ import kotlinx.coroutines.launch
 import yunkang.ako.R
 import yunkang.ako.databinding.DialogCambiarPinBinding
 import yunkang.ako.dominio.Validacion
+import yunkang.ako.ui.comun.sacudir
 
 // 1e · Cambiar PIN: actual, nuevo y repetido a la vez.
 // Orden al Aceptar: primero el actual; después, que los nuevos coincidan; por último se guarda.
@@ -91,8 +91,6 @@ class CambiarPinDialog : DialogFragment() {
         binding.textoActual.text?.clear()
         binding.campoActual.error = getString(R.string.pin_incorrecto)
         binding.textoActual.requestFocus()
-        ObjectAnimator.ofFloat(binding.campoActual, "translationX", 0f, 20f, -20f, 15f, -15f, 0f)
-            .setDuration(400)
-            .start()
+        sacudir(binding.campoActual)
     }
 }

@@ -45,8 +45,8 @@ class SelectorFragment : Fragment(R.layout.fragment_selector) {
                         titulo = getString(R.string.puerta_pedir_titulo),
                         texto = getString(motivo),
                         afirmativo = getString(R.string.comun_aceptar),
-                        clave = "puerta_pedir"
-                    ).show(parentFragmentManager, "puerta_pedir")
+                        clave = CLAVE_PUERTA
+                    ).show(parentFragmentManager, CLAVE_PUERTA)
                 } else {
                     // Puerta abierta: la Activity enseña 1d (la rejilla en modo elegir)
                     (requireActivity() as SelectorActivity).abrirElegirMesa()
@@ -60,5 +60,9 @@ class SelectorFragment : Fragment(R.layout.fragment_selector) {
                 startActivity(Intent(requireContext(), CuentaActivity::class.java))
             }
         }
+    }
+
+    companion object {
+        private const val CLAVE_PUERTA = "puerta_pedir"
     }
 }

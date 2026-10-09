@@ -6,8 +6,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commit
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import yunkang.ako.R
 import yunkang.ako.databinding.ActivitySelectorBinding
 import yunkang.ako.ui.comun.ComprobadorPin
@@ -15,6 +13,7 @@ import yunkang.ako.ui.comun.GuardaDobleToque
 import yunkang.ako.ui.comun.RejillaMesasFragment
 import yunkang.ako.ui.panel.PanelActivity
 import yunkang.ako.ui.pedido.PedidoActivity
+import yunkang.ako.ui.comun.apartarDeLasBarras
 
 // Pantalla 1 (Selector de rol). Es solo el marco: dentro enseña 1a (Selector), 1b (Crear PIN) o 1d (Elegir mesa).
 // Sabe comprobar un PIN (ComprobadorPin): es lo que PinDialog le pide
@@ -31,18 +30,12 @@ class SelectorActivity : AppCompatActivity(), ComprobadorPin {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // La pantalla ocupa el móvil de borde a borde...
         enableEdgeToEdge()
         binding = ActivitySelectorBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // ...y el contenedor se aparta de las barras del sistema (la hora arriba, los botones abajo)
-        // y del teclado (ime), para que Aceptar no quede tapado al escribir el PIN
-        ViewCompat.setOnApplyWindowInsetsListener(binding.contenedor) { vista, insets ->
-            val barras = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.ime())
-            vista.setPadding(barras.left, barras.top, barras.right, barras.bottom)
-            insets
-        }
+        // Así Aceptar no queda tapado por el teclado al escribir el PIN
+        binding.contenedor.apartarDeLasBarras()
 
         // La primera vez: si ya hay PIN, 1a; si no, 1b (ficha 1, flujo).
         // Si Android rehace la pantalla, ya está montado y no se repite

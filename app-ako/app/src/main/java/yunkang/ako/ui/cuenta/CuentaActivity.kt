@@ -4,8 +4,6 @@ import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
 import androidx.lifecycle.lifecycleScope
@@ -17,6 +15,7 @@ import yunkang.ako.ui.comun.ConfirmacionDialog
 import yunkang.ako.ui.comun.GuardaDobleToque
 import yunkang.ako.ui.comun.ReciboFragment
 import yunkang.ako.ui.comun.RejillaMesasFragment
+import yunkang.ako.ui.comun.apartarDeLasBarras
 
 // Pantalla 6 (Cuenta). Es solo el marco: dentro se apilan la rejilla (6a), la comanda (6b) y el recibo (6c).
 // No pide PIN: la usa el camarero (ficha 1). El Resumen de ingresos no vive aquí, sino detrás del PIN (RNF-10)
@@ -40,11 +39,7 @@ class CuentaActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityCuentaBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        ViewCompat.setOnApplyWindowInsetsListener(binding.contenedor) { vista, insets ->
-            val barras = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.ime())
-            vista.setPadding(barras.left, barras.top, barras.right, barras.bottom)
-            insets
-        }
+        binding.contenedor.apartarDeLasBarras()
 
         // La primera vez, la rejilla (6a) con su título; si Android rehace la pantalla, ya está montada
         if (savedInstanceState == null) {

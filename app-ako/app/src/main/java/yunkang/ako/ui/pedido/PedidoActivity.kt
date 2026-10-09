@@ -5,8 +5,6 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.commit
 import yunkang.ako.R
 import yunkang.ako.databinding.ActivityPedidoBinding
@@ -14,6 +12,7 @@ import yunkang.ako.ui.comun.ComprobadorPin
 import yunkang.ako.ui.comun.ConfirmacionDialog
 import yunkang.ako.ui.comun.GuardaDobleToque
 import yunkang.ako.ui.selector.PinDialog
+import yunkang.ako.ui.comun.apartarDeLasBarras
 
 // Pantalla 5 (Pedir). Es solo el marco: dentro se apilan la carta (5a), la ficha (5b) y el carrito (5c).
 // Sabe comprobar un PIN (ComprobadorPin): salir de Pedir lo pide (ficha 1)
@@ -42,11 +41,7 @@ class PedidoActivity : AppCompatActivity(), ComprobadorPin {
         enableEdgeToEdge()
         binding = ActivityPedidoBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        ViewCompat.setOnApplyWindowInsetsListener(binding.contenedor) { vista, insets ->
-            val barras = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.ime())
-            vista.setPadding(barras.left, barras.top, barras.right, barras.bottom)
-            insets
-        }
+        binding.contenedor.apartarDeLasBarras()
 
         // La mesa llega grapada a la nota (Intent) con la que 1d abrió esta pantalla
         viewModel.iniciar(
