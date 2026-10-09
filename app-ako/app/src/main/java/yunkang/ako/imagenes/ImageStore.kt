@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.media.ExifInterface
 import android.net.Uri
+import androidx.core.graphics.scale
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -50,7 +51,7 @@ class ImageStore(private val context: Context) {
             val escala = LADO_FINAL.toFloat() / ladoMayor
             val ancho = (foto.width * escala).roundToInt()
             val alto = (foto.height * escala).roundToInt()
-            foto = Bitmap.createScaledBitmap(foto, ancho, alto, true)
+            foto = foto.scale(ancho, alto)
         }
         if (giro != 0) {
             val matriz = Matrix()

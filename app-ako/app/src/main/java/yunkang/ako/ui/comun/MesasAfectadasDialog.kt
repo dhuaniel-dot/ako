@@ -16,7 +16,7 @@ object MesasAfectadasDialog {
 
     // «Este plato está en comandas pendientes: Flan (mesa 5). No se quitará de esas comandas.»
     // Todas las palabras salen de strings.xml; aquí solo se juntan las piezas
-    fun textoCategoria(contexto: Context, afectados: List<PlatoConMesas>): String {
+    private fun textoCategoria(contexto: Context, afectados: List<PlatoConMesas>): String {
         val y = contexto.getString(R.string.comun_y)
         // Cada plato con sus mesas: «Flan (mesa 5)» o «Helado (mesas 5 y 7)»
         val partes = afectados.map { plato ->
@@ -44,7 +44,7 @@ object MesasAfectadasDialog {
 
     // 3d · «Pollo asado está en una comanda pendiente de la mesa 6. No se quitará de esa comanda.»
     // Una mesa o varias: el plurals elige la frase según cuántas mesas haya
-    fun textoPlato(contexto: Context, nombre: String, mesas: List<Int>): String {
+    private fun textoPlato(contexto: Context, nombre: String, mesas: List<Int>): String {
         val y = contexto.getString(R.string.comun_y)
         val listaMesas = Formato.lista(mesas.map { it.toString() }, y)
         return contexto.resources.getQuantityString(

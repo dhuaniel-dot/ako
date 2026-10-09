@@ -141,7 +141,6 @@ class ComandaRepositoryReal(
         return ResumenIngresos(
             dia = dia,
             comandas = filas,
-            numComandas = filas.size,
             totalCentimos = filas.sumOf { it.totalCentimos }
         )
     }

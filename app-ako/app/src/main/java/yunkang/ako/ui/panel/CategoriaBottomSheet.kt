@@ -1,12 +1,12 @@
 package yunkang.ako.ui.panel
 
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.net.toUri
 import androidx.core.os.bundleOf
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.activityViewModels
@@ -187,7 +187,7 @@ class CategoriaBottomSheet : BottomSheetDialogFragment() {
         // Si la foto elegida no se puede leer, la libreta lanza el error y no se guarda nada.
         // [Claude] SecurityException: el préstamo de la foto ya no vale
         val resultado = try {
-            viewModel.guardarCategoria(aGuardar, fotoElegida?.let { Uri.parse(it) })
+            viewModel.guardarCategoria(aGuardar, fotoElegida?.toUri())
         } catch (e: IOException) {
             fotoNoUsable()
             return

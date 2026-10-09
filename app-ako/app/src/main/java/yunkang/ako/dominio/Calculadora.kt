@@ -1,6 +1,5 @@
 package yunkang.ako.dominio
 
-
 // Las cuentas del cobro. No guarda nada: entran números, sale un número.
 object Calculadora {
 

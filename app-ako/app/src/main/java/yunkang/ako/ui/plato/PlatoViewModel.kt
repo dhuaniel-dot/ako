@@ -1,6 +1,7 @@
 package yunkang.ako.ui.plato
 
 import android.net.Uri
+import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -117,7 +118,7 @@ class PlatoViewModel(
     suspend fun guardar(p: Producto, aunqueCategoriaEliminada: Boolean = false): ResultadoGuardado {
         val fotoAntes = datos.value?.plato?.imagen
         val elegida = fotoElegida.value
-        val fotoNueva = if (elegida == null) null else imageStore.guardar(Uri.parse(elegida))
+        val fotoNueva = if (elegida == null) null else imageStore.guardar(elegida.toUri())
         val plato = if (fotoNueva == null) p else p.copy(imagen = fotoNueva)
 
         val resultado = cartaRepository.guardarPlato(plato, alergenosMarcados, aunqueCategoriaEliminada = aunqueCategoriaEliminada)

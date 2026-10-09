@@ -74,7 +74,7 @@ class ResumenListaFragment : Fragment(R.layout.fragment_resumen_lista) {
             val vacio = resumen.comandas.isEmpty()
             binding.textoVacio.isVisible = vacio
             binding.listaComandas.isVisible = !vacio
-            binding.textoNumComandas.text = getString(R.string.comun_numero, resumen.numComandas)
+            binding.textoNumComandas.text = getString(R.string.comun_numero, resumen.comandas.size)
             binding.textoTotalDia.text = getString(R.string.comun_precio, Formato.precio(resumen.totalCentimos))
         }
     }

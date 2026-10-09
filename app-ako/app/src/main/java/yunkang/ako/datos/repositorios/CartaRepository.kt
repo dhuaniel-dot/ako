@@ -66,7 +66,7 @@ class CartaRepository(
     }
 
     // R6: mesas con comanda pendiente que llevan algún plato de esta categoría (aviso 2e, antes de confirmar).
-    suspend fun mesasAfectadasPorCategoria(id: Long): List<Int> =
+    private suspend fun mesasAfectadasPorCategoria(id: Long): List<Int> =
         comandaRepository.mesasConCategoriaPendiente(id)
 
     // R6: ANTES de eliminar una categoría, qué platos suyos están en comandas pendientes

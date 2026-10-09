@@ -120,6 +120,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:baselineAligned="false"
                 android:orientation="horizontal">
 
                 <!-- Solo cifras y sin signo: «number» no deja entrar el «−» (R8 y R9) -->
@@ -161,7 +162,6 @@
             <!-- Categoría: desplegable (se elige, no se escribe). [Claude] android:theme le pone
                  el mismo retoque de color que al resto de campos, que su estilo propio pierde -->
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/campoCategoria"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -179,7 +179,6 @@
 
             <!-- Descripción: opcional y de varias líneas -->
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/campoDescripcion"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
