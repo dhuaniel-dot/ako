@@ -32,8 +32,7 @@ class CategoriaBottomSheet : BottomSheetDialogFragment() {
     private val viewModel: PanelViewModel by activityViewModels { PanelViewModel.Factory }
 
     // [Claude] La vista solo existe mientras la hoja está abierta: se guarda aquí y se suelta al cerrarla
-    private var _binding: SheetCategoriaBinding? = null
-    private val binding get() = _binding!!
+    private var binding: SheetCategoriaBinding? = null
 
     // La categoría que se edita. null = es nueva, o la lista del Panel todavía no ha llegado
     private var categoria: Categoria? = null
@@ -53,12 +52,14 @@ class CategoriaBottomSheet : BottomSheetDialogFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        _binding = SheetCategoriaBinding.inflate(inflater, container, false)
+        val binding = SheetCategoriaBinding.inflate(inflater, container, false)
+        this.binding = binding
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val binding = binding ?: return
 
         // Si Android rehízo la hoja, se recupera la foto que se había elegido
         fotoElegida = savedInstanceState?.getString(CLAVE_FOTO)
@@ -143,6 +144,7 @@ class CategoriaBottomSheet : BottomSheetDialogFragment() {
     // Lo que enseña el hueco redondo: la foto elegida; si no, la que ya tenía la categoría; si no, el «?».
     // Glide entiende las dos direcciones como texto: «content://…» y «/data/…/fotos/….jpg»
     private fun pintarFoto() {
+        val binding = binding ?: return
         val foto = fotoElegida ?: categoria?.imagen
         pintarFoto(binding.imagenCategoria, foto, binding.textoNombre.text.toString(), redonda = true)
     }
@@ -150,6 +152,7 @@ class CategoriaBottomSheet : BottomSheetDialogFragment() {
     // [Claude] Guardar se enciende con algo escrito y, al editar, solo cuando la categoría ya ha llegado:
     // así nunca se guarda «como nueva» una que se estaba editando
     private fun actualizarGuardar() {
+        val binding = binding ?: return
         val hayNombre = !binding.textoNombre.text.isNullOrBlank()
         val esNueva = requireArguments().getLong(ARG_ID) == 0L
         binding.botonGuardar.isEnabled = hayNombre && (esNueva || categoria != null)
@@ -157,16 +160,21 @@ class CategoriaBottomSheet : BottomSheetDialogFragment() {
 
     // [Claude] ¿El Propietario ha apagado «En la carta» de una categoría que estaba en la carta?
     // (La de por defecto nunca: su interruptor ni se ve, R16)
-    private fun seVaAEliminar(categoria: Categoria): Boolean =
-        !categoria.esPorDefecto && categoria.activo && !binding.interruptorEnLaCarta.isChecked
+    private fun seVaAEliminar(categoria: Categoria): Boolean {
+        val binding = binding ?: return false
+        return !categoria.esPorDefecto && categoria.activo && !binding.interruptorEnLaCarta.isChecked
+    }
 
     // [Claude] ¿Lo ha encendido en una categoría eliminada?
-    private fun seVaARecuperar(categoria: Categoria): Boolean =
-        !categoria.esPorDefecto && !categoria.activo && binding.interruptorEnLaCarta.isChecked
+    private fun seVaARecuperar(categoria: Categoria): Boolean {
+        val binding = binding ?: return false
+        return !categoria.esPorDefecto && !categoria.activo && binding.interruptorEnLaCarta.isChecked
+    }
 
     // Guarda el nombre y la foto y, si el interruptor cambió, elimina o recupera (activo solo cambia aquí).
     // Eliminar, R5: activo = false; ninguna línea se toca (R6). Recuperar: vuelve con sus platos intactos
     private suspend fun guardar(categoria: Categoria?) {
+        val binding = binding ?: return
         val nombre = binding.textoNombre.text.toString().trim()
         // Editar: la misma categoría con el nombre nuevo (activo lo conserva el repositorio; la foto
         // de antes va dentro, y si se eligió otra la cambia la libreta). Crear: una nueva en la carta
@@ -203,6 +211,7 @@ class CategoriaBottomSheet : BottomSheetDialogFragment() {
 
     // [Claude] La foto elegida no se ha podido usar: se olvida, se avisa y la hoja sigue abierta
     private fun fotoNoUsable() {
+        val binding = binding ?: return
         fotoElegida = null
         pintarFoto()
         Snackbar.make(binding.root, R.string.foto_error, Snackbar.LENGTH_LONG).show()
@@ -219,7 +228,7 @@ class CategoriaBottomSheet : BottomSheetDialogFragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
+        binding = null
     }
 
     companion object {

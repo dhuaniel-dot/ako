@@ -22,8 +22,8 @@ class FichaPlatoFragment : Fragment(R.layout.fragment_ficha_plato) {
     // La misma que la carta y el carrito
     private val viewModel: PedidoViewModel by activityViewModels { PedidoViewModel.Factory }
 
-    // Cambia cada vez que Android vuelve a crear la vista
-    private lateinit var binding: FragmentFichaPlatoBinding
+    // Lo usan las funciones de pintar; solo existe mientras hay vista (como en ReciboFragment)
+    private var binding: FragmentFichaPlatoBinding? = null
 
     // [Claude] La cantidad elegida (de 1 a 99, R4); se guarda si Android rehace la pantalla
     private var cantidad = 1
@@ -36,7 +36,8 @@ class FichaPlatoFragment : Fragment(R.layout.fragment_ficha_plato) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentFichaPlatoBinding.bind(view)
+        val binding = FragmentFichaPlatoBinding.bind(view)
+        this.binding = binding
 
         // ← Atrás: Android quita la ficha de la pila y se vuelve a la carta, sin PIN
         binding.botonAtras.setOnClickListener {
@@ -111,8 +112,15 @@ class FichaPlatoFragment : Fragment(R.layout.fragment_ficha_plato) {
         outState.putBoolean(CLAVE_ALERGENOS_ABIERTOS, alergenosAbiertos)
     }
 
+    // Al quitar la vista se olvida el binding: así nadie pinta en una vista que ya no está
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
+    }
+
     // Abierto: se ven los alérgenos y la flecha apunta abajo; cerrado: ocultos y flecha a la derecha
     private fun pintarDesplegable() {
+        val binding = binding ?: return
         binding.textoAlergenos.visibility = if (alergenosAbiertos) View.VISIBLE else View.GONE
         binding.flechaAlergenos.rotation = if (alergenosAbiertos) 0f else -90f
     }
@@ -120,6 +128,7 @@ class FichaPlatoFragment : Fragment(R.layout.fragment_ficha_plato) {
     // R4 en la pantalla: − apagado en 1 y + apagado en 99 (el 99 está escrito solo en Validacion).
     // El botón dice el importe de la cantidad elegida: precio × cantidad (R10, Calculadora)
     private fun pintarCantidad() {
+        val binding = binding ?: return
         binding.textoCantidad.text = getString(R.string.comun_numero, cantidad)
         binding.botonMenos.isEnabled = cantidad > 1
         binding.botonMas.isEnabled = cantidad < Validacion.MAXIMO_POR_PLATO

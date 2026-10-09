@@ -22,9 +22,13 @@ class RejillaMesasFragment : Fragment(R.layout.fragment_rejilla_mesas) {
         )
     }
 
+    // Solo mientras hay vista: onDestroyView lo necesita para soltar el adaptador
+    private var binding: FragmentRejillaMesasBinding? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentRejillaMesasBinding.bind(view)
+        this.binding = binding
 
         // El título llega en los arguments (se conservan si Android rehace el Fragment)
         binding.textoTitulo.setText(requireArguments().getInt(ARG_TITULO))
@@ -38,10 +42,11 @@ class RejillaMesasFragment : Fragment(R.layout.fragment_rejilla_mesas) {
         }
     }
 
-    // Al quitar la vista, la lista suelta su adaptador (como en ReciboFragment)
+    // Al quitar la vista, la lista suelta su adaptador y se olvida el binding (como en ReciboFragment)
     override fun onDestroyView() {
-        FragmentRejillaMesasBinding.bind(requireView()).listaMesas.adapter = null
+        binding?.listaMesas?.adapter = null
         super.onDestroyView()
+        binding = null
     }
 
     // Quien la aloja le da las mesas. El adaptador las guarda aunque la vista aún no exista

@@ -29,9 +29,13 @@ class ComandaFragment : Fragment(R.layout.fragment_comanda) {
     private val cuenta: CuentaActivity
         get() = requireActivity() as CuentaActivity
 
+    // Solo mientras hay vista: onDestroyView lo necesita para soltar el adaptador
+    private var binding: FragmentComandaBinding? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentComandaBinding.bind(view)
+        this.binding = binding
 
         binding.textoTitulo.text = getString(R.string.comun_mesa, viewModel.mesaNumero)
 
@@ -94,10 +98,11 @@ class ComandaFragment : Fragment(R.layout.fragment_comanda) {
         }
     }
 
-    // Al quitar la vista, la lista suelta su adaptador (como en ReciboFragment)
+    // Al quitar la vista, la lista suelta su adaptador y se olvida el binding (como en ReciboFragment)
     override fun onDestroyView() {
-        FragmentComandaBinding.bind(requireView()).listaLineas.adapter = null
+        binding?.listaLineas?.adapter = null
         super.onDestroyView()
+        binding = null
     }
 
     // Quitar: sin aviso, salvo si es la última línea (R7): entonces se pregunta ANTES de quitar

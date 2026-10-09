@@ -31,9 +31,13 @@ class ResumenListaFragment : Fragment(R.layout.fragment_resumen_lista) {
     // Su portero: un segundo toque seguido no abre otro calendario u otro recibo encima
     private val portero = GuardaDobleToque()
 
+    // Solo mientras hay vista: onDestroyView lo necesita para soltar el adaptador
+    private var binding: FragmentResumenListaBinding? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentResumenListaBinding.bind(view)
+        this.binding = binding
 
         // ← Atrás: con la lista delante, cierra 2g y vuelve al Panel sin pedir PIN
         binding.botonAtras.setOnClickListener {
@@ -79,9 +83,10 @@ class ResumenListaFragment : Fragment(R.layout.fragment_resumen_lista) {
         }
     }
 
-    // Al quitar la vista, la lista suelta su adaptador (como en ReciboFragment)
+    // Al quitar la vista, la lista suelta su adaptador y se olvida el binding (como en ReciboFragment)
     override fun onDestroyView() {
-        FragmentResumenListaBinding.bind(requireView()).listaComandas.adapter = null
+        binding?.listaComandas?.adapter = null
         super.onDestroyView()
+        binding = null
     }
 }
