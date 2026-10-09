@@ -9,8 +9,9 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import yunkang.ako.datos.entidades.Producto
 import yunkang.ako.dominio.modelos.ResultadoGuardado
+import yunkang.ako.datos.entidades.Categoria
 
-// guardarPlato con actores en vez de base de datos, sin emulador.
+// guardarPlato y guardarCategoria con actores en vez de base de datos, sin emulador.
 class CartaRepositoryTest {
 
     // Un plato nuevo (id 0) con el precio que diga cada prueba.
@@ -57,6 +58,16 @@ class CartaRepositoryTest {
         assertFalse(productoDao.seLlamoInsertar)
         assertNull(productoDao.productoRecibido)
         assertNull(productoDao.marcasRecibidas)
+    }
+
+    // Otro plato ya tiene el número 12: se avisa con NumeroRepetido antes de guardar nada
+    @Test
+    fun numeroRepetidoNoGuarda() {
+        val productoDao = ProductoDaoFalso(numeroOcupado = true)
+        val repositorio = crearRepositorio(productoDao)
+        val resultado = runBlocking { repositorio.guardarPlato(platoConPrecio(1850), emptyList()) }
+        assertEquals(ResultadoGuardado.NumeroRepetido, resultado)
+        assertNull(productoDao.productoRecibido)
     }
 
     // [Claude] La cadena 3e solo salta al crear o mover
@@ -116,5 +127,36 @@ class CartaRepositoryTest {
         val repositorio = crearRepositorio(productoDao)
         runBlocking { repositorio.guardarPlato(eliminado.copy(activo = true, nombre = "Otro"), emptyList()) }
         assertEquals(false, productoDao.productoRecibido?.activo)
+    }
+
+    // Una categoría nueva va detrás de Carnes (orden 2) y nunca es la por defecto, aunque lo pida
+    @Test
+    fun categoriaNuevaVaLaUltimaYNoEsPorDefecto() {
+        val categoriaDao = CategoriaDaoFalso()
+        val repositorio = crearRepositorio(ProductoDaoFalso(), categoriaDao)
+        val postres = Categoria(nombre = "Postres", imagen = null, orden = 0, activo = true, esPorDefecto = true)
+        runBlocking { repositorio.guardarCategoria(postres) }
+        assertEquals(3, categoriaDao.insertada?.orden)
+        assertEquals(false, categoriaDao.insertada?.esPorDefecto)
+    }
+
+    // Editar una categoría eliminada no la recupera: eso solo lo hace recuperarCategoria
+    @Test
+    fun categoriaEditadaConservaActivo() {
+        val categoriaDao = CategoriaDaoFalso(activa = false)
+        val repositorio = crearRepositorio(ProductoDaoFalso(), categoriaDao)
+        val editada = Categoria(
+            id = 2, nombre = "Carnes a la brasa", imagen = null, orden = 2, activo = true, esPorDefecto = false
+        )
+        runBlocking { repositorio.guardarCategoria(editada) }
+        assertEquals(false, categoriaDao.actualizada?.activo)
+    }
+
+    // Un nombre de solo espacios es un fallo de programación (la hoja 2b ya no deja guardarlo): lanza un error
+    @Test
+    fun nombreVacioLanza() {
+        val repositorio = crearRepositorio(ProductoDaoFalso())
+        val sinNombre = Categoria(nombre = "   ", imagen = null, orden = 0, activo = true, esPorDefecto = false)
+        assertThrows(IllegalArgumentException::class.java) { runBlocking { repositorio.guardarCategoria(sinNombre) } }
     }
 }

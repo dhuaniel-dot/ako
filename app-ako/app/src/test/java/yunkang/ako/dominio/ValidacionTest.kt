@@ -9,7 +9,7 @@ class ValidacionTest {
 
     // 1850 y 0 son válidos (si lanzaran, la prueba saldría roja); -1 lanza un error
     @Test
-    fun precioNegativo() {
+    fun precioValidoYNegativo() {
         Validacion.precioValido(1850)
         Validacion.precioValido(0)
         assertThrows(IllegalArgumentException::class.java) {
@@ -33,5 +33,7 @@ class ValidacionTest {
         assertFalse(Validacion.pinValido("123"))
         assertFalse(Validacion.pinValido("12345"))
         assertFalse(Validacion.pinValido("12a4"))
+        assertFalse(Validacion.pinValido(""))
+        assertFalse(Validacion.pinValido("12 4"))
     }
 }

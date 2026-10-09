@@ -14,8 +14,9 @@ import org.junit.runner.RunWith
 import yunkang.ako.datos.entidades.Categoria
 import yunkang.ako.datos.repositorios.CartaRepository
 import yunkang.ako.datos.repositorios.ComandaRepositoryReal
+import yunkang.ako.dominio.modelos.ResultadoGuardado
 
-// Siempre hay exactamente una categoría por defecto; no se elimina y no se crea otra.
+// Las categorías con Room de verdad (base en memoria con la precarga hecha).
 @RunWith(AndroidJUnit4::class)
 class CategoriaPorDefectoTest {
 
@@ -43,6 +44,7 @@ class CategoriaPorDefectoTest {
     private fun contarPorDefecto(): Int =
         runBlocking { db.categoriaDao().todas().count { it.esPorDefecto } }
 
+    // Siempre hay exactamente una categoría por defecto; no se elimina y no se crea otra
     @Test
     fun siempreHayUnaSolaCategoriaPorDefecto() {
         // Tras la precarga: una sola, y activa
@@ -58,5 +60,14 @@ class CategoriaPorDefectoTest {
         val varios = Categoria(nombre = "Varios", imagen = null, orden = 0, activo = true, esPorDefecto = true)
         runBlocking { repositorio.guardarCategoria(varios) }
         assertEquals(1, contarPorDefecto())
+    }
+
+    // «carnes» y «Carnes» son el mismo nombre; lo decide el SQL (COLLATE NOCASE), por eso se prueba con Room
+    @Test
+    fun nombreRepetidoSinMirarMayusculas() {
+        val carnes = Categoria(nombre = "Carnes", imagen = null, orden = 0, activo = true, esPorDefecto = false)
+        runBlocking { repositorio.guardarCategoria(carnes) }
+        val enMinusculas = Categoria(nombre = "carnes", imagen = null, orden = 0, activo = true, esPorDefecto = false)
+        assertEquals(ResultadoGuardado.NombreRepetido, runBlocking { repositorio.guardarCategoria(enMinusculas) })
     }
 }

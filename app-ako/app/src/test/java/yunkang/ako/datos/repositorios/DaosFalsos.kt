@@ -13,21 +13,32 @@ import kotlinx.coroutines.flow.Flow
 // Solo contestan lo que la prueba necesita; lo demás es TODO() ("esto no lo ensayamos").
 
 // Contesta que la categoría existe; si está en la carta o eliminada lo decide cada prueba (activa).
+// Solo hay una categoría, Carnes, de orden 2, y ningún nombre está repetido.
+// Apunta la categoría que le llega al insertar (insertada) y al actualizar (actualizada).
 class CategoriaDaoFalso(var activa: Boolean = true) : CategoriaDao {
+    var insertada: Categoria? = null
+    var actualizada: Categoria? = null
     override suspend fun porId(id: Long): Categoria? =
         Categoria(id = id, nombre = "Carnes", imagen = null, orden = 2, activo = activa, esPorDefecto = false)
-    override suspend fun insertar(categoria: Categoria): Long = TODO()
-    override suspend fun actualizar(categoria: Categoria): Unit = TODO()
-    override suspend fun todas(): List<Categoria> = TODO()
+    override suspend fun insertar(categoria: Categoria): Long {
+        insertada = categoria
+        return 9
+    }
+    override suspend fun actualizar(categoria: Categoria) {
+        actualizada = categoria
+    }
+    override suspend fun todas(): List<Categoria> =
+        listOf(Categoria(id = 2, nombre = "Carnes", imagen = null, orden = 2, activo = activa, esPorDefecto = false))
     override fun todasObservadas(): Flow<List<Categoria>> = TODO()
     override suspend fun porDefecto(): Categoria = TODO()
-    override suspend fun existeNombre(nombre: String, exceptoId: Long): Boolean = TODO()
+    override suspend fun existeNombre(nombre: String, exceptoId: Long): Boolean = false
 }
 
-// Apunta qué plato y qué marcas de alérgeno le llegan; el número siempre está libre.
+// Apunta qué plato y qué marcas de alérgeno le llegan.
 // "guardado" es el plato que la prueba dice que ya existe (para editar); vacío si no hay ninguno.
+// "numeroOcupado": si la prueba dice true, otro plato ya tiene ese número; si no, está libre.
 // borrarAlergenosDe e insertarAlergenosDe no llevan TODO(): las usa guardarAlergenos.
-class ProductoDaoFalso(var guardado: Producto? = null) : ProductoDao {
+class ProductoDaoFalso(var guardado: Producto? = null, var numeroOcupado: Boolean = false) : ProductoDao {
     var seLlamoInsertar = false
     var productoRecibido: Producto? = null
     var marcasRecibidas: List<ProductoAlergeno>? = null
@@ -40,7 +51,7 @@ class ProductoDaoFalso(var guardado: Producto? = null) : ProductoDao {
         productoRecibido = producto
     }
     override suspend fun porId(id: Long): Producto? = guardado?.takeIf { it.id == id }
-    override suspend fun existeNumero(numero: Int, exceptoId: Long): Boolean = false
+    override suspend fun existeNumero(numero: Int, exceptoId: Long): Boolean = numeroOcupado
     override suspend fun borrarAlergenosDe(productoId: Long) {}
     override suspend fun insertarAlergenosDe(marcas: List<ProductoAlergeno>) {
         marcasRecibidas = marcas

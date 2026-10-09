@@ -53,6 +53,15 @@ class CarritoTest {
         assertFalse(cupo)
     }
 
+    // El tope también vale para un plato que aún no está en el carrito: 150 entra como 99 y se avisa
+    @Test
+    fun primerAnadirPorEncimaDelTopeSeQuedaEn99() {
+        val carrito = Carrito(mesaId = 4)
+        val cupo = carrito.anadir(entrecot, 150)
+        assertFalse(cupo)
+        assertEquals(99, carrito.lineas[0].cantidad)
+    }
+
     // [Claude] El mínimo (de 1 a 99 unidades): con 0 o menos no se añade nada
     @Test
     fun cantidadMenorQueUnoNoEntra() {

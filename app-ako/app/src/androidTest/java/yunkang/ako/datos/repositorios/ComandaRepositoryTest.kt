@@ -20,8 +20,12 @@ import yunkang.ako.datos.entidades.Categoria
 import yunkang.ako.datos.entidades.EstadoComanda
 import yunkang.ako.datos.entidades.Producto
 import yunkang.ako.dominio.Carrito
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertThrows
+import java.time.LocalDate
+import java.time.ZoneId
 
-// Enviar y quitar líneas con Room de verdad (base en memoria con la precarga hecha).
+// El puesto de comandas con Room de verdad (base en memoria con la precarga hecha).
 @RunWith(AndroidJUnit4::class)
 class ComandaRepositoryTest {
 
@@ -30,6 +34,7 @@ class ComandaRepositoryTest {
     private lateinit var entrecot: Producto
     private lateinit var helado: Producto
     private var mesa4Id = 0L
+    private var mesa7Id = 0L
 
     @Before
     fun prepararBase() {
@@ -59,8 +64,9 @@ class ComandaRepositoryTest {
             )
             helado = checkNotNull(db.productoDao().porId(idHelado))
 
-            // La mesa 4 se busca por su número: nunca se da por hecho que su id es 4
+            // Las mesas 4 y 7 se buscan por su número: nunca se da por hecho que su id es 4 o 7
             mesa4Id = db.mesaDao().todas().first { it.numero == 4 }.id
+            mesa7Id = db.mesaDao().todas().first { it.numero == 7 }.id
         }
     }
 
@@ -118,5 +124,79 @@ class ComandaRepositoryTest {
         val rejilla = runBlocking { repositorio.mesasConEstado().first() }
         val mesa4 = rejilla.single { it.mesa.numero == 4 }
         assertNull(mesa4.comandaId)
+    }
+
+    // Una línea que ya no existe (doble toque en Quitar) no se quita ni anula la comanda
+    @Test
+    fun quitarLineaInexistenteNoHaceNada() {
+        val carrito = Carrito(mesa4Id)
+        carrito.anadir(entrecot, 1)
+        val comandaId = runBlocking { repositorio.enviarCarrito(carrito) }
+        val quitada = runBlocking { repositorio.quitarLinea(999) }
+        val comanda = checkNotNull(runBlocking { db.comandaDao().porId(comandaId) })
+        val lineas = runBlocking { db.comandaDao().lineasDe(comandaId) }
+        assertFalse(quitada)
+        assertEquals(EstadoComanda.PENDIENTE, comanda.estado)
+        assertEquals(1, lineas.size)
+    }
+
+    // Una comanda nunca nace vacía: enviar un carrito sin platos es un fallo de programación
+    @Test
+    fun enviarCarritoVacioLanza() {
+        val vacio = Carrito(mesa4Id)
+        assertThrows(IllegalArgumentException::class.java) { runBlocking { repositorio.enviarCarrito(vacio) } }
+    }
+
+    // Una comanda cobrada ya está cerrada y no se puede volver a cobrar
+    @Test
+    fun cobrarComandaCerradaLanza() {
+        val carrito = Carrito(mesa4Id)
+        carrito.anadir(entrecot, 1)
+        val comandaId = runBlocking { repositorio.enviarCarrito(carrito) }
+        runBlocking { repositorio.cobrar(comandaId) }
+        assertThrows(IllegalStateException::class.java) { runBlocking { repositorio.cobrar(comandaId) } }
+    }
+
+    // El día del Resumen de ingresos acaba a las 23:59:59,999: lo cobrado un milisegundo después ya es de mañana
+    @Test
+    fun resumenDelDiaRespetaLaMedianoche() {
+        val hoy = LocalDate.now()
+        val zona = ZoneId.systemDefault()
+        val ultimoMilisegundoDeHoy = hoy.atTime(23, 59, 59, 999_000_000).atZone(zona).toInstant().toEpochMilli()
+        val primerMilisegundoDeManana = hoy.plusDays(1).atStartOfDay(zona).toInstant().toEpochMilli()
+
+        val carritoMesa4 = Carrito(mesa4Id)
+        carritoMesa4.anadir(entrecot, 1)
+        val idDeHoy = runBlocking { repositorio.enviarCarrito(carritoMesa4) }
+        val carritoMesa7 = Carrito(mesa7Id)
+        carritoMesa7.anadir(helado, 1)
+        val idDeManana = runBlocking { repositorio.enviarCarrito(carritoMesa7) }
+
+        runBlocking {
+            repositorio.cobrar(idDeHoy)
+            repositorio.cobrar(idDeManana)
+            val cobradaHoy = checkNotNull(db.comandaDao().porId(idDeHoy))
+            db.comandaDao().actualizar(cobradaHoy.copy(fechaCierre = ultimoMilisegundoDeHoy))
+            val cobradaManana = checkNotNull(db.comandaDao().porId(idDeManana))
+            db.comandaDao().actualizar(cobradaManana.copy(fechaCierre = primerMilisegundoDeManana))
+        }
+
+        val resumen = runBlocking { repositorio.resumenDelDia(hoy) }
+        assertEquals(1, resumen.comandas.size)
+        assertEquals(idDeHoy, resumen.comandas[0].comandaId)
+    }
+
+    // El total de cada mesa lo suma la base de datos y una mesa sin comanda sale libre
+    @Test
+    fun mesasConEstadoSumaElTotal() {
+        val carrito = Carrito(mesa4Id)
+        carrito.anadir(entrecot, 2)
+        carrito.anadir(helado, 1)
+        runBlocking { repositorio.enviarCarrito(carrito) }
+        val rejilla = runBlocking { repositorio.mesasConEstado().first() }
+        val mesa4 = rejilla.single { it.mesa.numero == 4 }
+        val mesa7 = rejilla.single { it.mesa.numero == 7 }
+        assertEquals(4200, mesa4.totalCentimos)
+        assertNull(mesa7.comandaId)
     }
 }
