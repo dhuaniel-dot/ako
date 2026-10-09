@@ -17,29 +17,27 @@ import yunkang.ako.ui.panel.PanelActivity
 import yunkang.ako.ui.pedido.PedidoActivity
 
 // Pantalla 1 (Selector de rol). Es solo el marco: dentro enseña 1a (Selector), 1b (Crear PIN) o 1d (Elegir mesa).
-// Sabe comprobar un PIN (ComprobadorPin, P145): es lo que PinDialog le pide
+// Sabe comprobar un PIN (ComprobadorPin): es lo que PinDialog le pide
 class SelectorActivity : AppCompatActivity(), ComprobadorPin {
 
-    // El "mando" de las vistas de activity_selector.xml (ViewBinding)
     private lateinit var binding: ActivitySelectorBinding
 
-    // La libreta de la pantalla 1, hecha con su fábrica (P140)
+    // La libreta de la pantalla 1, hecha con su fábrica
     private val viewModel: SelectorViewModel by viewModels { SelectorViewModel.Factory }
 
-    // H02 (revisión del 8 oct): el portero de la rejilla 1d, igual que en CuentaActivity (P171):
-    // dos toques rápidos en una mesa no abren Pedir dos veces
+    // El portero de la rejilla 1d, como en CuentaActivity: dos toques rápidos en una mesa no abren Pedir dos veces
     private val portero = GuardaDobleToque()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // P139: la pantalla ocupa el móvil de borde a borde...
+        // La pantalla ocupa el móvil de borde a borde...
         enableEdgeToEdge()
         binding = ActivitySelectorBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         // ...y el contenedor se aparta de las barras del sistema (la hora arriba, los botones abajo)
-        // y del teclado (ime), para que Aceptar no quede tapado al escribir el PIN (H25, 1 oct)
+        // y del teclado (ime), para que Aceptar no quede tapado al escribir el PIN
         ViewCompat.setOnApplyWindowInsetsListener(binding.contenedor) { vista, insets ->
             val barras = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.ime())
             vista.setPadding(barras.left, barras.top, barras.right, barras.bottom)
@@ -60,13 +58,13 @@ class SelectorActivity : AppCompatActivity(), ComprobadorPin {
             startActivity(Intent(this, PanelActivity::class.java))
         }
 
-        // 1d (P67 A): cada vez que cambian las mesas, se las da a la rejilla, si se está viendo
+        // 1d: cada vez que cambian las mesas, se las da a la rejilla, si se está viendo
         viewModel.mesas.observe(this) { mesas ->
             rejillaVisible()?.mostrar(mesas)
         }
 
-        // 1d: la rejilla avisa de la mesa tocada y esta pantalla abre Pedir con esa mesa grapada (P76 A).
-        // [Claude] Antes quita 1d de la pila: al salir de Pedir se vuelve a 1a, no a la rejilla (P-M-16, P-M-21)
+        // 1d: la rejilla avisa de la mesa tocada y esta pantalla abre Pedir con esa mesa grapada.
+        // [Claude] Antes quita 1d de la pila: al salir de Pedir se vuelve a 1a, no a la rejilla
         supportFragmentManager.setFragmentResultListener(RejillaMesasFragment.CLAVE_MESA_TOCADA, this) { _, sobre ->
             if (!portero.permite()) return@setFragmentResultListener
             supportFragmentManager.popBackStack()
@@ -92,6 +90,6 @@ class SelectorActivity : AppCompatActivity(), ComprobadorPin {
     private fun rejillaVisible(): RejillaMesasFragment? =
         supportFragmentManager.findFragmentById(R.id.contenedor) as? RejillaMesasFragment
 
-    // P145: PinDialog pregunta aquí; esta pantalla delega en su libreta
+    // PinDialog pregunta aquí; esta pantalla delega en su libreta
     override suspend fun comprobarPin(pin: String): Boolean = viewModel.comprobarPin(pin)
 }

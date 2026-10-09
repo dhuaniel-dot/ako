@@ -2,7 +2,7 @@ package yunkang.ako.ui.comun
 
 import android.os.SystemClock
 
-// [Claude] H01 B (P171, revisión del 6 oct): el portero que mira el reloj. Apunta la hora del último toque
+// [Claude] El portero que mira el reloj. Apunta la hora del último toque
 // que dejó pasar y, si el siguiente llega antes de medio segundo, lo ignora: así un dedo nervioso no abre
 // dos veces la misma pantalla o la misma caja. Una por pantalla, compartida por todos sus botones.
 // Receta: https://stackoverflow.com/questions/5608720/android-preventing-double-click-on-a-button

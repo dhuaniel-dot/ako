@@ -10,8 +10,8 @@ import yunkang.ako.databinding.ItemFilaPlatoBinding
 import yunkang.ako.datos.entidades.Producto
 import java.io.File
 
-// Las filas de plato del Panel (2a) y de la carta (5a): «se reutiliza el componente, no la pantalla» (spec 7).
-// Adaptador sencillo con notifyDataSetChanged (P50 C): la lista es corta y el atenuado depende también
+// Las filas de plato del Panel (2a) y de la carta (5a): «se reutiliza el componente, no la pantalla».
+// Adaptador sencillo con notifyDataSetChanged: la lista es corta y el atenuado depende también
 // de la categoría, que DiffUtil no vería (Flan no cambia cuando se elimina Postres)
 class FilaPlatoAdapter(
     // [Claude] Qué hacer al tocar una fila: lo decide quien usa el adaptador, no el adaptador
@@ -21,10 +21,9 @@ class FilaPlatoAdapter(
     private var platos: List<Producto> = emptyList()
     private var categoriaActiva: Boolean = true
 
-    // La bandeja de una fila
     class FilaViewHolder(val binding: ItemFilaPlatoBinding) : RecyclerView.ViewHolder(binding.root)
 
-    // La caja le da sus platos y si su categoría está en la carta; se repinta todo
+    // La caja le da sus platos y si su categoría está en la carta
     fun mostrar(platos: List<Producto>, categoriaActiva: Boolean) {
         this.platos = platos
         this.categoriaActiva = categoriaActiva
@@ -42,13 +41,13 @@ class FilaPlatoAdapter(
         val plato = platos[position]
         val contexto = holder.itemView.context
 
-        // «12 · Entrecot» y «18,50 €»: los textos salen de strings.xml; el precio, de Formato (pieza 2)
+        // «12 · Entrecot» y «18,50 €»: los textos salen de strings.xml; el precio, de Formato
         holder.binding.textoNumeroNombre.text =
             contexto.getString(R.string.comun_plato_numero_nombre, plato.numero, plato.nombre)
         holder.binding.textoPrecio.text =
             contexto.getString(R.string.comun_precio, Formato.precio(plato.precioCentimos))
 
-        // La miniatura (spec 9): Glide se llama SIEMPRE, también sin foto (null → el «?» de error).
+        // La miniatura: Glide se llama SIEMPRE, también sin foto (null → el «?» de error).
         // El RecyclerView recicla las filas: si no, una fila que llevaba la foto de Entrecot
         // la seguiría llevando al pintar otro plato
         Glide.with(holder.binding.imagenPlato)
@@ -57,7 +56,7 @@ class FilaPlatoAdapter(
             .error(R.drawable.ic_sin_foto)
             .centerCrop()
             .into(holder.binding.imagenPlato)
-        // Sin foto, «Sin foto» (spec 9); con foto, el nombre del plato
+        // Sin foto, «Sin foto»; con foto, el nombre del plato
         if (plato.imagen == null) {
             holder.binding.imagenPlato.contentDescription = contexto.getString(R.string.comun_sin_foto_cd)
         } else {

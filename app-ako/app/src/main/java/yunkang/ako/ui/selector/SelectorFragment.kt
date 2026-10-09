@@ -13,14 +13,13 @@ import yunkang.ako.ui.comun.ConfirmacionDialog
 import yunkang.ako.ui.comun.GuardaDobleToque
 import yunkang.ako.ui.cuenta.CuentaActivity
 
-// 1a · Selector de rol: el nombre de la app y los tres botones grandes (P101)
+// 1a · Selector de rol: el nombre de la app y los tres botones grandes
 class SelectorFragment : Fragment(R.layout.fragment_selector) {
 
-    // La libreta de la Activity (la misma para 1a y 1b): aquí se le pregunta por la puerta de Pedir
     private val viewModel: SelectorViewModel by activityViewModels { SelectorViewModel.Factory }
 
-    // H01 B (P171): el portero de 1a; un doble toque no abre dos cajas del PIN ni dos veces Cuenta.
-    // Pedir no lo necesita: ya se apaga mientras pregunta (P142)
+    // El portero de 1a; un doble toque no abre dos cajas del PIN ni dos veces Cuenta.
+    // Pedir no lo necesita: ya se apaga mientras pregunta
     private val portero = GuardaDobleToque()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -36,12 +35,12 @@ class SelectorFragment : Fragment(R.layout.fragment_selector) {
 
         // Pedir: la puerta (RF-25). Sin ningún plato visible no se entra: se avisa y se queda en 1a
         binding.botonPedir.setOnClickListener {
-            binding.botonPedir.isEnabled = false   // mientras pregunta, sin doble toque (P142)
+            binding.botonPedir.isEnabled = false
             viewLifecycleOwner.lifecycleScope.launch {
                 val motivo = viewModel.motivoPuertaCerrada()
                 binding.botonPedir.isEnabled = true
                 if (motivo != null) {
-                    // P15: la caja de siempre, con un solo botón (solo informa)
+                    // La caja de siempre, con un solo botón (solo informa)
                     ConfirmacionDialog.nueva(
                         titulo = getString(R.string.puerta_pedir_titulo),
                         texto = getString(motivo),

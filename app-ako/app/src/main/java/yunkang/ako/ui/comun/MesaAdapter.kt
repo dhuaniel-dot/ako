@@ -19,7 +19,7 @@ class MesaAdapter(
 
     private var mesas: List<MesaEstado> = emptyList()
 
-    // La bandeja de una casilla. [Claude] Al nacer apunta sus colores de mesa libre (los del tema,
+    // [Claude] Al nacer apunta sus colores de mesa libre (los del tema,
     // claro u oscuro), para volver a ellos si la casilla se reutiliza para una mesa libre
     class MesaViewHolder(val binding: ItemMesaBinding) : RecyclerView.ViewHolder(binding.root) {
         val fondoLibre: ColorStateList = binding.tarjetaMesa.cardBackgroundColor
@@ -27,7 +27,6 @@ class MesaAdapter(
         val textoLibre: ColorStateList = binding.textoNumero.textColors
     }
 
-    // La rejilla le da las mesas; se repinta todo
     fun mostrar(mesas: List<MesaEstado>) {
         this.mesas = mesas
         notifyDataSetChanged()
@@ -50,18 +49,18 @@ class MesaAdapter(
 
         // R3: ocupada = tiene comanda pendiente. No hay ninguna columna «ocupada»: lo dice el comandaId
         if (estado.comandaId != null) {
-            // Roja, letras blancas y el total (R10: lo suma la base de datos, nadie lo guarda)
+            // Roja (también el borde, para que no se vea), letras blancas y el total (R10: lo suma la base de datos, nadie lo guarda)
             val total = contexto.getString(R.string.comun_precio, Formato.precio(estado.totalCentimos ?: 0))
             val rojo = ContextCompat.getColor(contexto, R.color.mesa_ocupada)
             val blanco = ContextCompat.getColor(contexto, R.color.sobre_mesa_ocupada)
             tarjeta.setCardBackgroundColor(rojo)
-            tarjeta.strokeColor = rojo   // el borde, del mismo rojo: no se ve
+            tarjeta.strokeColor = rojo
             holder.binding.textoNumero.setTextColor(blanco)
             holder.binding.textoTotal.setTextColor(blanco)
             holder.binding.textoTotal.text = total
             holder.binding.textoTotal.visibility = View.VISIBLE
             // RNF-13: el lector de pantalla dice «Mesa 4, 42,00 €»: el estado no depende solo del color.
-            // La frase (con su coma) sale de strings.xml, como todo texto (RNF-19, H07)
+            // La frase (con su coma) sale de strings.xml, como todo texto (RNF-19)
             tarjeta.contentDescription = contexto.getString(R.string.mesa_ocupada_cd, textoMesa, total)
         } else {
             // Libre: vuelve a los colores con los que nació la casilla, sin total

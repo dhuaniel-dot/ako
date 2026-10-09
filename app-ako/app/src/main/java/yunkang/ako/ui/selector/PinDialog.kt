@@ -14,8 +14,9 @@ import yunkang.ako.databinding.DialogPinBinding
 import android.animation.ObjectAnimator
 import yunkang.ako.ui.comun.ComprobadorPin
 
-// 1c · Introducir PIN. No decide nada: pregunta a quien lo abrió (un ComprobadorPin, P145) y, si es correcto,
-// deja un sobre (CLAVE_RESULTADO) para quien lo abrió. Cancelar cierra sin sobre
+// 1c · Introducir PIN. No decide nada: pregunta a quien lo abrió (un ComprobadorPin) y, si es correcto,
+// deja un sobre (CLAVE_RESULTADO) para quien lo abrió. Cancelar cierra sin sobre.
+// Mientras se comprueba, Aceptar se apaga: sin doble toque
 class PinDialog : DialogFragment() {
 
     // La Activity que lo abre tiene que saber comprobar un PIN (SelectorActivity o PedidoActivity)
@@ -28,8 +29,8 @@ class PinDialog : DialogFragment() {
         val dialogo = MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.pin_introducir_titulo)
             .setView(binding.root)
-            .setNegativeButton(R.string.comun_cancelar, null)   // cierra y no deja sobre
-            .setPositiveButton(R.string.comun_aceptar, null)    // su trabajo se pone abajo
+            .setNegativeButton(R.string.comun_cancelar, null)
+            .setPositiveButton(R.string.comun_aceptar, null)
             .create()
 
         // [Claude] El Aceptar de serie cierra el diálogo siempre; se cambia al enseñarse,
@@ -46,18 +47,17 @@ class PinDialog : DialogFragment() {
 
             aceptar.setOnClickListener {
                 val pin = binding.textoPin.text.toString()
-                aceptar.isEnabled = false   // mientras se comprueba, sin doble toque
+                aceptar.isEnabled = false
                 lifecycleScope.launch {
                     if (comprobador.comprobarPin(pin)) {
                         setFragmentResult(CLAVE_RESULTADO, Bundle())
-                        // P146: si mientras se picaba el PIN la pantalla pasó a segundo plano (Home),
+                        // Si mientras se picaba el PIN la pantalla pasó a segundo plano (Home),
                         // dismiss() normal rompería la app; esta versión cierra igual sin romper
                         dismissAllowingStateLoss()
                     } else {
-                        // Incorrecto: se vacía el campo, se avisa y se sacude
                         binding.textoPin.text?.clear()
                         binding.campoPin.error = getString(R.string.pin_incorrecto)
-                        // Sacudida: el campo se mueve a los lados y vuelve a su sitio (spec 10, RNF-13)
+                        // Sacudida: el campo se mueve a los lados y vuelve a su sitio (RNF-13)
                         ObjectAnimator.ofFloat(binding.campoPin, "translationX", 0f, 20f, -20f, 15f, -15f, 0f)
                             .setDuration(400)
                             .start()

@@ -7,9 +7,9 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
-// La única caja de «¿seguro?» de toda la app (P84): Enviar, Cobrar, Anular, eliminar con mesas,
+// La única caja de «¿seguro?» de toda la app: Enviar, Cobrar, Anular, eliminar con mesas,
 // cadena 3e, «¿Salir sin enviar?», la puerta de Pedir... Cada uno le pasa sus textos.
-// Los botones dicen lo que hacen («Cobrar», «Eliminar»; nunca «Sí», P40)
+// Los botones dicen lo que hacen («Cobrar», «Eliminar»; nunca «Sí»)
 class ConfirmacionDialog : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -23,23 +23,22 @@ class ConfirmacionDialog : DialogFragment() {
             .setTitle(argumentos.getString(ARG_TITULO))
             .setMessage(argumentos.getString(ARG_TEXTO))
             .setPositiveButton(argumentos.getString(ARG_AFIRMATIVO)) { _, _ ->
-                // Sobre para quien la abrió: se pulsó el afirmativo
                 setFragmentResult(clave, bundleOf(RESPUESTA_AFIRMATIVA to true))
             }
 
-        // P15: el botón negativo es opcional (la puerta de Pedir solo informa).
-        // [Claude] P144 A: su sobre lo usan por primera vez 2e (S6) y la cadena 3e (S7)
+        // El botón negativo es opcional (la puerta de Pedir solo informa).
+        // [Claude] También deja sobre (con false), para quien tiene que hacer algo al cancelar, como la cadena 3e
         if (negativo != null) {
             caja.setNegativeButton(negativo) { _, _ ->
                 setFragmentResult(clave, bundleOf(RESPUESTA_AFIRMATIVA to false))
             }
         }
-        // Tocar fuera o Atrás cierra sin sobre (P144 A)
+        // Tocar fuera o Atrás cierra sin sobre
         return caja.create()
     }
 
     companion object {
-        // Dentro del sobre: true si se pulsó el afirmativo; false si el negativo (P144 A)
+        // Dentro del sobre: true si se pulsó el afirmativo; false si el negativo
         const val RESPUESTA_AFIRMATIVA = "afirmativa"
 
         // Los nombres de cada texto dentro de «arguments» (solo se usan en este archivo)

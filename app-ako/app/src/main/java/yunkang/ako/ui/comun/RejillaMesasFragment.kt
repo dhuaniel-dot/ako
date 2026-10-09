@@ -10,8 +10,8 @@ import yunkang.ako.R
 import yunkang.ako.databinding.FragmentRejillaMesasBinding
 import yunkang.ako.dominio.modelos.MesaEstado
 
-// La rejilla de 60 mesas: 1d (elegir mesa para pedir) y 6a (Cuenta). Es el mismo componente (spec 7).
-// P67 A: pinta lo que le da quien la aloja (mostrar) y avisa de la mesa tocada con un sobre; no decide nada
+// La rejilla de 60 mesas: 1d (elegir mesa para pedir) y 6a (Cuenta). Es el mismo componente.
+// Pinta lo que le da quien la aloja (mostrar) y avisa de la mesa tocada con un sobre; no decide nada
 class RejillaMesasFragment : Fragment(R.layout.fragment_rejilla_mesas) {
 
     // Al tocar una mesa, sobre para quien la aloja: el id (para la base de datos) y el número (para la barra)
@@ -26,10 +26,10 @@ class RejillaMesasFragment : Fragment(R.layout.fragment_rejilla_mesas) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentRejillaMesasBinding.bind(view)
 
-        // P168 C: el título llega en los arguments (se conservan si Android rehace el Fragment)
+        // El título llega en los arguments (se conservan si Android rehace el Fragment)
         binding.textoTitulo.setText(requireArguments().getInt(ARG_TITULO))
 
-        // Una lista que se rellena de cuatro en cuatro: 4 columnas × 15 filas, con scroll
+        // 4 columnas: 60 mesas caben en 15 filas con scroll (wireframe 01d).
         binding.listaMesas.layoutManager = GridLayoutManager(requireContext(), 4)
         binding.listaMesas.adapter = adaptador
 
@@ -39,8 +39,7 @@ class RejillaMesasFragment : Fragment(R.layout.fragment_rejilla_mesas) {
         }
     }
 
-    // P196 A (revisión S9, B1): al quitar la vista (por ejemplo, cuando otra se pone encima en la pila),
-    // la lista suelta su adaptador; si no, el adaptador, que vive con el Fragment, seguiría sujetando la vista vieja
+    // Al quitar la vista, la lista suelta su adaptador (como en ReciboFragment)
     override fun onDestroyView() {
         FragmentRejillaMesasBinding.bind(requireView()).listaMesas.adapter = null
         super.onDestroyView()
@@ -59,7 +58,7 @@ class RejillaMesasFragment : Fragment(R.layout.fragment_rejilla_mesas) {
 
         private const val ARG_TITULO = "titulo"
 
-        // La forma de crear una rejilla: se le da el título que enseña su barra (P168 C)
+        // La forma de crear una rejilla: se le da el título que enseña su barra
         fun nueva(titulo: Int): RejillaMesasFragment {
             val rejilla = RejillaMesasFragment()
             rejilla.arguments = bundleOf(ARG_TITULO to titulo)
