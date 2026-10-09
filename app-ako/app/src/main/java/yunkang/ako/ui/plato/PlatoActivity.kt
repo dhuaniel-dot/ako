@@ -10,7 +10,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.lifecycleScope
-import com.bumptech.glide.Glide
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
@@ -23,6 +22,7 @@ import yunkang.ako.ui.comun.ConfirmacionDialog
 import yunkang.ako.ui.comun.Formato
 import yunkang.ako.ui.comun.MesasAfectadasDialog
 import yunkang.ako.ui.comun.apartarDeLasBarras
+import yunkang.ako.ui.comun.pintarFoto
 import java.io.IOException
 
 // 3a · Formulario del plato. Se abre desde el Panel: «+ Plato» de una caja (crear)
@@ -238,18 +238,7 @@ class PlatoActivity : AppCompatActivity() {
     // «content://…» (la que prestó el selector) y «/data/…/fotos/….jpg» (nuestro archivo)
     private fun pintarFoto() {
         val foto = viewModel.fotoElegida.value ?: viewModel.datos.value?.plato?.imagen
-        Glide.with(binding.imagenPlato)
-            .load(foto)
-            .placeholder(R.drawable.foto_cargando)
-            .error(R.drawable.ic_sin_foto_grande)
-            .centerCrop()
-            .into(binding.imagenPlato)
-        // Sin foto, «Sin foto»; con foto, el nombre del plato
-        if (foto == null) {
-            binding.imagenPlato.contentDescription = getString(R.string.comun_sin_foto_cd)
-        } else {
-            binding.imagenPlato.contentDescription = binding.textoNombre.text.toString()
-        }
+        pintarFoto(binding.imagenPlato, foto, binding.textoNombre.text.toString(), grande = true)
     }
 
     // «¿Salir sin guardar? Se perderán los cambios» (ficha 3: no hay nada vivo entre pantallas)

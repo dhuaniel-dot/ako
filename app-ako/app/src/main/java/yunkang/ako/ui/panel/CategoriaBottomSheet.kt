@@ -11,7 +11,6 @@ import androidx.core.os.bundleOf
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -23,6 +22,7 @@ import yunkang.ako.datos.entidades.Categoria
 import yunkang.ako.dominio.modelos.ResultadoGuardado
 import yunkang.ako.ui.comun.ConfirmacionDialog
 import yunkang.ako.ui.comun.MesasAfectadasDialog
+import yunkang.ako.ui.comun.pintarFoto
 import java.io.IOException
 
 // 2b · Crear o editar una categoría en una hoja inferior (formulario corto → hoja).
@@ -144,18 +144,7 @@ class CategoriaBottomSheet : BottomSheetDialogFragment() {
     // Glide entiende las dos direcciones como texto: «content://…» y «/data/…/fotos/….jpg»
     private fun pintarFoto() {
         val foto = fotoElegida ?: categoria?.imagen
-        Glide.with(binding.imagenCategoria)
-            .load(foto)
-            .placeholder(R.drawable.foto_cargando)
-            .error(R.drawable.ic_sin_foto)
-            .circleCrop()
-            .into(binding.imagenCategoria)
-        // Sin foto, «Sin foto»; con foto, el nombre de la categoría
-        if (foto == null) {
-            binding.imagenCategoria.contentDescription = getString(R.string.comun_sin_foto_cd)
-        } else {
-            binding.imagenCategoria.contentDescription = binding.textoNombre.text.toString()
-        }
+        pintarFoto(binding.imagenCategoria, foto, binding.textoNombre.text.toString(), redonda = true)
     }
 
     // [Claude] Guardar se enciende con algo escrito y, al editar, solo cuando la categoría ya ha llegado:

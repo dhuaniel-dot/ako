@@ -5,7 +5,6 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import yunkang.ako.R
 import yunkang.ako.databinding.FragmentFichaPlatoBinding
@@ -13,6 +12,7 @@ import yunkang.ako.datos.entidades.Producto
 import yunkang.ako.dominio.Calculadora
 import yunkang.ako.dominio.Validacion
 import yunkang.ako.ui.comun.Formato
+import yunkang.ako.ui.comun.pintarFoto
 import java.io.File
 
 // 5b · Ficha del plato, a pantalla completa encima de la carta: sus datos, los alérgenos
@@ -56,20 +56,7 @@ class FichaPlatoFragment : Fragment(R.layout.fragment_ficha_plato) {
             val plato = datos.plato
             this.plato = plato
 
-            // La foto grande: Glide siempre, también sin foto (null → el «?» grande);
-            // la foto, recortada a todo el marco
-            Glide.with(binding.imagenPlato)
-                .load(plato.imagen?.let { File(it) })
-                .placeholder(R.drawable.foto_cargando)
-                .error(R.drawable.ic_sin_foto_grande)
-                .centerCrop()
-                .into(binding.imagenPlato)
-            // Sin foto, «Sin foto»; con foto, el nombre del plato
-            if (plato.imagen == null) {
-                binding.imagenPlato.contentDescription = getString(R.string.comun_sin_foto_cd)
-            } else {
-                binding.imagenPlato.contentDescription = plato.nombre
-            }
+            pintarFoto(binding.imagenPlato, plato.imagen?.let { File(it) }, plato.nombre, grande = true)
 
             // «12 · Entrecot» entero y «18,50 €»; la descripción solo si la tiene
             binding.textoNumeroNombre.text = getString(R.string.comun_plato_numero_nombre, plato.numero, plato.nombre)
