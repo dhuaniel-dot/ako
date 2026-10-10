@@ -104,8 +104,7 @@ class FichaPlatoFragment : Fragment(R.layout.fragment_ficha_plato) {
         }
     }
 
-    // guarda la cantidad y el desplegable por si Android rehace la pantalla (el resto se vuelve a pintar
-    // desde la bandeja)
+    // guarda la cantidad y el desplegable por si Android rehace la pantalla; lo demás se repinta desde la bandeja
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putInt(CLAVE_CANTIDAD, cantidad)

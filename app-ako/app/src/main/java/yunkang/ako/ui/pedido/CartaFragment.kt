@@ -33,13 +33,11 @@ class CartaFragment : Fragment(R.layout.fragment_carta) {
     // quien coloca las filas de la lista (y sabe llevar una posición arriba del todo)
     private lateinit var gestorLista: LinearLayoutManager
 
-    // la última carta pintada en esta vista. Room la vuelve a mandar igual al volver de segundo
-    // plano (asLiveData cierra el grifo a los 5 s sin nadie mirando); si no ha cambiado, no se repinta
+    // la última carta pintada: Room la vuelve a mandar igual al volver de segundo plano; si no ha cambiado, no se repinta
     private var ultimaCarta: List<CategoriaConPlatos>? = null
 
     // si Android rehace la pantalla (modo noche, tamaño de letra), recupera la categoría resaltada
-    // [Claude] en onCreate y no en onViewCreated: al volver de la ficha se rehace la vista pero no el
-    // Fragment, y el resaltado ya está en el campo
+    // [Claude] en onCreate y no en onViewCreated: al volver de la ficha se rehace la vista pero no el Fragment
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         categoriaActiva = savedInstanceState?.getLong(CLAVE_CATEGORIA_ACTIVA) ?: 0L

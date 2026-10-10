@@ -43,8 +43,7 @@ class PedidoViewModel(
     var mesaNumero: Int = 0
         private set
 
-    // 5a: la carta por secciones, solo con platos visibles. la escribe Room a través
-    // del repositorio (el grifo, Flow); asLiveData la cuelga en el tablón. nadie la carga a mano
+    // 5a: la carta por secciones, solo con platos visibles; llega sola (grifo → tablón)
     val carta: LiveData<List<CategoriaConPlatos>> = cartaRepository.cartaVisible().asLiveData()
 
     // 5b: la bandeja de la ficha abierta. solo esta libreta escribe en ella (_ficha);
@@ -57,8 +56,7 @@ class PedidoViewModel(
     private val _carrito = MutableLiveData<Carrito>()
     val carrito: LiveData<Carrito> = _carrito
 
-    // 5c: las líneas del carrito tal como se pintan. map las saca del carrito cada vez que suena
-    // su timbre: son LineaVista nuevas cada vez, así que la lista siempre ve el cambio de cantidad
+    // 5c: las líneas del carrito tal como se pintan; LineaVista nuevas cada vez, así la lista ve el cambio de cantidad
     val lineasVista: LiveData<List<LineaVista>> = carrito.map { c ->
         c.lineas.map { linea -> LineaVista(linea.producto.id, linea.cantidad, linea.producto.nombre, linea.importe()) }
     }
@@ -99,16 +97,14 @@ class PedidoViewModel(
     // [Claude] true mientras se envía: un segundo toque no vuelve a enviar las mismas líneas
     private var enviando = false
 
-    // 5c · enviar: el repositorio, todo en una transacción, crea la comanda o le añade líneas y garantiza una sola
-    // comanda abierta por mesa, de 1 a 99 unidades, ningún precio negativo y nombre y precio congelados al enviar
+    // 5c · enviar: lo guarda el repositorio en una transacción (crea la comanda o le añade líneas)
     // si va bien, la libreta cambia el carrito por uno nuevo y vacío de la misma mesa y devuelve true
     // es suspend: la pantalla espera; Room hace el trabajo fuera del hilo de la pantalla
     suspend fun enviar(): Boolean {
         val carrito = _carrito.value ?: return false
         if (enviando || carrito.estaVacio()) return false
         enviando = true
-        // finally se ejecuta siempre, también si enviarCarrito fallara a mitad;
-        // así la bandera nunca se queda encendida y Enviar sigue funcionando
+        // finally va siempre, también si enviarCarrito falla: así Enviar no se queda apagado
         try {
             comandaRepository.enviarCarrito(carrito)
             _carrito.value = Carrito(mesaId)
@@ -118,9 +114,8 @@ class PedidoViewModel(
         return true
     }
 
-    // 5b: llena la bandeja con un plato. la libreta es una para muchas fichas: primero se vacía,
-    // para que al abrir Helado no se vea Entrecot un instante. si ya tiene este plato (Android rehízo
-    // la pantalla), no se vuelve a leer. viewModelScope empieza en el hilo principal; Room cambia de hilo solo
+    // 5b: llena la bandeja con un plato. primero se vacía, para que al abrir Helado no se vea Entrecot un instante
+    // si ya tiene este plato (Android rehízo la pantalla), no se vuelve a leer. Room cambia de hilo solo
     fun cargarFicha(productoId: Long) {
         if (_ficha.value?.plato?.id == productoId) return
         _ficha.value = null

@@ -11,9 +11,9 @@ import yunkang.ako.ui.comun.pintarFoto
 import java.io.File
 
 // 5a · la fila de categorías de la carta: un círculo con el nombre por categoría, la activa resaltada
-// no es el CategoriaAdapter del Panel: solo comparten el dato. sencillo, con notifyDataSetChanged
+// no es el CategoriaAdapter del Panel: solo comparten el dato. sencillo, como FilaPlatoAdapter
 class CategoriaFilaAdapter(
-    // qué hacer al tocar una categoría (saltar a su sección): lo decide la carta, no el adaptador
+    // al tocar una categoría: saltar a su sección
     private val alTocar: (Long) -> Unit
 ) : RecyclerView.Adapter<CategoriaFilaAdapter.FilaViewHolder>() {
 

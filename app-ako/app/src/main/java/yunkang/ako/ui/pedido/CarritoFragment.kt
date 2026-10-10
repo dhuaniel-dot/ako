@@ -32,7 +32,7 @@ class CarritoFragment : Fragment(R.layout.fragment_carrito) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentCarritoBinding.bind(view)
 
-        // la mesa en la barra: equivocarse de mesa es el error más caro (ficha 5)
+        // la mesa en la barra, como en la carta
         binding.textoTitulo.text = getString(R.string.carrito_titulo, viewModel.mesaNumero)
 
         // ← Atrás: vuelve a la carta (con el carrito encima, el guardián está apagado)
@@ -73,7 +73,7 @@ class CarritoFragment : Fragment(R.layout.fragment_carrito) {
             viewLifecycleOwner.lifecycleScope.launch {
                 if (viewModel.enviar()) {
                     // aviso y vuelta a la carta con el carrito vacío; se puede seguir pidiendo en la misma comanda
-                    // el aviso va sobre la vista de la Activity porque el carrito se cierra ahora mismo
+                    // el aviso va sobre la vista de la Activity, como en la ficha
                     Snackbar.make(
                         requireActivity().findViewById(R.id.contenedor),
                         getString(R.string.enviar_hecho, viewModel.mesaNumero),
