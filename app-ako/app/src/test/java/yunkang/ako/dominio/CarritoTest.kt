@@ -75,7 +75,7 @@ class CarritoTest {
         assertEquals(3, carrito.lineas[0].cantidad)
     }
 
-    // cambiarCantidad fuera de 1–99 o de un plato que no está no hace nada; quitar vacía el renglón,
+    // cambiarCantidad fuera de 1–99 o de un plato que no está no hace nada; quitar vacía la línea,
     // y quitarlo dos veces no rompe
     @Test
     fun cambiarCantidadYQuitar() {

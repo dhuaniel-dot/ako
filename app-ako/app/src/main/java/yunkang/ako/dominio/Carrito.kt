@@ -8,10 +8,10 @@ class Carrito(val mesaId: Long) {
 
     val lineas = mutableListOf<PlatoApuntado>()
 
-    // si el plato ya está en el carrito, suma en el mismo renglón
+    // si el plato ya está en el carrito, suma en la misma línea
     // si se pasa de 99, se queda en 99 y devuelve false para que la pantalla avise
+    // con menos de 1 no se añade nada y también devuelve false
     fun anadir(producto: Producto, cantidad: Int): Boolean {
-        // menos de 1 no es una cantidad: no se añade nada y se avisa con false
         if (cantidad < 1) return false
         val maximo = Comprobacion.MAXIMO_POR_PLATO
         val linea = lineas.find { it.producto.id == producto.id }

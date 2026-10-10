@@ -3,7 +3,7 @@ package yunkang.ako.dominio
 // las cuentas del cobro. no guarda nada: entran números, sale un número
 object Calculadora {
 
-    // lo que cuesta un renglón, en céntimos: precio × cantidad
+    // lo que cuesta una línea, en céntimos: precio × cantidad
     // la usan el carrito y el recibo
     fun importe(precioCentimos: Int, cantidad: Int): Int = precioCentimos * cantidad
 
