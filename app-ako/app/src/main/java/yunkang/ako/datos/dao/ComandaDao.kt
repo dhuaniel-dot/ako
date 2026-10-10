@@ -9,7 +9,6 @@ import yunkang.ako.datos.entidades.Comanda
 import yunkang.ako.datos.entidades.LineaComanda
 import yunkang.ako.dominio.modelos.MesaConTotal
 
-// Lo que se le puede pedir a Room sobre las comandas y sus líneas.
 @Dao
 interface ComandaDao {
 
@@ -27,7 +26,6 @@ interface ComandaDao {
     suspend fun pendienteDeMesa(mesaId: Long): Comanda?
 
     // La rejilla: solo las mesas ocupadas (con comanda pendiente), con su total sumado.
-    // Room la vuelve a mandar cada vez que cambian comanda, mesa o linea_comanda
     @Query("""
         SELECT m.id AS mesaId, c.id AS comandaId,
                SUM(l.cantidad * l.precio_unitario_centimos) AS totalCentimos

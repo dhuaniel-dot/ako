@@ -10,7 +10,6 @@ import yunkang.ako.datos.entidades.Alergeno
 import yunkang.ako.datos.entidades.Producto
 import yunkang.ako.datos.entidades.ProductoAlergeno
 
-// Lo que se le puede pedir a Room sobre los platos.
 @Dao
 interface ProductoDao {
 
@@ -28,12 +27,10 @@ interface ProductoDao {
     suspend fun porCategoria(categoriaId: Long): List<Producto>
 
     // Todos los platos existentes (también los eliminados: el Panel los ve todos), por número.
-    // Room vuelve a mandar la lista cada vez que cambia la tabla producto
     @Query("SELECT * FROM producto ORDER BY numero")
     fun todosObservados(): Flow<List<Producto>>
 
     // La carta: platos visibles = activos y con su categoría activa.
-    // Room la vuelve a mandar cada vez que cambian producto o categoria
     @Query("""
         SELECT p.* FROM producto p
         JOIN categoria c ON c.id = p.categoria_id

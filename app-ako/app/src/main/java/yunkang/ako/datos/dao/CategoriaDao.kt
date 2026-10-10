@@ -7,7 +7,6 @@ import androidx.room.Update
 import yunkang.ako.datos.entidades.Categoria
 import kotlinx.coroutines.flow.Flow
 
-// Lo que se le puede pedir a Room sobre las categorías.
 @Dao
 interface CategoriaDao {
 
