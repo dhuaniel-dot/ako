@@ -26,7 +26,7 @@ import yunkang.ako.ui.comun.pintarFoto
 import java.io.IOException
 
 // 2b · crear o editar una categoría en una hoja inferior (formulario corto → hoja)
-// recibe el id por arguments (0 = nueva), como ConfirmacionDialog: si Android rehace la hoja, no se pierde
+// recibe el id por arguments (0 = nueva), como ConfirmacionDialog
 class CategoriaBottomSheet : BottomSheetDialogFragment() {
 
     private val viewModel: PanelViewModel by activityViewModels { PanelViewModel.Factory }
@@ -70,9 +70,7 @@ class CategoriaBottomSheet : BottomSheetDialogFragment() {
             binding.textoTitulo.setText(R.string.categoria_titulo_nueva)
         } else {
             binding.textoTitulo.setText(R.string.categoria_titulo_editar)
-            // la hoja no pregunta a la base de datos: escucha el tablón del Panel
-            // casi siempre la lista ya está y se pinta en el acto; si Android rehízo la hoja antes de que
-            // llegara, se pinta cuando llegue. solo se pinta una vez
+            // la hoja no pregunta a la base de datos: escucha el tablón del Panel y pinta una sola vez, cuando llega
             viewModel.categoriasConPlatos.observe(viewLifecycleOwner) { cajas ->
                 if (categoria != null) return@observe
                 val encontrada = cajas.map { it.categoria }.firstOrNull { it.id == id } ?: return@observe
@@ -149,8 +147,7 @@ class CategoriaBottomSheet : BottomSheetDialogFragment() {
         pintarFoto(binding.imagenCategoria, foto, binding.textoNombre.text.toString(), redonda = true)
     }
 
-    // [Claude] guardar se enciende con algo escrito y, al editar, solo cuando la categoría ya ha llegado:
-    // así nunca se guarda «como nueva» una que se estaba editando
+    // [Claude] al editar, guardar no se enciende hasta que llega la categoría: así nunca se guarda «como nueva»
     private fun actualizarGuardar() {
         val binding = binding ?: return
         val hayNombre = !binding.textoNombre.text.isNullOrBlank()
