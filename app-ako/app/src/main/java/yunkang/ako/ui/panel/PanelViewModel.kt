@@ -24,7 +24,7 @@ class PanelViewModel(
     private val galeria: Galeria
 ) : ViewModel() {
 
-    // las cajas del Panel: Room las manda solas cada vez que cambia una categoría o un plato (Flow → LiveData); nadie las escribe a mano
+    // las cajas del Panel: llegan solas cada vez que cambia una categoría o un plato
     val categoriasConPlatos: LiveData<List<CategoriaConPlatos>> =
         cartaRepository.categoriasConPlatos().asLiveData()
 

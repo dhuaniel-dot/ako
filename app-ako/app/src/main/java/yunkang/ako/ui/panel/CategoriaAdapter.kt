@@ -16,7 +16,7 @@ import yunkang.ako.dominio.modelos.CategoriaConPlatos
 import yunkang.ako.ui.comun.FilaPlatoAdapter
 
 // 2a · el encargado de las cajas del Panel (la fila de categorías de la carta tiene el suyo)
-// ListAdapter: le das la lista nueva con submitList y DiffUtil repinta solo lo que cambió
+// ListAdapter: se le da la lista nueva con submitList y DiffUtil repinta solo lo que cambió
 class CategoriaAdapter(
     private val estaPlegada: (Long) -> Boolean,
     private val alPlegar: (Categoria) -> Unit,
@@ -45,9 +45,7 @@ class CategoriaAdapter(
         binding.listaPlatos.layoutManager = LinearLayoutManager(parent.context)
         binding.listaPlatos.adapter = filas
         binding.listaPlatos.setRecycledViewPool(armario)
-        // dos listas que se mueven en vertical. sin esto, la de fuera (el Panel) se queda el dedo
-        // y la de dentro nunca baja. mientras a la lista de platos le quede recorrido hacia donde va el dedo,
-        // le pide al Panel que no se lo quite; al llegar al final, se lo deja (y el Panel sigue bajando)
+        // dos listas en vertical: mientras a la de platos le quede recorrido, el Panel no le quita el dedo
         // devuelve false: la lista sigue recibiendo el toque como siempre
         // fuente: https://developer.android.com/develop/ui/views/touch-and-input/gestures/viewgroup
         binding.listaPlatos.addOnItemTouchListener(object : RecyclerView.SimpleOnItemTouchListener() {
