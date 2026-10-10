@@ -57,7 +57,7 @@
 | RF-32 | Ver la información nutricional en desplegable (campos si los hay; si no, la foto) | 5 · 5b | — | 2 · inc. 5 | OE2 |
 | RF-33 | Elegir modificadores en la ficha; los de añadir con cantidad 1-9 | 5 · 5b | — | 2 · inc. 4 | OE2 |
 | RF-34 | Cambiar el idioma de la carta; sin traducción, nombre en español | 5 · 5d | R12 | 2 · inc. 10 | OE2 |
-| RF-54 | Selector de idioma de toda la app en 1a, al lado del icono de modo claro/oscuro: «Como el móvil», «Español», «English» (`AppCompatDelegate.setApplicationLocales`, guía oficial de idiomas por app); al cambiar a inglés, la interfaz y los platos y categorías traducidos | 1 · 1a | R12 | 2 · inc. 10 | OE2 |
+| RF-54 | Objetivo (Daniel): si un cliente habla inglés, cambiar el idioma rápido y que todo salga en ese idioma. Selector de idioma de toda la app en 1a, al lado del icono de modo claro/oscuro: «Como el móvil», «Español», «English» (`AppCompatDelegate.setApplicationLocales`, guía oficial de idiomas por app); al cambiar a inglés, la interfaz y los platos y categorías traducidos | 1 · 1a | R12 | 2 · inc. 10 | OE2 |
 | RF-35 | Activar el Modo Agrandar (magnificación) | 5 · 5a | — | 2 · inc. 3 | OE2 |
 | RF-36 | Añadir al carrito con cantidad 1-99; +/−, quitar; líneas idénticas se suman | 5 · 5c | R4 | 1 | OE3 |
 | RF-37 | Enviar con confirmación (mesa y total): crea la comanda o añade líneas; congela nombre y precio | 5 · 5c | R1, R2, R4, R14 | 1 | OE3 |
@@ -112,7 +112,7 @@ Con la precarga (RF-50 crea un plato de ejemplo) y con R5 (los platos no se borr
 | RNF-16 | Interfaz | Adaptación a distintos tamaños de pantalla con layouts flexibles (`ConstraintLayout`, medidas en `dp` y `sp`) | spec, apartado 6 | 1 |
 | RNF-17 | Interfaz | Paleta neutra con naranja como único acento; transiciones por defecto de Android; tres animaciones funcionales (sacudida del PIN, resaltado de fila, snackbar *Guardado*) | spec, apartado 14 | 1 (resaltado: 3; snackbar: 2) |
 | RNF-18 | Rendimiento | Fotos como archivo (solo la ruta en la base de datos), redimensionadas a ~1080px y comprimidas a JPEG al guardar; carga con Glide, con caché y placeholder | spec, apartado 15 | 1 |
-| RNF-19 | Localización | Interfaz en ES y EN (`strings.xml`), con caída a inglés para cualquier otro idioma; nombres de plato traducidos por tabla | spec, apartado 7 | 1 (tabla: 2 · inc. 10) |
+| RNF-19 | Localización | Interfaz en ES y EN (`strings.xml`); en cualquier otro idioma, en español (`values/` es el español; corregido el 11 oct 2026: decía «caída a inglés», que no es lo que hace la app); nombres de plato traducidos por tabla | spec, apartado 7 | 1 (tabla: 2 · inc. 10) |
 | RNF-20 | Plataforma | Android nativo en Kotlin, XML + Activities/Fragments, Room, MVVM sencillo (ver la nota de stack, abajo) | spec, apartado 2 | 1 |
 | RNF-21 | Plataforma | Versión mínima de Android: **8.0 (API 26), definitivo** — verificado el 17 de septiembre de 2026 contra la documentación oficial: `PBKDF2withHmacSHA256` está disponible desde API 26, Room 2.8 exige API 23 y Glide exige API 14, así que manda el PIN | Verificación 2, P63 | 1 |
 | RNF-22 | Plataforma | Funciona sin conexión a internet: base de datos, fotos y carga de imágenes son locales (P65) | spec, apartado 15 | 1 |
