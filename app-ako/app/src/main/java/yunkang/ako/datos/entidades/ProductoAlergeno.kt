@@ -7,7 +7,6 @@ import androidx.room.Index
 
 // Tabla puente: "este plato tiene este alérgeno". Una fila por cada casilla marcada.
 // El carné son las dos columnas juntas.
-// [Claude] El índice de alergeno_id: Room lo pide para las claves foráneas.
 @Entity(
     tableName = "producto_alergeno",
     primaryKeys = ["producto_id", "alergeno_id"],

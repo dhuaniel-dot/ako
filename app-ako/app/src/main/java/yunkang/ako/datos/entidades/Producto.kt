@@ -12,7 +12,6 @@ import androidx.room.PrimaryKey
 // [Claude] El índice de categoria_id: Room lo pide para las claves foráneas.
 // numero: el número que ve el cliente en la carta.
 // precioCentimos: 1,50 € se guarda como 150.
-// imagen: ruta de la foto.
 // activo: false = eliminado (no se borra nunca).
 @Entity(
     tableName = "producto",

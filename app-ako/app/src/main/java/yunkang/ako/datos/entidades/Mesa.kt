@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
-// Una de las 60 mesas del bar. Tabla "mesa".
+// Una mesa (las crea la precarga). Tabla "mesa".
 // No guarda si está ocupada: eso se calcula mirando si tiene una comanda PENDIENTE.
 // El número no se repite: no puede haber dos mesas 7.
 @Entity(

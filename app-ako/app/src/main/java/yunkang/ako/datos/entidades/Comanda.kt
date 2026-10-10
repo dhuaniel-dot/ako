@@ -8,7 +8,6 @@ import androidx.room.PrimaryKey
 
 // El pedido de una mesa, de principio a fin. Tabla "comanda".
 // No guarda el total: se calcula sumando sus líneas.
-// [Claude] El índice de mesa_id: Room lo pide para las claves foráneas.
 // fechaCreacion: cuándo se envió el primer pedido (instante en milisegundos).
 // fechaCierre: cuándo se cobró o se anuló; vacío mientras está PENDIENTE.
 @Entity(

@@ -8,8 +8,6 @@ import androidx.room.PrimaryKey
 // Una categoría de la carta (Bebidas, Carnes, Otros…). Tabla "categoria".
 // No puede haber dos categorías con el mismo nombre.
 // id: el carné; lo pone Room solo al guardar.
-// imagen: ruta de la foto; vacía si no tiene.
-// orden: posición en la carta.
 // activo: false = eliminada (no se borra nunca).
 // esPorDefecto: true solo en "Otros".
 @Entity(
