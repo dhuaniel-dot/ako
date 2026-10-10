@@ -44,7 +44,7 @@ class Galeria(private val context: Context) {
         val giro = leerGiro(uri)
         var foto = leerReducida(uri)
 
-        // [Claude] primero se reduce a 1080 y después se gira: girar una foto pequeña gasta menos memoria
+        // [Claude] primero se reduce y después se gira: girar una foto pequeña gasta menos memoria
         // si ya es más pequeña, no se agranda
         val ladoMayor = maxOf(foto.width, foto.height)
         if (ladoMayor > LADO_FINAL) {

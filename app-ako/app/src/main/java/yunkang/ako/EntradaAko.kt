@@ -30,7 +30,6 @@ class EntradaAko : Application() {
         ComandaRepositoryReal(baseDeDatos, baseDeDatos.mesaDao(), baseDeDatos.comandaDao())
     }
 
-    // la carta pregunta a comandas por el puesto, nunca por su DAO
     val cartaRepository: CartaRepository by lazy {
         CartaRepository(baseDeDatos.categoriaDao(), baseDeDatos.productoDao(), baseDeDatos.precargadosDao(), comandaRepository)
     }
@@ -40,7 +39,7 @@ class EntradaAko : Application() {
         SeguridadRepository(GuardaPin(this))
     }
 
-    // la galería de fotos, con el contexto de la app (vive lo mismo que la app, nunca el de una pantalla)
+    // la galería de fotos
     val galeria: Galeria by lazy {
         Galeria(this)
     }
