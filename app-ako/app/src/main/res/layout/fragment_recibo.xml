@@ -61,7 +61,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/barraSuperior" />
 
-    <!-- total, fijo encima del bloque de cambio -->
     <LinearLayout
         android:id="@+id/filaTotal"
         android:layout_width="0dp"

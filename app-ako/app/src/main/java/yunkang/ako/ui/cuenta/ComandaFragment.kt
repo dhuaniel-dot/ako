@@ -38,7 +38,6 @@ class ComandaFragment : Fragment(R.layout.fragment_comanda) {
 
         binding.textoTitulo.text = getString(R.string.comun_mesa, viewModel.mesaNumero)
 
-        // ← Atrás: quita 6b de la pila y vuelve a la rejilla
         binding.botonAtras.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }

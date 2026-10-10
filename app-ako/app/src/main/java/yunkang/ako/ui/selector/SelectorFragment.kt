@@ -26,7 +26,6 @@ class SelectorFragment : Fragment(R.layout.fragment_selector) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentSelectorBinding.bind(view)
 
-        // Propietario: pide el PIN (1c)
         binding.botonPropietario.setOnClickListener {
             if (portero.permite()) {
                 PinDialog().show(parentFragmentManager, "pin")
@@ -48,7 +47,6 @@ class SelectorFragment : Fragment(R.layout.fragment_selector) {
                         clave = CLAVE_PUERTA
                     ).show(parentFragmentManager, CLAVE_PUERTA)
                 } else {
-                    // puerta abierta: la Activity enseña 1d (la rejilla en modo elegir)
                     (requireActivity() as SelectorActivity).abrirElegirMesa()
                 }
             }

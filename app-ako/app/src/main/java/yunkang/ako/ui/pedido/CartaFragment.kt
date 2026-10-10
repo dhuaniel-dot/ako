@@ -21,7 +21,6 @@ class CartaFragment : Fragment(R.layout.fragment_carta) {
     // lo que apunte 5b lo tiene que ver 5c
     private val viewModel: PedidoViewModel by activityViewModels { PedidoViewModel.Factory }
 
-    // la fila de categorías; tocar una salta a su sección
     private val adaptadorFila = CategoriaFilaAdapter { categoriaId -> saltarA(categoriaId) }
 
     // [Claude] dónde empieza cada sección en la lista: id de la categoría → posición de su cabecera

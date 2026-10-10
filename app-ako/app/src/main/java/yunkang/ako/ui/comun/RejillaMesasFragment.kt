@@ -30,7 +30,6 @@ class RejillaMesasFragment : Fragment(R.layout.fragment_rejilla_mesas) {
         val binding = FragmentRejillaMesasBinding.bind(view)
         this.binding = binding
 
-        // el título llega en los arguments
         binding.textoTitulo.setText(requireArguments().getInt(ARG_TITULO))
 
         binding.listaMesas.layoutManager = GridLayoutManager(requireContext(), COLUMNAS)
@@ -63,7 +62,6 @@ class RejillaMesasFragment : Fragment(R.layout.fragment_rejilla_mesas) {
         // columnas de la rejilla; lo que no cabe, con scroll (wireframe 01d)
         private const val COLUMNAS = 4
 
-        // la forma de crear una rejilla: se le da el título que enseña su barra
         fun nueva(titulo: Int): RejillaMesasFragment {
             val rejilla = RejillaMesasFragment()
             rejilla.arguments = bundleOf(ARG_TITULO to titulo)

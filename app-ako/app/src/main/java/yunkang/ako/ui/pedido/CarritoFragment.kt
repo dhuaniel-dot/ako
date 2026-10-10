@@ -32,7 +32,6 @@ class CarritoFragment : Fragment(R.layout.fragment_carrito) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentCarritoBinding.bind(view)
 
-        // la mesa en la barra, como en la carta
         binding.textoTitulo.text = getString(R.string.carrito_titulo, viewModel.mesaNumero)
 
         // ← Atrás: vuelve a la carta (con el carrito encima, el guardián está apagado)

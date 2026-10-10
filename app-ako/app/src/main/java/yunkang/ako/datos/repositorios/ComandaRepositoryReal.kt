@@ -71,7 +71,6 @@ class ComandaRepositoryReal(
         // [Claude] toList(): se trabaja sobre una copia por si la pantalla toca el carrito mientras se envía
         val lineas = carrito.lineas.toList().map { linea ->
             Comprobacion.precioValido(linea.producto.precioCentimos)
-            // cada línea, de 1 a 99 unidades
             require(Comprobacion.cantidadValida(linea.cantidad)) { "Cantidad fuera de 1-99: ${linea.cantidad}" }
             LineaComanda(
                 comandaId = comandaId,

@@ -41,7 +41,6 @@ class ConfirmacionDialog : DialogFragment() {
         // dentro del sobre: true si se pulsó el afirmativo; false si el negativo
         const val RESPUESTA_AFIRMATIVA = "afirmativa"
 
-        // los nombres de cada texto dentro de «arguments»
         private const val ARG_TITULO = "titulo"
         private const val ARG_TEXTO = "texto"
         private const val ARG_AFIRMATIVO = "afirmativo"

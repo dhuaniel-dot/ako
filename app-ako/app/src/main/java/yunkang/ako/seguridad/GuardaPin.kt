@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.core.content.edit
 import yunkang.ako.dominio.PinSalHash
 
-// los nombres de las dos casillas del archivo
 private const val CLAVE_SAL = "sal"
 private const val CLAVE_HASH = "hash"
 

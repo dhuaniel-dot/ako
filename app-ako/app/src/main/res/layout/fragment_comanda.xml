@@ -106,7 +106,6 @@
             tools:text="39,50 €" />
     </LinearLayout>
 
-    <!-- «Dar la cuenta» fijo abajo -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/botonDarCuenta"
         style="@style/Widget.Material3.Button"

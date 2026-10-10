@@ -96,7 +96,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/botonResumen" />
 
-    <!-- barra inferior: Cambiar PIN (con borde) y Terminar (acento), uno al lado del otro -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/botonCambiarPin"
         style="@style/Widget.Material3.Button.OutlinedButton"

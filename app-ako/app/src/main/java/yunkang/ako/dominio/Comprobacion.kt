@@ -18,9 +18,7 @@ object Comprobacion {
         }
     }
 
-    // una cantidad vale si está entre 1 y 99
     fun cantidadValida(cantidad: Int): Boolean = cantidad in 1..MAXIMO_POR_PLATO
 
-    // el PIN son exactamente cuatro cifras del 0 al 9
     fun pinValido(pin: String): Boolean = pin.length == LONGITUD_PIN && pin.all { it in '0'..'9' }
 }

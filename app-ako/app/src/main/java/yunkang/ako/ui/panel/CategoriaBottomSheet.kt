@@ -117,7 +117,6 @@ class CategoriaBottomSheet : BottomSheetDialogFragment() {
                         return@launch
                     }
                 }
-                // sin nada que avisar: se guarda directamente
                 guardar(categoria)
             }
         }

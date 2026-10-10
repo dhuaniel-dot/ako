@@ -69,7 +69,6 @@ class PanelActivity : AppCompatActivity() {
         // una lista nueva, se le pasa al encargado; no hace falta recargar en onResume
         viewModel.categoriasConPlatos.observe(this) { cajas -> adaptador.submitList(cajas) }
 
-        // «+» de la barra: hoja 2b para crear una categoría
         binding.botonNuevaCategoria.setOnClickListener {
             if (portero.permite()) {
                 CategoriaBottomSheet.nueva().show(supportFragmentManager, "categoria")
@@ -87,7 +86,6 @@ class PanelActivity : AppCompatActivity() {
         binding.botonAtras.setOnClickListener { finish() }
         binding.botonTerminar.setOnClickListener { finish() }
 
-        // cambiar PIN: abre 1e
         binding.botonCambiarPin.setOnClickListener {
             if (portero.permite()) {
                 CambiarPinDialog().show(supportFragmentManager, "cambiar_pin")

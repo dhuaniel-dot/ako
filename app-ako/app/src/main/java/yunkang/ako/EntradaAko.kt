@@ -39,7 +39,6 @@ class EntradaAko : Application() {
         SeguridadRepository(GuardaPin(this))
     }
 
-    // la galería de fotos
     val galeria: Galeria by lazy {
         Galeria(this)
     }

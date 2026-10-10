@@ -9,6 +9,5 @@ data class PlatoApuntado(
     val producto: Producto,
     var cantidad: Int
 ) {
-    // lo que cuesta la línea, en céntimos: precio × cantidad
     fun importe(): Int = Calculadora.importe(producto.precioCentimos, cantidad)
 }

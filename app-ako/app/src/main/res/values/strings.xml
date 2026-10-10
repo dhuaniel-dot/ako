@@ -48,7 +48,6 @@
     <string name="pin_hint_nuevo">PIN nuevo</string>
     <string name="pin_hint_repite_nuevo">Repite el PIN nuevo</string>
 
-    <!-- 2a · Panel: botón Terminar -->
     <string name="panel_btn_terminar">Terminar</string>
     <!-- 2a · Panel -->
     <string name="panel_titulo">Categorías</string>
@@ -96,7 +95,6 @@
     <string name="plato_hint_categoria">Categoría *</string>
     <string name="plato_hint_descripcion">Descripción</string>
     <string name="plato_seccion_alergenos">ALÉRGENOS</string>
-    <!-- error del campo número al guardar (número de plato sin repetir) -->
     <string name="plato_numero_repetido">Ese número ya lo tiene otro plato</string>
     <!-- ayuda al cambiar el número de un plato ya creado; %1$d = el número anterior -->
     <string name="plato_numero_cambiado">Si alguien tiene apuntado el %1$d, dejará de corresponder</string>
@@ -131,7 +129,6 @@
     <!-- comunes que estrena Pedir (también los usan Cuenta y el recibo) -->
     <string name="comun_mesa">Mesa %1$d</string>
     <string name="comun_total">TOTAL</string>
-    <!-- «Quitar» en cada línea del carrito -->
     <string name="comun_quitar">Quitar</string>
     <!-- «2 × Entrecot»: cantidad × nombre (signo × U+00D7) -->
     <string name="comun_linea" translatable="false">%1$d × %2$s</string>
@@ -204,7 +201,6 @@
     <string name="recibo_titulo">Mesa %1$d · Recibo</string>
     <string name="recibo_entregado">Entregado</string>
     <string name="recibo_opcional">(opcional)</string>
-    <!-- sufijo a la derecha del campo Entregado -->
     <string name="recibo_euro_sufijo" translatable="false">€</string>
     <string name="recibo_cambio">Cambio</string>
     <!-- botón de 6c y también botón afirmativo del aviso de Cobrar -->
