@@ -20,7 +20,7 @@ class CartaRepositoryTest {
         precioCentimos = centimos, imagen = null, activo = true
     )
 
-    // el repositorio de verdad, pero con actores en vez de DAOs
+    // el repositorio de verdad
     private fun crearRepositorio(
         productoDao: ProductoDaoFalso,
         categoriaDao: CategoriaDaoFalso = CategoriaDaoFalso()

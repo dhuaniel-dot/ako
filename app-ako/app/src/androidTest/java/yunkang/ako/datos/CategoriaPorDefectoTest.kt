@@ -26,7 +26,7 @@ class CategoriaPorDefectoTest {
     @Before
     fun prepararBase() {
         val context = ApplicationProvider.getApplicationContext<Context>()
-        // base en memoria con la precarga, como la app: se escribe sola al abrir la base
+        // como la app: la precarga se escribe sola al abrir la base
         baseDeDatos = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java)
             .addCallback(Precarga(context))
             .build()
