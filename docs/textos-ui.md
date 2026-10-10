@@ -39,6 +39,8 @@ Cómo se lee: el orden es el de strings.xml, por pantallas. %1$d es un número e
 | `selector_btn_propietario` | Propietario | Owner | `fragment_selector.xml` |  |
 | `selector_btn_pedir` | Pedir | Order | `fragment_selector.xml` |  |
 | `selector_btn_cuenta` | Cuenta | Bill | `fragment_selector.xml` |  |
+| `selector_modo_oscuro_cd` | Cambiar a modo oscuro | Switch to dark mode | `fragment_selector.xml`, `SelectorFragment.kt` | Extra S15: lo que lee el lector de pantalla en el icono de la luna |
+| `selector_modo_claro_cd` | Cambiar a modo claro | Switch to light mode | `SelectorFragment.kt` | Extra S15: lo que lee el lector de pantalla en el icono del sol |
 
 ## 4. 1b · Crear PIN (barra superior sin Atrás)
 

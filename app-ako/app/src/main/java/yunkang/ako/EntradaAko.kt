@@ -13,6 +13,8 @@ import yunkang.ako.datos.repositorios.ComandaRepositoryReal
 import yunkang.ako.datos.repositorios.SeguridadRepository
 import yunkang.ako.imagenes.Galeria
 import yunkang.ako.seguridad.GuardaPin
+import androidx.appcompat.app.AppCompatDelegate
+import yunkang.ako.ui.comun.Tema
 
 // la entrada a Ako: Android la crea antes que cualquier pantalla y vive mientras la app está abierta
 // guarda lo que es único en toda la app: la base de datos y los repositorios
@@ -45,6 +47,8 @@ class EntradaAko : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        // antes de que se abra ninguna pantalla, si no saldría un momento con el modo del móvil
+        AppCompatDelegate.setDefaultNightMode(Tema.leer(this))
         // al arrancar, abre la base de datos por detrás; si es la primera vez, salta la precarga
         CoroutineScope(Dispatchers.IO).launch {
             baseDeDatos.openHelper.writableDatabase

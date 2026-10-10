@@ -20,6 +20,8 @@
     <string name="selector_btn_propietario">Owner</string>
     <string name="selector_btn_pedir">Order</string>
     <string name="selector_btn_cuenta">Bill</string>
+    <string name="selector_modo_oscuro_cd">Switch to dark mode</string>
+    <string name="selector_modo_claro_cd">Switch to light mode</string>
 
     <!-- 1b · crear PIN -->
     <string name="pin_crear_barra">Create PIN</string>

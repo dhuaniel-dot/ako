@@ -25,6 +25,8 @@
     <string name="selector_btn_propietario">Propietario</string>
     <string name="selector_btn_pedir">Pedir</string>
     <string name="selector_btn_cuenta">Cuenta</string>
+    <string name="selector_modo_oscuro_cd">Cambiar a modo oscuro</string>
+    <string name="selector_modo_claro_cd">Cambiar a modo claro</string>
 
     <!-- 1b · crear PIN (barra superior sin Atrás) -->
     <string name="pin_crear_barra">Crear PIN</string>

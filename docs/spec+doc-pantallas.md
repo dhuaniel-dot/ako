@@ -51,7 +51,7 @@ Cada pantalla se cierra con los mismos apartados: **para qué sirve · nivel de 
 
 | Vista | Cuándo aparece | Qué tiene |
 |---|---|---|
-| **1a Selector** | En cada arranque, salvo el primero | **El nombre de la app arriba y, debajo, tres botones grandes apilados en vertical**: **Propietario**, **Pedir** y **Cuenta** (P101, bloque 6). Grandes porque son el objetivo táctil más fácil de acertar de toda la app y porque los pulsa gente que no ha visto la app nunca |
+| **1a Selector** | En cada arranque, salvo el primero | **El nombre de la app arriba y, debajo, tres botones grandes apilados en vertical**: **Propietario**, **Pedir** y **Cuenta** (P101, bloque 6). Grandes porque son el objetivo táctil más fácil de acertar de toda la app y porque los pulsa gente que no ha visto la app nunca **Los tres botones, rellenos en naranja (10 oct 2026).** **Arriba a la derecha (extra S15, 10 oct 2026):** un icono para cambiar entre modo claro y oscuro (luna en claro, sol en oscuro); se recuerda al volver a abrir y, sin tocarlo, sigue al móvil |
 | **1b Crear PIN** | **Solo en el primer arranque, y es obligatoria** | El PIN se escribe **dos veces**. Aviso visible: *"Si lo olvidas, no se puede recuperar"* |
 | **1c Introducir PIN** | Al entrar en Propietario y al salir de Pedir en modo cliente | Cuatro cifras, ocultas. Botón de cancelar |
 | **1d Elegir mesa y modo** | Al entrar en Pedir | **La rejilla de mesas en modo *elegir*** (`RejillaMesasFragment`). Al elegir mesa, el interruptor **"Se la doy al cliente"** |
