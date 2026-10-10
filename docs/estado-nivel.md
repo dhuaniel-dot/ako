@@ -3,12 +3,12 @@
 
 # Estado del nivel — Ako
 
-**El nivel 1 (29 RF) es lo único obligatorio: el objetivo de la fase es el prototipo.** El nivel 2 (22 RF, 12 incrementos en orden) entra solo cuando el nivel 1 esté terminado, probado y documentado **y la memoria (el doc) terminada**, y solo si queda tiempo; cada incremento entra **entero** (sus tablas, columnas, precarga y función) y después se actualiza el doc (**P115**, Daniel, 30 sep 2026; sustituye a P3). Nada de código «por si acaso» que no use el nivel 1. El nivel 3 (2 RF) solo si sobra. Lo que no entre se declara *diseñado, no implementado* en la memoria.
+**El nivel 1 (29 RF) es lo único obligatorio: el objetivo de la fase es el prototipo.** El nivel 2 (24 RF, 12 incrementos en orden) entra solo cuando el nivel 1 esté terminado, probado y documentado **y la memoria (el doc) terminada**, y solo si queda tiempo; cada incremento entra **entero** (sus tablas, columnas, precarga y función) y después se actualiza el doc (**P115**, Daniel, 30 sep 2026; sustituye a P3). Nada de código «por si acaso» que no use el nivel 1. El nivel 3 (2 RF) solo si sobra. Lo que no entre se declara *diseñado, no implementado* en la memoria.
 
 | Nivel | RF | Estado |
 |---|---|---|
 | 1 | 29 | **29 implementados** (todos; los tres últimos, RF-04, RF-09 y RF-30, en la S12; la pasada final de la S13, 8 oct 2026, los confirmó a los 29 sin cambiar ningún estado) |
-| 2 | 22 | 0 implementados |
+| 2 | 24 | 0 implementados |
 | 3 | 2 | 0 implementados |
 
 ## Nivel 1 — obligatorio (29 RF)
@@ -45,7 +45,7 @@
 | RF-46 | Quitar una línea de la comanda desde Cuenta; aviso al quitar la última (la comanda pasa a ANULADA); los modificadores se van con la línea | 6 · 6b | Camarero (Cuenta) | 1 | implementado | S9 |
 | RF-50 | Precargar al instalar: categoría por defecto, 60 mesas, 14 alérgenos, 1 categoría y 1 plato de ejemplo (sin etiquetas: llegan con el incremento 1, P115) | — | Sistema | 1 | implementado | S2 |
 
-## Nivel 2 — incrementos, en este orden (22 RF)
+## Nivel 2 — incrementos, en este orden (24 RF)
 
 ### Incremento 1 — Etiquetas y chips (4 RF)
 
@@ -115,7 +115,9 @@
 |---|---|---|---|---|---|
 | RF-22 | Gestionar idiomas: crear (nombre + código de dos letras, único, *ES* rechazado), editar, **eliminar**; avisos con contador | 8 · 8a, 8b, 8d | Propietario | diseñado | — |
 | RF-23 | Traducir nombres de platos: dos listas, autoguardado con snackbar, copiar el nombre español, vaciar = pendiente | 8 · 8c | Propietario | diseñado | — |
+| RF-55 | Traducir también los nombres de las categorías (tabla `categoria_traduccion`) | 8 · 8c | Propietario | diseñado (10 oct) | — |
 | RF-34 | Cambiar el idioma de la carta; sin traducción, nombre en español | 5 · 5d | Cliente (Pedir) | diseñado | — |
+| RF-54 | Selector de idioma de toda la app en 1a, al lado del icono de modo (Como el móvil / Español / English) | 1 · 1a | Todos | diseñado (10 oct) | — |
 
 ### Incremento 11 — Foto de la tabla nutricional (1 RF)
 

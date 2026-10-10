@@ -44,6 +44,7 @@
 | RF-21 | Gestionar etiquetas: crear (solo nombre, único), renombrar, **eliminar** con contador de platos | 7 | R5 | 2 · inc. 1 | OE2 |
 | RF-22 | Gestionar idiomas: crear (nombre + código de dos letras, único, *ES* rechazado), editar, **eliminar**; avisos con contador | 8 · 8a, 8b, 8d | R5 | 2 · inc. 10 | OE2 |
 | RF-23 | Traducir nombres de platos: dos listas, autoguardado con snackbar, copiar el nombre español, vaciar = pendiente | 8 · 8c | R12 | 2 · inc. 10 | OE2 |
+| RF-55 | Traducir también los nombres de las categorías, como los de los platos (tabla `categoria_traduccion`); sin traducción, nombre en español | 8 · 8c | R12 | 2 · inc. 10 | OE2 |
 | **Cliente (Pedir)** | | | | | |
 | RF-24 | Elegir rol en el selector: Propietario, Pedir, Cuenta | 1 · 1a | — | 1 | OE3 |
 | RF-25 | Puerta de Pedir: no entrar sin ningún plato visible, con dos mensajes según el motivo | 1 | R15 | 1 | OE3 |
@@ -56,6 +57,7 @@
 | RF-32 | Ver la información nutricional en desplegable (campos si los hay; si no, la foto) | 5 · 5b | — | 2 · inc. 5 | OE2 |
 | RF-33 | Elegir modificadores en la ficha; los de añadir con cantidad 1-9 | 5 · 5b | — | 2 · inc. 4 | OE2 |
 | RF-34 | Cambiar el idioma de la carta; sin traducción, nombre en español | 5 · 5d | R12 | 2 · inc. 10 | OE2 |
+| RF-54 | Selector de idioma de toda la app en 1a, al lado del icono de modo claro/oscuro: «Como el móvil», «Español», «English» (`AppCompatDelegate.setApplicationLocales`, guía oficial de idiomas por app); al cambiar a inglés, la interfaz y los platos y categorías traducidos | 1 · 1a | R12 | 2 · inc. 10 | OE2 |
 | RF-35 | Activar el Modo Agrandar (magnificación) | 5 · 5a | — | 2 · inc. 3 | OE2 |
 | RF-36 | Añadir al carrito con cantidad 1-99; +/−, quitar; líneas idénticas se suman | 5 · 5c | R4 | 1 | OE3 |
 | RF-37 | Enviar con confirmación (mesa y total): crea la comanda o añade líneas; congela nombre y precio | 5 · 5c | R1, R2, R4, R14 | 1 | OE3 |
@@ -76,11 +78,11 @@
 | **Sistema** | | | | | |
 | RF-50 | Precargar al instalar: categoría por defecto, 60 mesas, 14 alérgenos, 3 etiquetas, 1 categoría y 1 plato de ejemplo | — | R16 | 1 | OE3 |
 
-**Recuento: 53 RF. Nivel 1: 29 · nivel 2: 22 · nivel 3: 2.** *(RF-53, el agotado temporal del incremento 12, entra el 17 de septiembre por la noche con P153.)*
+**Recuento: 55 RF. Nivel 1: 29 · nivel 2: 24 · nivel 3: 2.** *(RF-54 y RF-55, selector de idioma en 1a y categorías traducidas, entran en el incremento 10 el 10 de octubre de 2026, pedidos por Daniel en la S15.)* *(RF-53, el agotado temporal del incremento 12, entra el 17 de septiembre por la noche con P153.)*
 
 - **Nivel 1 (29):** RF-01 a RF-06, RF-08 a RF-12, RF-20, RF-24 a RF-26, RF-28 a RF-30, RF-36 a RF-38, RF-40 a RF-46, RF-50.
 - **Nivel 3 (2):** RF-39 y RF-49.
-- **Nivel 2 (22):** el resto. *(Decía "21": resto de antes de RF-53; corregido en la 5b, 24 sep.)*
+- **Nivel 2 (24):** el resto. *(Decía "21": resto de antes de RF-53; corregido en la 5b, 24 sep.)*
 
 La línea *"Nivel 1: 30 · nivel 2: 17 · nivel 3: 3"* que llevaba este documento desde el bloque 2 estaba mal contada (eran 28 · 20 · 2 antes de los cambios del bloque 8). Queda corregida aquí.
 
