@@ -134,7 +134,6 @@ class PlatoActivity : AppCompatActivity() {
                         return@launch
                     }
                 }
-                // [Claude] sin mesas no hay nada que avisar: se guarda directamente
                 guardar()
             }
         }
@@ -265,14 +264,12 @@ class PlatoActivity : AppCompatActivity() {
         )
     }
 
-    // [Claude] el Propietario ha apagado «En la carta» de un plato que estaba en la carta?
     // al crear no hay nada que eliminar
     private fun seVaAEliminar(): Boolean {
         val antes = viewModel.datos.value?.plato ?: return false
         return antes.activo && !binding.interruptorEnLaCarta.isChecked
     }
 
-    // [Claude] lo ha encendido en un plato eliminado?
     private fun seVaARecuperar(): Boolean {
         val antes = viewModel.datos.value?.plato ?: return false
         return !antes.activo && binding.interruptorEnLaCarta.isChecked
@@ -435,11 +432,9 @@ class PlatoActivity : AppCompatActivity() {
         const val EXTRA_PRODUCTO_ID = "producto_id"
         const val EXTRA_CATEGORIA_ID = "categoria_id"
 
-        // [Claude] los nombres de los sobres de los dos avisos 3e (cada pregunta, su sobre)
         const val CLAVE_3E_MOVER = "3e_mover"
         const val CLAVE_3E_RECUPERAR = "3e_recuperar"
 
-        // [Claude] el sobre de «Salir sin guardar?»
         const val CLAVE_SALIR = "salir"
     }
 }

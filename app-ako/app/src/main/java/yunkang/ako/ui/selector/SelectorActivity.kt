@@ -78,7 +78,6 @@ class SelectorActivity : AppCompatActivity(), ComprobadorPin {
         }
     }
 
-    // [Claude] la rejilla, si es lo que se ve ahora en el contenedor; si no, vacío
     private fun rejillaVisible(): RejillaMesasFragment? =
         supportFragmentManager.findFragmentById(R.id.contenedor) as? RejillaMesasFragment
 

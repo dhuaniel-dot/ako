@@ -44,7 +44,6 @@ class ResumenListaFragment : Fragment(R.layout.fragment_resumen_lista) {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
-        // la lista, una fila debajo de otra, con una raya entre filas como en el dibujo [Claude]
         binding.listaComandas.layoutManager = LinearLayoutManager(requireContext())
         binding.listaComandas.adapter = adaptador
         binding.listaComandas.addItemDecoration(

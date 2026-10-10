@@ -24,7 +24,6 @@ class Carrito(val mesaId: Long) {
         return nuevaCantidad <= maximo
     }
 
-    // [Claude] si la cantidad no está entre 1 y 99, no hace nada
     fun cambiarCantidad(productoId: Long, cantidad: Int) {
         if (!Comprobacion.cantidadValida(cantidad)) return
         val linea = lineas.find { it.producto.id == productoId } ?: return

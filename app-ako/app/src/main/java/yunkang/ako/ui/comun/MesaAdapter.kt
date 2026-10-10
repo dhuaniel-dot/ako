@@ -11,7 +11,6 @@ import yunkang.ako.databinding.ItemMesaBinding
 import yunkang.ako.dominio.modelos.MesaEstado
 
 // las mesas de la rejilla (1d elegir y 6a gestionar): convierte cada MesaEstado en una casilla
-// sencillo, como FilaPlatoAdapter [Claude]
 class MesaAdapter(
     private val alTocar: (MesaEstado) -> Unit
 ) : RecyclerView.Adapter<MesaAdapter.MesaViewHolder>() {

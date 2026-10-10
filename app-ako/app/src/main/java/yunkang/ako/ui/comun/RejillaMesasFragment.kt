@@ -36,7 +36,6 @@ class RejillaMesasFragment : Fragment(R.layout.fragment_rejilla_mesas) {
         binding.listaMesas.layoutManager = GridLayoutManager(requireContext(), COLUMNAS)
         binding.listaMesas.adapter = adaptador
 
-        // ← Atrás hace lo mismo que el Atrás del sistema [Claude]
         binding.botonAtras.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
@@ -55,7 +54,6 @@ class RejillaMesasFragment : Fragment(R.layout.fragment_rejilla_mesas) {
     }
 
     companion object {
-        // [Claude] el nombre del sobre y de lo que lleva dentro
         const val CLAVE_MESA_TOCADA = "mesa_tocada"
         const val MESA_ID = "mesa_id"
         const val MESA_NUMERO = "mesa_numero"

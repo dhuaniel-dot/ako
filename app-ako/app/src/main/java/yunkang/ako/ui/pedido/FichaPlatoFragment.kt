@@ -28,7 +28,6 @@ class FichaPlatoFragment : Fragment(R.layout.fragment_ficha_plato) {
     // [Claude] la cantidad elegida (de 1 a 99); se guarda si Android rehace la pantalla
     private var cantidad = 1
 
-    // [Claude] el plato de esta ficha, para el importe del botón y para Añadir; vacío hasta que llega
     private var plato: Producto? = null
 
     // [Claude] está abierto el desplegable de alérgenos? plegado al abrir la ficha; se guarda como la cantidad
@@ -137,7 +136,6 @@ class FichaPlatoFragment : Fragment(R.layout.fragment_ficha_plato) {
     }
 
     companion object {
-        // [Claude] los nombres del id del plato dentro de los arguments y de lo que se guarda
         private const val ARG_PRODUCTO_ID = "producto_id"
         private const val CLAVE_CANTIDAD = "cantidad"
         private const val CLAVE_ALERGENOS_ABIERTOS = "alergenos_abiertos"

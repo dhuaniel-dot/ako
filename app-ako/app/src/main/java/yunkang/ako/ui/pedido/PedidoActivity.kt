@@ -106,11 +106,9 @@ class PedidoActivity : AppCompatActivity(), ComprobadorPin {
     override suspend fun comprobarPin(pin: String): Boolean = viewModel.comprobarPin(pin)
 
     companion object {
-        // [Claude] los nombres de lo que va grapado a la nota que abre Pedir
         const val EXTRA_MESA_ID = "mesa_id"
         const val EXTRA_MESA_NUMERO = "mesa_numero"
 
-        // [Claude] el nombre de la caja «Salir sin enviar?» y de su sobre
         private const val CLAVE_SALIR = "salir_sin_enviar"
     }
 }

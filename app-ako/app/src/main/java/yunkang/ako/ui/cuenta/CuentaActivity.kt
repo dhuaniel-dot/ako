@@ -146,7 +146,6 @@ class CuentaActivity : AppCompatActivity() {
         }
     }
 
-    // [Claude] las líneas y el total de la libreta, al recibo, si es lo que se ve ahora
     private fun darDatosAlRecibo() {
         reciboVisible()?.mostrar(viewModel.lineas.value ?: emptyList(), viewModel.total.value ?: 0)
     }

@@ -7,7 +7,6 @@ import yunkang.ako.dominio.modelos.PlatoConMesas
 
 // los avisos de las mesas afectadas (ninguna línea se quita): montan el texto y abren la caja de siempre (ConfirmacionDialog)
 // 2e al eliminar una categoría (Panel) y 3d al eliminar un plato (formulario). vive en comun porque lo usan dos pantallas
-// [Claude] es un object (no guarda nada): solo sabe escribir los avisos
 object MesasAfectadasDialog {
 
     // [Claude] el nombre del sobre que deja la caja (RESPUESTA_AFIRMATIVA true = Eliminar, false = Cancelar)

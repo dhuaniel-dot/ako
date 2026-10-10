@@ -25,7 +25,6 @@ class ComandaFragment : Fragment(R.layout.fragment_comanda) {
     // y el adaptador esconde esos botones. solo sale Quitar
     private val adaptador = LineaAdapter(alMenos = null, alMas = null, alQuitar = { linea -> pulsarQuitar(linea) })
 
-    // [Claude] el marco de Cuenta: su portero y la vuelta a la rejilla
     private val cuenta: CuentaActivity
         get() = requireActivity() as CuentaActivity
 
@@ -127,7 +126,6 @@ class ComandaFragment : Fragment(R.layout.fragment_comanda) {
     }
 
     companion object {
-        // [Claude] los nombres de las dos cajas de 6b y de sus sobres
         private const val CLAVE_ANULAR = "anular"
         private const val CLAVE_ULTIMA_LINEA = "ultima_linea"
     }

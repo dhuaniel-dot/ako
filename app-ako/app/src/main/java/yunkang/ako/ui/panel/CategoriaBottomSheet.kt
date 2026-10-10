@@ -155,14 +155,12 @@ class CategoriaBottomSheet : BottomSheetDialogFragment() {
         binding.botonGuardar.isEnabled = hayNombre && (esNueva || categoria != null)
     }
 
-    // [Claude] el Propietario ha apagado «En la carta» de una categoría que estaba en la carta?
-    // (la de por defecto nunca: su interruptor ni se ve)
+    // la de por defecto nunca: su interruptor ni se ve
     private fun seVaAEliminar(categoria: Categoria): Boolean {
         val binding = binding ?: return false
         return !categoria.esPorDefecto && categoria.activo && !binding.interruptorEnLaCarta.isChecked
     }
 
-    // [Claude] lo ha encendido en una categoría eliminada?
     private fun seVaARecuperar(categoria: Categoria): Boolean {
         val binding = binding ?: return false
         return !categoria.esPorDefecto && !categoria.activo && binding.interruptorEnLaCarta.isChecked
@@ -231,7 +229,6 @@ class CategoriaBottomSheet : BottomSheetDialogFragment() {
     companion object {
         private const val ARG_ID = "id"
 
-        // [Claude] el nombre de la foto elegida dentro del estado guardado de la hoja
         private const val CLAVE_FOTO = "foto_elegida"
 
         // sin id (0) = crear; con el id de una categoría = editarla

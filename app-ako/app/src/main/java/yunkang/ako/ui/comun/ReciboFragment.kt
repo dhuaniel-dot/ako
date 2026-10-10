@@ -107,12 +107,10 @@ class ReciboFragment : Fragment(R.layout.fragment_recibo) {
     }
 
     companion object {
-        // [Claude] los sobres que salen del recibo hacia quien lo aloja, y lo que lleva dentro el de lo entregado
         const val CLAVE_ENTREGADO = "entregado"
         const val ENTREGADO_CENTIMOS = "entregado_centimos"
         const val CLAVE_COBRAR = "cobrar"
 
-        // [Claude] los nombres de lo que va en los arguments
         private const val ARG_MESA_NUMERO = "mesa_numero"
         private const val ARG_SOLO_LECTURA = "solo_lectura"
 

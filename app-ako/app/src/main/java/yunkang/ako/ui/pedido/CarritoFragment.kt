@@ -88,7 +88,6 @@ class CarritoFragment : Fragment(R.layout.fragment_carrito) {
     }
 
     companion object {
-        // [Claude] el nombre de la caja de Enviar y de su sobre
         private const val CLAVE_ENVIAR = "enviar"
     }
 }

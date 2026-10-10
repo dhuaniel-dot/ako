@@ -67,7 +67,6 @@ class PinDialog : DialogFragment() {
     }
 
     companion object {
-        // [Claude] el nombre del sobre que deja el diálogo cuando el PIN es correcto
         const val CLAVE_RESULTADO = "pin_correcto"
     }
 }

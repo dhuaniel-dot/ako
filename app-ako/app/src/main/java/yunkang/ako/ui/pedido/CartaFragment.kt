@@ -159,7 +159,6 @@ class CartaFragment : Fragment(R.layout.fragment_carta) {
     }
 
     companion object {
-        // [Claude] el nombre con el que se guarda en la caja fuerte
         private const val CLAVE_CATEGORIA_ACTIVA = "categoria_activa"
     }
 }

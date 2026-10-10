@@ -50,7 +50,6 @@ class PlatoViewModel(
     // (si Android mató la app, la libreta es nueva y vuelve a leer: es lo que toca)
     private var yaCargado = false
 
-    // [Claude] la categoría elegida, por su id (en la caja fuerte)
     var categoriaElegidaId: Long?
         get() = cajaFuerte[CLAVE_CATEGORIA]
         set(valor) { cajaFuerte[CLAVE_CATEGORIA] = valor }
@@ -88,7 +87,6 @@ class PlatoViewModel(
         cajaFuerte[CLAVE_FOTO] = uri.toString()
     }
 
-    // [Claude] se olvida la foto elegida (cuando no se ha podido usar): el hueco vuelve a la de antes
     fun olvidarFoto() {
         cajaFuerte[CLAVE_FOTO] = null
     }
@@ -140,7 +138,6 @@ class PlatoViewModel(
         return cartaRepository.platosDe(categoriaId).count { it.activo && it.id != idDelPlato }
     }
 
-    // [Claude] la categoría vuelve con todos sus platos
     suspend fun recuperarCategoria(id: Long) = cartaRepository.recuperarCategoria(id)
 
     // primer paso al eliminar: qué mesas tienen este plato en una comanda pendiente, para avisar. solo mira, no toca nada
@@ -156,7 +153,6 @@ class PlatoViewModel(
         cartaRepository.eliminarPlato(plato.id)
     }
 
-    // [Claude] recuperar = vuelve a la carta con todo lo que tenía
     suspend fun recuperar() {
         val plato = datos.value?.plato ?: return
         cartaRepository.recuperarPlato(plato.id)
@@ -171,7 +167,6 @@ class PlatoViewModel(
             }
         }
 
-        // [Claude] las etiquetas de cada cosa dentro de la caja fuerte
         private const val CLAVE_CATEGORIA = "categoria_elegida"
         private const val CLAVE_RELLENO = "formulario_relleno"
         private const val CLAVE_CAMBIOS = "hay_cambios"

@@ -61,7 +61,6 @@ class ResumenIngresosActivity : AppCompatActivity() {
         supportFragmentManager.executePendingTransactions()
     }
 
-    // [Claude] las líneas y el total de la comanda que se mira, al recibo, si es lo que se ve ahora
     private fun darDatosAlRecibo() {
         val comanda = viewModel.comandaRecibo ?: return
         reciboVisible()?.mostrar(viewModel.lineasRecibo.value ?: emptyList(), comanda.totalCentimos)

@@ -20,7 +20,6 @@ import yunkang.ako.ui.comun.FilaPlatoAdapter
 class CategoriaAdapter(
     private val estaPlegada: (Long) -> Boolean,
     private val alPlegar: (Categoria) -> Unit,
-    // [Claude] los tres timbres de la caja: lo que pasa al tocarlos lo decide el Panel
     private val alEditar: (Categoria) -> Unit,
     private val alAnadirPlato: (Categoria) -> Unit,
     private val alTocarPlato: (Producto) -> Unit

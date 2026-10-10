@@ -13,7 +13,6 @@ import java.io.File
 // adaptador sencillo con notifyDataSetChanged: la lista es corta y el atenuado depende también
 // de la categoría, que DiffUtil no vería (Flan no cambia cuando se elimina Postres)
 class FilaPlatoAdapter(
-    // [Claude] qué hacer al tocar una fila: lo decide quien usa el adaptador, no el adaptador
     private val alTocar: (Producto) -> Unit
 ) : RecyclerView.Adapter<FilaPlatoAdapter.FilaViewHolder>() {
 

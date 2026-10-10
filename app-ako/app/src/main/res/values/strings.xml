@@ -174,7 +174,6 @@
     <string name="ficha_cantidad">Cantidad</string>
     <!-- guion largo U+2014; %1$s = importe ya con su € -->
     <string name="ficha_btn_anadir">Añadir — %1$s</string>
-    <!-- [Claude] aviso al topar en 99 al añadir -->
     <string name="carrito_tope_99">Máximo 99 unidades por plato</string>
 
     <!-- 5c · carrito. el botón sirve también de afirmativo en la confirmación -->
@@ -184,7 +183,6 @@
     <!-- 5c · confirmación de Enviar · comun_cancelar / carrito_btn_enviar. %2$s = total ya con su € -->
     <string name="enviar_titulo">¿Enviar el pedido?</string>
     <string name="enviar_cuerpo">Mesa %1$d · %2$s</string>
-    <!-- [Claude] aviso tras enviar -->
     <string name="enviar_hecho">Pedido enviado a la mesa %1$d</string>
 
     <!-- salir con platos sin enviar, antes del PIN · comun_cancelar / carta_btn_salir -->
