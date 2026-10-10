@@ -18,7 +18,7 @@ interface ComandaRepository {
     // que llevan algún plato de esta categoría
     suspend fun mesasConCategoriaPendiente(categoriaId: Long): List<Int>
 
-    // las 60 mesas, cada una libre u ocupada (con comanda pendiente) con su total (rejilla 1d y 6a); al día solas
+    // todas las mesas, cada una libre u ocupada (con comanda pendiente) con su total (rejilla 1d y 6a); al día solas
     fun mesasConEstado(): Flow<List<MesaEstado>>
 
     // las líneas de una comanda, en el orden en que se pidieron (6b, 6c y 2g)

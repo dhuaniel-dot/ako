@@ -6,7 +6,7 @@ import yunkang.ako.dominio.Comprobacion
 import yunkang.ako.seguridad.GuardaPin
 
 // la puerta única al PIN para las pantallas: nadie más toca GuardaPin
-// recibe GuardaPin por constructor. picar el PIN tarda: se hace fuera del hilo principal
+// picar el PIN tarda: se hace fuera del hilo principal
 class SeguridadRepository(private val guardaPin: GuardaPin) {
 
     // 1a/1b: ya hay PIN (se pide) o es la primera vez (se crea)?

@@ -18,24 +18,22 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 
 // la versión de verdad del puesto de comandas: pregunta a la base de datos
-// recibe sus herramientas por constructor; la base de datos, para la transacción de Enviar
+// la base de datos, para la transacción de Enviar
 class ComandaRepositoryReal(
     private val baseDeDatos: AppDatabase,
     private val mesaDao: MesaDao,
     private val comandaDao: ComandaDao
 ) : ComandaRepository {
 
-    // mesas que salen en el aviso al eliminar un plato (solo se miran, no se tocan)
+    // solo se miran, no se tocan
     override suspend fun mesasConPlatoPendiente(productoId: Long): List<Int> =
         comandaDao.mesasConProductoPendiente(productoId)
 
-    // mesas que salen en el aviso al eliminar una categoría (solo se miran, no se tocan)
     override suspend fun mesasConCategoriaPendiente(categoriaId: Long): List<Int> =
         comandaDao.mesasConCategoriaPendiente(categoriaId)
 
     // ninguna columna dice "ocupada"; ocupada = tiene comanda pendiente
-    // la base de datos da solo las ocupadas, y aquí se pegan a las 60 mesas
-    // combine junta los dos grifos; si cambia cualquiera de los dos, se vuelve a montar la rejilla
+    // la base de datos da solo las ocupadas, y aquí se pegan a todas las mesas
     override fun mesasConEstado(): Flow<List<MesaEstado>> =
         combine(mesaDao.todasObservadas(), comandaDao.pendientesConTotal()) { mesas, ocupadas ->
             mesas.map { mesa ->
@@ -44,7 +42,6 @@ class ComandaRepositoryReal(
             }
         }
 
-    // las líneas de una comanda, en el orden en que se pidieron (6b, 6c y 2g)
     override suspend fun lineasDe(comandaId: Long): List<LineaComanda> =
         comandaDao.lineasDe(comandaId)
 
@@ -89,7 +86,6 @@ class ComandaRepositoryReal(
         comandaId
     }
 
-    // quita una línea de una comanda abierta; si era la última, la comanda queda anulada (true)
     override suspend fun quitarLinea(lineaId: Long): Boolean = baseDeDatos.withTransaction {
         // si la línea ya no existe (doble toque en Quitar), no se hace nada y no se anula
         val linea = comandaDao.lineaPorId(lineaId) ?: return@withTransaction false
@@ -115,7 +111,6 @@ class ComandaRepositoryReal(
 
     override suspend fun cobrar(comandaId: Long) = cerrar(comandaId, EstadoComanda.PAGADA)
 
-    // las comandas cobradas en un día, cada una con su total calculado
     override suspend fun resumenDelDia(dia: LocalDate): ResumenIngresos {
         // el día va de las 0:00:00,000 a las 23:59:59,999 en la hora del móvil
         val zona = ZoneId.systemDefault()

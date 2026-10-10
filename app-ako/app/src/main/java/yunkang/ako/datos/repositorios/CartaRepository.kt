@@ -79,7 +79,6 @@ class CartaRepository(
         val afectados = mutableListOf<PlatoConMesas>()
         for (plato in platosDe(categoriaId)) {
             if (!plato.activo) continue
-            // A las comandas se pregunta por el puesto (ComandaRepository), nunca por su DAO
             val mesas = comandaRepository.mesasConPlatoPendiente(plato.id)
             if (mesas.isNotEmpty()) afectados.add(PlatoConMesas(plato.nombre, mesas))
         }
