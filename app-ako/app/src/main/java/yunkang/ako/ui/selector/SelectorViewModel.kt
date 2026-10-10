@@ -22,7 +22,7 @@ class SelectorViewModel(
     comandaRepository: ComandaRepository
 ) : ViewModel() {
 
-    // las 60 mesas, libres u ocupadas con su total: Room las manda solas cada vez que cambian (Flow → LiveData); nadie las carga a mano
+    // todas las mesas, libres u ocupadas con su total: Room las manda solas cada vez que cambian (Flow → LiveData); nadie las carga a mano
     val mesas: LiveData<List<MesaEstado>> = comandaRepository.mesasConEstado().asLiveData()
 
     // hay ya un PIN guardado? leerlo es inmediato, por eso no es suspend
