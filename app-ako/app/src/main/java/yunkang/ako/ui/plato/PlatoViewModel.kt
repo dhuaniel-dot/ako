@@ -110,11 +110,9 @@ class PlatoViewModel(
         }
     }
 
-    // guarda el plato con los alérgenos marcados. las reglas (ningún precio negativo, número sin repetir y la categoría eliminada)
-    // las comprueba el repositorio en ese orden; la pantalla solo reacciona a la respuesta
+    // guarda el plato con sus alérgenos. las reglas las comprueba el repositorio; la pantalla solo reacciona a la respuesta
     // aunqueCategoriaEliminada = true es la tercera salida de 3e: el Propietario dijo «No» a las dos preguntas
-    // si se eligió una foto, se copia ahora y el plato apunta a la copia. si la foto no se puede
-    // leer, Galeria lanza el error, no se guarda nada y la pantalla avisa
+    // si se eligió una foto, se copia ahora (como en 2b)
     suspend fun guardar(p: Producto, aunqueCategoriaEliminada: Boolean = false): ResultadoGuardado {
         val fotoAntes = datos.value?.plato?.imagen
         val elegida = fotoElegida.value
@@ -152,8 +150,7 @@ class PlatoViewModel(
         return cartaRepository.mesasAfectadasPorPlato(plato.id)
     }
 
-    // eliminar = activo false; la fila sigue y ninguna línea de comanda se toca
-    // la foto tampoco se toca: el plato se puede recuperar entero
+    // la foto no se toca: el plato se puede recuperar entero
     suspend fun eliminar() {
         val plato = datos.value?.plato ?: return
         cartaRepository.eliminarPlato(plato.id)

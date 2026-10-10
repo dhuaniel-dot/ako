@@ -43,8 +43,7 @@ class PlatoActivity : AppCompatActivity() {
 
     // el selector de fotos del sistema: sin permisos, la app solo recibe la foto que se toca
     // la foto elegida cuenta como cambio sin guardar
-    // [Claude] se registra al crear la pantalla y no dentro del clic: así Android puede devolver la foto
-    // aunque recree la pantalla mientras el selector está abierto
+    // [Claude] se registra al crear la pantalla, no en el clic: así la foto vuelve aunque Android recree la pantalla
     private val selectorFotos = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         // null = se canceló el selector: no cambia nada
         if (uri != null) {
@@ -95,8 +94,8 @@ class PlatoActivity : AppCompatActivity() {
                 viewModel.formularioRelleno = true
             }
 
-            // la categoría elegida vive en la libreta y se pinta cada vez (el campo no guarda su texto:
-            // saveEnabled="false"). false = «no filtres la lista por lo escrito»: si no, enseñaría solo esa
+            // la categoría elegida vive en la libreta y se pinta cada vez (el campo tiene saveEnabled="false")
+            // false = no filtrar la lista por lo escrito; si no, enseñaría solo esa
             val elegida = datos.categorias.find { it.id == viewModel.categoriaElegidaId }
             if (elegida != null) {
                 binding.textoCategoria.setText(elegida.nombre, false)
@@ -140,8 +139,8 @@ class PlatoActivity : AppCompatActivity() {
             }
         }
 
-        // el sobre del aviso 3d: se abre y se escucha en el mismo gestor (supportFragmentManager),
-        // y se escucha desde aquí, onCreate, para que la respuesta encuentre a alguien si Android recrea la pantalla
+        // el sobre del aviso 3d: mismo gestor (supportFragmentManager) y escuchado desde onCreate,
+        // para que la respuesta llegue aunque Android recree la pantalla
         supportFragmentManager.setFragmentResultListener(MesasAfectadasDialog.CLAVE_PLATO, this) { _, sobre ->
             if (sobre.getBoolean(ConfirmacionDialog.RESPUESTA_AFIRMATIVA)) {
                 // eliminar: ahora sí se guarda y se elimina
@@ -200,8 +199,7 @@ class PlatoActivity : AppCompatActivity() {
         binding.botonAtras.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
     }
 
-    // [Claude] los timbres de los campos se ponen aquí y no en onCreate: onPostCreate llega después de que
-    // Android devuelva a los campos lo que tenían (si recrea la pantalla), y eso no debe contar como cambio
+    // [Claude] los timbres de los campos van aquí y no en onCreate: si no, lo que Android devuelve a los campos al recrear contaría como cambio
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
 
@@ -232,9 +230,7 @@ class PlatoActivity : AppCompatActivity() {
         guardianAtras.isEnabled = true
     }
 
-    // lo que enseña el hueco: la foto elegida y aún sin guardar; si no hay, la que ya tenía el plato;
-    // si tampoco, null, y Glide pone el «?» (error). Glide entiende las dos direcciones como texto:
-    // «content://…» (la que prestó el selector) y «/data/…/fotos/….jpg» (nuestro archivo)
+    // lo que enseña el hueco: la foto elegida y aún sin guardar; si no, la que ya tenía el plato; si tampoco, el «?»
     private fun pintarFoto() {
         val foto = viewModel.fotoElegida.value ?: viewModel.datos.value?.plato?.imagen
         pintarFoto(binding.imagenPlato, foto, binding.textoNombre.text.toString(), grande = true)
@@ -251,10 +247,8 @@ class PlatoActivity : AppCompatActivity() {
         ).show(supportFragmentManager, CLAVE_SALIR)
     }
 
-    // [Claude] convierte lo que hay en pantalla en un Producto listo para guardar
-    // solo se llama con Guardar encendido: los cuatro obligatorios ya se pueden leer
-    // un plato nuevo va con id 0: Room le dará uno nuevo. la foto es la de antes;
-    // si se eligió otra, la pone la libreta al guardar
+    // [Claude] lo que hay en pantalla → un Producto listo para guardar. solo con Guardar encendido (los obligatorios ya se leen)
+    // nuevo: id 0 (Room le da uno). la foto es la de antes; si se eligió otra, la pone la libreta
     private fun leerFormulario(): Producto {
         val antes = viewModel.datos.value?.plato
         val descripcion = binding.textoDescripcion.text.toString().trim()
@@ -286,7 +280,6 @@ class PlatoActivity : AppCompatActivity() {
 
     // guarda y, si el interruptor cambió, elimina o recupera (como la hoja 2b)
     // aunqueCategoriaEliminada solo lo pone el «No» del segundo aviso 3e
-    // eliminar: activo = false (nada se borra); ninguna línea se toca
     private suspend fun guardar(aunqueCategoriaEliminada: Boolean = false) {
         // si la foto elegida no se puede leer, la libreta lanza el error y no se guarda nada
         // [Claude] SecurityException: el préstamo de la foto ya no vale
@@ -414,8 +407,7 @@ class PlatoActivity : AppCompatActivity() {
         }
     }
 
-    // [Claude] guardar se enciende solo con los cuatro obligatorios (ficha 3: «todo campo es opcional
-    // salvo que una regla o la base de datos lo exijan»). descripción y alérgenos no cuentan
+    // [Claude] guardar se enciende solo con los cuatro obligatorios (ficha 3); descripción y alérgenos no cuentan
     // en el número, «07» se lee como 7
     private fun actualizarGuardar() {
         val nombreBien = binding.textoNombre.text.toString().isNotBlank()
