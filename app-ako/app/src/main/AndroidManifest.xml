@@ -18,7 +18,8 @@
         <activity
             android:name=".ui.selector.SelectorActivity"
             android:exported="true"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            tools:ignore="DiscouragedApi,LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -30,32 +31,37 @@
         <activity
             android:name=".ui.panel.PanelActivity"
             android:exported="false"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            tools:ignore="DiscouragedApi,LockedOrientationActivity" />
 
         <!-- pantalla 5 (Pedir: carta, ficha y carrito). solo en vertical -->
         <activity
             android:name=".ui.pedido.PedidoActivity"
             android:exported="false"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            tools:ignore="DiscouragedApi,LockedOrientationActivity" />
 
         <!-- pantalla 6 (Cuenta: rejilla, comanda y recibo). sin PIN. solo en vertical -->
         <activity
             android:name=".ui.cuenta.CuentaActivity"
             android:exported="false"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            tools:ignore="DiscouragedApi,LockedOrientationActivity" />
 
         <!-- pantalla 2g (Resumen de ingresos). solo desde el Panel, detrás del PIN: sin intent-filter
              y exported="false", ninguna otra app la puede abrir. solo en vertical -->
         <activity
             android:name=".ui.resumen.ResumenIngresosActivity"
             android:exported="false"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            tools:ignore="DiscouragedApi,LockedOrientationActivity" />
 
         <!-- pantalla 3 (formulario del plato). solo en vertical -->
         <activity
             android:name=".ui.plato.PlatoActivity"
             android:exported="false"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            tools:ignore="DiscouragedApi,LockedOrientationActivity" />
     </application>
 
 </manifest>
