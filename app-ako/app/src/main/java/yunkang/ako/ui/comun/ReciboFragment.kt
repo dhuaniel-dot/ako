@@ -112,11 +112,11 @@ class ReciboFragment : Fragment(R.layout.fragment_recibo) {
         const val ENTREGADO_CENTIMOS = "entregado_centimos"
         const val CLAVE_COBRAR = "cobrar"
 
-        // [Claude] los nombres de lo que va en los arguments (solo se usan en este archivo)
+        // [Claude] los nombres de lo que va en los arguments
         private const val ARG_MESA_NUMERO = "mesa_numero"
         private const val ARG_SOLO_LECTURA = "solo_lectura"
 
-        // la forma de crear un recibo: los arguments se conservan si Android rehace el Fragment
+        // la forma de crear un recibo
         fun nuevo(mesaNumero: Int, soloLectura: Boolean): ReciboFragment {
             val recibo = ReciboFragment()
             recibo.arguments = bundleOf(ARG_MESA_NUMERO to mesaNumero, ARG_SOLO_LECTURA to soloLectura)

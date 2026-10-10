@@ -10,10 +10,9 @@ import yunkang.ako.R
 import yunkang.ako.databinding.ItemMesaBinding
 import yunkang.ako.dominio.modelos.MesaEstado
 
-// las 60 mesas de la rejilla (1d elegir y 6a gestionar): convierte cada MesaEstado en una casilla
-// adaptador sencillo con notifyDataSetChanged, como FilaPlatoAdapter [Claude]
+// las mesas de la rejilla (1d elegir y 6a gestionar): convierte cada MesaEstado en una casilla
+// sencillo, como FilaPlatoAdapter [Claude]
 class MesaAdapter(
-    // qué hacer al tocar una mesa: lo decide quien usa el adaptador, no el adaptador
     private val alTocar: (MesaEstado) -> Unit
 ) : RecyclerView.Adapter<MesaAdapter.MesaViewHolder>() {
 
@@ -47,7 +46,7 @@ class MesaAdapter(
 
         holder.binding.textoNumero.text = contexto.getString(R.string.comun_numero, estado.mesa.numero)
 
-        // ocupada = tiene comanda pendiente. no hay ninguna columna «ocupada»: lo dice el comandaId
+        // ocupada = tiene comanda (lo dice el comandaId)
         if (estado.comandaId != null) {
             // roja (también el borde, para que no se vea), letras blancas y el total (lo suma la base de datos, nadie lo guarda)
             val total = contexto.getString(R.string.comun_precio, Formato.precio(estado.totalCentimos ?: 0))

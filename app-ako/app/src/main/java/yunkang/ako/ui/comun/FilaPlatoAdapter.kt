@@ -59,8 +59,7 @@ class FilaPlatoAdapter(
     }
 
     companion object {
-        // lo eliminado se ve apagado al 80 %: se nota, pero la palabra «Eliminado» se sigue leyendo
-        // (contraste 5,15:1)
+        // lo eliminado se ve apagado: se nota, pero la palabra «Eliminado» se sigue leyendo (contraste 5,15:1)
         const val ALFA_ELIMINADO = 0.8f
     }
 }

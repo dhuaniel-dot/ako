@@ -10,7 +10,7 @@ import yunkang.ako.R
 import yunkang.ako.databinding.FragmentRejillaMesasBinding
 import yunkang.ako.dominio.modelos.MesaEstado
 
-// la rejilla de 60 mesas: 1d (elegir mesa para pedir) y 6a (Cuenta). es el mismo componente
+// la rejilla de mesas: 1d (elegir mesa para pedir) y 6a (Cuenta). es el mismo componente
 // pinta lo que le da quien la aloja (mostrar) y avisa de la mesa tocada con un sobre; no decide nada
 class RejillaMesasFragment : Fragment(R.layout.fragment_rejilla_mesas) {
 
@@ -30,7 +30,7 @@ class RejillaMesasFragment : Fragment(R.layout.fragment_rejilla_mesas) {
         val binding = FragmentRejillaMesasBinding.bind(view)
         this.binding = binding
 
-        // el título llega en los arguments (se conservan si Android rehace el Fragment)
+        // el título llega en los arguments
         binding.textoTitulo.setText(requireArguments().getInt(ARG_TITULO))
 
         binding.listaMesas.layoutManager = GridLayoutManager(requireContext(), COLUMNAS)
@@ -62,7 +62,7 @@ class RejillaMesasFragment : Fragment(R.layout.fragment_rejilla_mesas) {
 
         private const val ARG_TITULO = "titulo"
 
-        // 4 columnas: 60 mesas en 15 filas con scroll (wireframe 01d)
+        // columnas de la rejilla; lo que no cabe, con scroll (wireframe 01d)
         private const val COLUMNAS = 4
 
         // la forma de crear una rejilla: se le da el título que enseña su barra

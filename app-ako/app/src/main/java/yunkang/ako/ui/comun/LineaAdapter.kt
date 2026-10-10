@@ -12,9 +12,9 @@ import yunkang.ako.dominio.Comprobacion
 // recibe LineaVista, no las clases del dominio, para servir al carrito (5c), a la comanda (6b) y al recibo (6c, 2g)
 // sin modos. quien lo usa pasa solo las acciones que quiere; una acción vacía (null) esconde su botón:
 // carrito − + Quitar · comanda solo Quitar · recibo ninguna (y entonces se esconde la fila de botones entera)
-// sencillo, con notifyDataSetChanged, como los demás adaptadores
+// sencillo, como FilaPlatoAdapter
 class LineaAdapter(
-    // qué hacer con cada botón: lo decide quien usa el adaptador; null = ese botón no sale
+    // null = ese botón no sale
     private val alMenos: ((LineaVista) -> Unit)?,
     private val alMas: ((LineaVista) -> Unit)?,
     private val alQuitar: ((LineaVista) -> Unit)?
