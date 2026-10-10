@@ -472,6 +472,7 @@ Los nombres los puso Daniel en su lista (`ako-nombres.md`, fuera del repositorio
 | Fecha · decisión | Consecuencia |
 |---|---|
 | 10 oct · **Nombres de dominio, seguridad e imágenes (tanda N1)** | Renombrado el 10 oct en la parte 3 de la S13.5: `Validacion` → `Comprobacion` (y `ValidacionTest` → `ComprobacionTest`), `LineaCarrito` → `PlatoApuntado` (`Carrito.lineas` se queda), `Hash` → `PinSalHash` (y `HashTest` → `PinSalHashTest`), `PinStore` → `GuardaPin` (`pinStore` → `guardaPin`), `ImageStore` → `Galeria` (`imageStore` → `galeria`) y `db` → `baseDeDatos` en `EntradaAko`, `ComandaRepositoryReal` y las dos pruebas de Room. El `db` de `Precarga.onCreate` se queda (es el de Room). No cambian el archivo `pin`, `ako.db` ni las tablas. Las filas de arriba se quedan con los nombres de su día |
+| 10 oct · **Iconos (tanda N2)** | Renombrado el 10 oct en la parte 3 de la S13.5: `ic_sin_foto` → `sin_foto`, `ic_sin_foto_grande` → `sin_foto_grande`, `ic_desplegado` → `desplegado` e `ic_editar` → `icono_editar`. `ic_launcher_*` se queda (lo pone Android). Las filas del 2 y el 8 oct que los nombran se quedan como están |
 
 ## 6. Para el Project (lo que Daniel corrige en el doc)
 

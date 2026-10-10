@@ -27,7 +27,7 @@
             android:background="?attr/colorSurfaceContainerHigh"
             android:contentDescription="@string/comun_sin_foto_cd"
             android:scaleType="center"
-            android:src="@drawable/ic_sin_foto" />
+            android:src="@drawable/sin_foto" />
     </com.google.android.material.card.MaterialCardView>
 
     <TextView

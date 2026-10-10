@@ -13,7 +13,7 @@ fun pintarFoto(hueco: ImageView, foto: Any?, nombre: String, redonda: Boolean = 
     val peticion = Glide.with(hueco)
         .load(foto)
         .placeholder(R.drawable.foto_cargando)
-        .error(if (grande) R.drawable.ic_sin_foto_grande else R.drawable.ic_sin_foto)
+        .error(if (grande) R.drawable.sin_foto_grande else R.drawable.sin_foto)
     if (redonda) peticion.circleCrop().into(hueco) else peticion.centerCrop().into(hueco)
     hueco.contentDescription = if (foto == null) hueco.context.getString(R.string.comun_sin_foto_cd) else nombre
 }

@@ -62,7 +62,7 @@
                     android:layout_height="match_parent"
                     android:contentDescription="@string/comun_sin_foto_cd"
                     android:scaleType="center"
-                    android:src="@drawable/ic_sin_foto_grande" />
+                    android:src="@drawable/sin_foto_grande" />
             </FrameLayout>
 
             <LinearLayout
@@ -132,7 +132,7 @@
                         android:layout_height="24dp"
                         android:importantForAccessibility="no"
                         android:rotation="-90"
-                        android:src="@drawable/ic_desplegado" />
+                        android:src="@drawable/desplegado" />
                 </LinearLayout>
 
                 <!-- Los alérgenos, uno por línea con «•», o el aviso «Pregunta al personal»; plegado al abrir -->

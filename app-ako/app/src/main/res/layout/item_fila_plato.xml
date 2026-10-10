@@ -20,7 +20,7 @@
         android:background="?attr/colorSurfaceContainerHigh"
         android:contentDescription="@string/comun_sin_foto_cd"
         android:scaleType="center"
-        android:src="@drawable/ic_sin_foto"
+        android:src="@drawable/sin_foto"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

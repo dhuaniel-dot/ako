@@ -79,7 +79,7 @@
                     android:layout_height="match_parent"
                     android:contentDescription="@string/comun_sin_foto_cd"
                     android:scaleType="center"
-                    android:src="@drawable/ic_sin_foto_grande" />
+                    android:src="@drawable/sin_foto_grande" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/botonElegirFoto"

@@ -70,7 +70,7 @@
             android:layout_height="wrap_content"
             android:clickable="true"
             android:cursorVisible="false"
-            android:drawableEnd="@drawable/ic_desplegado"
+            android:drawableEnd="@drawable/desplegado"
             android:focusable="false"
             android:inputType="none"
             android:longClickable="false"

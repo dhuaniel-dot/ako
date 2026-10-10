@@ -32,7 +32,7 @@
                 android:layout_height="48dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/panel_plegar_cd"
-                android:src="@drawable/ic_desplegado" />
+                android:src="@drawable/desplegado" />
 
             <TextView
                 android:id="@+id/textoNombre"
@@ -64,7 +64,7 @@
                 android:layout_height="48dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/categoria_titulo_editar"
-                android:src="@drawable/ic_editar" />
+                android:src="@drawable/icono_editar" />
         </LinearLayout>
 
         <View
