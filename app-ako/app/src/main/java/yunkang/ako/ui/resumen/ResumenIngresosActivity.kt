@@ -37,8 +37,7 @@ class ResumenIngresosActivity : AppCompatActivity() {
                 replace(R.id.contenedor, ResumenListaFragment())
             }
         } else if (viewModel.comandaRecibo == null) {
-            // [Claude] como en Cuenta: Android mató la app con el recibo delante y la libreta renació
-            // en blanco, sin saber de qué comanda era. se quita el recibo y queda la lista
+            // [Claude] como en Cuenta: si Android mató la app con el recibo delante, se quita el recibo y queda la lista
             supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         }
 
@@ -58,8 +57,7 @@ class ResumenIngresosActivity : AppCompatActivity() {
             replace(R.id.contenedor, recibo)
             addToBackStack(null)
         }
-        // [Claude] commit no cambia la vista al momento: la deja apuntada para dentro de un instante. las líneas
-        // pueden llegar antes y no encontrarían el recibo; executePendingTransactions lo pone ya en su sitio
+        // [Claude] commit no cambia la vista al momento: executePendingTransactions pone ya el recibo, para que las líneas lo encuentren
         supportFragmentManager.executePendingTransactions()
     }
 

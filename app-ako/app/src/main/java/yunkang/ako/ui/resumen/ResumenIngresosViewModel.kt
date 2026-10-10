@@ -29,9 +29,8 @@ class ResumenIngresosViewModel(
     private val _dia = MutableLiveData(LocalDate.now())
     val dia: LiveData<LocalDate> = _dia
 
-    // lo cobrado el día que se mira. switchMap vigila el día: cada vez que cambia, tira la consulta
-    // anterior y lanza otra con liveData { }, que pide el resumen a la base de datos y lo cuelga en el tablón
-    // Room cambia de hilo solo dentro de sus consultas
+    // lo cobrado el día que se mira: switchMap vigila el día y, cada vez que cambia, pide el resumen otra vez (liveData { })
+    // Room cambia de hilo solo
     val resumen: LiveData<ResumenIngresos> = dia.switchMap { elegido ->
         liveData { emit(comandaRepository.resumenDelDia(elegido)) }
     }
@@ -48,9 +47,7 @@ class ResumenIngresosViewModel(
     private val _lineasRecibo = MutableLiveData<List<LineaVista>>(emptyList())
     val lineasRecibo: LiveData<List<LineaVista>> = _lineasRecibo
 
-    // como CuentaViewModel.abrirComanda. primero se vacía la bandeja, para que no se vea ni un instante
-    // el recibo anterior; después se piden las líneas. Room cambia de hilo solo
-    // nombre y precio salen de la línea, congelados al enviar, no de la carta de hoy
+    // como CuentaViewModel.abrirComanda: primero se vacía la bandeja y después se piden las líneas
     fun abrirRecibo(comanda: ComandaConTotal) {
         comandaRecibo = comanda
         _lineasRecibo.value = emptyList()

@@ -57,8 +57,7 @@ class ResumenListaFragment : Fragment(R.layout.fragment_resumen_lista) {
         }
 
         // tocar el campo Día abre el calendario estándar de Android, puesto en el día que se mira
-        // la trampa de los meses: Android los cuenta desde 0 (enero = 0) y java.time desde 1 (enero = 1),
-        // así que al abrir se resta uno y al volver se suma uno. el calendario no guarda nada: solo dice qué día mirar
+        // la trampa de los meses: Android cuenta desde 0 y java.time desde 1, así que al abrir se resta uno y al volver se suma uno
         binding.textoDia.setOnClickListener {
             if (!portero.permite()) return@setOnClickListener
             val dia = viewModel.dia.value ?: return@setOnClickListener

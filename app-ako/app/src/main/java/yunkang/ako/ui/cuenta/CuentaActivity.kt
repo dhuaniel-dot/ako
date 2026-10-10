@@ -47,9 +47,8 @@ class CuentaActivity : AppCompatActivity() {
                 replace(R.id.contenedor, RejillaMesasFragment.nueva(R.string.cuenta_titulo))
             }
         } else if (viewModel.comandaId == 0L) {
-            // Android mató la app con 6b o 6c delante y la libreta renació en blanco,
-            // sin saber qué comanda era. se cierran las cajas que hubiera abiertas (Anular, Cobrar, última línea) y
-            // se vacía la pila: vuelve la rejilla y el camarero toca otra vez la mesa
+            // Android mató la app con 6b o 6c delante y la libreta renació en blanco: se cierran las cajas abiertas
+            // y se vacía la pila (vuelve la rejilla y el camarero toca otra vez la mesa)
             supportFragmentManager.fragments.filterIsInstance<ConfirmacionDialog>().forEach { it.dismiss() }
             supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         }
@@ -129,10 +128,8 @@ class CuentaActivity : AppCompatActivity() {
         }
     }
 
-    // [Claude] quitar la última línea, Anular y Cobrar acaban aquí: la comanda ya está cerrada y no se toca,
-    // así que se quitan de golpe todas las vistas de encima (6b y 6c) y queda la rejilla, con la mesa ya blanca
-    // llega tras esperar a la base de datos; si la app pasó mientras a segundo plano, no se puede
-    // cambiar de vista ahora y se hace al volver (onResume)
+    // [Claude] quitar la última línea, Anular y Cobrar acaban aquí: se quitan 6b y 6c de golpe y queda la rejilla, con la mesa ya blanca
+    // si la app pasó a segundo plano mientras se esperaba a la base de datos, se hace al volver (onResume)
     fun volverARejilla() {
         if (supportFragmentManager.isStateSaved) {
             vueltaPendiente = true

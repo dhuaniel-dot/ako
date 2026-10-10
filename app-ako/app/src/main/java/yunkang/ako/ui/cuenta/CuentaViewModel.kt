@@ -22,8 +22,7 @@ class CuentaViewModel(
     private val comandaRepository: ComandaRepository
 ) : ViewModel() {
 
-    // 6a: las 60 mesas, libres u ocupadas con su total. Room las manda solas cada vez que
-    // cambia una comanda o una línea (el grifo, Flow); asLiveData las cuelga en el tablón. nadie las carga a mano
+    // 6a: todas las mesas, libres u ocupadas con su total; llegan solas (grifo → tablón)
     val mesas: LiveData<List<MesaEstado>> = comandaRepository.mesasConEstado().asLiveData()
 
     // 6b y 6c: la comanda abierta y el número de su mesa (para las barras). solo la libreta los cambia
@@ -103,8 +102,7 @@ class CuentaViewModel(
     // es una función pura: no guarda nada; cerrar el recibo lo olvida
     fun cambio(entregadoCentimos: Int): Int = Calculadora.cambio(total.value ?: 0, entregadoCentimos)
 
-    // vuelve a preguntar las líneas y el total a la base de datos (el total se suma en SQL cada vez,
-    // nunca se resta en la pantalla). nombre y precio salen de la línea, congelados al enviar
+    // vuelve a preguntar las líneas y el total a la base de datos (nunca se resta en la pantalla)
     private suspend fun recargar() {
         val lineas = comandaRepository.lineasDe(comandaId)
         _lineas.value = lineas.map { LineaVista.de(it) }

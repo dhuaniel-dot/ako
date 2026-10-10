@@ -9,10 +9,10 @@ import yunkang.ako.dominio.modelos.ComandaConTotal
 import yunkang.ako.ui.comun.Formato
 
 // 2g · las comandas cobradas de un día: «Mesa 9 · Cobrada a las 14:32 · 93,00 €», una fila por cobro
-// propio, porque una comanda cobrada no es una línea (LineaAdapter); sencillo, con notifyDataSetChanged,
-// como los demás adaptadores: la lista solo cambia entera, al cambiar de día
+// propio, porque una comanda cobrada no es una línea (LineaAdapter). sencillo, como FilaPlatoAdapter:
+// la lista solo cambia entera, al cambiar de día
 class ComandaCobradaAdapter(
-    // qué hacer al tocar una fila (abrir su recibo): lo decide quien usa el adaptador
+    // al tocar una fila: abrir su recibo
     private val alTocar: (ComandaConTotal) -> Unit
 ) : RecyclerView.Adapter<ComandaCobradaAdapter.FilaViewHolder>() {
 
