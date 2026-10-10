@@ -38,15 +38,14 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/botonPropietario"
-        style="@style/Widget.Material3.Button.OutlinedButton"
         android:layout_width="0dp"
         android:layout_height="72dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="120dp"
         android:layout_marginEnd="32dp"
         android:text="@string/selector_btn_propietario"
-        android:textColor="?attr/colorOnSurface"
         android:textSize="20sp"
+        android:textStyle="bold"
         app:cornerRadius="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -69,15 +68,14 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/botonCuenta"
-        style="@style/Widget.Material3.Button.OutlinedButton"
         android:layout_width="0dp"
         android:layout_height="72dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="32dp"
         android:text="@string/selector_btn_cuenta"
-        android:textColor="?attr/colorOnSurface"
         android:textSize="20sp"
+        android:textStyle="bold"
         app:cornerRadius="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
