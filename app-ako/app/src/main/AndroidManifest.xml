@@ -2,11 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- allowBackup="false": sin copia en la nube del PIN ni de la base de datos; así reinstalar
-         borra todo, como dicen el aviso de 1b y el Anexo II
-         dataExtractionRules: en Android 12+ algunos fabricantes pasan los datos de móvil a móvil
-         aunque allowBackup esté apagado; reglas_extraccion.xml excluye el PIN y la base de datos también de eso
-         (el atributo es de Android 12, api 31; en versiones anteriores se ignora: tools:targetApi) -->
+    <!-- allowBackup="false": sin copia en la nube del PIN ni de la base de datos; reinstalar borra todo (aviso de 1b y Anexo II)
+         dataExtractionRules: lo mismo para el paso de móvil a móvil de Android 12+ (reglas_extraccion.xml); antes de la api 31 se ignora -->
     <application
         android:name=".EntradaAko"
         android:allowBackup="false"

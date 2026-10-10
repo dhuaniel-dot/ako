@@ -34,7 +34,7 @@
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- un solo scroll con todo dentro: aquí no hay listas que reciclen filas -->
+    <!-- un solo scroll, como en el formulario del plato -->
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollFicha"
         android:layout_width="0dp"
@@ -49,8 +49,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- la foto grande a todo el marco. Glide pinta la foto recortada (centerCrop); el gris de
-                 «cargando» y el «?», a su tamaño en el centro (scaleType center) -->
+            <!-- la foto grande a todo el marco. Glide, como en item_fila_plato (centerCrop) -->
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="220dp"
@@ -154,7 +153,6 @@
                     android:layout_height="1dp"
                     android:background="?attr/colorOutlineVariant" />
 
-                <!-- cantidad: − 1 + (de 1 a 99) -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

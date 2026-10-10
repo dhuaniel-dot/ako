@@ -5,9 +5,8 @@
         <item name="colorPrimary">@color/acento</item>
         <!-- texto encima del naranja: blanco (contraste 4,6:1) -->
         <item name="colorOnPrimary">@color/white</item>
-        <!-- en los diálogos (1c, 1e, cajas de confirmación) el texto de Aceptar/Cancelar y la etiqueta
-             del campo se pintan con colorPrimary; el naranja como texto sobre fondo claro no llega a 4,5:1,
-             así que dentro de los diálogos colorPrimary pasa a ser el color del texto normal -->
+        <!-- en los diálogos (1c, 1e, cajas de confirmación) colorPrimary pasa a ser el color del texto normal:
+             el naranja como texto sobre fondo claro no llega a 4,5:1 -->
         <item name="materialAlertDialogTheme">@style/ThemeOverlay.AKO.Dialogo</item>
         <!-- todos los campos de texto (1b, 1c, 1e, 2b, 3a) usan este estilo -->
         <item name="textInputStyle">@style/Widget.AKO.CampoTexto</item>
@@ -22,8 +21,7 @@
         <item name="materialThemeOverlay">@style/ThemeOverlay.AKO.CampoTexto</item>
     </style>
 
-    <!-- solo dentro del campo, el naranja pasa a ser el color del texto normal
-         (la etiqueta naranja sobre fondo claro no llegaba a 4,5:1). los botones rellenos siguen naranjas -->
+    <!-- dentro del campo, lo mismo que en los diálogos; los botones rellenos siguen naranjas -->
     <style name="ThemeOverlay.AKO.CampoTexto" parent="ThemeOverlay.Material3.TextInputEditText.OutlinedBox">
         <item name="colorPrimary">?attr/colorOnSurface</item>
     </style>

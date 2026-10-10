@@ -99,14 +99,14 @@ class CuentaActivity : AppCompatActivity() {
             // el sobre no lleva la comanda: se busca la mesa en el tablón (roja = tiene comanda pendiente)
             val comandaId = viewModel.mesas.value?.find { it.mesa.id == mesaId }?.comandaId
             if (comandaId == null) {
-                // Mesa blanca (nivel 1): solo un aviso. no se crea nada: la comanda nace con el primer Enviar
+                // mesa blanca (nivel 1): solo un aviso. no se crea nada: la comanda nace con el primer Enviar
                 Snackbar.make(
                     binding.contenedor,
                     getString(R.string.cuenta_mesa_sin_comanda, numero),
                     Snackbar.LENGTH_SHORT
                 ).show()
             } else {
-                // Mesa roja: la libreta abre su comanda y 6b se pone encima de la rejilla
+                // mesa roja: la libreta abre su comanda y 6b se pone encima de la rejilla
                 // addToBackStack: Atrás (el del sistema o la flecha) la quita y vuelve la rejilla
                 viewModel.abrirComanda(comandaId, numero)
                 supportFragmentManager.commit {

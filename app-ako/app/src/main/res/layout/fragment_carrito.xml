@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 5c · Carrito (wireframe 05c), pantalla completa: barra «← Atrás · Carrito · Mesa N»; las líneas;
+<!-- 5c · carrito (wireframe 05c), pantalla completa: barra «← Atrás · Carrito · Mesa N»; las líneas;
      total y «Enviar» fijos abajo -->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -94,7 +94,7 @@
             tools:text="39,50 €" />
     </LinearLayout>
 
-    <!-- «Enviar» fijo abajo (naranja: botón de acción); apagado con el carrito vacío -->
+    <!-- «Enviar» fijo abajo; apagado con el carrito vacío -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/botonEnviar"
         style="@style/Widget.Material3.Button"

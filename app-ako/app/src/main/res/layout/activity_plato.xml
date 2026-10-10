@@ -66,8 +66,7 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- la foto a todo el marco y el botón redondo «+». Glide pinta la foto recortada
-                 (centerCrop); el gris de «cargando» y el «?» los pinta a su tamaño en el centro (scaleType center) -->
+            <!-- la foto a todo el marco y el botón redondo «+». Glide, como en item_fila_plato (centerCrop) -->
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="180dp"
@@ -115,7 +114,6 @@
                     android:maxLines="1" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- número y precio en la misma fila -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

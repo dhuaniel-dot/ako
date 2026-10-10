@@ -11,8 +11,7 @@
     android:orientation="vertical"
     android:paddingTop="8dp">
 
-    <!-- el círculo: Glide pinta la foto recortada en redondo (circleCrop); el gris y el «?», a su tamaño
-         en el centro (scaleType center). sin padding: encogería la foto -->
+    <!-- el círculo, como en sheet_categoria. sin padding: encogería la foto -->
     <com.google.android.material.card.MaterialCardView
         style="?attr/materialCardViewOutlinedStyle"
         android:layout_width="56dp"
