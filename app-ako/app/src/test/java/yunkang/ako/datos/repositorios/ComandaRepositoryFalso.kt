@@ -7,8 +7,8 @@ import java.time.LocalDate
 import kotlinx.coroutines.flow.Flow
 import yunkang.ako.dominio.modelos.ResumenIngresos
 
-// [Claude] El actor del puesto de comandas en las pruebas.
-// No se usa en estas pruebas; existe porque CartaRepository lo pide al crearse.
+// [Claude] el actor del puesto de comandas en las pruebas
+// no se usa en estas pruebas; existe porque CartaRepository lo pide al crearse
 class ComandaRepositoryFalso : ComandaRepository {
     override suspend fun mesasConPlatoPendiente(productoId: Long): List<Int> = TODO()
     override suspend fun mesasConCategoriaPendiente(categoriaId: Long): List<Int> = TODO()

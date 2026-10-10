@@ -12,8 +12,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import yunkang.ako.datos.repositorios.SeguridadRepository
 
-// El PIN con su archivo de verdad (las SharedPreferences "pin"), por eso va en androidTest.
-// Es el mismo archivo que el de la app instalada: cada prueba lo vacía al empezar.
+// el PIN con su archivo de verdad (las SharedPreferences "pin"), por eso va en androidTest
+// es el mismo archivo que el de la app instalada: cada prueba lo vacía al empezar
 @RunWith(AndroidJUnit4::class)
 class SeguridadRepositoryTest {
 
@@ -26,7 +26,7 @@ class SeguridadRepositoryTest {
         repositorio = SeguridadRepository(GuardaPin(context))
     }
 
-    // Con el PIN actual mal, cambiarPin no guarda el nuevo: el de antes sigue valiendo
+    // con el PIN actual mal, cambiarPin no guarda el nuevo: el de antes sigue valiendo
     @Test
     fun cambiarPinConActualMaloNoCambia() {
         runBlocking { repositorio.crearPin("1234") }
@@ -35,7 +35,7 @@ class SeguridadRepositoryTest {
         assertTrue(runBlocking { repositorio.comprobarPin("1234") })
     }
 
-    // Si ya hay PIN, crearPin no lo pisa: para cambiarlo hay que dar el actual
+    // si ya hay PIN, crearPin no lo pisa: para cambiarlo hay que dar el actual
     @Test
     fun crearPinDosVecesLanza() {
         runBlocking { repositorio.crearPin("1234") }

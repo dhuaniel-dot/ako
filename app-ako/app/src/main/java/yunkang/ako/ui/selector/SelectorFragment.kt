@@ -13,12 +13,12 @@ import yunkang.ako.ui.comun.ConfirmacionDialog
 import yunkang.ako.ui.comun.GuardaDobleToque
 import yunkang.ako.ui.cuenta.CuentaActivity
 
-// 1a · Selector de rol: el nombre de la app y los tres botones grandes
+// 1a · selector de rol: el nombre de la app y los tres botones grandes
 class SelectorFragment : Fragment(R.layout.fragment_selector) {
 
     private val viewModel: SelectorViewModel by activityViewModels { SelectorViewModel.Factory }
 
-    // El portero de 1a; un doble toque no abre dos cajas del PIN ni dos veces Cuenta.
+    // el portero de 1a; un doble toque no abre dos cajas del PIN ni dos veces Cuenta
     // Pedir no lo necesita: ya se apaga mientras pregunta
     private val portero = GuardaDobleToque()
 
@@ -33,14 +33,14 @@ class SelectorFragment : Fragment(R.layout.fragment_selector) {
             }
         }
 
-        // Pedir: la puerta. Sin ningún plato visible no se entra: se avisa y se queda en 1a
+        // Pedir: la puerta. sin ningún plato visible no se entra: se avisa y se queda en 1a
         binding.botonPedir.setOnClickListener {
             binding.botonPedir.isEnabled = false
             viewLifecycleOwner.lifecycleScope.launch {
                 val motivo = viewModel.motivoPuertaCerrada()
                 binding.botonPedir.isEnabled = true
                 if (motivo != null) {
-                    // La caja de siempre, con un solo botón (solo informa)
+                    // la caja de siempre, con un solo botón (solo informa)
                     ConfirmacionDialog.nueva(
                         titulo = getString(R.string.puerta_pedir_titulo),
                         texto = getString(motivo),
@@ -48,7 +48,7 @@ class SelectorFragment : Fragment(R.layout.fragment_selector) {
                         clave = CLAVE_PUERTA
                     ).show(parentFragmentManager, CLAVE_PUERTA)
                 } else {
-                    // Puerta abierta: la Activity enseña 1d (la rejilla en modo elegir)
+                    // puerta abierta: la Activity enseña 1d (la rejilla en modo elegir)
                     (requireActivity() as SelectorActivity).abrirElegirMesa()
                 }
             }

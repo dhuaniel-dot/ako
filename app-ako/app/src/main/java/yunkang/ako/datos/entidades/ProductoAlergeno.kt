@@ -5,8 +5,8 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 
-// Tabla puente: "este plato tiene este alérgeno". Una fila por cada casilla marcada.
-// El carné son las dos columnas juntas.
+// tabla puente: "este plato tiene este alérgeno". una fila por cada casilla marcada
+// el carné son las dos columnas juntas
 @Entity(
     tableName = "producto_alergeno",
     primaryKeys = ["producto_id", "alergeno_id"],

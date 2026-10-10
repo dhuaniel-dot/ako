@@ -5,33 +5,33 @@ import androidx.fragment.app.FragmentManager
 import yunkang.ako.R
 import yunkang.ako.dominio.modelos.PlatoConMesas
 
-// Los avisos de las mesas afectadas (ninguna línea se quita): montan el texto y abren la caja de siempre (ConfirmacionDialog).
-// 2e al eliminar una categoría (Panel) y 3d al eliminar un plato (formulario). Vive en comun porque lo usan dos pantallas.
-// [Claude] Es un object (no guarda nada): solo sabe escribir los avisos
+// los avisos de las mesas afectadas (ninguna línea se quita): montan el texto y abren la caja de siempre (ConfirmacionDialog)
+// 2e al eliminar una categoría (Panel) y 3d al eliminar un plato (formulario). vive en comun porque lo usan dos pantallas
+// [Claude] es un object (no guarda nada): solo sabe escribir los avisos
 object MesasAfectadasDialog {
 
-    // [Claude] El nombre del sobre que deja la caja (RESPUESTA_AFIRMATIVA true = Eliminar, false = Cancelar)
+    // [Claude] el nombre del sobre que deja la caja (RESPUESTA_AFIRMATIVA true = Eliminar, false = Cancelar)
     const val CLAVE_CATEGORIA = "eliminar_categoria"
     const val CLAVE_PLATO = "eliminar_plato"
 
     // «Este plato está en comandas pendientes: Flan (mesa 5). No se quitará de esas comandas.»
-    // Todas las palabras salen de strings.xml; aquí solo se juntan las piezas
+    // todas las palabras salen de strings.xml; aquí solo se juntan las piezas
     private fun textoCategoria(contexto: Context, afectados: List<PlatoConMesas>): String {
         val y = contexto.getString(R.string.comun_y)
-        // Cada plato con sus mesas: «Flan (mesa 5)» o «Helado (mesas 5 y 7)»
+        // cada plato con sus mesas: «Flan (mesa 5)» o «Helado (mesas 5 y 7)»
         val partes = afectados.map { plato ->
             val mesas = Formato.lista(plato.mesas.map { it.toString() }, y)
             contexto.resources.getQuantityString(
                 R.plurals.categoria_eliminar_plato_mesas, plato.mesas.size, plato.nombre, mesas
             )
         }
-        // La frase entera, en singular o plural según cuántos platos haya
+        // la frase entera, en singular o plural según cuántos platos haya
         return contexto.resources.getQuantityString(
             R.plurals.categoria_eliminar_cuerpo, afectados.size, partes.joinToString(", ")
         )
     }
 
-    // Un solo aviso con todos los platos y una única confirmación (ficha 2: cinco avisos seguidos no se leen)
+    // un solo aviso con todos los platos y una única confirmación (ficha 2: cinco avisos seguidos no se leen)
     fun abrirCategoria(gestor: FragmentManager, contexto: Context, afectados: List<PlatoConMesas>) {
         ConfirmacionDialog.nueva(
             titulo = contexto.getString(R.string.categoria_eliminar_titulo),
@@ -43,7 +43,7 @@ object MesasAfectadasDialog {
     }
 
     // 3d · «Pollo asado está en una comanda pendiente de la mesa 6. No se quitará de esa comanda.»
-    // Una mesa o varias: el plurals elige la frase según cuántas mesas haya
+    // una mesa o varias: el plurals elige la frase según cuántas mesas haya
     private fun textoPlato(contexto: Context, nombre: String, mesas: List<Int>): String {
         val y = contexto.getString(R.string.comun_y)
         val listaMesas = Formato.lista(mesas.map { it.toString() }, y)
@@ -52,7 +52,7 @@ object MesasAfectadasDialog {
         )
     }
 
-    // La misma caja que abrirCategoria, con el texto de un solo plato
+    // la misma caja que abrirCategoria, con el texto de un solo plato
     fun abrirPlato(gestor: FragmentManager, contexto: Context, nombre: String, mesas: List<Int>) {
         ConfirmacionDialog.nueva(
             titulo = contexto.getString(R.string.mesas_afectadas_titulo),

@@ -6,10 +6,10 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
-// El pedido de una mesa, de principio a fin. Tabla "comanda".
-// No guarda el total: se calcula sumando sus líneas.
-// fechaCreacion: cuándo se envió el primer pedido (instante en milisegundos).
-// fechaCierre: cuándo se cobró o se anuló; vacío mientras está PENDIENTE.
+// el pedido de una mesa, de principio a fin. tabla "comanda"
+// no guarda el total: se calcula sumando sus líneas
+// fechaCreacion: cuándo se envió el primer pedido (instante en milisegundos)
+// fechaCierre: cuándo se cobró o se anuló; vacío mientras está pendiente
 @Entity(
     tableName = "comanda",
     foreignKeys = [

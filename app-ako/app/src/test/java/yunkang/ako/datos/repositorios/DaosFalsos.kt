@@ -9,12 +9,12 @@ import yunkang.ako.datos.entidades.Producto
 import yunkang.ako.datos.entidades.ProductoAlergeno
 import kotlinx.coroutines.flow.Flow
 
-// [Claude] Actores que hacen de DAO en las pruebas: no tocan ninguna base de datos.
-// Solo contestan lo que la prueba necesita; lo demás es TODO() ("esto no lo ensayamos").
+// [Claude] actores que hacen de DAO en las pruebas: no tocan ninguna base de datos
+// solo contestan lo que la prueba necesita; lo demás es todo() ("esto no lo ensayamos")
 
-// Contesta que la categoría existe; si está en la carta o eliminada lo decide cada prueba (activa).
-// Solo hay una categoría, Carnes, de orden 2, y ningún nombre está repetido.
-// Apunta la categoría que le llega al insertar (insertada) y al actualizar (actualizada).
+// contesta que la categoría existe; si está en la carta o eliminada lo decide cada prueba (activa)
+// solo hay una categoría, Carnes, de orden 2, y ningún nombre está repetido
+// apunta la categoría que le llega al insertar (insertada) y al actualizar (actualizada)
 class CategoriaDaoFalso(var activa: Boolean = true) : CategoriaDao {
     var insertada: Categoria? = null
     var actualizada: Categoria? = null
@@ -34,10 +34,10 @@ class CategoriaDaoFalso(var activa: Boolean = true) : CategoriaDao {
     override suspend fun existeNombre(nombre: String, exceptoId: Long): Boolean = false
 }
 
-// Apunta qué plato y qué marcas de alérgeno le llegan.
-// "guardado" es el plato que la prueba dice que ya existe (para editar); vacío si no hay ninguno.
-// "numeroOcupado": si la prueba dice true, otro plato ya tiene ese número; si no, está libre.
-// borrarAlergenosDe e insertarAlergenosDe no llevan TODO(): las usa guardarAlergenos.
+// apunta qué plato y qué marcas de alérgeno le llegan
+// "guardado" es el plato que la prueba dice que ya existe (para editar); vacío si no hay ninguno
+// "numeroOcupado": si la prueba dice true, otro plato ya tiene ese número; si no, está libre
+// borrarAlergenosDe e insertarAlergenosDe no llevan todo(): las usa guardarAlergenos
 class ProductoDaoFalso(var guardado: Producto? = null, var numeroOcupado: Boolean = false) : ProductoDao {
     var seLlamoInsertar = false
     var productoRecibido: Producto? = null
@@ -64,7 +64,7 @@ class ProductoDaoFalso(var guardado: Producto? = null, var numeroOcupado: Boolea
     override suspend fun alergenosDe(productoId: Long): List<Alergeno> = TODO()
 }
 
-// No se usa en estas pruebas; existe porque CartaRepository lo pide al crearse.
+// no se usa en estas pruebas; existe porque CartaRepository lo pide al crearse
 class PrecargadosDaoFalso : PrecargadosDao {
     override suspend fun alergenos(): List<Alergeno> = TODO()
 }

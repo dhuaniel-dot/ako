@@ -12,58 +12,58 @@ import yunkang.ako.dominio.modelos.ComandaConTotal
 import yunkang.ako.ui.comun.ReciboFragment
 import yunkang.ako.ui.comun.apartarDeLasBarras
 
-// Pantalla 2g (Resumen de ingresos). Solo se llega desde el Panel, detrás del PIN: Cuenta no pide PIN
-// y la recaudación quedaría a la vista de cualquiera. Es solo el marco: dentro va la lista (ResumenListaFragment)
-// y, encima en la pila, el recibo en solo lectura. Solo mira: no escribe nada en la base de datos
+// pantalla 2g (Resumen de ingresos). solo se llega desde el Panel, detrás del PIN: Cuenta no pide PIN
+// y la recaudación quedaría a la vista de cualquiera. es solo el marco: dentro va la lista (ResumenListaFragment)
+// y, encima en la pila, el recibo en solo lectura. solo mira: no escribe nada en la base de datos
 class ResumenIngresosActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityResumenIngresosBinding
 
-    // La libreta de 2g, la misma para la lista (como en PedidoActivity)
+    // la libreta de 2g, la misma para la lista (como en PedidoActivity)
     private val viewModel: ResumenIngresosViewModel by viewModels { ResumenIngresosViewModel.Factory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // De borde a borde, apartado de las barras y del teclado (como SelectorActivity)
+        // de borde a borde, apartado de las barras y del teclado (como SelectorActivity)
         enableEdgeToEdge()
         binding = ActivityResumenIngresosBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.contenedor.apartarDeLasBarras()
 
-        // La primera vez, la lista; si Android rehace la pantalla, ya está montada
+        // la primera vez, la lista; si Android rehace la pantalla, ya está montada
         if (savedInstanceState == null) {
             supportFragmentManager.commit {
                 replace(R.id.contenedor, ResumenListaFragment())
             }
         } else if (viewModel.comandaRecibo == null) {
-            // [Claude] Como en Cuenta: Android mató la app con el recibo delante y la libreta renació
-            // en blanco, sin saber de qué comanda era. Se quita el recibo y queda la lista
+            // [Claude] como en Cuenta: Android mató la app con el recibo delante y la libreta renació
+            // en blanco, sin saber de qué comanda era. se quita el recibo y queda la lista
             supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         }
 
-        // Cada vez que llegan las líneas de la comanda que se mira, se las da al recibo, si se está viendo.
-        // También le llegan así si Android rehace la pantalla con el recibo delante (modo noche)
+        // cada vez que llegan las líneas de la comanda que se mira, se las da al recibo, si se está viendo
+        // también le llegan así si Android rehace la pantalla con el recibo delante (modo noche)
         viewModel.lineasRecibo.observe(this) { darDatosAlRecibo() }
     }
 
-    // Lista → recibo de una comanda cobrada, en su lugar, sin calculadora ni Cobrar (soloLectura).
+    // lista → recibo de una comanda cobrada, en su lugar, sin calculadora ni Cobrar (soloLectura)
     // addToBackStack: Atrás (el del sistema o la flecha) lo quita y vuelve la lista con el mismo día
     fun abrirRecibo(comanda: ComandaConTotal) {
         viewModel.abrirRecibo(comanda)
         val recibo = ReciboFragment.nuevo(comanda.mesaNumero, soloLectura = true)
-        // Lo que ya hay en el tablón (vacío); las líneas llegan después por el observe de onCreate
+        // lo que ya hay en el tablón (vacío); las líneas llegan después por el observe de onCreate
         recibo.mostrar(viewModel.lineasRecibo.value ?: emptyList(), comanda.totalCentimos)
         supportFragmentManager.commit {
             replace(R.id.contenedor, recibo)
             addToBackStack(null)
         }
-        // [Claude] commit no cambia la vista al momento: la deja apuntada para dentro de un instante. Las líneas
+        // [Claude] commit no cambia la vista al momento: la deja apuntada para dentro de un instante. las líneas
         // pueden llegar antes y no encontrarían el recibo; executePendingTransactions lo pone ya en su sitio
         supportFragmentManager.executePendingTransactions()
     }
 
-    // [Claude] Las líneas y el total de la comanda que se mira, al recibo, si es lo que se ve ahora
+    // [Claude] las líneas y el total de la comanda que se mira, al recibo, si es lo que se ve ahora
     private fun darDatosAlRecibo() {
         val comanda = viewModel.comandaRecibo ?: return
         reciboVisible()?.mostrar(viewModel.lineasRecibo.value ?: emptyList(), comanda.totalCentimos)

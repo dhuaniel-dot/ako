@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 6b · Comanda de la mesa (wireframe 06b): barra «← Atrás · Mesa N · Anular»; las líneas con Quitar;
-     TOTAL y «Dar la cuenta» fijos abajo, como en el carrito -->
+<!-- 6b · comanda de la mesa (wireframe 06b): barra «← Atrás · Mesa N · Anular»; las líneas con Quitar;
+     total y «Dar la cuenta» fijos abajo, como en el carrito -->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Barra superior con «Anular» a la derecha -->
+    <!-- barra superior con «Anular» a la derecha -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/barraSuperior"
         android:layout_width="0dp"
@@ -74,7 +74,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/barraSuperior" />
 
-    <!-- [Claude] TOTAL fijo encima de «Dar la cuenta», como en el carrito: con muchas líneas sigue a la vista -->
+    <!-- [Claude] total fijo encima de «Dar la cuenta», como en el carrito: con muchas líneas sigue a la vista -->
     <LinearLayout
         android:id="@+id/filaTotal"
         android:layout_width="0dp"

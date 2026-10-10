@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Una línea del carrito (wireframe 05c): «2 × Entrecot» con su importe a la derecha y, debajo, − + y «Quitar» -->
+<!-- una línea del carrito (wireframe 05c): «2 × Entrecot» con su importe a la derecha y, debajo, − + y «Quitar» -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"

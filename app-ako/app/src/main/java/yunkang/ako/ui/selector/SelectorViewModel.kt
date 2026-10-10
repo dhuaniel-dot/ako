@@ -14,31 +14,31 @@ import yunkang.ako.datos.repositorios.ComandaRepository
 import yunkang.ako.datos.repositorios.SeguridadRepository
 import yunkang.ako.dominio.modelos.MesaEstado
 
-// La libreta de la pantalla 1: sobrevive a que Android rehaga la pantalla.
-// Las vistas le preguntan a ella, nunca al repositorio.
+// la libreta de la pantalla 1: sobrevive a que Android rehaga la pantalla
+// las vistas le preguntan a ella, nunca al repositorio
 class SelectorViewModel(
     private val seguridadRepository: SeguridadRepository,
     private val cartaRepository: CartaRepository,
     comandaRepository: ComandaRepository
 ) : ViewModel() {
 
-    // Las 60 mesas, libres u ocupadas con su total: Room las manda solas cada vez que cambian (Flow → LiveData); nadie las carga a mano
+    // las 60 mesas, libres u ocupadas con su total: Room las manda solas cada vez que cambian (Flow → LiveData); nadie las carga a mano
     val mesas: LiveData<List<MesaEstado>> = comandaRepository.mesasConEstado().asLiveData()
 
-    // ¿Hay ya un PIN guardado? Leerlo es inmediato, por eso no es suspend
+    // hay ya un PIN guardado? leerlo es inmediato, por eso no es suspend
     fun hayPin(): Boolean = seguridadRepository.hayPin()
 
-    // 1b: guarda el primer PIN. Es suspend: la pantalla espera a que esté guardado.
-    // Quien saca el trabajo del hilo de la pantalla es el repositorio, no la libreta
+    // 1b: guarda el primer PIN. es suspend: la pantalla espera a que esté guardado
+    // quien saca el trabajo del hilo de la pantalla es el repositorio, no la libreta
     suspend fun crearPin(pin: String) {
         seguridadRepository.crearPin(pin)
     }
 
-    // 1c: ¿es este el PIN guardado? También suspend; el repositorio cambia de hilo
+    // 1c: es este el PIN guardado? también suspend; el repositorio cambia de hilo
     suspend fun comprobarPin(pin: String): Boolean = seguridadRepository.comprobarPin(pin)
 
-    // Puerta de Pedir: vacío si se puede entrar; si no, el texto que dice por qué.
-    // La regla («¿hay algún plato visible?») la sabe el repositorio; la libreta solo elige el mensaje
+    // puerta de Pedir: vacío si se puede entrar; si no, el texto que dice por qué
+    // la regla («hay algún plato visible?») la sabe el repositorio; la libreta solo elige el mensaje
     suspend fun motivoPuertaCerrada(): Int? {
         if (cartaRepository.hayPlatoVisible()) return null
         return if (cartaRepository.hayPlatoExistente()) {
@@ -48,7 +48,7 @@ class SelectorViewModel(
         }
     }
 
-    // La fábrica que construye esta libreta con los repositorios de EntradaAko
+    // la fábrica que construye esta libreta con los repositorios de EntradaAko
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {

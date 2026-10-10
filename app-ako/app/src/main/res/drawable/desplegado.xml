@@ -1,5 +1,5 @@
-<!-- [Claude] Icono «expand more» de Material (Apache 2.0), creado por Claude porque el asistente no lo mostraba.
-     Flecha hacia abajo: la caja está desplegada; el código la gira -90° cuando está plegada -->
+<!-- [Claude] icono «expand more» de Material (Apache 2.0), creado por Claude porque el asistente no lo mostraba
+     flecha hacia abajo: la caja está desplegada; el código la gira -90° cuando está plegada -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android" android:height="24dp" android:tint="?attr/colorOnSurfaceVariant" android:viewportHeight="24" android:viewportWidth="24" android:width="24dp">
     <path android:fillColor="@android:color/white" android:pathData="M16.59,8.59L12,13.17 7.41,8.59 6,10l6,6 6,-6z"/>
 </vector>

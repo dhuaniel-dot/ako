@@ -7,13 +7,13 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
-// La única caja de «¿seguro?» de toda la app: Enviar, Cobrar, Anular, eliminar con mesas,
-// cadena 3e, «¿Salir sin enviar?», la puerta de Pedir... Cada uno le pasa sus textos.
-// Los botones dicen lo que hacen («Cobrar», «Eliminar»; nunca «Sí»)
+// la única caja de «seguro?» de toda la app: Enviar, Cobrar, Anular, eliminar con mesas,
+// cadena 3e, «Salir sin enviar?», la puerta de Pedir... cada uno le pasa sus textos
+// los botones dicen lo que hacen («Cobrar», «Eliminar»; nunca «Sí»)
 class ConfirmacionDialog : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        // Los textos llegan en «arguments», no por el constructor:
+        // los textos llegan en «arguments», no por el constructor:
         // si Android rehace el diálogo, los arguments se conservan y el constructor no se vuelve a llamar
         val argumentos = requireArguments()
         val clave = checkNotNull(argumentos.getString(ARG_CLAVE)) { "La caja necesita una clave" }
@@ -26,29 +26,29 @@ class ConfirmacionDialog : DialogFragment() {
                 setFragmentResult(clave, bundleOf(RESPUESTA_AFIRMATIVA to true))
             }
 
-        // El botón negativo es opcional (la puerta de Pedir solo informa).
-        // [Claude] También deja sobre (con false), para quien tiene que hacer algo al cancelar, como la cadena 3e
+        // el botón negativo es opcional (la puerta de Pedir solo informa)
+        // [Claude] también deja sobre (con false), para quien tiene que hacer algo al cancelar, como la cadena 3e
         if (negativo != null) {
             caja.setNegativeButton(negativo) { _, _ ->
                 setFragmentResult(clave, bundleOf(RESPUESTA_AFIRMATIVA to false))
             }
         }
-        // Tocar fuera o Atrás cierra sin sobre
+        // tocar fuera o Atrás cierra sin sobre
         return caja.create()
     }
 
     companion object {
-        // Dentro del sobre: true si se pulsó el afirmativo; false si el negativo
+        // dentro del sobre: true si se pulsó el afirmativo; false si el negativo
         const val RESPUESTA_AFIRMATIVA = "afirmativa"
 
-        // Los nombres de cada texto dentro de «arguments» (solo se usan en este archivo)
+        // los nombres de cada texto dentro de «arguments» (solo se usan en este archivo)
         private const val ARG_TITULO = "titulo"
         private const val ARG_TEXTO = "texto"
         private const val ARG_AFIRMATIVO = "afirmativo"
         private const val ARG_NEGATIVO = "negativo"
         private const val ARG_CLAVE = "clave"
 
-        // La forma de crear una caja: se le dan los textos y el nombre de su sobre
+        // la forma de crear una caja: se le dan los textos y el nombre de su sobre
         fun nueva(
             titulo: String,
             texto: String,

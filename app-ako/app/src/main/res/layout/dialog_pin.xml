@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 1c · Introducir PIN: solo el campo. El título y los botones los pone el propio diálogo -->
+<!-- 1c · introducir PIN: solo el campo. el título y los botones los pone el propio diálogo -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"

@@ -15,9 +15,9 @@ import yunkang.ako.databinding.DialogCambiarPinBinding
 import yunkang.ako.dominio.Comprobacion
 import yunkang.ako.ui.comun.sacudir
 
-// 1e · Cambiar PIN: actual, nuevo y repetido a la vez.
-// Orden al Aceptar: primero el actual; después, que los nuevos coincidan; por último se guarda.
-// Mientras se comprueba, Aceptar se apaga: sin doble toque
+// 1e · cambiar PIN: actual, nuevo y repetido a la vez
+// orden al Aceptar: primero el actual; después, que los nuevos coincidan; por último se guarda
+// mientras se comprueba, Aceptar se apaga: sin doble toque
 class CambiarPinDialog : DialogFragment() {
 
     private val viewModel: PanelViewModel by activityViewModels { PanelViewModel.Factory }
@@ -32,7 +32,7 @@ class CambiarPinDialog : DialogFragment() {
             .setPositiveButton(R.string.comun_aceptar, null)
             .create()
 
-        // [Claude] Igual que en 1c: el Aceptar de serie cerraría siempre; se cambia al enseñarse
+        // [Claude] igual que en 1c: el Aceptar de serie cerraría siempre; se cambia al enseñarse
         dialogo.setOnShowListener {
             val aceptar = dialogo.getButton(AlertDialog.BUTTON_POSITIVE)
             revisarBoton(binding, aceptar)
@@ -57,19 +57,19 @@ class CambiarPinDialog : DialogFragment() {
 
                 lifecycleScope.launch {
                     if (!viewModel.comprobarPin(actual)) {
-                        // El actual está mal: aviso y sacudida en el actual; los nuevos no se tocan
+                        // el actual está mal: aviso y sacudida en el actual; los nuevos no se tocan
                         avisarActualIncorrecto(binding)
                     } else if (nuevo != repite) {
-                        // El actual está bien, pero los nuevos no coinciden: se vacían los dos
+                        // el actual está bien, pero los nuevos no coinciden: se vacían los dos
                         binding.textoNuevo.text?.clear()
                         binding.textoRepite.text?.clear()
                         binding.campoNuevo.error = getString(R.string.pin_no_coinciden)
                         binding.textoNuevo.requestFocus()
                     } else if (viewModel.cambiarPin(actual, nuevo)) {
-                        // Todo bien: guardado. Se cierra sin romper si la app pasó a segundo plano
+                        // todo bien: guardado. se cierra sin romper si la app pasó a segundo plano
                         dismissAllowingStateLoss()
                     } else {
-                        // El repositorio vuelve a mirar el actual; si dijera que no, mismo aviso
+                        // el repositorio vuelve a mirar el actual; si dijera que no, mismo aviso
                         avisarActualIncorrecto(binding)
                     }
                 }
@@ -78,7 +78,7 @@ class CambiarPinDialog : DialogFragment() {
         return dialogo
     }
 
-    // Aceptar solo se enciende con 4 cifras en los tres campos (ficha 1)
+    // aceptar solo se enciende con 4 cifras en los tres campos (ficha 1)
     private fun revisarBoton(binding: DialogCambiarPinBinding, aceptar: Button) {
         val actualCompleto = binding.textoActual.text?.length == Comprobacion.LONGITUD_PIN
         val nuevoCompleto = binding.textoNuevo.text?.length == Comprobacion.LONGITUD_PIN

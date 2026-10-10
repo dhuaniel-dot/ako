@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 2a · Una caja de categoría (wireframe 02a): cabecera con nombre, «Categoría eliminada» y lápiz;
-     la lista de platos con ALTURA FIJA y scroll propio; «+ Plato» fijo abajo, fuera del scroll -->
+<!-- 2a · una caja de categoría (wireframe 02a): cabecera con nombre, «Categoría eliminada» y lápiz;
+     la lista de platos con altura fija y scroll propio; «+ Plato» fijo abajo, fuera del scroll -->
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     style="?attr/materialCardViewOutlinedStyle"
@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Cabecera: NOMBRE · (Categoría eliminada) · lápiz -->
+        <!-- cabecera: nombre · (categoría eliminada) · lápiz -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -25,7 +25,7 @@
             android:paddingStart="4dp"
             android:paddingEnd="4dp">
 
-            <!-- Icono visible para plegar (no un gesto oculto); gira cuando la caja está plegada -->
+            <!-- icono visible para plegar (no un gesto oculto); gira cuando la caja está plegada -->
             <ImageButton
                 android:id="@+id/botonPlegar"
                 android:layout_width="48dp"
@@ -72,7 +72,7 @@
             android:layout_height="1dp"
             android:background="?attr/colorOutlineVariant" />
 
-        <!-- Los platos: altura FIJA (cuatro filas). Nunca wrap_content ni un ScrollView alrededor -->
+        <!-- los platos: altura fija (cuatro filas). nunca wrap_content ni un ScrollView alrededor -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/listaPlatos"
             android:layout_width="match_parent"

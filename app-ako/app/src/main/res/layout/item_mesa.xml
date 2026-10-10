@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Una mesa de la rejilla (1d y 6a): el número grande y, si tiene comanda, el total debajo.
-     Nace como mesa libre (fondo y borde del tema); MesaAdapter la pinta roja si está ocupada -->
+<!-- una mesa de la rejilla (1d y 6a): el número grande y, si tiene comanda, el total debajo
+     nace como mesa libre (fondo y borde del tema); MesaAdapter la pinta roja si está ocupada -->
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -18,7 +18,7 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <!-- El número ocupa el hueco que deja el total y encoge su letra si no cabe
+        <!-- el número ocupa el hueco que deja el total y encoge su letra si no cabe
              (con la letra del móvil al máximo); como mucho 24 sp y nunca menos de 12 sp -->
         <TextView
             android:id="@+id/textoNumero"

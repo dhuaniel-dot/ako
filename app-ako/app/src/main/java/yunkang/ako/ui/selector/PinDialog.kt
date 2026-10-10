@@ -15,12 +15,12 @@ import yunkang.ako.dominio.Comprobacion
 import yunkang.ako.ui.comun.ComprobadorPin
 import yunkang.ako.ui.comun.sacudir
 
-// 1c · Introducir PIN. No decide nada: pregunta a quien lo abrió (un ComprobadorPin) y, si es correcto,
-// deja un sobre (CLAVE_RESULTADO) para quien lo abrió. Cancelar cierra sin sobre.
-// Mientras se comprueba, Aceptar se apaga: sin doble toque
+// 1c · introducir PIN. no decide nada: pregunta a quien lo abrió (un ComprobadorPin) y, si es correcto,
+// deja un sobre (CLAVE_RESULTADO) para quien lo abrió. cancelar cierra sin sobre
+// mientras se comprueba, Aceptar se apaga: sin doble toque
 class PinDialog : DialogFragment() {
 
-    // La Activity que lo abre tiene que saber comprobar un PIN (SelectorActivity o PedidoActivity)
+    // la Activity que lo abre tiene que saber comprobar un PIN (SelectorActivity o PedidoActivity)
     private val comprobador: ComprobadorPin
         get() = requireActivity() as ComprobadorPin
 
@@ -34,13 +34,13 @@ class PinDialog : DialogFragment() {
             .setPositiveButton(R.string.comun_aceptar, null)
             .create()
 
-        // [Claude] El Aceptar de serie cierra el diálogo siempre; se cambia al enseñarse,
+        // [Claude] el Aceptar de serie cierra el diálogo siempre; se cambia al enseñarse,
         // para que con un PIN incorrecto el diálogo siga abierto
         dialogo.setOnShowListener {
             val aceptar = dialogo.getButton(AlertDialog.BUTTON_POSITIVE)
             aceptar.isEnabled = binding.textoPin.text?.length == Comprobacion.LONGITUD_PIN
 
-            // Aceptar solo se enciende con 4 cifras (ficha 1)
+            // aceptar solo se enciende con 4 cifras (ficha 1)
             binding.textoPin.doAfterTextChanged {
                 binding.campoPin.error = null
                 aceptar.isEnabled = binding.textoPin.text?.length == Comprobacion.LONGITUD_PIN
@@ -52,7 +52,7 @@ class PinDialog : DialogFragment() {
                 lifecycleScope.launch {
                     if (comprobador.comprobarPin(pin)) {
                         setFragmentResult(CLAVE_RESULTADO, Bundle())
-                        // Si mientras se picaba el PIN la pantalla pasó a segundo plano (Home),
+                        // si mientras se picaba el PIN la pantalla pasó a segundo plano (Home),
                         // dismiss() normal rompería la app; esta versión cierra igual sin romper
                         dismissAllowingStateLoss()
                     } else {
@@ -67,7 +67,7 @@ class PinDialog : DialogFragment() {
     }
 
     companion object {
-        // [Claude] El nombre del sobre que deja el diálogo cuando el PIN es correcto
+        // [Claude] el nombre del sobre que deja el diálogo cuando el PIN es correcto
         const val CLAVE_RESULTADO = "pin_correcto"
     }
 }

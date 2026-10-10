@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- 5c · Carrito (wireframe 05c), pantalla completa: barra «← Atrás · Carrito · Mesa N»; las líneas;
-     TOTAL y «Enviar» fijos abajo -->
+     total y «Enviar» fijos abajo -->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Barra superior: «← Atrás» vuelve a la carta; la mesa, siempre a la vista -->
+    <!-- barra superior: «← Atrás» vuelve a la carta; la mesa, siempre a la vista -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/barraSuperior"
         android:layout_width="0dp"
@@ -61,7 +61,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/barraSuperior" />
 
-    <!-- [Claude] TOTAL fijo encima de Enviar (no detrás de la última línea): con muchas líneas sigue a la vista -->
+    <!-- [Claude] total fijo encima de Enviar (no detrás de la última línea): con muchas líneas sigue a la vista -->
     <LinearLayout
         android:id="@+id/filaTotal"
         android:layout_width="0dp"

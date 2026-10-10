@@ -10,10 +10,10 @@ import yunkang.ako.datos.entidades.Categoria
 import yunkang.ako.ui.comun.pintarFoto
 import java.io.File
 
-// 5a · La fila de categorías de la carta: un círculo con el nombre por categoría, la activa resaltada.
-// No es el CategoriaAdapter del Panel: solo comparten el dato. Sencillo, con notifyDataSetChanged
+// 5a · la fila de categorías de la carta: un círculo con el nombre por categoría, la activa resaltada
+// no es el CategoriaAdapter del Panel: solo comparten el dato. sencillo, con notifyDataSetChanged
 class CategoriaFilaAdapter(
-    // Qué hacer al tocar una categoría (saltar a su sección): lo decide la carta, no el adaptador
+    // qué hacer al tocar una categoría (saltar a su sección): lo decide la carta, no el adaptador
     private val alTocar: (Long) -> Unit
 ) : RecyclerView.Adapter<CategoriaFilaAdapter.FilaViewHolder>() {
 
@@ -22,7 +22,7 @@ class CategoriaFilaAdapter(
 
     class FilaViewHolder(val binding: ItemCategoriaFilaBinding) : RecyclerView.ViewHolder(binding.root)
 
-    // La carta le da sus categorías (solo las que tienen algún plato visible)
+    // la carta le da sus categorías (solo las que tienen algún plato visible)
     fun mostrar(categorias: List<Categoria>) {
         this.categorias = categorias
         notifyDataSetChanged()
@@ -48,7 +48,7 @@ class CategoriaFilaAdapter(
 
         pintarFoto(holder.binding.imagenCategoria, categoria.imagen?.let { File(it) }, categoria.nombre, redonda = true)
 
-        // La activa no se distingue solo por el color: negrita y raya debajo.
+        // la activa no se distingue solo por el color: negrita y raya debajo
         // isSelected hace que el lector de pantalla diga «seleccionado»
         holder.binding.textoNombre.setTypeface(null, if (activa) Typeface.BOLD else Typeface.NORMAL)
         holder.binding.rayaActiva.visibility = if (activa) View.VISIBLE else View.INVISIBLE

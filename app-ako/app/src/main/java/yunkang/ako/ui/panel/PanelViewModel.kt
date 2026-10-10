@@ -17,18 +17,18 @@ import yunkang.ako.dominio.modelos.PlatoConMesas
 import yunkang.ako.dominio.modelos.ResultadoGuardado
 import yunkang.ako.imagenes.Galeria
 
-// La libreta del Panel (pantalla 2): el PIN (1e) y la carta en modo edición (2a)
+// la libreta del Panel (pantalla 2): el PIN (1e) y la carta en modo edición (2a)
 class PanelViewModel(
     private val seguridadRepository: SeguridadRepository,
     private val cartaRepository: CartaRepository,
     private val galeria: Galeria
 ) : ViewModel() {
 
-    // Las cajas del Panel: Room las manda solas cada vez que cambia una categoría o un plato (Flow → LiveData); nadie las escribe a mano
+    // las cajas del Panel: Room las manda solas cada vez que cambia una categoría o un plato (Flow → LiveData); nadie las escribe a mano
     val categoriasConPlatos: LiveData<List<CategoriaConPlatos>> =
         cartaRepository.categoriasConPlatos().asLiveData()
 
-    // Qué cajas están plegadas. Vive en la libreta, no en la bandeja: las bandejas se reciclan
+    // qué cajas están plegadas. vive en la libreta, no en la bandeja: las bandejas se reciclan
     private val plegadas = mutableSetOf<Long>()
 
     fun estaPlegada(categoriaId: Long): Boolean = categoriaId in plegadas
@@ -40,9 +40,9 @@ class PanelViewModel(
     // 2b (como el plato): al elegir la foto no se copia nada; se pide el préstamo largo
     fun conservarPrestamo(uri: Uri) = galeria.conservarPrestamo(uri)
 
-    // 2b: crea o renombra una categoría, con su foto si se eligió una. La lista se pone al día sola.
-    // La foto elegida se copia AHORA; la vieja se borra solo si se guardó bien, y la copia nueva si no
-    // (nombre repetido). Si la foto no se puede leer, Galeria lanza el error y la hoja avisa
+    // 2b: crea o renombra una categoría, con su foto si se eligió una. la lista se pone al día sola
+    // la foto elegida se copia ahora; la vieja se borra solo si se guardó bien, y la copia nueva si no
+    // (nombre repetido). si la foto no se puede leer, Galeria lanza el error y la hoja avisa
     suspend fun guardarCategoria(c: Categoria, fotoElegida: Uri?): ResultadoGuardado {
         val fotoAntes = c.imagen
         val fotoNueva = if (fotoElegida == null) null else galeria.guardar(fotoElegida)
@@ -64,7 +64,7 @@ class PanelViewModel(
     suspend fun platosAfectados(categoriaId: Long): List<PlatoConMesas> =
         cartaRepository.platosAfectadosPorCategoria(categoriaId)
 
-    // 2b: eliminar (activo = false) o recuperar una categoría. Las mesas ya se miraron antes
+    // 2b: eliminar (activo = false) o recuperar una categoría. las mesas ya se miraron antes
     suspend fun eliminarCategoria(id: Long) = cartaRepository.eliminarCategoria(id)
 
     suspend fun recuperarCategoria(id: Long) = cartaRepository.recuperarCategoria(id)

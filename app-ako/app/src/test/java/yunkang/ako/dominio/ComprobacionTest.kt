@@ -17,7 +17,7 @@ class ComprobacionTest {
         }
     }
 
-    // [Claude] Cantidad entre 1 y 99
+    // [Claude] cantidad entre 1 y 99
     @Test
     fun cantidadEntre1y99() {
         assertFalse(Comprobacion.cantidadValida(0))
@@ -26,7 +26,7 @@ class ComprobacionTest {
         assertFalse(Comprobacion.cantidadValida(100))
     }
 
-    // [Claude] El PIN son cuatro cifras
+    // [Claude] el PIN son cuatro cifras
     @Test
     fun pinDeCuatroCifras() {
         assertTrue(Comprobacion.pinValido("1234"))

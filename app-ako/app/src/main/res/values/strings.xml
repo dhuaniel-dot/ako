@@ -1,48 +1,48 @@
 <resources>
     <string name="app_name" translatable="false">AKO</string>
 
-    <!-- Comunes: botones y barras que se repiten en varias pantallas -->
+    <!-- comunes: botones y barras que se repiten en varias pantallas -->
     <string name="comun_atras">← Atrás</string>
-    <!-- [Claude] Lo que lee el lector de pantalla en el botón Atrás (sin la flecha) -->
+    <!-- [Claude] lo que lee el lector de pantalla en el botón Atrás (sin la flecha) -->
     <string name="comun_atras_cd">Atrás</string>
     <string name="comun_aceptar">Aceptar</string>
     <string name="comun_cancelar">Cancelar</string>
     <string name="comun_guardar">Guardar</string>
     <string name="comun_eliminar">Eliminar</string>
-    <!-- Precio ya formateado + espacio que no se parte (&#160;) + € -->
+    <!-- precio ya formateado + espacio que no se parte (&#160;) + € -->
     <string name="comun_precio" translatable="false">%1$s&#160;€</string>
     <!-- «12 · Entrecot»: número · nombre (punto medio) -->
     <string name="comun_plato_numero_nombre" translatable="false">%1$d · %2$s</string>
     <string name="comun_mas" translatable="false">+</string>
     <string name="comun_sin_foto_cd">Sin foto</string>
-    <!-- [Claude] La «y» de las listas («mesas 5, 6 y 7»); los espacios los pone el código (XML se come los de los bordes) -->
+    <!-- [Claude] la «y» de las listas («mesas 5, 6 y 7»); los espacios los pone el código (XML se come los de los bordes) -->
     <string name="comun_y">y</string>
-    <!-- Botón negativo de los dos avisos 3e -->
+    <!-- botón negativo de los dos avisos 3e -->
     <string name="comun_no">No</string>
 
-    <!-- 1a · Selector de rol -->
+    <!-- 1a · selector de rol -->
     <string name="selector_subtitulo">Pedidos para bares y restaurantes</string>
     <string name="selector_btn_propietario">Propietario</string>
     <string name="selector_btn_pedir">Pedir</string>
     <string name="selector_btn_cuenta">Cuenta</string>
 
-    <!-- 1b · Crear PIN (barra superior sin Atrás) -->
+    <!-- 1b · crear PIN (barra superior sin Atrás) -->
     <string name="pin_crear_barra">Crear PIN</string>
     <string name="pin_crear_titulo">Crea el PIN del Propietario</string>
     <string name="pin_crear_subtitulo">Protege el Panel y la salida de Pedir.</string>
     <string name="pin_hint_pin">PIN (4 cifras)</string>
     <string name="pin_hint_repite">Repite el PIN</string>
-    <!-- Versión larga del wireframe -->
+    <!-- versión larga del wireframe -->
     <string name="pin_crear_aviso">Si lo olvidas, no se puede recuperar: habrá que reinstalar la app.</string>
 
-    <!-- Errores del PIN (1b, 1c y 1e) -->
+    <!-- errores del PIN (1b, 1c y 1e) -->
     <string name="pin_no_coinciden">Los PIN no coinciden</string>
     <string name="pin_incorrecto">PIN incorrecto</string>
 
-    <!-- 1c · Introducir PIN -->
+    <!-- 1c · introducir PIN -->
     <string name="pin_introducir_titulo">Introduce el PIN</string>
 
-    <!-- 1e · Cambiar PIN (los tres campos a la vez). El título sirve también para el botón del Panel -->
+    <!-- 1e · cambiar PIN (los tres campos a la vez). el título sirve también para el botón del Panel -->
     <string name="pin_cambiar_titulo">Cambiar PIN</string>
     <string name="pin_hint_actual">PIN actual</string>
     <string name="pin_hint_nuevo">PIN nuevo</string>
@@ -56,94 +56,94 @@
     <string name="panel_categoria_eliminada">Categoría eliminada</string>
     <string name="panel_plato_eliminado">Eliminado</string>
     <string name="panel_btn_mas_plato">+ Plato</string>
-    <!-- [Claude] El texto de partida del icono de plegar en item_categoria_caja.xml; al pintar la caja,
+    <!-- [Claude] el texto de partida del icono de plegar en item_categoria_caja.xml; al pintar la caja,
          CategoriaAdapter pone el que lleva el nombre (panel_plegar_categoria_cd / panel_desplegar_categoria_cd) -->
     <string name="panel_plegar_cd">Plegar</string>
 
-    <!-- 2b · Hoja de categoría. Los títulos sirven también de contentDescription del + y del lápiz -->
+    <!-- 2b · hoja de categoría. los títulos sirven también de contentDescription del + y del lápiz -->
     <string name="categoria_titulo_nueva">Nueva categoría</string>
     <string name="categoria_titulo_editar">Editar categoría</string>
     <string name="categoria_hint_nombre">Nombre</string>
     <string name="categoria_foto_opcional">Foto (opcional)</string>
     <string name="categoria_btn_elegir_foto">+ Elegir</string>
-    <!-- El interruptor de 2b se llama igual que el del plato; apagarlo ELIMINA la categoría -->
+    <!-- el interruptor de 2b se llama igual que el del plato; apagarlo elimina la categoría -->
     <string name="plato_en_la_carta">En la carta</string>
     <string name="categoria_nombre_repetido">Ya existe una categoría con ese nombre</string>
 
-    <!-- 2e · Aviso agrupado al eliminar una categoría con platos en comandas pendientes -->
+    <!-- 2e · aviso agrupado al eliminar una categoría con platos en comandas pendientes -->
     <string name="categoria_eliminar_titulo">¿Eliminar la categoría?</string>
     <!-- %1$s = la lista de platos, p. ej. «Flan (mesa 5), Helado (mesas 5 y 7)» -->
     <plurals name="categoria_eliminar_cuerpo">
         <item quantity="one">Este plato está en comandas pendientes: %1$s. No se quitará de esas comandas.</item>
         <item quantity="other">Estos platos están en comandas pendientes: %1$s. No se quitarán de esas comandas.</item>
     </plurals>
-    <!-- [Claude] Un plato con sus mesas: %1$s = nombre, %2$s = «5» o «5 y 7» -->
+    <!-- [Claude] un plato con sus mesas: %1$s = nombre, %2$s = «5» o «5 y 7» -->
     <plurals name="categoria_eliminar_plato_mesas">
         <item quantity="one">%1$s (mesa %2$s)</item>
         <item quantity="other">%1$s (mesas %2$s)</item>
     </plurals>
 
-    <!-- 3a · Formulario del plato -->
+    <!-- 3a · formulario del plato -->
     <string name="plato_titulo_nuevo">Nuevo plato</string>
     <string name="plato_titulo_editar">Editar plato</string>
-    <!-- La foto elegida no se ha podido leer (archivo roto, no es una imagen) -->
+    <!-- la foto elegida no se ha podido leer (archivo roto, no es una imagen) -->
     <string name="foto_error">No se ha podido usar esa foto</string>
     <string name="plato_elegir_foto_cd">Elegir foto</string>
-    <!-- Obligatorios con * -->
+    <!-- obligatorios con * -->
     <string name="plato_hint_nombre">Nombre *</string>
     <string name="plato_hint_numero">Número *</string>
     <string name="plato_hint_precio">Precio (€) *</string>
     <string name="plato_hint_categoria">Categoría *</string>
     <string name="plato_hint_descripcion">Descripción</string>
     <string name="plato_seccion_alergenos">ALÉRGENOS</string>
-    <!-- Error del campo número al guardar (número de plato sin repetir) -->
+    <!-- error del campo número al guardar (número de plato sin repetir) -->
     <string name="plato_numero_repetido">Ese número ya lo tiene otro plato</string>
-    <!-- Ayuda al cambiar el número de un plato ya creado; %1$d = el número ANTERIOR -->
+    <!-- ayuda al cambiar el número de un plato ya creado; %1$d = el número anterior -->
     <string name="plato_numero_cambiado">Si alguien tiene apuntado el %1$d, dejará de corresponder</string>
 
-    <!-- 3a · Atrás con cambios sin guardar · comun_cancelar / carta_btn_salir -->
+    <!-- 3a · atrás con cambios sin guardar · comun_cancelar / carta_btn_salir -->
     <string name="plato_salir_titulo">¿Salir sin guardar?</string>
     <string name="plato_salir_cuerpo">Se perderán los cambios</string>
-    <!-- El mismo «Salir» que la barra de la carta (5a) -->
+    <!-- el mismo «Salir» que la barra de la carta (5a) -->
     <string name="carta_btn_salir">Salir</string>
 
-    <!-- 3d · Aviso de las mesas al apagar «En la carta» y guardar · comun_cancelar / comun_eliminar -->
+    <!-- 3d · aviso de las mesas al apagar «En la carta» y guardar · comun_cancelar / comun_eliminar -->
     <string name="mesas_afectadas_titulo">¿Eliminar el plato?</string>
-    <!-- Cuenta las mesas; %1$s = nombre del plato, %2$s = «6» o «4 y 7» -->
+    <!-- cuenta las mesas; %1$s = nombre del plato, %2$s = «6» o «4 y 7» -->
     <plurals name="mesas_afectadas_cuerpo">
         <item quantity="one">%1$s está en una comanda pendiente de la mesa %2$s. No se quitará de esa comanda.</item>
         <item quantity="other">%1$s está en comandas pendientes de las mesas %2$s. No se quitará de esas comandas.</item>
     </plurals>
 
     <!-- 3e · aviso 1 de 2 · título: panel_categoria_eliminada · comun_no / categoria_eliminada_btn_mover -->
-    <!-- %1$s = la categoría eliminada, %2$s = el nombre REAL de la categoría por defecto -->
+    <!-- %1$s = la categoría eliminada, %2$s = el nombre real de la categoría por defecto -->
     <string name="categoria_eliminada_cuerpo">La categoría %1$s está eliminada. ¿Muevo el plato a %2$s?</string>
     <string name="categoria_eliminada_btn_mover">Sí, mover</string>
 
     <!-- 3e · aviso 2 de 2 · comun_no / recuperar_categoria_btn_recuperar (recuperar, no reactivar) -->
     <string name="recuperar_categoria_titulo">¿Quieres recuperar %1$s?</string>
-    <!-- Frase neutra que vale para 0, 1 o varios; %1$d = platos que vuelven -->
+    <!-- frase neutra que vale para 0, 1 o varios; %1$d = platos que vuelven -->
     <string name="recuperar_categoria_cuerpo">Platos que volverán a la carta: %1$d</string>
     <string name="recuperar_categoria_btn_recuperar">Recuperar</string>
 
     <!-- Pedir: 1d, la puerta, 5a, 5b, 5c y sus avisos -->
 
-    <!-- Comunes que estrena Pedir (también los usan Cuenta y el recibo) -->
+    <!-- comunes que estrena Pedir (también los usan Cuenta y el recibo) -->
     <string name="comun_mesa">Mesa %1$d</string>
     <string name="comun_total">TOTAL</string>
     <!-- «Quitar» en cada línea del carrito -->
     <string name="comun_quitar">Quitar</string>
     <!-- «2 × Entrecot»: cantidad × nombre (signo × U+00D7) -->
     <string name="comun_linea" translatable="false">%1$d × %2$s</string>
-    <!-- Un número entero suelto (mesa, cantidad, número de plato, comandas del día),
+    <!-- un número entero suelto (mesa, cantidad, número de plato, comandas del día),
          escrito con los dígitos del idioma del móvil y no con toString() -->
     <string name="comun_numero" translatable="false">%1$d</string>
-    <!-- Signo menos U+2212 (el + ya está arriba, comun_mas) -->
+    <!-- signo menos U+2212 (el + ya está arriba, comun_mas) -->
     <string name="comun_menos" translatable="false">−</string>
-    <!-- Lo que lee el lector de pantalla en los botones − y + de 5b y 5c -->
+    <!-- lo que lee el lector de pantalla en los botones − y + de 5b y 5c -->
     <string name="comun_menos_cd">Quitar uno</string>
     <string name="comun_mas_cd">Añadir uno</string>
-    <!-- Lo que lee el lector de pantalla en los botones que se repiten, con el nombre para
+    <!-- lo que lee el lector de pantalla en los botones que se repiten, con el nombre para
          distinguirlos: −, + y Quitar de cada línea (5c, 6b), y plegar y lápiz de cada caja del Panel (2a) -->
     <string name="linea_menos_cd">Quitar uno de %1$s</string>
     <string name="linea_mas_cd">Añadir uno de %1$s</string>
@@ -154,11 +154,11 @@
 
     <!-- 1d · rejilla en modo elegir -->
     <string name="mesa_elegir_titulo">Elige la mesa</string>
-    <!-- Lo que lee el lector de pantalla en una mesa ocupada: «Mesa 4, 42,00 €»
+    <!-- lo que lee el lector de pantalla en una mesa ocupada: «Mesa 4, 42,00 €»
          (%1$s = comun_mesa ya montado, %2$s = total ya con su €); la coma sale de aquí, no del código (para español e inglés) -->
     <string name="mesa_ocupada_cd" translatable="false">%1$s, %2$s</string>
 
-    <!-- Puerta de Pedir · solo el botón comun_aceptar -->
+    <!-- puerta de Pedir · solo el botón comun_aceptar -->
     <string name="puerta_pedir_titulo">No se puede pedir</string>
     <string name="puerta_pedir_carta_vacia">La carta está vacía</string>
     <string name="puerta_pedir_categorias_eliminadas">Todas las categorías están eliminadas</string>
@@ -166,28 +166,28 @@
     <!-- 5a · la carta. %1$d = número de platos, %2$s = total ya con su € (comun_precio) -->
     <string name="carta_carrito_pastilla">Carrito · %1$d · %2$s</string>
 
-    <!-- 5b · ficha del plato. Título del desplegable -->
+    <!-- 5b · ficha del plato. título del desplegable -->
     <string name="ficha_alergenos">Alérgenos</string>
-    <!-- Una línea por alérgeno marcado -->
+    <!-- una línea por alérgeno marcado -->
     <string name="ficha_alergeno_item" translatable="false">• %1$s</string>
     <string name="ficha_sin_alergenos">El restaurante no ha indicado alérgenos para este plato. Pregunta al personal.</string>
     <string name="ficha_cantidad">Cantidad</string>
-    <!-- Guion largo U+2014; %1$s = importe ya con su € -->
+    <!-- guion largo U+2014; %1$s = importe ya con su € -->
     <string name="ficha_btn_anadir">Añadir — %1$s</string>
-    <!-- [Claude] Aviso al topar en 99 al añadir -->
+    <!-- [Claude] aviso al topar en 99 al añadir -->
     <string name="carrito_tope_99">Máximo 99 unidades por plato</string>
 
-    <!-- 5c · carrito. El botón sirve también de afirmativo en la confirmación -->
+    <!-- 5c · carrito. el botón sirve también de afirmativo en la confirmación -->
     <string name="carrito_titulo">Carrito · Mesa %1$d</string>
     <string name="carrito_btn_enviar">Enviar</string>
 
     <!-- 5c · confirmación de Enviar · comun_cancelar / carrito_btn_enviar. %2$s = total ya con su € -->
     <string name="enviar_titulo">¿Enviar el pedido?</string>
     <string name="enviar_cuerpo">Mesa %1$d · %2$s</string>
-    <!-- [Claude] Aviso tras enviar -->
+    <!-- [Claude] aviso tras enviar -->
     <string name="enviar_hecho">Pedido enviado a la mesa %1$d</string>
 
-    <!-- Salir con platos sin enviar, antes del PIN · comun_cancelar / carta_btn_salir -->
+    <!-- salir con platos sin enviar, antes del PIN · comun_cancelar / carta_btn_salir -->
     <string name="salir_sin_enviar_titulo">¿Salir sin enviar?</string>
     <!-- %1$d = platos en el carrito: decide la forma y se escribe en la frase -->
     <plurals name="salir_sin_enviar_cuerpo">
@@ -199,24 +199,24 @@
     <string name="cuenta_titulo">Cuenta</string>
     <!-- Snackbar al tocar una mesa blanca -->
     <string name="cuenta_mesa_sin_comanda">La mesa %1$d no tiene comanda</string>
-    <!-- Barra de 6b y también botón afirmativo del aviso de Anular -->
+    <!-- barra de 6b y también botón afirmativo del aviso de Anular -->
     <string name="comanda_btn_anular">Anular</string>
     <string name="comanda_btn_dar_cuenta">Dar la cuenta</string>
     <!-- 6c y el recibo en solo lectura de 2g -->
     <string name="recibo_titulo">Mesa %1$d · Recibo</string>
     <string name="recibo_entregado">Entregado</string>
     <string name="recibo_opcional">(opcional)</string>
-    <!-- Sufijo a la derecha del campo Entregado -->
+    <!-- sufijo a la derecha del campo Entregado -->
     <string name="recibo_euro_sufijo" translatable="false">€</string>
     <string name="recibo_cambio">Cambio</string>
-    <!-- Botón de 6c y también botón afirmativo del aviso de Cobrar -->
+    <!-- botón de 6c y también botón afirmativo del aviso de Cobrar -->
     <string name="recibo_btn_cobrar">Cobrar</string>
 
     <!-- 6b · aviso de Anular · comun_cancelar / comanda_btn_anular -->
     <string name="anular_titulo">¿Anular la comanda de la mesa %1$d?</string>
     <string name="anular_cuerpo">No se puede deshacer</string>
 
-    <!-- 6b · Aviso al quitar la última línea (sin líneas = anulada) · comun_cancelar / ultima_linea_btn_quitar_anular -->
+    <!-- 6b · aviso al quitar la última línea (sin líneas = anulada) · comun_cancelar / ultima_linea_btn_quitar_anular -->
     <string name="ultima_linea_titulo">¿Quitar la última línea?</string>
     <string name="ultima_linea_cuerpo">La comanda se quedará vacía y se anulará. La mesa %1$d quedará libre.</string>
     <string name="ultima_linea_btn_quitar_anular">Quitar y anular</string>
@@ -225,8 +225,8 @@
     <string name="cobrar_titulo">¿Cobrar la mesa %1$d?</string>
     <string name="cobrar_cuerpo">Total: %1$s.\nLa comanda quedará PAGADA y no se podrá modificar.</string>
 
-    <!-- 2g · Resumen de ingresos (el título dice «Resumen de ingresos»; el pie en dos etiquetas).
-         La fecha del campo Día no es una cadena: la escribe Formato.fecha en el idioma del móvil -->
+    <!-- 2g · Resumen de ingresos (el título dice «Resumen de ingresos»; el pie en dos etiquetas)
+         la fecha del campo Día no es una cadena: la escribe Formato.fecha en el idioma del móvil -->
     <string name="resumen_titulo">Resumen de ingresos</string>
     <string name="resumen_dia">Día</string>
     <string name="resumen_seccion_comandas">COMANDAS COBRADAS</string>
@@ -236,10 +236,10 @@
     <string name="resumen_pie_total">Total del día</string>
     <string name="resumen_vacio">No se cobró ninguna comanda ese día</string>
 
-    <!-- Precarga: estos textos se guardan en la base de datos la primera vez que se abre la app.
+    <!-- Precarga: estos textos se guardan en la base de datos la primera vez que se abre la app
          translatable="false": son datos de la carta en español, no se traducen -->
 
-    <!-- Los 14 alérgenos legales (anexo II del Reglamento UE 1169/2011). El número fija el orden -->
+    <!-- los 14 alérgenos legales (anexo II del Reglamento UE 1169/2011). el número fija el orden -->
     <string name="alergeno_01_gluten" translatable="false">Gluten</string>
     <string name="alergeno_02_crustaceos" translatable="false">Crustáceos</string>
     <string name="alergeno_03_huevos" translatable="false">Huevos</string>
@@ -255,10 +255,10 @@
     <string name="alergeno_13_altramuces" translatable="false">Altramuces</string>
     <string name="alergeno_14_moluscos" translatable="false">Moluscos</string>
 
-    <!-- Categoría por defecto (se reconoce por esPorDefecto, nunca por el nombre) -->
+    <!-- categoría por defecto (se reconoce por esPorDefecto, nunca por el nombre) -->
     <string name="precarga_categoria_por_defecto" translatable="false">Otros</string>
 
-    <!-- Categoría y plato de ejemplo: 1 · Agua · 1,50 € -->
+    <!-- categoría y plato de ejemplo: 1 · Agua · 1,50 € -->
     <string name="precarga_categoria_ejemplo" translatable="false">Bebidas</string>
     <string name="precarga_plato_ejemplo" translatable="false">Agua</string>
 </resources>

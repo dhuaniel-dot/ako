@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 1b · Crear PIN (wireframe 01b): solo en el primer arranque y obligatoria, por eso la barra no tiene Atrás -->
-<!-- [Claude] Con scroll, para que en pantallas bajas o con letra grande se llegue a todo -->
+<!-- 1b · crear PIN (wireframe 01b): solo en el primer arranque y obligatoria, por eso la barra no tiene Atrás -->
+<!-- [Claude] con scroll, para que en pantallas bajas o con letra grande se llegue a todo -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -11,7 +11,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <!-- Barra superior sin flecha Atrás -->
+    <!-- barra superior sin flecha Atrás -->
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/barra"
         android:layout_width="0dp"
@@ -86,7 +86,7 @@
             android:maxLength="4" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Aviso fijo en una caja gris -->
+    <!-- aviso fijo en una caja gris -->
     <TextView
         android:id="@+id/textoAviso"
         android:layout_width="0dp"
@@ -101,7 +101,7 @@
         app:layout_constraintStart_toStartOf="@id/textoTitulo"
         app:layout_constraintTop_toBottomOf="@id/campoRepite" />
 
-    <!-- Aceptar: apagado hasta que los dos campos tengan 4 cifras -->
+    <!-- aceptar: apagado hasta que los dos campos tengan 4 cifras -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/botonAceptar"
         android:layout_width="0dp"

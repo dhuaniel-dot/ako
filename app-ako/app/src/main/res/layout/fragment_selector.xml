@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 1a · Selector de rol (wireframe 01a): nombre, subtítulo y tres botones grandes apilados -->
-<!-- [Claude] Con scroll, para que en pantallas bajas o con letra grande se llegue a todo -->
+<!-- 1a · selector de rol (wireframe 01a): nombre, subtítulo y tres botones grandes apilados -->
+<!-- [Claude] con scroll, para que en pantallas bajas o con letra grande se llegue a todo -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"

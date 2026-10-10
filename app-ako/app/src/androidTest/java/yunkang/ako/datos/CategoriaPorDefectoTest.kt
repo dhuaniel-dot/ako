@@ -16,7 +16,7 @@ import yunkang.ako.datos.repositorios.CartaRepository
 import yunkang.ako.datos.repositorios.ComandaRepositoryReal
 import yunkang.ako.dominio.modelos.ResultadoGuardado
 
-// Las categorías con Room de verdad (base en memoria con la precarga hecha).
+// las categorías con Room de verdad (base en memoria con la precarga hecha)
 @RunWith(AndroidJUnit4::class)
 class CategoriaPorDefectoTest {
 
@@ -26,7 +26,7 @@ class CategoriaPorDefectoTest {
     @Before
     fun prepararBase() {
         val context = ApplicationProvider.getApplicationContext<Context>()
-        // Base en memoria CON la precarga, como la app: se escribe sola al abrir la base
+        // base en memoria con la precarga, como la app: se escribe sola al abrir la base
         baseDeDatos = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java)
             .addCallback(Precarga(context))
             .build()
@@ -40,23 +40,23 @@ class CategoriaPorDefectoTest {
         baseDeDatos.close()
     }
 
-    // Cuántas categorías tienen esPorDefecto = true (nunca se busca por el nombre)
+    // cuántas categorías tienen esPorDefecto = true (nunca se busca por el nombre)
     private fun contarPorDefecto(): Int =
         runBlocking { baseDeDatos.categoriaDao().todas().count { it.esPorDefecto } }
 
-    // Siempre hay exactamente una categoría por defecto; no se elimina y no se crea otra
+    // siempre hay exactamente una categoría por defecto; no se elimina y no se crea otra
     @Test
     fun siempreHayUnaSolaCategoriaPorDefecto() {
-        // Tras la precarga: una sola, y activa
+        // tras la precarga: una sola, y activa
         assertEquals(1, contarPorDefecto())
         val porDefecto = runBlocking { baseDeDatos.categoriaDao().porDefecto() }
         assertTrue(porDefecto.activo)
 
-        // Intentar eliminarla: sigue activa
+        // intentar eliminarla: sigue activa
         runBlocking { repositorio.eliminarCategoria(porDefecto.id) }
         assertTrue(runBlocking { baseDeDatos.categoriaDao().porDefecto() }.activo)
 
-        // Intentar crear otra por defecto: sigue habiendo una sola
+        // intentar crear otra por defecto: sigue habiendo una sola
         val varios = Categoria(nombre = "Varios", imagen = null, orden = 0, activo = true, esPorDefecto = true)
         runBlocking { repositorio.guardarCategoria(varios) }
         assertEquals(1, contarPorDefecto())

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 5a · La cabecera de una sección de la lista («CARNES»): el nombre en mayúsculas y gris, como 05a -->
+<!-- 5a · la cabecera de una sección de la lista («CARNES»): el nombre en mayúsculas y gris, como 05a -->
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/textoCabecera"

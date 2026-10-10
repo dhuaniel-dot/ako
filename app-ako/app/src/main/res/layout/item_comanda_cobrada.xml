@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 2g · Una comanda cobrada (wireframe 02g): «Mesa 9» y debajo «Cobrada a las 14:32»; el importe a la derecha -->
+<!-- 2g · una comanda cobrada (wireframe 02g): «Mesa 9» y debajo «Cobrada a las 14:32»; el importe a la derecha -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"

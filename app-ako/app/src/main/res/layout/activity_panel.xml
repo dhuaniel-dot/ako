@@ -7,8 +7,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Barra superior gris: «← Atrás» a la izquierda, «Categorías» en el centro y «+» a la derecha.
-         [Claude] El título va atado entre los dos botones para no pisarlos con la letra grande (accesibilidad) -->
+    <!-- barra superior gris: «← Atrás» a la izquierda, «Categorías» en el centro y «+» a la derecha
+         [Claude] el título va atado entre los dos botones para no pisarlos con la letra grande (accesibilidad) -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/barraSuperior"
         android:layout_width="0dp"
@@ -50,7 +50,7 @@
             app:layout_constraintStart_toEndOf="@id/botonAtras"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- «+» crea una categoría (2b). Sin texto que leer: el lector dice «Nueva categoría» -->
+        <!-- «+» crea una categoría (2b). sin texto que leer: el lector dice «Nueva categoría» -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/botonNuevaCategoria"
             style="@style/Widget.Material3.Button.TextButton"
@@ -84,7 +84,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/barraSuperior" />
 
-    <!-- La lista de cajas: ocupa lo que queda entre el Resumen y los botones -->
+    <!-- la lista de cajas: ocupa lo que queda entre el Resumen y los botones -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/listaCategorias"
         android:layout_width="0dp"
@@ -96,7 +96,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/botonResumen" />
 
-    <!-- Barra inferior: Cambiar PIN (con borde) y Terminar (acento), uno al lado del otro -->
+    <!-- barra inferior: Cambiar PIN (con borde) y Terminar (acento), uno al lado del otro -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/botonCambiarPin"
         style="@style/Widget.Material3.Button.OutlinedButton"

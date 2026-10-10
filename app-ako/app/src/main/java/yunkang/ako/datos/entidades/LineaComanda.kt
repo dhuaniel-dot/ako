@@ -6,8 +6,8 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
-// Una línea de la comanda: "2 × Agua a 1,50 €". Tabla "linea_comanda".
-// Copia el nombre y el precio del plato en el momento de pedir.
+// una línea de la comanda: "2 × Agua a 1,50 €". tabla "linea_comanda"
+// copia el nombre y el precio del plato en el momento de pedir
 @Entity(
     tableName = "linea_comanda",
     foreignKeys = [

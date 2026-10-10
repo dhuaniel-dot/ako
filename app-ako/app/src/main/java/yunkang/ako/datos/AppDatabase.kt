@@ -15,8 +15,8 @@ import yunkang.ako.datos.dao.PrecargadosDao
 import yunkang.ako.datos.dao.ProductoDao
 import yunkang.ako.datos.dao.ComandaDao
 
-// La base de datos de Ako: el archivador con sus 7 cajones.
-// La única instancia la guarda EntradaAko.
+// la base de datos de Ako: el archivador con sus 7 cajones
+// la única instancia la guarda EntradaAko
 @Database(
     entities = [
         Categoria::class,
@@ -32,7 +32,7 @@ import yunkang.ako.datos.dao.ComandaDao
 )
 abstract class AppDatabase : RoomDatabase() {
 
-    // Los mostradores del archivero; Room escribe su código al compilar.
+    // los mostradores del archivero; Room escribe su código al compilar
     abstract fun categoriaDao(): CategoriaDao
     abstract fun productoDao(): ProductoDao
     abstract fun mesaDao(): MesaDao

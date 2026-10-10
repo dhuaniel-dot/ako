@@ -7,23 +7,23 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import yunkang.ako.R
 
-// Las mesas del bar: de la 1 a la 60. Solo está escrito aquí
+// las mesas del bar: de la 1 a la 60. solo está escrito aquí
 private const val NUM_MESAS = 60
 
-// La precarga: lo que la app trae "de fábrica" la primera vez que se abre.
-// Room llama a onCreate UNA sola vez: cuando crea el archivo de la base de datos.
-// Todo se escribe aquí dentro, en la base «cruda» que pasa Room, y no por detrás: Android crea la base
+// la precarga: lo que la app trae "de fábrica" la primera vez que se abre
+// Room llama a onCreate una sola vez: cuando crea el archivo de la base de datos
+// todo se escribe aquí dentro, en la base «cruda» que pasa Room, y no por detrás: Android crea la base
 // dentro de una transacción que incluye este onCreate; si la app muriera a mitad, no quedaría nada y la
-// próxima vez se volvería a crear entera.
-// Fuente: https://developer.android.com/reference/android/database/sqlite/SQLiteOpenHelper
-// [Claude] Aquí no hay DAO: se escribe con los nombres de tablas y columnas de las entidades. Si uno
+// próxima vez se volvería a crear entera
+// fuente: https://developer.android.com/reference/android/database/sqlite/SQLiteOpenHelper
+// [Claude] aquí no hay DAO: se escribe con los nombres de tablas y columnas de las entidades. si uno
 // estuviera mal, fallaría al abrir la app (no al compilar); lo vigilan las pruebas de Room
 class Precarga(private val context: Context) : RoomDatabase.Callback() {
 
     override fun onCreate(db: SupportSQLiteDatabase) {
         super.onCreate(db)
 
-        // La categoría por defecto va antes que cualquier plato: orden 0.
+        // la categoría por defecto va antes que cualquier plato: orden 0
         val otros = ContentValues()
         otros.put("nombre", context.getString(R.string.precarga_categoria_por_defecto))
         otros.putNull("imagen")
@@ -38,7 +38,7 @@ class Precarga(private val context: Context) : RoomDatabase.Callback() {
             db.insert("mesa", SQLiteDatabase.CONFLICT_ABORT, mesa)
         }
 
-        // Los 14 alérgenos, en el orden de la ley (el de strings.xml).
+        // los 14 alérgenos, en el orden de la ley (el de strings.xml)
         val textosAlergenos = listOf(
             R.string.alergeno_01_gluten,
             R.string.alergeno_02_crustaceos,
@@ -61,7 +61,7 @@ class Precarga(private val context: Context) : RoomDatabase.Callback() {
             db.insert("alergeno", SQLiteDatabase.CONFLICT_ABORT, alergeno)
         }
 
-        // El ejemplo: categoría Bebidas y el plato 1 · Agua · 1,50 €.
+        // el ejemplo: categoría Bebidas y el plato 1 · Agua · 1,50 €
         val bebidas = ContentValues()
         bebidas.put("nombre", context.getString(R.string.precarga_categoria_ejemplo))
         bebidas.putNull("imagen")

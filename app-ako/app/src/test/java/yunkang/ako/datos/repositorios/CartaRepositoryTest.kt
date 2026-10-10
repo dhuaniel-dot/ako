@@ -11,16 +11,16 @@ import yunkang.ako.datos.entidades.Producto
 import yunkang.ako.dominio.modelos.ResultadoGuardado
 import yunkang.ako.datos.entidades.Categoria
 
-// guardarPlato y guardarCategoria con actores en vez de base de datos, sin emulador.
+// guardarPlato y guardarCategoria con actores en vez de base de datos, sin emulador
 class CartaRepositoryTest {
 
-    // Un plato nuevo (id 0) con el precio que diga cada prueba.
+    // un plato nuevo (id 0) con el precio que diga cada prueba
     private fun platoConPrecio(centimos: Int) = Producto(
         categoriaId = 2, numero = 12, nombre = "Entrecot", descripcion = null,
         precioCentimos = centimos, imagen = null, activo = true
     )
 
-    // El repositorio de verdad, pero con actores en vez de DAOs.
+    // el repositorio de verdad, pero con actores en vez de DAOs
     private fun crearRepositorio(
         productoDao: ProductoDaoFalso,
         categoriaDao: CategoriaDaoFalso = CategoriaDaoFalso()
@@ -60,7 +60,7 @@ class CartaRepositoryTest {
         assertNull(productoDao.marcasRecibidas)
     }
 
-    // Otro plato ya tiene el número 12: se avisa con NumeroRepetido antes de guardar nada
+    // otro plato ya tiene el número 12: se avisa con NumeroRepetido antes de guardar nada
     @Test
     fun numeroRepetidoNoGuarda() {
         val productoDao = ProductoDaoFalso(numeroOcupado = true)
@@ -70,12 +70,12 @@ class CartaRepositoryTest {
         assertNull(productoDao.productoRecibido)
     }
 
-    // [Claude] La cadena 3e solo salta al crear o mover
+    // [Claude] la cadena 3e solo salta al crear o mover
 
-    // Plato ya guardado en la categoría 2, para las pruebas de editar
+    // plato ya guardado en la categoría 2, para las pruebas de editar
     private val entrecotGuardado = platoConPrecio(1850).copy(id = 7)
 
-    // Plato nuevo en una categoría eliminada → CategoriaEliminada y no se guarda
+    // plato nuevo en una categoría eliminada → CategoriaEliminada y no se guarda
     @Test
     fun nuevoEnCategoriaEliminadaAvisa() {
         val productoDao = ProductoDaoFalso()
@@ -85,7 +85,7 @@ class CartaRepositoryTest {
         assertNull(productoDao.productoRecibido)
     }
 
-    // Plato que se mueve (de la categoría 2 a la 5, eliminada) → CategoriaEliminada
+    // plato que se mueve (de la categoría 2 a la 5, eliminada) → CategoriaEliminada
     @Test
     fun movidoACategoriaEliminadaAvisa() {
         val productoDao = ProductoDaoFalso(guardado = entrecotGuardado)
@@ -96,7 +96,7 @@ class CartaRepositoryTest {
         assertNull(productoDao.productoRecibido)
     }
 
-    // Plato que se edita SIN moverlo, aunque su categoría esté eliminada → Ok
+    // plato que se edita sin moverlo, aunque su categoría esté eliminada → Ok
     @Test
     fun editadoSinMoverSeGuarda() {
         val productoDao = ProductoDaoFalso(guardado = entrecotGuardado)
@@ -107,7 +107,7 @@ class CartaRepositoryTest {
         assertEquals("Entrecot de ternera", productoDao.productoRecibido?.nombre)
     }
 
-    // Tercera salida de la cadena: «guárdalo ahí aunque esté eliminada» → Ok, con sus alérgenos
+    // tercera salida de la cadena: «guárdalo ahí aunque esté eliminada» → Ok, con sus alérgenos
     @Test
     fun aunqueCategoriaEliminadaSeGuarda() {
         val productoDao = ProductoDaoFalso()
@@ -119,7 +119,7 @@ class CartaRepositoryTest {
         assertEquals(listOf(1L, 7L), productoDao.marcasRecibidas?.map { it.alergenoId })
     }
 
-    // Al editar, «activo» se queda como estaba guardado: guardarPlato no elimina ni recupera
+    // al editar, «activo» se queda como estaba guardado: guardarPlato no elimina ni recupera
     @Test
     fun editarNoCambiaActivo() {
         val eliminado = entrecotGuardado.copy(activo = false)
@@ -129,7 +129,7 @@ class CartaRepositoryTest {
         assertEquals(false, productoDao.productoRecibido?.activo)
     }
 
-    // Una categoría nueva va detrás de Carnes (orden 2) y nunca es la por defecto, aunque lo pida
+    // una categoría nueva va detrás de Carnes (orden 2) y nunca es la por defecto, aunque lo pida
     @Test
     fun categoriaNuevaVaLaUltimaYNoEsPorDefecto() {
         val categoriaDao = CategoriaDaoFalso()
@@ -140,7 +140,7 @@ class CartaRepositoryTest {
         assertEquals(false, categoriaDao.insertada?.esPorDefecto)
     }
 
-    // Editar una categoría eliminada no la recupera: eso solo lo hace recuperarCategoria
+    // editar una categoría eliminada no la recupera: eso solo lo hace recuperarCategoria
     @Test
     fun categoriaEditadaConservaActivo() {
         val categoriaDao = CategoriaDaoFalso(activa = false)
@@ -152,7 +152,7 @@ class CartaRepositoryTest {
         assertEquals(false, categoriaDao.actualizada?.activo)
     }
 
-    // Un nombre de solo espacios es un fallo de programación (la hoja 2b ya no deja guardarlo): lanza un error
+    // un nombre de solo espacios es un fallo de programación (la hoja 2b ya no deja guardarlo): lanza un error
     @Test
     fun nombreVacioLanza() {
         val repositorio = crearRepositorio(ProductoDaoFalso())

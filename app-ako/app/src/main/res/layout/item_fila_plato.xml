@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Fila de plato (2a y 5a): miniatura · «12 · Entrecot» · precio; debajo, «Eliminado» si toca -->
+<!-- fila de plato (2a y 5a): miniatura · «12 · Entrecot» · precio; debajo, «Eliminado» si toca -->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -11,8 +11,8 @@
     android:paddingEnd="12dp"
     android:paddingBottom="4dp">
 
-    <!-- Miniatura: Glide pinta la foto recortada a todo el hueco; el gris de «cargando» y el «?»,
-         a su tamaño en el centro (scaleType center). Sin padding: encogería la foto -->
+    <!-- miniatura: Glide pinta la foto recortada a todo el hueco; el gris de «cargando» y el «?»,
+         a su tamaño en el centro (scaleType center). sin padding: encogería la foto -->
     <ImageView
         android:id="@+id/imagenPlato"
         android:layout_width="44dp"
@@ -42,7 +42,7 @@
         app:layout_constraintVertical_chainStyle="packed"
         tools:text="12 · Entrecot" />
 
-    <!-- La palabra «Eliminado»: oculta (gone) mientras el plato está en la carta -->
+    <!-- la palabra «Eliminado»: oculta (gone) mientras el plato está en la carta -->
     <TextView
         android:id="@+id/textoEliminado"
         android:layout_width="wrap_content"

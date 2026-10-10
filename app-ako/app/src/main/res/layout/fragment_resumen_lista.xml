@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- 2g · Resumen de ingresos (wireframe 02g): barra «← Atrás · Resumen de ingresos», el campo Día,
-     COMANDAS COBRADAS con la lista (scroll propio) y el pie gris fijo abajo con cuántas y el total -->
+     comandas cobradas con la lista (scroll propio) y el pie gris fijo abajo con cuántas y el total -->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -50,8 +50,8 @@
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- El campo Día: parece un desplegable, pero no se escribe en él; tocarlo abre el
-         calendario. [Claude] La flecha ▾ es solo dibujo (drawableEnd): todo el campo es el botón -->
+    <!-- el campo Día: parece un desplegable, pero no se escribe en él; tocarlo abre el
+         calendario. [Claude] la flecha ▾ es solo dibujo (drawableEnd): todo el campo es el botón -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/campoDia"
         android:layout_width="0dp"
@@ -78,7 +78,7 @@
             tools:text="Jueves, 8 de octubre de 2026" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- COMANDAS COBRADAS, como las cabeceras de sección de la carta -->
+    <!-- comandas cobradas, como las cabeceras de sección de la carta -->
     <TextView
         android:id="@+id/textoSeccion"
         android:layout_width="0dp"
@@ -95,7 +95,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/campoDia" />
 
-    <!-- Las comandas cobradas ese día: ocupa lo que queda entre la sección y el pie, con su propio scroll -->
+    <!-- las comandas cobradas ese día: ocupa lo que queda entre la sección y el pie, con su propio scroll -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/listaComandas"
         android:layout_width="0dp"
@@ -106,7 +106,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textoSeccion" />
 
-    <!-- Día sin cobros (ficha 2g): no es un error, solo un aviso. Oculto hasta que la lista llegue vacía -->
+    <!-- día sin cobros (ficha 2g): no es un error, solo un aviso. oculto hasta que la lista llegue vacía -->
     <TextView
         android:id="@+id/textoVacio"
         android:layout_width="0dp"
@@ -120,7 +120,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textoSeccion" />
 
-    <!-- El pie gris fijo abajo, fuera de la lista: cuántas a la izquierda, el total a la derecha -->
+    <!-- el pie gris fijo abajo, fuera de la lista: cuántas a la izquierda, el total a la derecha -->
     <LinearLayout
         android:id="@+id/pie"
         android:layout_width="0dp"

@@ -3,10 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <!-- allowBackup="false": sin copia en la nube del PIN ni de la base de datos; así reinstalar
-         borra todo, como dicen el aviso de 1b y el Anexo II.
+         borra todo, como dicen el aviso de 1b y el Anexo II
          dataExtractionRules: en Android 12+ algunos fabricantes pasan los datos de móvil a móvil
          aunque allowBackup esté apagado; reglas_extraccion.xml excluye el PIN y la base de datos también de eso
-         (el atributo es de Android 12, API 31; en versiones anteriores se ignora: tools:targetApi) -->
+         (el atributo es de Android 12, api 31; en versiones anteriores se ignora: tools:targetApi) -->
     <application
         android:name=".EntradaAko"
         android:allowBackup="false"
@@ -17,7 +17,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AKO">
-        <!-- Pantalla 1: arranca aquí (LAUNCHER). Solo en vertical -->
+        <!-- pantalla 1: arranca aquí (LAUNCHER). solo en vertical -->
         <activity
             android:name=".ui.selector.SelectorActivity"
             android:exported="true"
@@ -29,32 +29,32 @@
             </intent-filter>
         </activity>
 
-        <!-- Pantalla 2 (Panel). Solo en vertical -->
+        <!-- pantalla 2 (Panel). solo en vertical -->
         <activity
             android:name=".ui.panel.PanelActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
 
-        <!-- Pantalla 5 (Pedir: carta, ficha y carrito). Solo en vertical -->
+        <!-- pantalla 5 (Pedir: carta, ficha y carrito). solo en vertical -->
         <activity
             android:name=".ui.pedido.PedidoActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
 
-        <!-- Pantalla 6 (Cuenta: rejilla, comanda y recibo). Sin PIN. Solo en vertical -->
+        <!-- pantalla 6 (Cuenta: rejilla, comanda y recibo). sin PIN. solo en vertical -->
         <activity
             android:name=".ui.cuenta.CuentaActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
 
-        <!-- Pantalla 2g (Resumen de ingresos). Solo desde el Panel, detrás del PIN: sin intent-filter
-             y exported="false", ninguna otra app la puede abrir. Solo en vertical -->
+        <!-- pantalla 2g (Resumen de ingresos). solo desde el Panel, detrás del PIN: sin intent-filter
+             y exported="false", ninguna otra app la puede abrir. solo en vertical -->
         <activity
             android:name=".ui.resumen.ResumenIngresosActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
 
-        <!-- Pantalla 3 (formulario del plato). Solo en vertical -->
+        <!-- pantalla 3 (formulario del plato). solo en vertical -->
         <activity
             android:name=".ui.plato.PlatoActivity"
             android:exported="false"

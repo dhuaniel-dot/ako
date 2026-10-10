@@ -21,20 +21,20 @@ import yunkang.ako.datos.repositorios.CartaRepository
 import yunkang.ako.dominio.modelos.ResultadoGuardado
 import yunkang.ako.imagenes.Galeria
 
-// [Claude] Todo lo que el formulario lee al abrirse, junto en una sola bandeja
+// [Claude] todo lo que el formulario lee al abrirse, junto en una sola bandeja
 data class DatosFormulario(
     // null = plato nuevo
     val plato: Producto?,
-    // Para el desplegable; la de por defecto, la última
+    // para el desplegable; la de por defecto, la última
     val categorias: List<Categoria>,
-    // Los 14, en el orden de la precarga
+    // los 14, en el orden de la precarga
     val alergenos: List<Alergeno>,
-    // Los ids que el plato ya lleva marcados (vacía si es nuevo)
+    // los ids que el plato ya lleva marcados (vacía si es nuevo)
     val alergenosDelPlato: List<Long>
 )
 
-// La libreta de la pantalla 3 (formulario del plato).
-// Lo que el Propietario va eligiendo se guarda en una caja fuerte (SavedStateHandle) que
+// la libreta de la pantalla 3 (formulario del plato)
+// lo que el Propietario va eligiendo se guarda en una caja fuerte (SavedStateHandle) que
 // sobrevive incluso a que Android mate la app en segundo plano; la libreta sola solo sobrevive a recrear la pantalla
 class PlatoViewModel(
     private val cartaRepository: CartaRepository,
@@ -42,21 +42,21 @@ class PlatoViewModel(
     private val cajaFuerte: SavedStateHandle
 ) : ViewModel() {
 
-    // Un solo tablón. Solo esta libreta escribe en él (_datos); la pantalla solo lo lee (datos)
+    // un solo tablón. solo esta libreta escribe en él (_datos); la pantalla solo lo lee (datos)
     private val _datos = MutableLiveData<DatosFormulario>()
     val datos: LiveData<DatosFormulario> = _datos
 
-    // [Claude] Para no leer dos veces: la libreta sobrevive a que Android recree la pantalla.
-    // (Si Android mató la app, la libreta es nueva y vuelve a leer: es lo que toca)
+    // [Claude] para no leer dos veces: la libreta sobrevive a que Android recree la pantalla
+    // (si Android mató la app, la libreta es nueva y vuelve a leer: es lo que toca)
     private var yaCargado = false
 
-    // [Claude] La categoría elegida, por su id (en la caja fuerte)
+    // [Claude] la categoría elegida, por su id (en la caja fuerte)
     var categoriaElegidaId: Long?
         get() = cajaFuerte[CLAVE_CATEGORIA]
         set(valor) { cajaFuerte[CLAVE_CATEGORIA] = valor }
 
-    // [Claude] true cuando los campos ya tienen lo guardado; desde ahí manda lo que se teclea.
-    // En la caja fuerte: tras una muerte del proceso, Android devuelve los campos y NO se vuelven a rellenar
+    // [Claude] true cuando los campos ya tienen lo guardado; desde ahí manda lo que se teclea
+    // en la caja fuerte: tras una muerte del proceso, Android devuelve los campos y no se vuelven a rellenar
     var formularioRelleno: Boolean
         get() = cajaFuerte[CLAVE_RELLENO] ?: false
         set(valor) { cajaFuerte[CLAVE_RELLENO] = valor }
@@ -66,35 +66,35 @@ class PlatoViewModel(
         get() = cajaFuerte[CLAVE_CAMBIOS] ?: false
         set(valor) { cajaFuerte[CLAVE_CAMBIOS] = valor }
 
-    // Los alérgenos marcados (sus ids) viven en la libreta, no en las casillas:
-    // las casillas se crean de nuevo si Android recrea la pantalla. En la caja fuerte van como lista de números
+    // los alérgenos marcados (sus ids) viven en la libreta, no en las casillas:
+    // las casillas se crean de nuevo si Android recrea la pantalla. en la caja fuerte van como lista de números
     val alergenosMarcados: List<Long>
         get() = (cajaFuerte.get<LongArray>(CLAVE_ALERGENOS) ?: LongArray(0)).toList()
 
-    // La foto elegida y aún sin guardar (su dirección, «content://…»), en la caja fuerte.
+    // la foto elegida y aún sin guardar (su dirección, «content://…»), en la caja fuerte
     // getLiveData la convierte en un tablón que la pantalla puede mirar. null = no se ha elegido ninguna
     val fotoElegida: LiveData<String?> = cajaFuerte.getLiveData<String?>(CLAVE_FOTO, null)
 
-    // Se trabaja con un conjunto (sin repetidos) y se vuelve a guardar entero
+    // se trabaja con un conjunto (sin repetidos) y se vuelve a guardar entero
     fun marcarAlergeno(id: Long, marcado: Boolean) {
         val ahora = alergenosMarcados.toMutableSet()
         if (marcado) ahora.add(id) else ahora.remove(id)
         cajaFuerte[CLAVE_ALERGENOS] = ahora.toLongArray()
     }
 
-    // Al elegir no se copia nada; se pide el préstamo largo y se apunta la dirección
+    // al elegir no se copia nada; se pide el préstamo largo y se apunta la dirección
     fun elegirFoto(uri: Uri) {
         galeria.conservarPrestamo(uri)
         cajaFuerte[CLAVE_FOTO] = uri.toString()
     }
 
-    // [Claude] Se olvida la foto elegida (cuando no se ha podido usar): el hueco vuelve a la de antes
+    // [Claude] se olvida la foto elegida (cuando no se ha podido usar): el hueco vuelve a la de antes
     fun olvidarFoto() {
         cajaFuerte[CLAVE_FOTO] = null
     }
 
-    // Lee la base de datos UNA sola vez. productoId null = plato nuevo.
-    // Cada llamada de Room se va sola a otro hilo y vuelve con el resultado
+    // lee la base de datos una sola vez. productoId null = plato nuevo
+    // cada llamada de Room se va sola a otro hilo y vuelve con el resultado
     fun cargar(productoId: Long?) {
         if (yaCargado) return
         yaCargado = true
@@ -110,10 +110,10 @@ class PlatoViewModel(
         }
     }
 
-    // Guarda el plato con los alérgenos marcados. Las reglas (ningún precio negativo, número sin repetir y la categoría eliminada)
+    // guarda el plato con los alérgenos marcados. las reglas (ningún precio negativo, número sin repetir y la categoría eliminada)
     // las comprueba el repositorio en ese orden; la pantalla solo reacciona a la respuesta
     // aunqueCategoriaEliminada = true es la tercera salida de 3e: el Propietario dijo «No» a las dos preguntas
-    // Si se eligió una foto, se copia AHORA y el plato apunta a la copia. Si la foto no se puede
+    // si se eligió una foto, se copia ahora y el plato apunta a la copia. si la foto no se puede
     // leer, Galeria lanza el error, no se guarda nada y la pantalla avisa
     suspend fun guardar(p: Producto, aunqueCategoriaEliminada: Boolean = false): ResultadoGuardado {
         val fotoAntes = datos.value?.plato?.imagen
@@ -125,41 +125,41 @@ class PlatoViewModel(
 
         if (fotoNueva != null) {
             if (resultado == ResultadoGuardado.Ok) {
-                // Guardado bien: la foto vieja ya no la usa ninguna fila (se borra después, nunca antes)
+                // guardado bien: la foto vieja ya no la usa ninguna fila (se borra después, nunca antes)
                 if (fotoAntes != null) galeria.borrar(fotoAntes)
             } else {
-                // [Claude] No se guardó (número repetido, avisos 3e): la copia sobra; al volver a guardar se hace otra
+                // [Claude] no se guardó (número repetido, avisos 3e): la copia sobra; al volver a guardar se hace otra
                 galeria.borrar(fotoNueva)
             }
         }
         return resultado
     }
 
-    // [Claude] 3e, segundo aviso: cuántos platos volverían a la carta al recuperar la categoría.
-    // El reverso del aviso de las mesas al eliminar: los activos de esa categoría, sin contar el que se está guardando
+    // [Claude] 3e, segundo aviso: cuántos platos volverían a la carta al recuperar la categoría
+    // el reverso del aviso de las mesas al eliminar: los activos de esa categoría, sin contar el que se está guardando
     suspend fun platosQueVuelven(categoriaId: Long): Int {
         val idDelPlato = datos.value?.plato?.id
         return cartaRepository.platosDe(categoriaId).count { it.activo && it.id != idDelPlato }
     }
 
-    // [Claude] La categoría vuelve con todos sus platos
+    // [Claude] la categoría vuelve con todos sus platos
     suspend fun recuperarCategoria(id: Long) = cartaRepository.recuperarCategoria(id)
 
-    // Primer paso al eliminar: qué mesas tienen este plato en una comanda pendiente, para avisar. Solo mira, no toca nada.
-    // Un plato nuevo no está en ninguna mesa
+    // primer paso al eliminar: qué mesas tienen este plato en una comanda pendiente, para avisar. solo mira, no toca nada
+    // un plato nuevo no está en ninguna mesa
     suspend fun mesasAfectadas(): List<Int> {
         val plato = datos.value?.plato ?: return emptyList()
         return cartaRepository.mesasAfectadasPorPlato(plato.id)
     }
 
-    // Eliminar = activo false; la fila sigue y ninguna línea de comanda se toca.
-    // La foto tampoco se toca: el plato se puede recuperar entero
+    // eliminar = activo false; la fila sigue y ninguna línea de comanda se toca
+    // la foto tampoco se toca: el plato se puede recuperar entero
     suspend fun eliminar() {
         val plato = datos.value?.plato ?: return
         cartaRepository.eliminarPlato(plato.id)
     }
 
-    // [Claude] Recuperar = vuelve a la carta con todo lo que tenía
+    // [Claude] recuperar = vuelve a la carta con todo lo que tenía
     suspend fun recuperar() {
         val plato = datos.value?.plato ?: return
         cartaRepository.recuperarPlato(plato.id)
@@ -174,7 +174,7 @@ class PlatoViewModel(
             }
         }
 
-        // [Claude] Las etiquetas de cada cosa dentro de la caja fuerte
+        // [Claude] las etiquetas de cada cosa dentro de la caja fuerte
         private const val CLAVE_CATEGORIA = "categoria_elegida"
         private const val CLAVE_RELLENO = "formulario_relleno"
         private const val CLAVE_CAMBIOS = "hay_cambios"

@@ -2,16 +2,16 @@ package yunkang.ako.dominio
 
 import yunkang.ako.datos.entidades.Producto
 
-// La libreta del camarero para una mesa mientras toma nota.
-// Vive en memoria hasta que se pulsa Enviar; no se guarda en la base de datos.
+// la libreta del camarero para una mesa mientras toma nota
+// vive en memoria hasta que se pulsa Enviar; no se guarda en la base de datos
 class Carrito(val mesaId: Long) {
 
     val lineas = mutableListOf<PlatoApuntado>()
 
-    // Si el plato ya está en el carrito, suma en el mismo renglón.
-    // Si se pasa de 99, se queda en 99 y devuelve false para que la pantalla avise.
+    // si el plato ya está en el carrito, suma en el mismo renglón
+    // si se pasa de 99, se queda en 99 y devuelve false para que la pantalla avise
     fun anadir(producto: Producto, cantidad: Int): Boolean {
-        // Menos de 1 no es una cantidad: no se añade nada y se avisa con false
+        // menos de 1 no es una cantidad: no se añade nada y se avisa con false
         if (cantidad < 1) return false
         val maximo = Comprobacion.MAXIMO_POR_PLATO
         val linea = lineas.find { it.producto.id == producto.id }
@@ -24,7 +24,7 @@ class Carrito(val mesaId: Long) {
         return nuevaCantidad <= maximo
     }
 
-    // [Claude] Si la cantidad no está entre 1 y 99, no hace nada.
+    // [Claude] si la cantidad no está entre 1 y 99, no hace nada
     fun cambiarCantidad(productoId: Long, cantidad: Int) {
         if (!Comprobacion.cantidadValida(cantidad)) return
         val linea = lineas.find { it.producto.id == productoId } ?: return
@@ -35,10 +35,10 @@ class Carrito(val mesaId: Long) {
         lineas.removeAll { it.producto.id == productoId }
     }
 
-    // Cuántos platos lleva en total (2 Entrecot + 1 Agua = 3)
+    // cuántos platos lleva en total (2 Entrecot + 1 Agua = 3)
     fun numPlatos(): Int = lineas.sumOf { it.cantidad }
 
-    // Lo que suma todo el carrito, en céntimos. Se calcula, no se guarda.
+    // lo que suma todo el carrito, en céntimos. se calcula, no se guarda
     fun total(): Int = lineas.sumOf { it.importe() }
 
     fun estaVacio(): Boolean = lineas.isEmpty()

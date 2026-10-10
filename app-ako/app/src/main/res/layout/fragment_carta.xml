@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 5a · La carta (wireframe 05a): barra con «Salir» y «Mesa N»; debajo, la fila de categorías FIJA
-     (scroll horizontal); debajo, la lista de platos por secciones (scroll vertical). Nunca un ScrollView con listas dentro.
-     Abajo a la derecha, flotando sobre la lista, la pastilla del carrito -->
+<!-- 5a · la carta (wireframe 05a): barra con «Salir» y «Mesa N»; debajo, la fila de categorías fija
+     (scroll horizontal); debajo, la lista de platos por secciones (scroll vertical). nunca un ScrollView con listas dentro
+     abajo a la derecha, flotando sobre la lista, la pastilla del carrito -->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -47,7 +47,7 @@
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- La fila de categorías: fija bajo la barra, fuera de la lista; solo crece lo que miden sus círculos -->
+    <!-- la fila de categorías: fija bajo la barra, fuera de la lista; solo crece lo que miden sus círculos -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/filaCategorias"
         android:layout_width="0dp"
@@ -68,8 +68,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/filaCategorias" />
 
-    <!-- La lista de platos por secciones: ocupa todo lo que queda hasta abajo. [Claude] Hueco abajo
-         (paddingBottom sin recortar, clipToPadding false) para que la pastilla no tape el último plato.
+    <!-- la lista de platos por secciones: ocupa todo lo que queda hasta abajo. [Claude] hueco abajo
+         (paddingBottom sin recortar, clipToPadding false) para que la pastilla no tape el último plato
          88 dp = los 56 de la pastilla y sus dos márgenes de 16 -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/listaPlatos"
@@ -83,8 +83,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/separador" />
 
-    <!-- La pastilla «Carrito · N · total», abajo a la derecha (no una barra fija, ficha 5).
-         Gris oscuro con letras claras (los colores del texto al revés: en modo noche se invierte); el texto lo pone el código -->
+    <!-- la pastilla «Carrito · N · total», abajo a la derecha (no una barra fija, ficha 5)
+         gris oscuro con letras claras (los colores del texto al revés: en modo noche se invierte); el texto lo pone el código -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/botonCarrito"
         style="@style/Widget.Material3.Button"

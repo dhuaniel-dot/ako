@@ -1,13 +1,13 @@
 package yunkang.ako.dominio
 
-// Las cuentas del cobro. No guarda nada: entran números, sale un número.
+// las cuentas del cobro. no guarda nada: entran números, sale un número
 object Calculadora {
 
-    // Lo que cuesta un renglón, en céntimos: precio × cantidad.
-    // La usan el carrito y el recibo.
+    // lo que cuesta un renglón, en céntimos: precio × cantidad
+    // la usan el carrito y el recibo
     fun importe(precioCentimos: Int, cantidad: Int): Int = precioCentimos * cantidad
 
-    // Lo que hay que devolver al cliente: entregado − total.
-    // Si sale negativo, el cliente ha dado de menos; no es un error.
+    // lo que hay que devolver al cliente: entregado − total
+    // si sale negativo, el cliente ha dado de menos; no es un error
     fun cambio(totalCentimos: Int, entregadoCentimos: Int): Int = entregadoCentimos - totalCentimos
 }

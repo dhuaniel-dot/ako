@@ -8,7 +8,7 @@ import yunkang.ako.datos.entidades.Producto
 
 class CarritoTest {
 
-    // Platos de prueba: solo importan el id y el precio
+    // platos de prueba: solo importan el id y el precio
     private val entrecot = Producto(id = 1, categoriaId = 1, numero = 10, nombre = "Entrecot",
         descripcion = null, precioCentimos = 1850, imagen = null, activo = true)
     private val agua = Producto(id = 2, categoriaId = 1, numero = 1, nombre = "Agua",
@@ -20,7 +20,7 @@ class CarritoTest {
         assertEquals(5550, linea.importe())
     }
 
-    // Total del carrito, vacío y con líneas
+    // total del carrito, vacío y con líneas
     @Test
     fun totalDelCarrito() {
         val carrito = Carrito(mesaId = 4)
@@ -37,7 +37,7 @@ class CarritoTest {
         assertFalse(carrito.estaVacio())
     }
 
-    // Líneas idénticas se suman y el tope es 99 (si no cabe, anadir avisa con false)
+    // líneas idénticas se suman y el tope es 99 (si no cabe, anadir avisa con false)
     @Test
     fun lineasIdenticasSeSumanYTope99() {
         val carrito = Carrito(mesaId = 4)
@@ -53,7 +53,7 @@ class CarritoTest {
         assertFalse(cupo)
     }
 
-    // El tope también vale para un plato que aún no está en el carrito: 150 entra como 99 y se avisa
+    // el tope también vale para un plato que aún no está en el carrito: 150 entra como 99 y se avisa
     @Test
     fun primerAnadirPorEncimaDelTopeSeQuedaEn99() {
         val carrito = Carrito(mesaId = 4)
@@ -62,7 +62,7 @@ class CarritoTest {
         assertEquals(99, carrito.lineas[0].cantidad)
     }
 
-    // [Claude] El mínimo (de 1 a 99 unidades): con 0 o menos no se añade nada
+    // [Claude] el mínimo (de 1 a 99 unidades): con 0 o menos no se añade nada
     @Test
     fun cantidadMenorQueUnoNoEntra() {
         val carrito = Carrito(mesaId = 4)

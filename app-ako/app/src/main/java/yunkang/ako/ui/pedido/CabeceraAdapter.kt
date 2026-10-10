@@ -5,8 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import yunkang.ako.databinding.ItemCabeceraSeccionBinding
 
-// [Claude] 5a · La cabecera de UNA sección («CARNES»): un adaptador de un solo elemento.
-// La carta pega, por cada sección, una cabecera y un FilaPlatoAdapter con sus platos (ConcatAdapter)
+// [Claude] 5a · la cabecera de una sección («CARNES»): un adaptador de un solo elemento
+// la carta pega, por cada sección, una cabecera y un FilaPlatoAdapter con sus platos (ConcatAdapter)
 class CabeceraAdapter(
     private val nombre: String
 ) : RecyclerView.Adapter<CabeceraAdapter.CabeceraViewHolder>() {
@@ -21,7 +21,7 @@ class CabeceraAdapter(
     }
 
     override fun onBindViewHolder(holder: CabeceraViewHolder, position: Int) {
-        // Las mayúsculas las pone el XML (textAllCaps): el nombre se guarda tal cual
+        // las mayúsculas las pone el XML (textAllCaps): el nombre se guarda tal cual
         holder.binding.textoCabecera.text = nombre
     }
 }

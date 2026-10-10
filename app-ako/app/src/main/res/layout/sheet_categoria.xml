@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 2b · Hoja inferior para crear o editar una categoría (wireframe 02b) -->
+<!-- 2b · hoja inferior para crear o editar una categoría (wireframe 02b) -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -42,7 +42,7 @@
         android:textColor="?attr/colorOnSurfaceVariant"
         android:textSize="14sp" />
 
-    <!-- Foto: el hueco redondo, como en la carta, y «+ Elegir» -->
+    <!-- foto: el hueco redondo, como en la carta, y «+ Elegir» -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -50,7 +50,7 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <!-- El círculo: Glide pinta la foto recortada en redondo (circleCrop); el gris y el «?»,
+        <!-- el círculo: Glide pinta la foto recortada en redondo (circleCrop); el gris y el «?»,
              a su tamaño en el centro (scaleType center) -->
         <com.google.android.material.card.MaterialCardView
             style="?attr/materialCardViewOutlinedStyle"
@@ -91,7 +91,7 @@
         android:textSize="16sp"
         android:visibility="gone" />
 
-    <!-- [Claude] Estilo de botón relleno escrito a mano: dentro de la hoja, sin él, sale como texto naranja -->
+    <!-- [Claude] estilo de botón relleno escrito a mano: dentro de la hoja, sin él, sale como texto naranja -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/botonGuardar"
         style="@style/Widget.Material3.Button"

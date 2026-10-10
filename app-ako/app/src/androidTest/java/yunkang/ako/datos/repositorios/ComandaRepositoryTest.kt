@@ -25,7 +25,7 @@ import org.junit.Assert.assertThrows
 import java.time.LocalDate
 import java.time.ZoneId
 
-// El puesto de comandas con Room de verdad (base en memoria con la precarga hecha).
+// el puesto de comandas con Room de verdad (base en memoria con la precarga hecha)
 @RunWith(AndroidJUnit4::class)
 class ComandaRepositoryTest {
 
@@ -39,14 +39,14 @@ class ComandaRepositoryTest {
     @Before
     fun prepararBase() {
         val context = ApplicationProvider.getApplicationContext<Context>()
-        // Igual que en CategoriaPorDefectoTest (repetido a propósito: cada clase se lee sola)
+        // igual que en CategoriaPorDefectoTest (repetido a propósito: cada clase se lee sola)
         baseDeDatos = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java)
             .addCallback(Precarga(context))
             .build()
         repositorio = ComandaRepositoryReal(baseDeDatos, baseDeDatos.mesaDao(), baseDeDatos.comandaDao())
 
         runBlocking {
-            // Carnes ANTES que Entrecot: un plato tiene que apuntar a una categoría que ya existe
+            // Carnes antes que Entrecot: un plato tiene que apuntar a una categoría que ya existe
             val carnesId = baseDeDatos.categoriaDao().insertar(
                 Categoria(nombre = "Carnes", imagen = null, orden = 1, activo = true, esPorDefecto = false)
             )
@@ -64,7 +64,7 @@ class ComandaRepositoryTest {
             )
             helado = checkNotNull(baseDeDatos.productoDao().porId(idHelado))
 
-            // Las mesas 4 y 7 se buscan por su número: nunca se da por hecho que su id es 4 o 7
+            // las mesas 4 y 7 se buscan por su número: nunca se da por hecho que su id es 4 o 7
             mesa4Id = baseDeDatos.mesaDao().todas().first { it.numero == 4 }.id
             mesa7Id = baseDeDatos.mesaDao().todas().first { it.numero == 7 }.id
         }
@@ -75,7 +75,7 @@ class ComandaRepositoryTest {
         baseDeDatos.close()
     }
 
-    // Dos envíos a la mesa 4 → una sola comanda con dos líneas copiadas
+    // dos envíos a la mesa 4 → una sola comanda con dos líneas copiadas
     @Test
     fun dosEnviosALaMismaMesaVanALaMismaComanda() {
         val primero = Carrito(mesa4Id)
@@ -86,14 +86,14 @@ class ComandaRepositoryTest {
         segundo.anadir(helado, 1)
         val id2 = runBlocking { repositorio.enviarCarrito(segundo) }
 
-        // La misma comanda, y es la pendiente de la mesa 4
+        // la misma comanda, y es la pendiente de la mesa 4
         assertEquals(id1, id2)
         assertEquals(id1, runBlocking { baseDeDatos.comandaDao().pendienteDeMesa(mesa4Id) }?.id)
 
-        // Dos líneas, una por envío
+        // dos líneas, una por envío
         assertEquals(2, runBlocking { baseDeDatos.comandaDao().contarLineas(id1) })
 
-        // Cada línea lleva el nombre, el precio y la cantidad copiados al enviar
+        // cada línea lleva el nombre, el precio y la cantidad copiados al enviar
         val lineas = runBlocking { baseDeDatos.comandaDao().lineasDe(id1) }
         assertEquals("Entrecot", lineas[0].nombreProducto)
         assertEquals(1850, lineas[0].precioUnitarioCentimos)
@@ -103,7 +103,7 @@ class ComandaRepositoryTest {
         assertEquals(1, lineas[1].cantidad)
     }
 
-    // Quitar la última línea deja la comanda ANULADA y la mesa libre
+    // quitar la última línea deja la comanda anulada y la mesa libre
     @Test
     fun quitarLaUltimaLineaAnulaLaComanda() {
         val carrito = Carrito(mesa4Id)
@@ -114,19 +114,19 @@ class ComandaRepositoryTest {
         // true = era la última línea (la pantalla de Cuenta vuelve entonces a la rejilla)
         assertTrue(runBlocking { repositorio.quitarLinea(linea.id) })
 
-        // La comanda no se borra; queda ANULADA, con su hora de cierre y sin líneas
+        // la comanda no se borra; queda anulada, con su hora de cierre y sin líneas
         val comanda = checkNotNull(runBlocking { baseDeDatos.comandaDao().porId(comandaId) })
         assertEquals(EstadoComanda.ANULADA, comanda.estado)
         assertNotNull(comanda.fechaCierre)
         assertEquals(0, runBlocking { baseDeDatos.comandaDao().contarLineas(comandaId) })
 
-        // La mesa 4 sale libre en la rejilla (first = una foto del grifo, no se queda escuchando)
+        // la mesa 4 sale libre en la rejilla (first = una foto del grifo, no se queda escuchando)
         val rejilla = runBlocking { repositorio.mesasConEstado().first() }
         val mesa4 = rejilla.single { it.mesa.numero == 4 }
         assertNull(mesa4.comandaId)
     }
 
-    // Una línea que ya no existe (doble toque en Quitar) no se quita ni anula la comanda
+    // una línea que ya no existe (doble toque en Quitar) no se quita ni anula la comanda
     @Test
     fun quitarLineaInexistenteNoHaceNada() {
         val carrito = Carrito(mesa4Id)
@@ -140,14 +140,14 @@ class ComandaRepositoryTest {
         assertEquals(1, lineas.size)
     }
 
-    // Una comanda nunca nace vacía: enviar un carrito sin platos es un fallo de programación
+    // una comanda nunca nace vacía: enviar un carrito sin platos es un fallo de programación
     @Test
     fun enviarCarritoVacioLanza() {
         val vacio = Carrito(mesa4Id)
         assertThrows(IllegalArgumentException::class.java) { runBlocking { repositorio.enviarCarrito(vacio) } }
     }
 
-    // Una comanda cobrada ya está cerrada y no se puede volver a cobrar
+    // una comanda cobrada ya está cerrada y no se puede volver a cobrar
     @Test
     fun cobrarComandaCerradaLanza() {
         val carrito = Carrito(mesa4Id)
@@ -157,7 +157,7 @@ class ComandaRepositoryTest {
         assertThrows(IllegalStateException::class.java) { runBlocking { repositorio.cobrar(comandaId) } }
     }
 
-    // El día del Resumen de ingresos acaba a las 23:59:59,999: lo cobrado un milisegundo después ya es de mañana
+    // el día del Resumen de ingresos acaba a las 23:59:59,999: lo cobrado un milisegundo después ya es de mañana
     @Test
     fun resumenDelDiaRespetaLaMedianoche() {
         val hoy = LocalDate.now()
@@ -186,7 +186,7 @@ class ComandaRepositoryTest {
         assertEquals(idDeHoy, resumen.comandas[0].comandaId)
     }
 
-    // El total de cada mesa lo suma la base de datos y una mesa sin comanda sale libre
+    // el total de cada mesa lo suma la base de datos y una mesa sin comanda sale libre
     @Test
     fun mesasConEstadoSumaElTotal() {
         val carrito = Carrito(mesa4Id)

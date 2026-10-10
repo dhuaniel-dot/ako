@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 3a · Formulario del plato (wireframes 03a-formulario-1 y -2): barra arriba, un scroll único
+<!-- 3a · formulario del plato (wireframes 03a-formulario-1 y -2): barra arriba, un scroll único
      con todo el formulario y Guardar fijo abajo, fuera del scroll -->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Barra superior: el título lo pone el código («Nuevo plato» o «Editar plato») -->
+    <!-- barra superior: el título lo pone el código («Nuevo plato» o «Editar plato») -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/barraSuperior"
         android:layout_width="0dp"
@@ -50,7 +50,7 @@
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- Un solo scroll con todo dentro: aquí no hay listas que reciclen filas (en el Panel sí) -->
+    <!-- un solo scroll con todo dentro: aquí no hay listas que reciclen filas (en el Panel sí) -->
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollFormulario"
         android:layout_width="0dp"
@@ -66,7 +66,7 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- La foto a todo el marco y el botón redondo «+». Glide pinta la foto recortada
+            <!-- la foto a todo el marco y el botón redondo «+». Glide pinta la foto recortada
                  (centerCrop); el gris de «cargando» y el «?» los pinta a su tamaño en el centro (scaleType center) -->
             <FrameLayout
                 android:layout_width="match_parent"
@@ -99,7 +99,7 @@
                     app:cornerRadius="28dp" />
             </FrameLayout>
 
-            <!-- Nombre (el estilo de todos los campos lo pone el tema) -->
+            <!-- nombre (el estilo de todos los campos lo pone el tema) -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/campoNombre"
                 android:layout_width="match_parent"
@@ -115,7 +115,7 @@
                     android:maxLines="1" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Número y precio en la misma fila -->
+            <!-- número y precio en la misma fila -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -123,7 +123,7 @@
                 android:baselineAligned="false"
                 android:orientation="horizontal">
 
-                <!-- Solo cifras y sin signo: «number» no deja entrar el «−» -->
+                <!-- solo cifras y sin signo: «number» no deja entrar el «−» -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/campoNumero"
                     android:layout_width="0dp"
@@ -140,7 +140,7 @@
                         android:maxLines="1" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Teclado numérico con decimales; digits deja escribir coma o punto y ningún signo -->
+                <!-- teclado numérico con decimales; digits deja escribir coma o punto y ningún signo -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/campoPrecio"
                     android:layout_width="0dp"
@@ -159,7 +159,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
-            <!-- Categoría: desplegable (se elige, no se escribe). [Claude] android:theme le pone
+            <!-- categoría: desplegable (se elige, no se escribe). [Claude] android:theme le pone
                  el mismo retoque de color que al resto de campos, que su estilo propio pierde -->
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
@@ -177,7 +177,7 @@
                     android:saveEnabled="false" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Descripción: opcional y de varias líneas -->
+            <!-- descripción: opcional y de varias líneas -->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -193,7 +193,7 @@
                     android:minLines="3" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- ALÉRGENOS: título y raya; las 14 casillas las crea el código -->
+            <!-- alérgenos: título y raya; las 14 casillas las crea el código -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -220,7 +220,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp" />
 
-            <!-- «En la carta»: también al crear, encendido. Apagarlo y guardar ELIMINA el plato (3d) -->
+            <!-- «En la carta»: también al crear, encendido. apagarlo y guardar elimina el plato (3d) -->
             <com.google.android.material.materialswitch.MaterialSwitch
                 android:id="@+id/interruptorEnLaCarta"
                 android:layout_width="match_parent"
@@ -233,7 +233,7 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- Guardar fijo abajo, fuera del scroll; apagado hasta que estén los cuatro obligatorios -->
+    <!-- guardar fijo abajo, fuera del scroll; apagado hasta que estén los cuatro obligatorios -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/botonGuardar"
         style="@style/Widget.Material3.Button"

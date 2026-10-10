@@ -8,13 +8,13 @@ import yunkang.ako.R
 import yunkang.ako.databinding.ItemLineaBinding
 import yunkang.ako.dominio.Comprobacion
 
-// Las líneas de un pedido: «2 × Entrecot · 37,00 €» y, debajo, los botones que toquen.
-// Recibe LineaVista, no las clases del dominio, para servir al carrito (5c), a la comanda (6b) y al recibo (6c, 2g).
-// Sin modos. Quien lo usa pasa solo las acciones que quiere; una acción vacía (null) esconde su botón:
-// carrito − + Quitar · comanda solo Quitar · recibo ninguna (y entonces se esconde la fila de botones entera).
-// Sencillo, con notifyDataSetChanged, como los demás adaptadores
+// las líneas de un pedido: «2 × Entrecot · 37,00 €» y, debajo, los botones que toquen
+// recibe LineaVista, no las clases del dominio, para servir al carrito (5c), a la comanda (6b) y al recibo (6c, 2g)
+// sin modos. quien lo usa pasa solo las acciones que quiere; una acción vacía (null) esconde su botón:
+// carrito − + Quitar · comanda solo Quitar · recibo ninguna (y entonces se esconde la fila de botones entera)
+// sencillo, con notifyDataSetChanged, como los demás adaptadores
 class LineaAdapter(
-    // Qué hacer con cada botón: lo decide quien usa el adaptador; null = ese botón no sale
+    // qué hacer con cada botón: lo decide quien usa el adaptador; null = ese botón no sale
     private val alMenos: ((LineaVista) -> Unit)?,
     private val alMas: ((LineaVista) -> Unit)?,
     private val alQuitar: ((LineaVista) -> Unit)?
@@ -45,7 +45,7 @@ class LineaAdapter(
         holder.binding.textoImporte.text =
             contexto.getString(R.string.comun_precio, Formato.precio(linea.importeCentimos))
 
-        // Cada botón sale solo si le dieron qué hacer; sin ninguno, fuera la fila entera (el recibo)
+        // cada botón sale solo si le dieron qué hacer; sin ninguno, fuera la fila entera (el recibo)
         holder.binding.botonMenos.isVisible = alMenos != null
         holder.binding.botonMas.isVisible = alMas != null
         holder.binding.botonQuitar.isVisible = alQuitar != null
@@ -58,7 +58,7 @@ class LineaAdapter(
         holder.binding.botonMas.setOnClickListener { alMas?.invoke(linea) }
         holder.binding.botonQuitar.setOnClickListener { alQuitar?.invoke(linea) }
 
-        // El lector de pantalla dice de qué plato es cada botón («Quitar uno de Entrecot»)
+        // el lector de pantalla dice de qué plato es cada botón («Quitar uno de Entrecot»)
         holder.binding.botonMenos.contentDescription = contexto.getString(R.string.linea_menos_cd, linea.nombre)
         holder.binding.botonMas.contentDescription = contexto.getString(R.string.linea_mas_cd, linea.nombre)
         holder.binding.botonQuitar.contentDescription = contexto.getString(R.string.linea_quitar_cd, linea.nombre)

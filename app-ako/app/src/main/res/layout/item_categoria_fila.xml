@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 5a · Una categoría en la fila de arriba de la carta (wireframe 05a): círculo con su foto o con «?»
-     y el nombre debajo. La activa: nombre en negrita y raya debajo (no solo color) -->
+<!-- 5a · una categoría en la fila de arriba de la carta (wireframe 05a): círculo con su foto o con «?»
+     y el nombre debajo. la activa: nombre en negrita y raya debajo (no solo color) -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -11,8 +11,8 @@
     android:orientation="vertical"
     android:paddingTop="8dp">
 
-    <!-- El círculo: Glide pinta la foto recortada en redondo (circleCrop); el gris y el «?», a su tamaño
-         en el centro (scaleType center). Sin padding: encogería la foto -->
+    <!-- el círculo: Glide pinta la foto recortada en redondo (circleCrop); el gris y el «?», a su tamaño
+         en el centro (scaleType center). sin padding: encogería la foto -->
     <com.google.android.material.card.MaterialCardView
         style="?attr/materialCardViewOutlinedStyle"
         android:layout_width="56dp"
@@ -44,7 +44,7 @@
         android:textSize="14sp"
         tools:text="Carnes" />
 
-    <!-- La raya de la activa; invisible (ocupa su sitio) en las demás, para que nada salte -->
+    <!-- la raya de la activa; invisible (ocupa su sitio) en las demás, para que nada salte -->
     <View
         android:id="@+id/rayaActiva"
         android:layout_width="64dp"

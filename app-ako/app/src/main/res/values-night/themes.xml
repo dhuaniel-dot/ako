@@ -1,9 +1,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Tema de la app (modo noche): el mismo acento, para que no salga el morado de serie -->
+    <!-- tema de la app (modo noche): el mismo acento, para que no salga el morado de serie -->
     <style name="Base.Theme.AKO" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimary">@color/acento</item>
         <item name="colorOnPrimary">@color/white</item>
-        <!-- Diálogos y campos: como en values/themes.xml -->
+        <!-- diálogos y campos: como en values/themes.xml -->
         <item name="materialAlertDialogTheme">@style/ThemeOverlay.AKO.Dialogo</item>
         <item name="textInputStyle">@style/Widget.AKO.CampoTexto</item>
     </style>

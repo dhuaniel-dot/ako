@@ -10,11 +10,11 @@ import yunkang.ako.R
 import yunkang.ako.databinding.FragmentRejillaMesasBinding
 import yunkang.ako.dominio.modelos.MesaEstado
 
-// La rejilla de 60 mesas: 1d (elegir mesa para pedir) y 6a (Cuenta). Es el mismo componente.
-// Pinta lo que le da quien la aloja (mostrar) y avisa de la mesa tocada con un sobre; no decide nada
+// la rejilla de 60 mesas: 1d (elegir mesa para pedir) y 6a (Cuenta). es el mismo componente
+// pinta lo que le da quien la aloja (mostrar) y avisa de la mesa tocada con un sobre; no decide nada
 class RejillaMesasFragment : Fragment(R.layout.fragment_rejilla_mesas) {
 
-    // Al tocar una mesa, sobre para quien la aloja: el id (para la base de datos) y el número (para la barra)
+    // al tocar una mesa, sobre para quien la aloja: el id (para la base de datos) y el número (para la barra)
     private val adaptador = MesaAdapter { estado ->
         setFragmentResult(
             CLAVE_MESA_TOCADA,
@@ -22,7 +22,7 @@ class RejillaMesasFragment : Fragment(R.layout.fragment_rejilla_mesas) {
         )
     }
 
-    // Solo mientras hay vista: onDestroyView lo necesita para soltar el adaptador
+    // solo mientras hay vista: onDestroyView lo necesita para soltar el adaptador
     private var binding: FragmentRejillaMesasBinding? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -30,7 +30,7 @@ class RejillaMesasFragment : Fragment(R.layout.fragment_rejilla_mesas) {
         val binding = FragmentRejillaMesasBinding.bind(view)
         this.binding = binding
 
-        // El título llega en los arguments (se conservan si Android rehace el Fragment)
+        // el título llega en los arguments (se conservan si Android rehace el Fragment)
         binding.textoTitulo.setText(requireArguments().getInt(ARG_TITULO))
 
         binding.listaMesas.layoutManager = GridLayoutManager(requireContext(), COLUMNAS)
@@ -42,20 +42,20 @@ class RejillaMesasFragment : Fragment(R.layout.fragment_rejilla_mesas) {
         }
     }
 
-    // Al quitar la vista, la lista suelta su adaptador y se olvida el binding (como en ReciboFragment)
+    // al quitar la vista, la lista suelta su adaptador y se olvida el binding (como en ReciboFragment)
     override fun onDestroyView() {
         binding?.listaMesas?.adapter = null
         super.onDestroyView()
         binding = null
     }
 
-    // Quien la aloja le da las mesas. El adaptador las guarda aunque la vista aún no exista
+    // quien la aloja le da las mesas. el adaptador las guarda aunque la vista aún no exista
     fun mostrar(mesas: List<MesaEstado>) {
         adaptador.mostrar(mesas)
     }
 
     companion object {
-        // [Claude] El nombre del sobre y de lo que lleva dentro
+        // [Claude] el nombre del sobre y de lo que lleva dentro
         const val CLAVE_MESA_TOCADA = "mesa_tocada"
         const val MESA_ID = "mesa_id"
         const val MESA_NUMERO = "mesa_numero"
@@ -65,7 +65,7 @@ class RejillaMesasFragment : Fragment(R.layout.fragment_rejilla_mesas) {
         // 4 columnas: 60 mesas en 15 filas con scroll (wireframe 01d)
         private const val COLUMNAS = 4
 
-        // La forma de crear una rejilla: se le da el título que enseña su barra
+        // la forma de crear una rejilla: se le da el título que enseña su barra
         fun nueva(titulo: Int): RejillaMesasFragment {
             val rejilla = RejillaMesasFragment()
             rejilla.arguments = bundleOf(ARG_TITULO to titulo)

@@ -15,15 +15,15 @@ import yunkang.ako.ui.panel.PanelActivity
 import yunkang.ako.ui.pedido.PedidoActivity
 import yunkang.ako.ui.comun.apartarDeLasBarras
 
-// Pantalla 1 (Selector de rol). Es solo el marco: dentro enseña 1a (Selector), 1b (Crear PIN) o 1d (Elegir mesa).
-// Sabe comprobar un PIN (ComprobadorPin): es lo que PinDialog le pide
+// pantalla 1 (Selector de rol). es solo el marco: dentro enseña 1a (Selector), 1b (Crear PIN) o 1d (Elegir mesa)
+// sabe comprobar un PIN (ComprobadorPin): es lo que PinDialog le pide
 class SelectorActivity : AppCompatActivity(), ComprobadorPin {
 
     private lateinit var binding: ActivitySelectorBinding
 
     private val viewModel: SelectorViewModel by viewModels { SelectorViewModel.Factory }
 
-    // El portero de la rejilla 1d, como en CuentaActivity: dos toques rápidos en una mesa no abren Pedir dos veces
+    // el portero de la rejilla 1d, como en CuentaActivity: dos toques rápidos en una mesa no abren Pedir dos veces
     private val portero = GuardaDobleToque()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,11 +33,11 @@ class SelectorActivity : AppCompatActivity(), ComprobadorPin {
         binding = ActivitySelectorBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Así Aceptar no queda tapado por el teclado al escribir el PIN
+        // así Aceptar no queda tapado por el teclado al escribir el PIN
         binding.contenedor.apartarDeLasBarras()
 
-        // La primera vez: si ya hay PIN, 1a; si no, 1b (ficha 1, flujo).
-        // Si Android rehace la pantalla, ya está montado y no se repite
+        // la primera vez: si ya hay PIN, 1a; si no, 1b (ficha 1, flujo)
+        // si Android rehace la pantalla, ya está montado y no se repite
         if (savedInstanceState == null) {
             val vista = if (viewModel.hayPin()) SelectorFragment() else CrearPinFragment()
             supportFragmentManager.commit {
@@ -45,7 +45,7 @@ class SelectorActivity : AppCompatActivity(), ComprobadorPin {
             }
         }
 
-        // Cuando 1c deja el sobre de «PIN correcto», esta pantalla decide: abrir el Panel (Propietario)
+        // cuando 1c deja el sobre de «PIN correcto», esta pantalla decide: abrir el Panel (Propietario)
         supportFragmentManager.setFragmentResultListener(PinDialog.CLAVE_RESULTADO, this) { _, _ ->
             startActivity(Intent(this, PanelActivity::class.java))
         }
@@ -55,8 +55,8 @@ class SelectorActivity : AppCompatActivity(), ComprobadorPin {
             rejillaVisible()?.mostrar(mesas)
         }
 
-        // 1d: la rejilla avisa de la mesa tocada y esta pantalla abre Pedir con esa mesa grapada.
-        // [Claude] Antes quita 1d de la pila: al salir de Pedir se vuelve a 1a, no a la rejilla
+        // 1d: la rejilla avisa de la mesa tocada y esta pantalla abre Pedir con esa mesa grapada
+        // [Claude] antes quita 1d de la pila: al salir de Pedir se vuelve a 1a, no a la rejilla
         supportFragmentManager.setFragmentResultListener(RejillaMesasFragment.CLAVE_MESA_TOCADA, this) { _, sobre ->
             if (!portero.permite()) return@setFragmentResultListener
             supportFragmentManager.popBackStack()
@@ -70,7 +70,7 @@ class SelectorActivity : AppCompatActivity(), ComprobadorPin {
     // 1d: la rejilla en modo elegir, encima de 1a. addToBackStack: Atrás la quita y vuelve 1a, sin PIN
     fun abrirElegirMesa() {
         val rejilla = RejillaMesasFragment.nueva(R.string.mesa_elegir_titulo)
-        // Las mesas que ya hay en el tablón; las siguientes llegan por el observe de arriba
+        // las mesas que ya hay en el tablón; las siguientes llegan por el observe de arriba
         rejilla.mostrar(viewModel.mesas.value ?: emptyList())
         supportFragmentManager.commit {
             replace(R.id.contenedor, rejilla)
@@ -78,7 +78,7 @@ class SelectorActivity : AppCompatActivity(), ComprobadorPin {
         }
     }
 
-    // [Claude] La rejilla, si es lo que se ve ahora en el contenedor; si no, vacío
+    // [Claude] la rejilla, si es lo que se ve ahora en el contenedor; si no, vacío
     private fun rejillaVisible(): RejillaMesasFragment? =
         supportFragmentManager.findFragmentById(R.id.contenedor) as? RejillaMesasFragment
 

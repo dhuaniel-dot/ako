@@ -9,11 +9,11 @@ import yunkang.ako.databinding.ItemFilaPlatoBinding
 import yunkang.ako.datos.entidades.Producto
 import java.io.File
 
-// Las filas de plato del Panel (2a) y de la carta (5a): «se reutiliza el componente, no la pantalla».
-// Adaptador sencillo con notifyDataSetChanged: la lista es corta y el atenuado depende también
+// las filas de plato del Panel (2a) y de la carta (5a): «se reutiliza el componente, no la pantalla»
+// adaptador sencillo con notifyDataSetChanged: la lista es corta y el atenuado depende también
 // de la categoría, que DiffUtil no vería (Flan no cambia cuando se elimina Postres)
 class FilaPlatoAdapter(
-    // [Claude] Qué hacer al tocar una fila: lo decide quien usa el adaptador, no el adaptador
+    // [Claude] qué hacer al tocar una fila: lo decide quien usa el adaptador, no el adaptador
     private val alTocar: (Producto) -> Unit
 ) : RecyclerView.Adapter<FilaPlatoAdapter.FilaViewHolder>() {
 
@@ -22,7 +22,7 @@ class FilaPlatoAdapter(
 
     class FilaViewHolder(val binding: ItemFilaPlatoBinding) : RecyclerView.ViewHolder(binding.root)
 
-    // La caja le da sus platos y si su categoría está en la carta
+    // la caja le da sus platos y si su categoría está en la carta
     fun mostrar(platos: List<Producto>, categoriaActiva: Boolean) {
         this.platos = platos
         this.categoriaActiva = categoriaActiva
@@ -48,18 +48,18 @@ class FilaPlatoAdapter(
 
         pintarFoto(holder.binding.imagenPlato, plato.imagen?.let { File(it) }, plato.nombre)
 
-        // La palabra «Eliminado» es la información; el gris solo la refuerza.
-        // En la carta nunca llega un plato eliminado, así que allí no sale sola
+        // la palabra «Eliminado» es la información; el gris solo la refuerza
+        // en la carta nunca llega un plato eliminado, así que allí no sale sola
         holder.binding.textoEliminado.visibility = if (plato.activo) View.GONE else View.VISIBLE
 
-        // Atenuada si el plato está eliminado o si lo está su categoría (Flan dentro de Postres eliminada)
+        // atenuada si el plato está eliminado o si lo está su categoría (Flan dentro de Postres eliminada)
         holder.itemView.alpha = if (plato.activo && categoriaActiva) 1f else ALFA_ELIMINADO
 
         holder.itemView.setOnClickListener { alTocar(plato) }
     }
 
     companion object {
-        // Lo eliminado se ve apagado al 80 %: se nota, pero la palabra «Eliminado» se sigue leyendo
+        // lo eliminado se ve apagado al 80 %: se nota, pero la palabra «Eliminado» se sigue leyendo
         // (contraste 5,15:1)
         const val ALFA_ELIMINADO = 0.8f
     }
