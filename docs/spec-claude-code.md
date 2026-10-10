@@ -47,14 +47,14 @@ yunkang.ako/                    [Claude] el paquete raíz; cambiar por el que Da
 │   ├── AppDatabase    @Database con las 7 entidades y los 5 DAOs (única instancia; P115)
 │   └── Precarga       RoomDatabase.Callback: Otros, 60 mesas, 14 alérgenos, 1 categoría + 1 plato de ejemplo (sin etiquetas: P115)
 ├── dominio/           SOLO lo puro: nada de aquí toca Android, Room, SharedPreferences ni archivos (P237)
-│   ├── Carrito, LineaCarrito, Calculadora (importe, total, cambio: funciones puras)
-│   ├── Validacion     precio ≥ 0, cantidad 1-99, PIN de 4 cifras (funciones puras, R4 y R8)
-│   ├── Hash           PBKDF2 puro (javax.crypto), separado de PinStore para poder probarlo sin emulador (P-C-05)
+│   ├── Carrito, PlatoApuntado, Calculadora (importe, total, cambio: funciones puras)
+│   ├── Comprobacion   precio ≥ 0, cantidad 1-99, PIN de 4 cifras (funciones puras, R4 y R8)
+│   ├── PinSalHash     PBKDF2 puro (javax.crypto), separado de GuardaPin para poder probarlo sin emulador (P-C-05)
 │   └── modelos/       MesaEstado · ResumenIngresos · ComandaConTotal · CategoriaConPlatos · ResultadoGuardado
 ├── seguridad/
-│   └── PinStore       SharedPreferences privadas: sal + hash; nunca el PIN. Llama a dominio/Hash
+│   └── GuardaPin      SharedPreferences privadas: sal + hash; nunca el PIN. Llama a dominio/PinSalHash
 ├── imagenes/
-│   └── ImageStore     guardar (redimensionar ~1080 px + JPEG + archivo privado → ruta), borrar
+│   └── Galeria        guardar (redimensionar ~1080 px + JPEG + archivo privado → ruta), borrar
 └── ui/
     ├── selector/      SelectorActivity · SelectorFragment (1a) · CrearPinFragment (1b) · PinDialog (1c) · SelectorViewModel
     ├── panel/         PanelActivity (2a) · CategoriaBottomSheet (2b) · CambiarPinDialog (1e) · MesasAfectadasDialog (2e/3d) · PanelViewModel
@@ -73,13 +73,13 @@ yunkang.ako/                    [Claude] el paquete raíz; cambiar por el que Da
 | Entidades | Describen las 7 tablas del nivel 1 con tipos Kotlin (P115) | Lógica |
 | DAOs | La única capa que sabe SQL: consultas parametrizadas de Room (`@Query`, `@Insert`…), nunca SQL concatenado (RNF-08) | Reglas de negocio |
 | Repositorios | **Garantizan las reglas R1-R16** de su parte y devuelven modelos listos para la pantalla | Saber qué pantalla los llama |
-| Dominio puro (`Carrito`, `Calculadora`, `Validacion`, `Hash`) | Cálculos sin Android: es lo que prueban las P-C en `test/` | Tocar Room, SharedPreferences ni archivos |
+| Dominio puro (`Carrito`, `Calculadora`, `Comprobacion`, `PinSalHash`) | Cálculos sin Android: es lo que prueban las P-C en `test/` | Tocar Room, SharedPreferences ni archivos |
 | ViewModels | Estado de una pantalla; llaman al repositorio en corrutinas; **el carrito vive en `PedidoViewModel`** | Tocar la base de datos directamente |
 | Activities y Fragments | Pintar y recoger toques; `ViewBinding`; una Activity por pantalla de las fichas, sus vistas como Fragments | Lógica ni cálculos |
 
 **Un ViewModel por Activity** (P108); los Fragments de una Activity comparten su ViewModel (`activityViewModels()`).
 
-**Por qué los repositorios están en `datos/` y `Hash` en `dominio/` (P237 → B, delegada a Claude [Claude]):** así es verdad, y no solo una intención, que **todo lo de `dominio/` se prueba en el PC sin emulador** (las ~~seis~~ ocho P-C de `test/` (revisión del 8 oct 2026, C07: con P-C-10 y P-C-11)): los repositorios usan Room, luego no son dominio puro; `Hash` no usa nada de Android, luego sí lo es. `PinStore` (que sí usa `SharedPreferences`) se queda solo en `seguridad/`. `spec+doc-clases.md` lo describe así también.
+**Por qué los repositorios están en `datos/` y `PinSalHash` en `dominio/` (P237 → B, delegada a Claude [Claude]):** así es verdad, y no solo una intención, que **todo lo de `dominio/` se prueba en el PC sin emulador** (las ~~seis~~ ocho P-C de `test/` (revisión del 8 oct 2026, C07: con P-C-10 y P-C-11)): los repositorios usan Room, luego no son dominio puro; `PinSalHash` no usa nada de Android, luego sí lo es. `GuardaPin` (que sí usa `SharedPreferences`) se queda solo en `seguridad/`. `spec+doc-clases.md` lo describe así también.
 
 ## 4. Contrato del prototipo — niveles
 
@@ -160,7 +160,7 @@ Tipos Kotlin: `Long` para claves, `Int` para céntimos, cantidades y números de
 
 - **Todo importe en céntimos y todo valor nutricional en miligramos, como `Int`.** La coma flotante acumula error al sumar. La interfaz convierte (18,50 € ↔ 1850).
 - **`producto.numero` y `mesa.numero` son enteros y únicos.** Si fueran texto, `"7"` y `"07"` convivirían.
-- **Ningún precio negativo (R8).** Room no sabe declarar `CHECK` (verificación 9): **lo garantiza el código**, en `Validacion.precioValido()` llamada por `CartaRepository.guardarPlato` y `guardarModificador` y por `ComandaRepository.enviarCarrito` al congelar precios. Un precio negativo lanza `IllegalArgumentException`; la interfaz además no admite el signo. Los QUITAR se guardan a 0. **No escribir `CHECK` en ningún `@Entity` ni en un `Callback`**: Room compara el esquema al abrir y no lo entendería.
+- **Ningún precio negativo (R8).** Room no sabe declarar `CHECK` (verificación 9): **lo garantiza el código**, en `Comprobacion.precioValido()` llamada por `CartaRepository.guardarPlato` y `guardarModificador` y por `ComandaRepository.enviarCarrito` al congelar precios. Un precio negativo lanza `IllegalArgumentException`; la interfaz además no admite el signo. Los QUITAR se guardan a 0. **No escribir `CHECK` en ningún `@Entity` ni en un `Callback`**: Room compara el esquema al abrir y no lo entendería.
 - **Las entidades no se borran: `activo = false`** en `producto`, `categoria`, `modificador`, `etiqueta` e `idioma` (las tres últimas, cuando llegue su incremento: P115). `mesa` no lleva `activo`. **Eso es *eliminar*** (y *recuperar* es volver a `activo = true`). **Desactivar es otra cosa** (P153): `producto.disponible = false`, el agotado temporal, **solo en platos**, nivel 2 (incremento 12); en el nivel 1 la columna no existe: se añade con el incremento 12 (P115).
 - **Lo que sí se borra:** filas de relación (desmarcar una etiqueta, vaciar una traducción) y **líneas de una comanda todavía abierta**. **Una comanda cerrada (PAGADA o ANULADA) es intocable.** Una comanda anulada por R7 queda ANULADA con cero líneas en el histórico.
 - **`onDelete = RESTRICT` en todas las claves foráneas.** En el nivel 1 **no hay ninguna `CASCADE`** (P115); la única del diseño, `linea_modificador → linea_comanda`, llega con el incremento 4.
@@ -177,13 +177,13 @@ Tipos Kotlin: `Long` para claves, `Int` para céntimos, cantidades y números de
 | # | Regla | Dónde vive en el código |
 |---|---|---|
 | R1 | Una mesa tiene como máximo una comanda no cerrada | `ComandaRepository.enviarCarrito`: busca `pendienteDeMesa`; si existe, añade líneas; si no, crea. **La base de datos no puede**: Room no declara índices únicos parciales |
-| R2 | *Enviar* crea la comanda si no hay ninguna abierta y añade líneas si la hay. Cada envío crea líneas nuevas (no suma a las existentes: precios congelados distintos) | `ComandaRepository.enviarCarrito`, en una ~~`@Transaction`~~ transacción de Room: `db.withTransaction { }` en `ComandaRepositoryReal` (P129; revisión del 8 oct 2026, C09) |
+| R2 | *Enviar* crea la comanda si no hay ninguna abierta y añade líneas si la hay. Cada envío crea líneas nuevas (no suma a las existentes: precios congelados distintos) | `ComandaRepository.enviarCarrito`, en una ~~`@Transaction`~~ transacción de Room: `baseDeDatos.withTransaction { }` en `ComandaRepositoryReal` (P129; revisión del 8 oct 2026, C09) |
 | R3 | Mesa ocupada = tiene comanda PENDIENTE. No hay campo | `ComandaDao.pendientesConTotal` + `ComandaRepository.mesasConEstado` |
-| R4 | No se envía un carrito vacío; 1-99 unidades por línea; modificadores de añadir 1-9 | `Carrito` y `Validacion`; la interfaz bloquea los botones en los límites |
+| R4 | No se envía un carrito vacío; 1-99 unidades por línea; modificadores de añadir 1-9 | `Carrito` y `Comprobacion`; la interfaz bloquea los botones en los límites |
 | R5 | Nada se borra salvo relaciones y líneas de comanda abierta; comanda cerrada intocable | Repositorios: no existe ningún método que borre una entidad ni que toque una comanda cerrada |
 | R6 | Al eliminar un plato **o una categoría** (y, en el incremento 12, al desactivar un plato), avisar de qué mesas lo tienen PENDIENTE; **no borrar ninguna línea**; varios a la vez → un aviso agrupado | ~~`CartaRepository.eliminarPlato / eliminarCategoria` (incremento 12: también `desactivarPlato`) devuelven la lista de mesas~~ **P128 (1 oct):** `mesasAfectadasPorPlato / mesasAfectadasPorCategoria` dan la lista de mesas (solo platos activos, P55) y `eliminarPlato / eliminarCategoria` solo eliminan; la pantalla enseña `MesasAfectadasDialog` **antes** de confirmar |
 | R7 | Comanda sin líneas → ANULADA con `fechaCierre`, mesa libre | `ComandaRepository.quitarLinea` (devuelve `true` si quedó anulada); la pantalla avisa antes de quitar la última |
-| R8 | Ningún precio negativo | **`Validacion` + repositorios** (ver 5.1). Prueba P-C-09. **Límite declarado (8 oct, P201 C):** no hay tope por arriba más allá de 7 cifras de euros; con un precio de siete cifras, precio × cantidad o el total de una comanda pueden pasar de 21.474.836,47 € (lo más que cabe en un `Int`) y saldrían mal |
+| R8 | Ningún precio negativo | **`Comprobacion` + repositorios** (ver 5.1). Prueba P-C-09. **Límite declarado (8 oct, P201 C):** no hay tope por arriba más allá de 7 cifras de euros; con un precio de siete cifras, precio × cantidad o el total de una comanda pueden pasar de 21.474.836,47 € (lo más que cabe en un `Int`) y saldrían mal |
 | R9 | Dos platos no tienen el mismo número a la vez | **La base de datos** (`UNIQUE` sobre entero) y `ProductoDao.existeNumero` para avisar antes de guardar |
 | R10 | La comanda no guarda su total | ~~`Calculadora.total(lineas)`~~ `ComandaDao.totalDe` (suma en SQL, P131/P135; `Calculadora` solo tiene `importe` y `cambio`, P120); `ComandaRepository.totalDe` |
 | R11 | RESTRICT en todo salvo `linea_modificador → linea_comanda` CASCADE (en el nivel 1 esa tabla no existe: todo RESTRICT, ninguna CASCADE; P115) | **La base de datos** (`@ForeignKey`) |
@@ -219,7 +219,7 @@ Las fichas completas (flujo, validaciones, casos límite, errores) están en `do
 
 | Qué | Cómo |
 |---|---|
-| **PIN del Propietario** | 4 dígitos. `Hash.pbkdf2(pin, sal)` con **`PBKDF2withHmacSHA256`**, sal de **16 bytes** de `SecureRandom`, **100 000 iteraciones**, clave de **256 bits** (P126; RFC 8018 pide ≥ 64 bits de sal y ≥ 1 000 iteraciones). `PinStore` guarda `sal` y `hash` en Base64 en `SharedPreferences` privadas (`MODE_PRIVATE`), **nunca el PIN**. `coincide(pin)` recalcula y compara. Intentos ilimitados (recorte declarado) |
+| **PIN del Propietario** | 4 dígitos. `PinSalHash.pbkdf2(pin, sal)` con **`PBKDF2withHmacSHA256`**, sal de **16 bytes** de `SecureRandom`, **100 000 iteraciones**, clave de **256 bits** (P126; RFC 8018 pide ≥ 64 bits de sal y ≥ 1 000 iteraciones). `GuardaPin` guarda `sal` y `hash` en Base64 en `SharedPreferences` privadas (`MODE_PRIVATE`), **nunca el PIN**. `coincide(pin)` recalcula y compara. Intentos ilimitados (recorte declarado) |
 | **Consultas** | Room parametriza todo (`@Query` con `:parametro`). Nunca `rawQuery` con texto concatenado (RNF-08) |
 | **Resumen de ingresos** | Solo desde el Panel, detrás del PIN. Cuenta no lo enseña (RNF-10) |
 | **Modo kiosco** | Incremento 2: `startLockTask()` (screen pinning, sin administrador); el sistema muestra un diálogo y el usuario puede salir por el sistema. La protección real combina el PIN de la app con la opción del dispositivo *"solicitar PIN antes de dejar de fijar"* (Anexo I) |
@@ -228,7 +228,7 @@ Las fichas completas (flujo, validaciones, casos límite, errores) están en `do
 ## 9. Imágenes
 
 - **Archivo, nunca BLOB** (verificación 6: Android lee las filas por una ventana de 2 MB). En `imagen` se guarda la **ruta** del archivo dentro de `filesDir/fotos/`.
-- **`ImageStore.guardar(uri)`**: decodifica con `inSampleSize` (guía *Loading Large Bitmaps Efficiently*), redimensiona el lado mayor a **~1080 px**, comprime a **JPEG (calidad ~85)**, escribe el archivo y devuelve la ruta. Se hace en `Dispatchers.IO`.
+- **`Galeria.guardar(uri)`**: decodifica con `inSampleSize` (guía *Loading Large Bitmaps Efficiently*), redimensiona el lado mayor a **~1080 px**, comprime a **JPEG (calidad ~85)**, escribe el archivo y devuelve la ruta. Se hace en `Dispatchers.IO`.
 - **Elegir la foto:** `ActivityResultContracts.PickVisualMedia` (selector de fotos del sistema, sin permisos de almacenamiento).
 - **Cargar con Glide** en cada `ImageView` (`Glide.with(view).load(File(ruta)).placeholder(neutro).error(interrogacion).into(view)`): Glide redimensiona al tamaño real de la vista y cachea. Sin permiso `INTERNET`.
 - **Sin foto**: el **"?"** con `contentDescription = "Sin foto"`, en el plato (miniatura y ficha) **y en la categoría** (círculo con «?» en la fila de categorías de la carta y en la hoja 2b; P224, que sustituye al *"solo el nombre"* de P92). **Toda la app funciona sin fotos**: por eso la foto es la última pieza del nivel 1 (sesión 12).
@@ -248,8 +248,8 @@ Cada sesión tiene un objetivo de una línea, un entregable comprobable y termin
 |---|---|---|---|
 | **1** | **Proyecto y repositorio.** Android Studio: proyecto vacío (Kotlin DSL, `minSdk 26`, ViewBinding, catálogo de versiones con Room, Glide, KSP, corrutinas, pruebas); primer arranque del emulador; Git: `init`, `.gitignore`, `README.md`, repositorio público en GitHub, primer `commit` y `push`; carpeta `docs/` con este spec, `CLAUDE.md`, fichas, wireframes, plan de pruebas, plantilla del diario y `estado-nivel.md`. **Antes del primer commit (P226):** Claude Code guía a Daniel para crear o editar `C:\Users\dhuan\.claude\settings.json` (ajustes de **usuario**; NO el `.claude/settings.json` del repositorio, que se subiría a GitHub) con `{"attribution": {"commit": "", "pr": ""}}` y reiniciar Claude Code | La app vacía arranca en el emulador; el repositorio se ve en GitHub; **el primer commit no lleva la línea `Co-Authored-By`** | — | **[1 oct: lo de `attribution` vacío y «el primer commit no lleva coautor» quedó sustituido por P111: desde el 29 sep los commits llevan `Co-Authored-By: Claude`.]**
 | **2** | **7 entidades (solo el nivel 1, P115), `AppDatabase`, `Precarga`** (sin `Converters`: P113) | Compila; al arrancar, el inspector de base de datos enseña las 7 tablas con *Otros*, 60 mesas, 14 alérgenos y el ejemplo (sin etiquetas: P115) | — |
-| **3** | **DAOs y dominio puro**: los 5 DAOs con sus consultas; `Carrito`, `LineaCarrito`, `Calculadora`, `Validacion`, `Hash` | Compila; las cinco puras pasan | **P-C-01 a P-C-05 y P-C-09** en `test/` (P-C-09 llegó en la S4; P-C-10 y P-C-11, en la revisión del 1 oct) |
-| **4** | **Repositorios**: `CartaRepository`, `ComandaRepository`, `SeguridadRepository`, `PinStore` | Compila; cada método tiene un comentario de una línea con la regla que garantiza | — |
+| **3** | **DAOs y dominio puro**: los 5 DAOs con sus consultas; `Carrito`, `PlatoApuntado`, `Calculadora`, `Comprobacion`, `PinSalHash` | Compila; las cinco puras pasan | **P-C-01 a P-C-05 y P-C-09** en `test/` (P-C-09 llegó en la S4; P-C-10 y P-C-11, en la revisión del 1 oct) |
+| **4** | **Repositorios**: `CartaRepository`, `ComandaRepository`, `SeguridadRepository`, `GuardaPin` | Compila; cada método tiene un comentario de una línea con la regla que garantiza | — |
 | **5** | **Selector y PIN** (1a, 1b, 1c, 1e) + `ConfirmacionDialog` | P-M-01, 02, 03, 13 pasan | P-M-01, 02, 03, 13, 29 |
 | **6** | **Panel** (2a, 2b, 2e) con `CategoriaAdapter`, `FilaPlatoAdapter`, `MesasAfectadasDialog` | P-M-04, 05, 06 pasan (con platos creados a mano en el inspector si hace falta) | P-M-04, 05, 06 |
 | **7** | **Plato sin foto** (3a, 3d, 3e) | P-M-07, 09, 10, 11 pasan | P-M-07, 09, 10, 11 |
@@ -257,7 +257,7 @@ Cada sesión tiene un objetivo de una línea, un entregable comprobable y termin
 | **9** | **Cuenta** (6a, 6b con Quitar y R7, 6c con `ReciboFragment`, cambio, Cobrar, Anular) | P-M-22 a P-M-28 pasan | P-M-22 a 28 |
 | **10** | **Resumen de ingresos** (2g) | P-M-12 pasa | P-M-12 |
 | **11** | **Pruebas de Room** en `androidTest/` (P117, con red de seguridad: si no arrancan en una sesión, se documenta y R1, R7 y R16 quedan cubiertas por las manuales) | P-C-06, 07, 08 pasan, o la ficha dice por qué no | P-C-06 a 08 |
-| **12** | **Fotos** (`ImageStore`, selector de fotos, Glide en Panel, 5a y 5b) | P-M-08 pasa | P-M-08 |
+| **12** | **Fotos** (`Galeria`, selector de fotos, Glide en Panel, 5a y 5b) | P-M-08 pasa | P-M-08 |
 | **13** | **Cierre del nivel 1**: tema (paleta, naranja), `strings.xml` EN, ~~Accessibility Scanner en las siete pantallas~~ revisión de accesibilidad (P98 B), pasada por las 29 manuales que faltaran, `estado-nivel.md` con todo el nivel 1 en *implementado*, etiqueta `v1-nivel1` en Git; **APK debug generada en Android Studio (Build → Build APK) y adjuntada a mano por Daniel a una Release de GitHub con esa etiqueta (P225, P248)** | Las 29 P-M y las ~~9~~ 11 P-C anotadas en `spec+doc-pruebas.md` con fecha; ~~la Release `v1-nivel1` con la APK se ve en GitHub~~ (P198: la S13 no sube nada, ni etiqueta ni Release; la APK, cuando Daniel lo diga) | Todas |
 
 **Qué pasa después de la S13, en este orden (P233 → A):**
@@ -279,19 +279,19 @@ Plan completo en `docs/spec+doc-pruebas.md` (29 manuales P-M-01…29, una por RF
 
 | Código | Qué | Clase · función | Carpeta |
 |---|---|---|---|
-| P-C-01 | Importe de una línea (1850 × 3 = 5550) | `LineaCarrito.importe()` / `Calculadora.importe` | `test/` |
+| P-C-01 | Importe de una línea (1850 × 3 = 5550) | `PlatoApuntado.importe()` / `Calculadora.importe` | `test/` |
 | P-C-02 | Total del carrito, vacío y con líneas (4200; `numPlatos` 3) | `Carrito.total()`, `estaVacio()`, `numPlatos()` | `test/` |
 | P-C-03 | Líneas idénticas se suman; tope 99 | `Carrito.anadir()`, `cambiarCantidad()` | `test/` |
 | P-C-04 | Cambio: 800 / −200 / 0 | `Calculadora.cambio(total, entregado)` (función pura; `CuentaViewModel` la llama) | `test/` |
-| P-C-05 | Hash del PIN: coincide consigo mismo, no con 1235, distinto con otra sal, no contiene "1234" | `Hash.pbkdf2()` y `Hash.coincide()` (puros); ~~`PinStore.coincide()` con un `SharedPreferences` falso~~ (P12: `PinStore` no se prueba en `test/`) | `test/` |
-| **P-C-09** | **Precio negativo rechazado** (R8): `precioValido(-1)` falso; `guardarPlato` con −100 lanza excepción; 0 se admite | `Validacion.precioValido()`; `CartaRepository.guardarPlato` con un DAO falso | `test/` |
+| P-C-05 | Hash del PIN: coincide consigo mismo, no con 1235, distinto con otra sal, no contiene "1234" | `PinSalHash.pbkdf2()` y `PinSalHash.coincide()` (puros); ~~`PinStore.coincide()` con un `SharedPreferences` falso~~ (P12: `GuardaPin` no se prueba en `test/`) | `test/` |
+| **P-C-09** | **Precio negativo rechazado** (R8): `precioValido(-1)` falso; `guardarPlato` con −100 lanza excepción; 0 se admite | `Comprobacion.precioValido()`; `CartaRepository.guardarPlato` con un DAO falso | `test/` |
 | P-C-06 | Una sola comanda abierta por mesa; dos envíos → una comanda con dos líneas, nombre y precio copiados | `ComandaRepository.enviarCarrito` con Room en memoria | `androidTest/` |
 | P-C-07 | Quitar la última línea → ANULADA con `fechaCierre`, mesa libre | `ComandaRepository.quitarLinea` | `androidTest/` |
 | P-C-08 | Exactamente una categoría por defecto; no se elimina; no se crea otra | `Precarga`, `CategoriaDao.porDefecto`, `CartaRepository` | `androidTest/` |
 | **P-C-10** | Cadena 3e: cuándo salta (P62 A, P130) — fila añadida el 8 oct (C16) | `CartaRepository.guardarPlato` con DAOs falsos (`CartaRepositoryTest`) | `test/` |
 | **P-C-11** | Carrito: el mínimo de R4, `cambiarCantidad` y `quitar` — fila añadida el 8 oct (C16) | `Carrito.anadir()`, `cambiarCantidad()`, `quitar()` (`CarritoTest`) | `test/` |
 
-Las de `test/` corren en el PC sin emulador (por eso `Calculadora`, `Validacion` y `Hash` son funciones puras separadas de los ViewModels y de `PinStore`). Las tres de `androidTest/` usan `Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java)` con la precarga ejecutada; necesitan el emulador. **Red de seguridad (P117):** si en la sesión 11 no arrancan, se documenta en la ficha, R1, R7 y R16 quedan cubiertas por P-M-20, P-M-24 y P-M-05, y la memoria lo dice tal cual. La documentación de Room (sep 2026) ofrece además pruebas JVM vía Room KMP; **descartado (P124)**: exige estructura multiplataforma.
+Las de `test/` corren en el PC sin emulador (por eso `Calculadora`, `Comprobacion` y `PinSalHash` son funciones puras separadas de los ViewModels y de `GuardaPin`). Las tres de `androidTest/` usan `Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java)` con la precarga ejecutada; necesitan el emulador. **Red de seguridad (P117):** si en la sesión 11 no arrancan, se documenta en la ficha, R1, R7 y R16 quedan cubiertas por P-M-20, P-M-24 y P-M-05, y la memoria lo dice tal cual. La documentación de Room (sep 2026) ofrece además pruebas JVM vía Room KMP; **descartado (P124)**: exige estructura multiplataforma.
 
 **Sin prueba, a propósito:** R11 (CASCADE) y R12 solo actúan en nivel 2 (en el nivel 1 no hay ninguna CASCADE: P115). RNF-11/13 se comprueban ~~con el Accessibility Scanner~~ con la revisión de accesibilidad de la S13 (P98 B; revisión del 8 oct 2026, C04).
 

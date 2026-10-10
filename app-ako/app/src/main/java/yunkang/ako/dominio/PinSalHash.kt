@@ -6,8 +6,8 @@ import java.util.Base64
 import javax.crypto.SecretKeyFactory
 import javax.crypto.spec.PBEKeySpec
 
-// La picadora del PIN: calcula, no guarda nada (guardar es cosa de PinStore).
-object Hash {
+// La picadora del PIN: calcula, no guarda nada (guardar es cosa de GuardaPin).
+object PinSalHash {
 
     // Las vueltas de picadora, el tamaño de la pasta y el tamaño de la sal
     private const val ITERACIONES = 100_000

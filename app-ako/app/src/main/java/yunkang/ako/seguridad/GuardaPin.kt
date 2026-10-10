@@ -2,7 +2,7 @@ package yunkang.ako.seguridad
 
 import android.content.Context
 import androidx.core.content.edit
-import yunkang.ako.dominio.Hash
+import yunkang.ako.dominio.PinSalHash
 
 // Los nombres de las dos casillas del archivo (solo se usan en este archivo).
 private const val CLAVE_SAL = "sal"
@@ -10,7 +10,7 @@ private const val CLAVE_HASH = "hash"
 
 // El cajón privado del PIN: guarda la sal y el hash, nunca el PIN.
 // Son SharedPreferences privadas de la app: se borran al desinstalarla.
-class PinStore(context: Context) {
+class GuardaPin(context: Context) {
 
     // El archivo "pin" de la app; MODE_PRIVATE: ninguna otra app lo puede leer.
     private val preferencias = context.getSharedPreferences("pin", Context.MODE_PRIVATE)
@@ -20,8 +20,8 @@ class PinStore(context: Context) {
 
     // Guarda un PIN nuevo: sal al azar + hash. El PIN no se escribe en ningún sitio.
     fun guardar(pin: String) {
-        val sal = Hash.generarSal()
-        val hash = Hash.pbkdf2(pin, sal)
+        val sal = PinSalHash.generarSal()
+        val hash = PinSalHash.pbkdf2(pin, sal)
         preferencias.edit {
             putString(CLAVE_SAL, sal)
             putString(CLAVE_HASH, hash)
@@ -34,7 +34,7 @@ class PinStore(context: Context) {
         val hash = preferencias.getString(CLAVE_HASH, null) ?: return false
         // [Claude] Si el archivo está roto (la sal no es Base64), es «no coincide», no un cierre de la app
         return try {
-            Hash.coincide(pin, sal, hash)
+            PinSalHash.coincide(pin, sal, hash)
         } catch (e: IllegalArgumentException) {
             false
         }

@@ -6,7 +6,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import yunkang.ako.R
 import yunkang.ako.databinding.ItemLineaBinding
-import yunkang.ako.dominio.Validacion
+import yunkang.ako.dominio.Comprobacion
 
 // Las líneas de un pedido: «2 × Entrecot · 37,00 €» y, debajo, los botones que toquen.
 // Recibe LineaVista, no las clases del dominio, para servir al carrito (5c), a la comanda (6b) y al recibo (6c, 2g).
@@ -53,7 +53,7 @@ class LineaAdapter(
 
         // − apagado en 1 y + apagado en 99; Quitar quita la línea entera
         holder.binding.botonMenos.isEnabled = linea.cantidad > 1
-        holder.binding.botonMas.isEnabled = linea.cantidad < Validacion.MAXIMO_POR_PLATO
+        holder.binding.botonMas.isEnabled = linea.cantidad < Comprobacion.MAXIMO_POR_PLATO
         holder.binding.botonMenos.setOnClickListener { alMenos?.invoke(linea) }
         holder.binding.botonMas.setOnClickListener { alMas?.invoke(linea) }
         holder.binding.botonQuitar.setOnClickListener { alQuitar?.invoke(linea) }

@@ -2,7 +2,7 @@ package yunkang.ako.dominio
 
 // Las comprobaciones de las reglas. Room no las comprueba (no declara CHECK),
 // así que se comprueban aquí antes de guardar.
-object Validacion {
+object Comprobacion {
 
     // Máximo de unidades de un mismo plato. Solo está escrito aquí.
     const val MAXIMO_POR_PLATO = 99

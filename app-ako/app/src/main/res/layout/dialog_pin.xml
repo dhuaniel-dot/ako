@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:hint="@string/pin_hint_pin">
 
-        <!-- 4 cifras: el mismo número que Validacion.LONGITUD_PIN -->
+        <!-- 4 cifras: el mismo número que Comprobacion.LONGITUD_PIN -->
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/textoPin"
             android:layout_width="match_parent"

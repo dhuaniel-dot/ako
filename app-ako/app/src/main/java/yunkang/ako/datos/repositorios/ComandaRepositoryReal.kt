@@ -9,7 +9,7 @@ import androidx.room.withTransaction
 import yunkang.ako.datos.AppDatabase
 import yunkang.ako.datos.entidades.EstadoComanda
 import yunkang.ako.dominio.Carrito
-import yunkang.ako.dominio.Validacion
+import yunkang.ako.dominio.Comprobacion
 import java.time.LocalDate
 import java.time.ZoneId
 import yunkang.ako.dominio.modelos.ComandaConTotal
@@ -20,7 +20,7 @@ import kotlinx.coroutines.flow.combine
 // La versión de verdad del puesto de comandas: pregunta a la base de datos.
 // Recibe sus herramientas por constructor; la base de datos, para la transacción de Enviar.
 class ComandaRepositoryReal(
-    private val db: AppDatabase,
+    private val baseDeDatos: AppDatabase,
     private val mesaDao: MesaDao,
     private val comandaDao: ComandaDao
 ) : ComandaRepository {
@@ -53,7 +53,7 @@ class ComandaRepositoryReal(
         comandaDao.totalDe(comandaId)
 
     // Todo el envío en una transacción: se guarda entero o nada.
-    override suspend fun enviarCarrito(carrito: Carrito): Long = db.withTransaction {
+    override suspend fun enviarCarrito(carrito: Carrito): Long = baseDeDatos.withTransaction {
         // Nunca una comanda vacía (la pantalla ya lo impide; aquí se asegura).
         require(!carrito.estaVacio()) { "No se envía un carrito vacío" }
         // Si la mesa ya tiene comanda pendiente, se añade a ella; si no, se crea.
@@ -73,9 +73,9 @@ class ComandaRepositoryReal(
         // Cada línea copia nombre y precio del plato (congelados); nunca un precio negativo.
         // [Claude] toList(): se trabaja sobre una copia por si la pantalla toca el carrito mientras se envía
         val lineas = carrito.lineas.toList().map { linea ->
-            Validacion.precioValido(linea.producto.precioCentimos)
+            Comprobacion.precioValido(linea.producto.precioCentimos)
             // Cada línea, de 1 a 99 unidades.
-            require(Validacion.cantidadValida(linea.cantidad)) { "Cantidad fuera de 1-99: ${linea.cantidad}" }
+            require(Comprobacion.cantidadValida(linea.cantidad)) { "Cantidad fuera de 1-99: ${linea.cantidad}" }
             LineaComanda(
                 comandaId = comandaId,
                 productoId = linea.producto.id,
@@ -90,7 +90,7 @@ class ComandaRepositoryReal(
     }
 
     // Quita una línea de una comanda abierta; si era la última, la comanda queda ANULADA (true).
-    override suspend fun quitarLinea(lineaId: Long): Boolean = db.withTransaction {
+    override suspend fun quitarLinea(lineaId: Long): Boolean = baseDeDatos.withTransaction {
         // Si la línea ya no existe (doble toque en Quitar), no se hace nada y no se anula
         val linea = comandaDao.lineaPorId(lineaId) ?: return@withTransaction false
         val comanda = abierta(linea.comandaId)

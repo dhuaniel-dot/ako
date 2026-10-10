@@ -23,7 +23,7 @@ class SeguridadRepositoryTest {
     fun empezarSinPin() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         context.getSharedPreferences("pin", Context.MODE_PRIVATE).edit().clear().commit()
-        repositorio = SeguridadRepository(PinStore(context))
+        repositorio = SeguridadRepository(GuardaPin(context))
     }
 
     // Con el PIN actual mal, cambiarPin no guarda el nuevo: el de antes sigue valiendo

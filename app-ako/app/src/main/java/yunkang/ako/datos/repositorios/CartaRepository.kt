@@ -7,7 +7,7 @@ import yunkang.ako.datos.dao.PrecargadosDao
 import yunkang.ako.datos.dao.ProductoDao
 import yunkang.ako.datos.entidades.Alergeno
 import yunkang.ako.datos.entidades.Producto
-import yunkang.ako.dominio.Validacion
+import yunkang.ako.dominio.Comprobacion
 import yunkang.ako.dominio.modelos.CategoriaConPlatos
 import yunkang.ako.dominio.modelos.PlatoConMesas
 import kotlinx.coroutines.flow.Flow
@@ -142,7 +142,7 @@ class CartaRepository(
         aunqueCategoriaEliminada: Boolean = false
     ): ResultadoGuardado {
         // Precio negativo = fallo de programación: excepción y no se guarda nada.
-        Validacion.precioValido(p.precioCentimos)
+        Comprobacion.precioValido(p.precioCentimos)
         // Número de plato sin repetir: avisar antes; la base de datos lo impide igualmente (UNIQUE).
         if (productoDao.existeNumero(p.numero, p.id)) {
             return ResultadoGuardado.NumeroRepetido

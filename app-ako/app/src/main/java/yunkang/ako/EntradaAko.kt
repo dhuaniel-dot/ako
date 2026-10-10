@@ -11,15 +11,15 @@ import yunkang.ako.datos.repositorios.CartaRepository
 import yunkang.ako.datos.repositorios.ComandaRepository
 import yunkang.ako.datos.repositorios.ComandaRepositoryReal
 import yunkang.ako.datos.repositorios.SeguridadRepository
-import yunkang.ako.imagenes.ImageStore
-import yunkang.ako.seguridad.PinStore
+import yunkang.ako.imagenes.Galeria
+import yunkang.ako.seguridad.GuardaPin
 
 // La entrada a Ako: Android la crea antes que cualquier pantalla y vive mientras la app está abierta.
 // Guarda lo que es único en toda la app: la base de datos y los repositorios.
 class EntradaAko : Application() {
 
     // Se crea la primera vez que alguien la pide y después es siempre la misma.
-    val db: AppDatabase by lazy {
+    val baseDeDatos: AppDatabase by lazy {
         Room.databaseBuilder(this, AppDatabase::class.java, "ako.db")
             .addCallback(Precarga(this))
             .build()
@@ -27,29 +27,29 @@ class EntradaAko : Application() {
 
     // El puesto de comandas: quien lo pida solo ve sus preguntas, no la versión real.
     val comandaRepository: ComandaRepository by lazy {
-        ComandaRepositoryReal(db, db.mesaDao(), db.comandaDao())
+        ComandaRepositoryReal(baseDeDatos, baseDeDatos.mesaDao(), baseDeDatos.comandaDao())
     }
 
     // La carta pregunta a comandas por el puesto, nunca por su DAO.
     val cartaRepository: CartaRepository by lazy {
-        CartaRepository(db.categoriaDao(), db.productoDao(), db.precargadosDao(), comandaRepository)
+        CartaRepository(baseDeDatos.categoriaDao(), baseDeDatos.productoDao(), baseDeDatos.precargadosDao(), comandaRepository)
     }
 
-    // [Claude] El PinStore se crea aquí dentro y no se ofrece suelto: al PIN solo se llega por este repositorio.
+    // [Claude] El GuardaPin se crea aquí dentro y no se ofrece suelto: al PIN solo se llega por este repositorio.
     val seguridadRepository: SeguridadRepository by lazy {
-        SeguridadRepository(PinStore(this))
+        SeguridadRepository(GuardaPin(this))
     }
 
-    // El almacén de fotos, con el contexto de la app (vive lo mismo que la app, nunca el de una pantalla)
-    val imageStore: ImageStore by lazy {
-        ImageStore(this)
+    // La galería de fotos, con el contexto de la app (vive lo mismo que la app, nunca el de una pantalla)
+    val galeria: Galeria by lazy {
+        Galeria(this)
     }
 
     override fun onCreate() {
         super.onCreate()
         // Al arrancar, abre la base de datos por detrás; si es la primera vez, salta la precarga.
         CoroutineScope(Dispatchers.IO).launch {
-            db.openHelper.writableDatabase
+            baseDeDatos.openHelper.writableDatabase
         }
     }
 }

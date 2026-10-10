@@ -16,7 +16,7 @@ class CarritoTest {
 
     @Test
     fun importeDeUnaLinea() {
-        val linea = LineaCarrito(entrecot, 3)
+        val linea = PlatoApuntado(entrecot, 3)
         assertEquals(5550, linea.importe())
     }
 

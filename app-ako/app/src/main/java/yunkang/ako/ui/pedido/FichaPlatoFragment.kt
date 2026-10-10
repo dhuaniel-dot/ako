@@ -10,7 +10,7 @@ import yunkang.ako.R
 import yunkang.ako.databinding.FragmentFichaPlatoBinding
 import yunkang.ako.datos.entidades.Producto
 import yunkang.ako.dominio.Calculadora
-import yunkang.ako.dominio.Validacion
+import yunkang.ako.dominio.Comprobacion
 import yunkang.ako.ui.comun.Formato
 import yunkang.ako.ui.comun.pintarFoto
 import java.io.File
@@ -87,7 +87,7 @@ class FichaPlatoFragment : Fragment(R.layout.fragment_ficha_plato) {
             pintarCantidad()
         }
         binding.botonMas.setOnClickListener {
-            if (cantidad < Validacion.MAXIMO_POR_PLATO) cantidad++
+            if (cantidad < Comprobacion.MAXIMO_POR_PLATO) cantidad++
             pintarCantidad()
         }
         pintarCantidad()
@@ -125,13 +125,13 @@ class FichaPlatoFragment : Fragment(R.layout.fragment_ficha_plato) {
         binding.flechaAlergenos.rotation = if (alergenosAbiertos) 0f else -90f
     }
 
-    // De 1 a 99 en la pantalla: − apagado en 1 y + apagado en 99 (el 99 está escrito solo en Validacion).
+    // De 1 a 99 en la pantalla: − apagado en 1 y + apagado en 99 (el 99 está escrito solo en Comprobacion).
     // El botón dice el importe de la cantidad elegida: precio × cantidad (Calculadora)
     private fun pintarCantidad() {
         val binding = binding ?: return
         binding.textoCantidad.text = getString(R.string.comun_numero, cantidad)
         binding.botonMenos.isEnabled = cantidad > 1
-        binding.botonMas.isEnabled = cantidad < Validacion.MAXIMO_POR_PLATO
+        binding.botonMas.isEnabled = cantidad < Comprobacion.MAXIMO_POR_PLATO
         val importe = Calculadora.importe(plato?.precioCentimos ?: 0, cantidad)
         binding.botonAnadir.text =
             getString(R.string.ficha_btn_anadir, getString(R.string.comun_precio, Formato.precio(importe)))

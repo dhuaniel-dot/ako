@@ -26,7 +26,7 @@ private const val CARPETA = "fotos"
 
 // Guarda las fotos elegidas como archivos JPEG en la carpeta privada de la app (archivo, nunca BLOB).
 // Recibe el contexto de la app (EntradaAko), nunca el de una pantalla.
-class ImageStore(private val context: Context) {
+class Galeria(private val context: Context) {
 
     // Pide a Android que el préstamo de la foto no caduque, porque se copia al guardar
     // (documentación oficial del selector de fotos, «Persist media file access»)

@@ -2,6 +2,7 @@
 > **Actualizado en la fase 5b (24 sep 2026):** **P238 → A**: `ResumenDiaActivity`, `ResumenDiaViewModel` y la data class `ResumenDia` pasan a **`ResumenIngresosActivity`, `ResumenIngresosViewModel` y `ResumenIngresos`** (vocabulario de P149), cambiado en el texto y en los `.puml` de abajo; **las figuras PNG no se redibujan** (el diagrama definitivo sale del código en la fase 7). **P237** (repositorios en `datos/repositorios/`, `Hash` en `dominio/`) y **P243** (qué comprueba `Validacion`), en las tablas de los apartados 1 y 3.3. Ruta del PC corregida (P164).
 > Creado el **17 de septiembre de 2026**, fase 2d, bloque 7 (P104-P112). Motivos en la entrada de la fase 2d de `diario+doc-decisiones.md`.
 > **Actualizado el 17 de septiembre de 2026, en el cierre de la fase 2d.** Cuatro cambios, todos anotados sin redibujar las figuras: **el paquete raíz es `yunkang.ako`** (P138); **nacen tres clases de dominio puro —`Calculadora`, `Validacion` y `Hash`— en un paquete `dominio/` separado de `datos/`**, y `cambio()` y `hash()` **dejan de vivir** en `CuentaViewModel` y en `PinStore` (bloque 10); **`PinStore` lleva el algoritmo del PIN fijado** (P126); y **el aviso de platos sin enviar (RF-38) usa `ConfirmacionDialog`** y comparte caja con el de cobrar (P121). **Las cinco figuras siguen siendo las del bloque 7 y no muestran las tres clases nuevas: el diagrama definitivo de la fase 7, generado desde el código, sí las recoge.** Se retira el apartado *Pendiente de volcar*, ya consumido.
+> **Actualizado el 10 de octubre de 2026 (parte 3 de la S13.5):** nombres nuevos puestos por Daniel: `Validacion` → `Comprobacion`, `LineaCarrito` → `PlatoApuntado`, `Hash` → `PinSalHash`, `PinStore` → `GuardaPin` e `ImageStore` → `Galeria`. El texto ya los usa; las figuras PlantUML siguen con los nombres del bloque 7 hasta que se rehagan desde el código en la fase 7.
 > **Es un borrador.** Los nombres de clases y métodos los propuso Claude a partir de las fichas y las reglas R1-R16; **el diagrama definitivo se genera en la fase 7 desde el código real** (spec, apartado 12), y ahí cambiarán nombres. Lo que este documento fija es la **estructura**: capas, número de clases y quién habla con quién.
 
 # Diagrama de clases — borrador, nivel 1
@@ -17,11 +18,11 @@ Un **diagrama de clases** es el plano de cómo se organiza el **código**: qué 
 | DAOs | **Uno por agregado**: `CategoriaDao`, `ProductoDao` (con alérgenos; en nivel 2, nutrición, modificadores, etiquetas y traducciones), `PrecargadosDao`, `MesaDao`, `ComandaDao` (con líneas) | P106 |
 | Repositorios | **Tres**: `CartaRepository`, `ComandaRepository`, `SeguridadRepository`. Cada uno garantiza las reglas de su parte; el PIN no es Room | P107 |
 | Pantallas y ViewModels | **Una Activity por pantalla de las fichas** (1, 2, 3, 2g, 5, 6); las vistas 5a/5b/5c y 6a/6b/6c son Fragments dentro de su Activity; **un ViewModel por Activity**. El carrito vive en `PedidoViewModel` y lo comparten 5a, 5b y 5c | P108 |
-| Clases fuera de Room | Entran `PinStore`, `ImageStore`, `Precarga`, `Carrito` y `LineaCarrito`, como auxiliares | P109 |
+| Clases fuera de Room | Entran `GuardaPin`, `Galeria`, `Precarga`, `Carrito` y `PlatoApuntado`, como auxiliares | P109 |
 | Atributos | Las entidades llevan sus campos **con tipos Kotlin y nulabilidad** (`imagen: String?`) | P111 |
 | Figuras | **Vista general** (solo nombres, por capas) en el cuerpo de la memoria; **cuatro figuras detalladas** (entidades · base de datos, DAOs y repositorios · ViewModels y auxiliares · pantallas y adaptadores) en un anexo, una por página. Sustituye a P110 (dos figuras), que medidas salían a 3,6-3,9 pt | P112 |
 | **Paquete raíz** | **`yunkang.ako`** (cierre de la 2d) | P138 |
-| **Dominio puro** | **Paquete `dominio/`, separado de `datos/`**, con `Carrito`, `LineaCarrito` y **tres clases nuevas: `Calculadora`, `Validacion` y `Hash`** (bloque 10). **P237 → B (5b, 24 sep, delegada a Claude [Claude]): `Hash` vive en `dominio/` (es puro: solo `javax.crypto`) y los repositorios viven en `datos/repositorios/`, no en `dominio/`, porque usan Room; `seguridad/` se queda solo con `PinStore`.** Así es verdad que todo `dominio/` se prueba sin emulador | P237 |
+| **Dominio puro** | **Paquete `dominio/`, separado de `datos/`**, con `Carrito`, `PlatoApuntado` y **tres clases nuevas: `Calculadora`, `Comprobacion` y `PinSalHash`** (bloque 10). **P237 → B (5b, 24 sep, delegada a Claude [Claude]): `PinSalHash` vive en `dominio/` (es puro: solo `javax.crypto`) y los repositorios viven en `datos/repositorios/`, no en `dominio/`, porque usan Room; `seguridad/` se queda solo con `GuardaPin`.** Así es verdad que todo `dominio/` se prueba sin emulador | P237 |
 
 **Regla de Daniel fijada en este bloque (P112):** *lo que no vaya al documento ni a la presentación se hace de la mejor forma posible para Claude Code; no se recorta.*
 
@@ -39,7 +40,7 @@ Un **diagrama de clases** es el plano de cómo se organiza el **código**: qué 
 
 Cada figura existe en `.png` (200 dpi), `.svg` y `.puml` (código fuente PlantUML, para regenerar).
 
-> **Las 58 clases son las del bloque 7.** Las tres de dominio puro del bloque 10 (`Calculadora`, `Validacion`, `Hash`) **no están dibujadas**: se decidieron después y redibujar dos figuras exige Java y Graphviz en el PC. **Están descritas en el apartado 3.3 y en `spec-claude-code.md`, apartado 3**, y **el diagrama definitivo de la fase 7 —que sale del código— las recogerá**. Contando las tres, la estructura del prototipo son **61 clases**.
+> **Las 58 clases son las del bloque 7.** Las tres de dominio puro del bloque 10 (`Calculadora`, `Comprobacion`, `PinSalHash`) **no están dibujadas**: se decidieron después y redibujar dos figuras exige Java y Graphviz en el PC. **Están descritas en el apartado 3.3 y en `spec-claude-code.md`, apartado 3**, y **el diagrama definitivo de la fase 7 —que sale del código— las recogerá**. Contando las tres, la estructura del prototipo son **61 clases**.
 
 ## 3. Capas y clases
 
@@ -49,8 +50,8 @@ flowchart TB
     VM --> R["Repositorios — Carta, Comanda, Seguridad<br/>reglas de negocio R1-R16"]
     R --> D["DAOs — uno por agregado<br/>la única capa que sabe SQL"]
     D --> E["Entidades Room — las 14 tablas"]
-    R --> X["Auxiliares — PinStore, ImageStore, Precarga"]
-    VM --> DOM["Dominio puro — Carrito, Calculadora,<br/>Validacion, Hash: sin Android, se prueban solas"]
+    R --> X["Auxiliares — GuardaPin, Galeria, Precarga"]
+    VM --> DOM["Dominio puro — Carrito, Calculadora,<br/>Comprobacion, PinSalHash: sin Android, se prueban solas"]
     R --> DOM
 ```
 
@@ -68,7 +69,7 @@ Las 14 tablas del spec, apartado 5, una clase `@Entity` por tabla, con los campo
 
 Relaciones dibujadas: las claves foráneas del E-R, con `*-->` (composición) en `Comanda → LineaComanda` y `LineaComanda → LineaModificador` (la única CASCADE, R11), y con línea discontinua las dos referencias "congeladas" (`LineaComanda → Producto`, `LineaModificador → Modificador`, R14).
 
-> **Ninguna entidad declara `CHECK`.** Los `>= 0` del spec, apartado 5 son restricción del dominio y **los garantiza `Validacion`**, llamada desde los repositorios (R8, verificación 9). Room no genera `CHECK` ni índices parciales.
+> **Ninguna entidad declara `CHECK`.** Los `>= 0` del spec, apartado 5 son restricción del dominio y **los garantiza `Comprobacion`**, llamada desde los repositorios (R8, verificación 9). Room no genera `CHECK` ni índices parciales.
 
 ### 3.2 Base de datos, DAOs y repositorios (figura 2)
 
@@ -81,10 +82,10 @@ Relaciones dibujadas: las claves foráneas del E-R, con `*-->` (composición) en
 | `PrecargadosDao` | `@Dao` | alergenos, etiquetas (lectura) e inserción para la precarga | — |
 | `MesaDao` | `@Dao` | todas, insertarTodas | — |
 | `ComandaDao` | `@Dao` | insertar, actualizar, porId, **pendienteDeMesa**, pendientesConTotal, lineasDe, insertarLineas, borrarLinea, contarLineas, **pagadasEntre**, mesasConProductoPendiente, mesasConCategoriaPendiente | Consultas de R3, R6 y del Resumen de ingresos |
-| `CartaRepository` | clase | categorias, guardarCategoria, eliminarCategoria → mesas afectadas, platosDe, platosVisibles, hayPlatoVisible, plato, guardarPlato (con alérgenos), eliminarPlato → mesas afectadas, alergenos, alergenosDe | **R6, R8** (llamando a `Validacion`), **R9, R15, R16** |
+| `CartaRepository` | clase | categorias, guardarCategoria, eliminarCategoria → mesas afectadas, platosDe, platosVisibles, hayPlatoVisible, plato, guardarPlato (con alérgenos), eliminarPlato → mesas afectadas, alergenos, alergenosDe | **R6, R8** (llamando a `Comprobacion`), **R9, R15, R16** |
 | `ComandaRepository` | clase | mesasConEstado, comandaPendiente, **enviarCarrito** (crea o amplía), lineasDe, totalDe, **quitarLinea** (devuelve si la comanda quedó anulada), anular, cobrar (fechaCierre), resumenDelDia | **R1, R2, R3, R7, R8** (al congelar el precio), **R10, R14** |
 | `SeguridadRepository` | clase | hayPin, crearPin, comprobarPin, cambiarPin | — |
-| `PinStore` | SharedPreferences | generarSal (`SecureRandom`, 16 bytes), guardar, leer, existe. **Nunca guarda el PIN**, solo sal + hash (spec, apartado 9). **El cálculo del hash ya no vive aquí: lo hace `Hash`** (bloque 10) | — |
+| `GuardaPin` | SharedPreferences | generarSal (`SecureRandom`, 16 bytes), guardar, leer, existe. **Nunca guarda el PIN**, solo sal + hash (spec, apartado 9). **El cálculo del hash ya no vive aquí: lo hace `PinSalHash`** (bloque 10) | — |
 | `MesaEstado` | data class | mesa + comandaId? + totalCentimos? — una fila de la rejilla (R3: la ocupación se calcula) | R3 |
 | `ResumenIngresos` | data class | dia, comandas con total, numComandas, totalCentimos | R10 |
 
@@ -96,7 +97,7 @@ Relaciones dibujadas: las claves foráneas del E-R, con `*-->` (composición) en
 |---|---|---|---|---|
 | `SelectorViewModel` | 1 | hayPin, mesas (para 1d) | crearPin, comprobarPin, hayPlatoVisible (puerta de Pedir) | Seguridad, Carta, Comanda |
 | `PanelViewModel` | 2 | categoriasConPlatos | guardarCategoria, eliminarCategoria, cambiarPin (1e) | Carta, Seguridad |
-| `PlatoViewModel` | 3 | plato, alergenos, categorias | cargar, elegirFoto, guardar, eliminar | Carta, ImageStore |
+| `PlatoViewModel` | 3 | plato, alergenos, categorias | cargar, elegirFoto, guardar, eliminar | Carta, Galeria |
 | `ResumenIngresosViewModel` | 2g | dia, resumen | elegirDia, lineasDe (recibo en solo lectura) | Comanda |
 | `PedidoViewModel` | 5 | mesaId, categorias, platosVisibles, **carrito** | anadir, cambiarCantidad, quitar, **enviar** (R2, R4), comprobarPin (salir de Pedir, P41) | Carta, Comanda, Seguridad, Carrito |
 | `CuentaViewModel` | 6 | mesas, comanda, lineas, total | abrirMesa, quitarLinea (R7), anular, cobrar, **cambio → llama a `Calculadora`** | Comanda, Calculadora |
@@ -106,14 +107,14 @@ Relaciones dibujadas: las claves foráneas del E-R, con `*-->` (composición) en
 | Clase | Qué hace | Prueba |
 |---|---|---|
 | `Carrito` | mesaId, lineas; `anadir` suma en la misma línea si el plato ya está; `cambiarCantidad`, `quitar`, `numPlatos`, `total`, `estaVacio` — **R4 y R10** | P-C-02, P-C-03 |
-| `LineaCarrito` | producto, cantidad, `importe()` — **R10** | P-C-01 |
+| `PlatoApuntado` | producto, cantidad, `importe()` — **R10** | P-C-01 |
 | **`Calculadora`** | `cambio(totalCentimos, entregadoCentimos)` = entregado − total; puede salir negativo y no lanza nada. **No guarda nada** (spec, apartado 10) | P-C-04 |
-| **`Validacion`** | `precioValido(centimos)`: **lanza excepción si es negativo** (**R8**). La llaman los tres repositorios antes de guardar un plato, un modificador o una línea. **También `cantidadValida(n)` (1-99, R4) y `pinValido(pin)` (cuatro cifras)** — P243 → A (5b): las tres comprobaciones que ya listaba `spec-claude-code.md`, apartado 3 | **P-C-09** (y P-C-03 por la cantidad) |
-| **`Hash`** | `pbkdf2(pin, sal)` y `coincide(pin, sal, hash)`: **`PBKDF2withHmacSHA256`, 100 000 iteraciones, clave de 256 bits** (P126). Solo calcula; **guardar es cosa de `PinStore`** | P-C-05 |
+| **`Comprobacion`** | `precioValido(centimos)`: **lanza excepción si es negativo** (**R8**). La llaman los tres repositorios antes de guardar un plato, un modificador o una línea. **También `cantidadValida(n)` (1-99, R4) y `pinValido(pin)` (cuatro cifras)** — P243 → A (5b): las tres comprobaciones que ya listaba `spec-claude-code.md`, apartado 3 | **P-C-09** (y P-C-03 por la cantidad) |
+| **`PinSalHash`** | `pbkdf2(pin, sal)` y `coincide(pin, sal, hash)`: **`PBKDF2withHmacSHA256`, 100 000 iteraciones, clave de 256 bits** (P126). Solo calcula; **guardar es cosa de `GuardaPin`** | P-C-05 |
 
-> **Por qué nacieron las tres** (bloque 10). En el borrador, `cambio()` vivía en `CuentaViewModel` y `hash()` dentro de `PinStore`. Probar un ViewModel arrastra `LiveData` y exige `InstantTaskExecutorRule`; probar `PinStore` arrastra SharedPreferences, que no existe fuera de Android. **Separar *calcular* de *guardar* y de *pintar*** deja seis pruebas que corren en el PC en segundos, y de paso da un sitio donde poner `Validacion`, que antes no existía porque se daba por hecho que R8 la imponía la base de datos.
+> **Por qué nacieron las tres** (bloque 10). En el borrador, `cambio()` vivía en `CuentaViewModel` y `hash()` dentro de `GuardaPin`. Probar un ViewModel arrastra `LiveData` y exige `InstantTaskExecutorRule`; probar `GuardaPin` arrastra SharedPreferences, que no existe fuera de Android. **Separar *calcular* de *guardar* y de *pintar*** deja seis pruebas que corren en el PC en segundos, y de paso da un sitio donde poner `Comprobacion`, que antes no existía porque se daba por hecho que R8 la imponía la base de datos.
 
-**Otro auxiliar:** `ImageStore` (guardar = redimensionar a ~1080 px + JPEG + archivo privado, devuelve la ruta; borrar — spec, apartado 15).
+**Otro auxiliar:** `Galeria` (guardar = redimensionar a ~1080 px + JPEG + archivo privado, devuelve la ruta; borrar — spec, apartado 15).
 
 ### 3.4 Pantallas y adaptadores (figura 4)
 
@@ -134,7 +135,7 @@ Relaciones dibujadas: las claves foráneas del E-R, con `*-->` (composición) en
 
 Los cinco `.puml` están en `Imágenes\Diagramas\`. Se regeneran con `java -jar plantuml.jar -tpng -Sdpi=200 clases-*.puml` (necesita Graphviz). Se reproducen aquí para que ningún documento del Project dependa de un archivo del PC.
 
-> **Son los del bloque 7.** No incluyen `Calculadora`, `Validacion` ni `Hash`, ni el paquete `yunkang.ako`. **No se regeneran ahora**: el diagrama que va a la memoria en el apartado 7 se genera en la fase 7 desde el código real, y será el que las recoja.
+> **Son los del bloque 7.** No incluyen `Calculadora`, `Comprobacion` ni `PinSalHash`, ni el paquete `yunkang.ako`. **No se regeneran ahora**: el diagrama que va a la memoria en el apartado 7 se genera en la fase 7 desde el código real, y será el que las recoja.
 
 ### clases-vista-general.puml
 

@@ -15,13 +15,13 @@ import yunkang.ako.datos.repositorios.SeguridadRepository
 import yunkang.ako.dominio.modelos.CategoriaConPlatos
 import yunkang.ako.dominio.modelos.PlatoConMesas
 import yunkang.ako.dominio.modelos.ResultadoGuardado
-import yunkang.ako.imagenes.ImageStore
+import yunkang.ako.imagenes.Galeria
 
 // La libreta del Panel (pantalla 2): el PIN (1e) y la carta en modo edición (2a)
 class PanelViewModel(
     private val seguridadRepository: SeguridadRepository,
     private val cartaRepository: CartaRepository,
-    private val imageStore: ImageStore
+    private val galeria: Galeria
 ) : ViewModel() {
 
     // Las cajas del Panel: Room las manda solas cada vez que cambia una categoría o un plato (Flow → LiveData); nadie las escribe a mano
@@ -38,23 +38,23 @@ class PanelViewModel(
     }
 
     // 2b (como el plato): al elegir la foto no se copia nada; se pide el préstamo largo
-    fun conservarPrestamo(uri: Uri) = imageStore.conservarPrestamo(uri)
+    fun conservarPrestamo(uri: Uri) = galeria.conservarPrestamo(uri)
 
     // 2b: crea o renombra una categoría, con su foto si se eligió una. La lista se pone al día sola.
     // La foto elegida se copia AHORA; la vieja se borra solo si se guardó bien, y la copia nueva si no
-    // (nombre repetido). Si la foto no se puede leer, ImageStore lanza el error y la hoja avisa
+    // (nombre repetido). Si la foto no se puede leer, Galeria lanza el error y la hoja avisa
     suspend fun guardarCategoria(c: Categoria, fotoElegida: Uri?): ResultadoGuardado {
         val fotoAntes = c.imagen
-        val fotoNueva = if (fotoElegida == null) null else imageStore.guardar(fotoElegida)
+        val fotoNueva = if (fotoElegida == null) null else galeria.guardar(fotoElegida)
         val categoria = if (fotoNueva == null) c else c.copy(imagen = fotoNueva)
 
         val resultado = cartaRepository.guardarCategoria(categoria)
 
         if (fotoNueva != null) {
             if (resultado == ResultadoGuardado.Ok) {
-                if (fotoAntes != null) imageStore.borrar(fotoAntes)
+                if (fotoAntes != null) galeria.borrar(fotoAntes)
             } else {
-                imageStore.borrar(fotoNueva)
+                galeria.borrar(fotoNueva)
             }
         }
         return resultado
@@ -80,7 +80,7 @@ class PanelViewModel(
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val app = this[APPLICATION_KEY] as EntradaAko
-                PanelViewModel(app.seguridadRepository, app.cartaRepository, app.imageStore)
+                PanelViewModel(app.seguridadRepository, app.cartaRepository, app.galeria)
             }
         }
     }

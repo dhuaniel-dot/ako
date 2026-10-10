@@ -29,7 +29,7 @@ import java.time.ZoneId
 @RunWith(AndroidJUnit4::class)
 class ComandaRepositoryTest {
 
-    private lateinit var db: AppDatabase
+    private lateinit var baseDeDatos: AppDatabase
     private lateinit var repositorio: ComandaRepositoryReal
     private lateinit var entrecot: Producto
     private lateinit var helado: Producto
@@ -40,39 +40,39 @@ class ComandaRepositoryTest {
     fun prepararBase() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         // Igual que en CategoriaPorDefectoTest (repetido a propósito: cada clase se lee sola)
-        db = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java)
+        baseDeDatos = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java)
             .addCallback(Precarga(context))
             .build()
-        repositorio = ComandaRepositoryReal(db, db.mesaDao(), db.comandaDao())
+        repositorio = ComandaRepositoryReal(baseDeDatos, baseDeDatos.mesaDao(), baseDeDatos.comandaDao())
 
         runBlocking {
             // Carnes ANTES que Entrecot: un plato tiene que apuntar a una categoría que ya existe
-            val carnesId = db.categoriaDao().insertar(
+            val carnesId = baseDeDatos.categoriaDao().insertar(
                 Categoria(nombre = "Carnes", imagen = null, orden = 1, activo = true, esPorDefecto = false)
             )
-            val idEntrecot = db.productoDao().insertar(
+            val idEntrecot = baseDeDatos.productoDao().insertar(
                 Producto(categoriaId = carnesId, numero = 12, nombre = "Entrecot", descripcion = null,
                     precioCentimos = 1850, imagen = null, activo = true)
             )
-            entrecot = checkNotNull(db.productoDao().porId(idEntrecot))
+            entrecot = checkNotNull(baseDeDatos.productoDao().porId(idEntrecot))
 
             // Helado, en la categoría por defecto (se busca por esPorDefecto, nunca por el nombre)
-            val porDefectoId = db.categoriaDao().porDefecto().id
-            val idHelado = db.productoDao().insertar(
+            val porDefectoId = baseDeDatos.categoriaDao().porDefecto().id
+            val idHelado = baseDeDatos.productoDao().insertar(
                 Producto(categoriaId = porDefectoId, numero = 32, nombre = "Helado", descripcion = null,
                     precioCentimos = 500, imagen = null, activo = true)
             )
-            helado = checkNotNull(db.productoDao().porId(idHelado))
+            helado = checkNotNull(baseDeDatos.productoDao().porId(idHelado))
 
             // Las mesas 4 y 7 se buscan por su número: nunca se da por hecho que su id es 4 o 7
-            mesa4Id = db.mesaDao().todas().first { it.numero == 4 }.id
-            mesa7Id = db.mesaDao().todas().first { it.numero == 7 }.id
+            mesa4Id = baseDeDatos.mesaDao().todas().first { it.numero == 4 }.id
+            mesa7Id = baseDeDatos.mesaDao().todas().first { it.numero == 7 }.id
         }
     }
 
     @After
     fun cerrarBase() {
-        db.close()
+        baseDeDatos.close()
     }
 
     // Dos envíos a la mesa 4 → una sola comanda con dos líneas copiadas
@@ -88,13 +88,13 @@ class ComandaRepositoryTest {
 
         // La misma comanda, y es la pendiente de la mesa 4
         assertEquals(id1, id2)
-        assertEquals(id1, runBlocking { db.comandaDao().pendienteDeMesa(mesa4Id) }?.id)
+        assertEquals(id1, runBlocking { baseDeDatos.comandaDao().pendienteDeMesa(mesa4Id) }?.id)
 
         // Dos líneas, una por envío
-        assertEquals(2, runBlocking { db.comandaDao().contarLineas(id1) })
+        assertEquals(2, runBlocking { baseDeDatos.comandaDao().contarLineas(id1) })
 
         // Cada línea lleva el nombre, el precio y la cantidad copiados al enviar
-        val lineas = runBlocking { db.comandaDao().lineasDe(id1) }
+        val lineas = runBlocking { baseDeDatos.comandaDao().lineasDe(id1) }
         assertEquals("Entrecot", lineas[0].nombreProducto)
         assertEquals(1850, lineas[0].precioUnitarioCentimos)
         assertEquals(2, lineas[0].cantidad)
@@ -109,16 +109,16 @@ class ComandaRepositoryTest {
         val carrito = Carrito(mesa4Id)
         carrito.anadir(entrecot, 1)
         val comandaId = runBlocking { repositorio.enviarCarrito(carrito) }
-        val linea = runBlocking { db.comandaDao().lineasDe(comandaId) }.single()
+        val linea = runBlocking { baseDeDatos.comandaDao().lineasDe(comandaId) }.single()
 
         // true = era la última línea (la pantalla de Cuenta vuelve entonces a la rejilla)
         assertTrue(runBlocking { repositorio.quitarLinea(linea.id) })
 
         // La comanda no se borra; queda ANULADA, con su hora de cierre y sin líneas
-        val comanda = checkNotNull(runBlocking { db.comandaDao().porId(comandaId) })
+        val comanda = checkNotNull(runBlocking { baseDeDatos.comandaDao().porId(comandaId) })
         assertEquals(EstadoComanda.ANULADA, comanda.estado)
         assertNotNull(comanda.fechaCierre)
-        assertEquals(0, runBlocking { db.comandaDao().contarLineas(comandaId) })
+        assertEquals(0, runBlocking { baseDeDatos.comandaDao().contarLineas(comandaId) })
 
         // La mesa 4 sale libre en la rejilla (first = una foto del grifo, no se queda escuchando)
         val rejilla = runBlocking { repositorio.mesasConEstado().first() }
@@ -133,8 +133,8 @@ class ComandaRepositoryTest {
         carrito.anadir(entrecot, 1)
         val comandaId = runBlocking { repositorio.enviarCarrito(carrito) }
         val quitada = runBlocking { repositorio.quitarLinea(999) }
-        val comanda = checkNotNull(runBlocking { db.comandaDao().porId(comandaId) })
-        val lineas = runBlocking { db.comandaDao().lineasDe(comandaId) }
+        val comanda = checkNotNull(runBlocking { baseDeDatos.comandaDao().porId(comandaId) })
+        val lineas = runBlocking { baseDeDatos.comandaDao().lineasDe(comandaId) }
         assertFalse(quitada)
         assertEquals(EstadoComanda.PENDIENTE, comanda.estado)
         assertEquals(1, lineas.size)
@@ -175,10 +175,10 @@ class ComandaRepositoryTest {
         runBlocking {
             repositorio.cobrar(idDeHoy)
             repositorio.cobrar(idDeManana)
-            val cobradaHoy = checkNotNull(db.comandaDao().porId(idDeHoy))
-            db.comandaDao().actualizar(cobradaHoy.copy(fechaCierre = ultimoMilisegundoDeHoy))
-            val cobradaManana = checkNotNull(db.comandaDao().porId(idDeManana))
-            db.comandaDao().actualizar(cobradaManana.copy(fechaCierre = primerMilisegundoDeManana))
+            val cobradaHoy = checkNotNull(baseDeDatos.comandaDao().porId(idDeHoy))
+            baseDeDatos.comandaDao().actualizar(cobradaHoy.copy(fechaCierre = ultimoMilisegundoDeHoy))
+            val cobradaManana = checkNotNull(baseDeDatos.comandaDao().porId(idDeManana))
+            baseDeDatos.comandaDao().actualizar(cobradaManana.copy(fechaCierre = primerMilisegundoDeManana))
         }
 
         val resumen = runBlocking { repositorio.resumenDelDia(hoy) }

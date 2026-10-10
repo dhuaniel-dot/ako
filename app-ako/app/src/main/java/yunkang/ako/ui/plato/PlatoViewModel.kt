@@ -19,7 +19,7 @@ import yunkang.ako.datos.entidades.Categoria
 import yunkang.ako.datos.entidades.Producto
 import yunkang.ako.datos.repositorios.CartaRepository
 import yunkang.ako.dominio.modelos.ResultadoGuardado
-import yunkang.ako.imagenes.ImageStore
+import yunkang.ako.imagenes.Galeria
 
 // [Claude] Todo lo que el formulario lee al abrirse, junto en una sola bandeja
 data class DatosFormulario(
@@ -38,7 +38,7 @@ data class DatosFormulario(
 // sobrevive incluso a que Android mate la app en segundo plano; la libreta sola solo sobrevive a recrear la pantalla
 class PlatoViewModel(
     private val cartaRepository: CartaRepository,
-    private val imageStore: ImageStore,
+    private val galeria: Galeria,
     private val cajaFuerte: SavedStateHandle
 ) : ViewModel() {
 
@@ -84,7 +84,7 @@ class PlatoViewModel(
 
     // Al elegir no se copia nada; se pide el préstamo largo y se apunta la dirección
     fun elegirFoto(uri: Uri) {
-        imageStore.conservarPrestamo(uri)
+        galeria.conservarPrestamo(uri)
         cajaFuerte[CLAVE_FOTO] = uri.toString()
     }
 
@@ -114,11 +114,11 @@ class PlatoViewModel(
     // las comprueba el repositorio en ese orden; la pantalla solo reacciona a la respuesta
     // aunqueCategoriaEliminada = true es la tercera salida de 3e: el Propietario dijo «No» a las dos preguntas
     // Si se eligió una foto, se copia AHORA y el plato apunta a la copia. Si la foto no se puede
-    // leer, ImageStore lanza el error, no se guarda nada y la pantalla avisa
+    // leer, Galeria lanza el error, no se guarda nada y la pantalla avisa
     suspend fun guardar(p: Producto, aunqueCategoriaEliminada: Boolean = false): ResultadoGuardado {
         val fotoAntes = datos.value?.plato?.imagen
         val elegida = fotoElegida.value
-        val fotoNueva = if (elegida == null) null else imageStore.guardar(elegida.toUri())
+        val fotoNueva = if (elegida == null) null else galeria.guardar(elegida.toUri())
         val plato = if (fotoNueva == null) p else p.copy(imagen = fotoNueva)
 
         val resultado = cartaRepository.guardarPlato(plato, alergenosMarcados, aunqueCategoriaEliminada = aunqueCategoriaEliminada)
@@ -126,10 +126,10 @@ class PlatoViewModel(
         if (fotoNueva != null) {
             if (resultado == ResultadoGuardado.Ok) {
                 // Guardado bien: la foto vieja ya no la usa ninguna fila (se borra después, nunca antes)
-                if (fotoAntes != null) imageStore.borrar(fotoAntes)
+                if (fotoAntes != null) galeria.borrar(fotoAntes)
             } else {
                 // [Claude] No se guardó (número repetido, avisos 3e): la copia sobra; al volver a guardar se hace otra
-                imageStore.borrar(fotoNueva)
+                galeria.borrar(fotoNueva)
             }
         }
         return resultado
@@ -170,7 +170,7 @@ class PlatoViewModel(
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val app = this[APPLICATION_KEY] as EntradaAko
-                PlatoViewModel(app.cartaRepository, app.imageStore, createSavedStateHandle())
+                PlatoViewModel(app.cartaRepository, app.galeria, createSavedStateHandle())
             }
         }
 
