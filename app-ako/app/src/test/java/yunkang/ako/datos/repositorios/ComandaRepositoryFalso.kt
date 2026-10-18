@@ -9,14 +9,14 @@ import yunkang.ako.dominio.modelos.ResumenIngresos
 
 // no se usa en estas pruebas; existe porque CartaRepository lo pide al crearse
 class ComandaRepositoryFalso : ComandaRepository {
-    override suspend fun mesasConPlatoPendiente(productoId: Long): List<Int> = TODO()
-    override suspend fun mesasConCategoriaPendiente(categoriaId: Long): List<Int> = TODO()
-    override fun mesasConEstado(): Flow<List<MesaEstado>> = TODO()
-    override suspend fun lineasDe(comandaId: Long): List<LineaComanda> = TODO()
-    override suspend fun totalDe(comandaId: Long): Int = TODO()
-    override suspend fun enviarCarrito(carrito: Carrito): Long = TODO()
-    override suspend fun quitarLinea(lineaId: Long): Boolean = TODO()
-    override suspend fun anular(comandaId: Long): Unit = TODO()
-    override suspend fun cobrar(comandaId: Long): Unit = TODO()
-    override suspend fun resumenDelDia(dia: LocalDate): ResumenIngresos = TODO()
+  override suspend fun mesasConPlatoPendiente(productoId: Long): List<Int> = TODO()
+  override suspend fun mesasConCategoriaPendiente(categoriaId: Long): List<Int> = TODO()
+  override fun mesasConEstado(): Flow<List<MesaEstado>> = TODO()
+  override suspend fun lineasDe(comandaId: Long): List<LineaComanda> = TODO()
+  override suspend fun totalDe(comandaId: Long): Int = TODO()
+  override suspend fun enviarCarrito(carrito: Carrito): Long = TODO()
+  override suspend fun quitarLinea(lineaId: Long): Boolean = TODO()
+  override suspend fun anular(comandaId: Long): Unit = TODO()
+  override suspend fun cobrar(comandaId: Long): Unit = TODO()
+  override suspend fun resumenDelDia(dia: LocalDate): ResumenIngresos = TODO()
 }

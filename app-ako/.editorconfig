@@ -1,0 +1,15 @@
+# Estilo del código de Ako. Android Studio lo usa al reformatear (Ctrl+Alt+L).
+root = true
+
+[*.{kt,kts}]
+# E: sangría de 2 espacios
+indent_size = 2
+# D: sin líneas en blanco dentro del código (entre funciones sigue habiendo una)
+ij_kotlin_keep_blank_lines_in_code = 0
+# A: espacios solo alrededor de = y +=; sin ellos en los demás operadores
+ij_kotlin_spaces_around_assignment_operators = true
+ij_kotlin_spaces_around_additive_operators = false
+ij_kotlin_spaces_around_multiplicative_operators = false
+ij_kotlin_spaces_around_equality_operators = false
+ij_kotlin_spaces_around_relational_operators = false
+ij_kotlin_spaces_around_logical_operators = false

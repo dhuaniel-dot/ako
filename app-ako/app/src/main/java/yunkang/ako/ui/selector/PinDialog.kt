@@ -19,54 +19,50 @@ import yunkang.ako.ui.comun.sacudir
 // deja un sobre (CLAVE_RESULTADO) para quien lo abrió. cancelar cierra sin sobre
 // mientras se comprueba, Aceptar se apaga: sin doble toque
 class PinDialog : DialogFragment() {
+  // la Activity que lo abre tiene que saber comprobar un PIN (SelectorActivity o PedidoActivity)
+  private val comprobador: ComprobadorPin
+    get() = requireActivity() as ComprobadorPin
 
-    // la Activity que lo abre tiene que saber comprobar un PIN (SelectorActivity o PedidoActivity)
-    private val comprobador: ComprobadorPin
-        get() = requireActivity() as ComprobadorPin
+  override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+    val binding = DialogPinBinding.inflate(layoutInflater)
+    val dialogo = MaterialAlertDialogBuilder(requireContext())
+      .setTitle(R.string.pin_introducir_titulo)
+      .setView(binding.root)
+      .setNegativeButton(R.string.comun_cancelar, null)
+      .setPositiveButton(R.string.comun_aceptar, null)
+      .create()
+    // [Claude] el Aceptar de serie cierra el diálogo siempre; se cambia al enseñarse,
+    // para que con un PIN incorrecto el diálogo siga abierto
+    dialogo.setOnShowListener {
+      val aceptar = dialogo.getButton(AlertDialog.BUTTON_POSITIVE)
+      aceptar.isEnabled = binding.textoPin.text?.length==Comprobacion.LONGITUD_PIN
+      // aceptar solo se enciende con 4 cifras (ficha 1)
+      binding.textoPin.doAfterTextChanged {
+        binding.campoPin.error = null
+        aceptar.isEnabled = binding.textoPin.text?.length==Comprobacion.LONGITUD_PIN
+      }
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val binding = DialogPinBinding.inflate(layoutInflater)
-
-        val dialogo = MaterialAlertDialogBuilder(requireContext())
-            .setTitle(R.string.pin_introducir_titulo)
-            .setView(binding.root)
-            .setNegativeButton(R.string.comun_cancelar, null)
-            .setPositiveButton(R.string.comun_aceptar, null)
-            .create()
-
-        // [Claude] el Aceptar de serie cierra el diálogo siempre; se cambia al enseñarse,
-        // para que con un PIN incorrecto el diálogo siga abierto
-        dialogo.setOnShowListener {
-            val aceptar = dialogo.getButton(AlertDialog.BUTTON_POSITIVE)
-            aceptar.isEnabled = binding.textoPin.text?.length == Comprobacion.LONGITUD_PIN
-
-            // aceptar solo se enciende con 4 cifras (ficha 1)
-            binding.textoPin.doAfterTextChanged {
-                binding.campoPin.error = null
-                aceptar.isEnabled = binding.textoPin.text?.length == Comprobacion.LONGITUD_PIN
-            }
-
-            aceptar.setOnClickListener {
-                val pin = binding.textoPin.text.toString()
-                aceptar.isEnabled = false
-                lifecycleScope.launch {
-                    if (comprobador.comprobarPin(pin)) {
-                        setFragmentResult(CLAVE_RESULTADO, Bundle())
-                        // si mientras se picaba el PIN la pantalla pasó a segundo plano (Home),
-                        // dismiss() normal rompería la app; esta versión cierra igual sin romper
-                        dismissAllowingStateLoss()
-                    } else {
-                        binding.textoPin.text?.clear()
-                        binding.campoPin.error = getString(R.string.pin_incorrecto)
-                        sacudir(binding.campoPin)
-                    }
-                }
-            }
+      aceptar.setOnClickListener {
+        val pin = binding.textoPin.text.toString()
+        aceptar.isEnabled = false
+        lifecycleScope.launch {
+          if (comprobador.comprobarPin(pin)) {
+            setFragmentResult(CLAVE_RESULTADO, Bundle())
+            // si mientras se picaba el PIN la pantalla pasó a segundo plano (Home),
+            // dismiss() normal rompería la app; esta versión cierra igual sin romper
+            dismissAllowingStateLoss()
+          } else {
+            binding.textoPin.text?.clear()
+            binding.campoPin.error = getString(R.string.pin_incorrecto)
+            sacudir(binding.campoPin)
+          }
         }
-        return dialogo
+      }
     }
+    return dialogo
+  }
 
-    companion object {
-        const val CLAVE_RESULTADO = "pin_correcto"
-    }
+  companion object {
+    const val CLAVE_RESULTADO = "pin_correcto"
+  }
 }

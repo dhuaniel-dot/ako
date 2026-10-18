@@ -11,18 +11,16 @@ import androidx.room.PrimaryKey
 // activo: false = eliminada (no se borra nunca)
 // esPorDefecto: true solo en "Otros"
 @Entity(
-    tableName = "categoria",
-    indices = [Index(value = ["nombre"], unique = true)]
+  tableName = "categoria",
+  indices = [Index(value = ["nombre"], unique = true)]
 )
 data class Categoria(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
-
-    val nombre: String,
-    val imagen: String?,
-    val orden: Int,
-    val activo: Boolean,
-
-    @ColumnInfo(name = "es_por_defecto")
-    val esPorDefecto: Boolean
+  @PrimaryKey(autoGenerate = true)
+  val id: Long = 0,
+  val nombre: String,
+  val imagen: String?,
+  val orden: Int,
+  val activo: Boolean,
+  @ColumnInfo(name = "es_por_defecto")
+  val esPorDefecto: Boolean
 )

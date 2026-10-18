@@ -7,16 +7,16 @@ import yunkang.ako.dominio.Calculadora
 // cada libreta convierte sus líneas a LineaVista
 // el id es el del plato en el carrito y el de la línea en una comanda; el importe es precio × cantidad, ya calculado
 data class LineaVista(
-    val id: Long,
-    val cantidad: Int,
-    val nombre: String,
-    val importeCentimos: Int
+  val id: Long,
+  val cantidad: Int,
+  val nombre: String,
+  val importeCentimos: Int
 ) {
-    companion object {
-        // con el nombre y el precio congelados al enviar
-        fun de(linea: LineaComanda) = LineaVista(
-            linea.id, linea.cantidad, linea.nombreProducto,
-            Calculadora.importe(linea.precioUnitarioCentimos, linea.cantidad)
-        )
-    }
+  companion object {
+    // con el nombre y el precio congelados al enviar
+    fun de(linea: LineaComanda) = LineaVista(
+      linea.id, linea.cantidad, linea.nombreProducto,
+      Calculadora.importe(linea.precioUnitarioCentimos, linea.cantidad)
+    )
+  }
 }

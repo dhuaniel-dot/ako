@@ -11,22 +11,22 @@ import yunkang.ako.dominio.modelos.MesaConTotal
 
 @Dao
 interface ComandaDao {
+  @Insert
+  suspend fun insertar(comanda: Comanda): Long
 
-    @Insert
-    suspend fun insertar(comanda: Comanda): Long
+  @Update
+  suspend fun actualizar(comanda: Comanda)
 
-    @Update
-    suspend fun actualizar(comanda: Comanda)
+  @Query("SELECT * FROM comanda WHERE id = :id")
+  suspend fun porId(id: Long): Comanda?
 
-    @Query("SELECT * FROM comanda WHERE id = :id")
-    suspend fun porId(id: Long): Comanda?
+  // la comanda pendiente de una mesa (como mucho hay una); vacío si la mesa está libre
+  @Query("SELECT * FROM comanda WHERE mesa_id = :mesaId AND estado = 'PENDIENTE' LIMIT 1")
+  suspend fun pendienteDeMesa(mesaId: Long): Comanda?
 
-    // la comanda pendiente de una mesa (como mucho hay una); vacío si la mesa está libre
-    @Query("SELECT * FROM comanda WHERE mesa_id = :mesaId AND estado = 'PENDIENTE' LIMIT 1")
-    suspend fun pendienteDeMesa(mesaId: Long): Comanda?
-
-    // la rejilla: solo las mesas ocupadas (con comanda pendiente), con su total sumado
-    @Query("""
+  // la rejilla: solo las mesas ocupadas (con comanda pendiente), con su total sumado
+  @Query(
+    """
         SELECT m.id AS mesaId, c.id AS comandaId,
                SUM(l.cantidad * l.precio_unitario_centimos) AS totalCentimos
         FROM comanda c
@@ -35,57 +35,64 @@ interface ComandaDao {
         WHERE c.estado = 'PENDIENTE'
         GROUP BY c.id
         ORDER BY m.numero
-    """)
-    fun pendientesConTotal(): Flow<List<MesaConTotal>>
+    """
+  )
+  fun pendientesConTotal(): Flow<List<MesaConTotal>>
 
-    @Query("SELECT * FROM linea_comanda WHERE comanda_id = :comandaId ORDER BY id")
-    suspend fun lineasDe(comandaId: Long): List<LineaComanda>
+  @Query("SELECT * FROM linea_comanda WHERE comanda_id = :comandaId ORDER BY id")
+  suspend fun lineasDe(comandaId: Long): List<LineaComanda>
 
-    @Insert
-    suspend fun insertarLineas(lineas: List<LineaComanda>)
+  @Insert
+  suspend fun insertarLineas(lineas: List<LineaComanda>)
 
-    @Query("DELETE FROM linea_comanda WHERE id = :lineaId")
-    suspend fun borrarLinea(lineaId: Long)
+  @Query("DELETE FROM linea_comanda WHERE id = :lineaId")
+  suspend fun borrarLinea(lineaId: Long)
 
-    // cuántas líneas le quedan a una comanda (si llega a 0, se anula)
-    @Query("SELECT COUNT(*) FROM linea_comanda WHERE comanda_id = :comandaId")
-    suspend fun contarLineas(comandaId: Long): Int
+  // cuántas líneas le quedan a una comanda (si llega a 0, se anula)
+  @Query("SELECT COUNT(*) FROM linea_comanda WHERE comanda_id = :comandaId")
+  suspend fun contarLineas(comandaId: Long): Int
 
-    // Resumen de ingresos: las comandas cobradas entre dos instantes
-    @Query("""
+  // Resumen de ingresos: las comandas cobradas entre dos instantes
+  @Query(
+    """
         SELECT * FROM comanda
         WHERE estado = 'PAGADA' AND fecha_cierre BETWEEN :inicio AND :fin
         ORDER BY fecha_cierre
-    """)
-    suspend fun pagadasEntre(inicio: Long, fin: Long): List<Comanda>
+    """
+  )
+  suspend fun pagadasEntre(inicio: Long, fin: Long): List<Comanda>
 
-    // para el aviso al eliminar un plato: números de las mesas con comanda pendiente que llevan este plato
-    @Query("""
+  // para el aviso al eliminar un plato: números de las mesas con comanda pendiente que llevan este plato
+  @Query(
+    """
         SELECT DISTINCT m.numero FROM mesa m
         JOIN comanda c ON c.mesa_id = m.id
         JOIN linea_comanda l ON l.comanda_id = c.id
         WHERE c.estado = 'PENDIENTE' AND l.producto_id = :productoId
         ORDER BY m.numero
-    """)
-    suspend fun mesasConProductoPendiente(productoId: Long): List<Int>
+    """
+  )
+  suspend fun mesasConProductoPendiente(productoId: Long): List<Int>
 
-    // para el aviso al eliminar una categoría: números de las mesas con comanda pendiente que llevan algún plato
-    // de esta categoría que siga en la carta (solo los activos, lo que de verdad se elimina)
-    @Query("""
+  // para el aviso al eliminar una categoría: números de las mesas con comanda pendiente que llevan algún plato
+  // de esta categoría que siga en la carta (solo los activos, lo que de verdad se elimina)
+  @Query(
+    """
         SELECT DISTINCT m.numero FROM mesa m
         JOIN comanda c ON c.mesa_id = m.id
         JOIN linea_comanda l ON l.comanda_id = c.id
         JOIN producto p ON p.id = l.producto_id
         WHERE c.estado = 'PENDIENTE' AND p.categoria_id = :categoriaId AND p.activo = 1
         ORDER BY m.numero
-    """)
-    suspend fun mesasConCategoriaPendiente(categoriaId: Long): List<Int>
+    """
+  )
+  suspend fun mesasConCategoriaPendiente(categoriaId: Long): List<Int>
 
-    // el total de una comanda, sumando sus líneas; sin líneas, 0
-    @Query("SELECT COALESCE(SUM(cantidad * precio_unitario_centimos), 0) FROM linea_comanda WHERE comanda_id = :comandaId")
-    suspend fun totalDe(comandaId: Long): Int
+  // el total de una comanda, sumando sus líneas; sin líneas, 0
+  @Query("SELECT COALESCE(SUM(cantidad * precio_unitario_centimos), 0) FROM linea_comanda WHERE comanda_id = :comandaId")
+  suspend fun totalDe(comandaId: Long): Int
 
-    // una línea por su id (para saber de qué comanda es antes de quitarla); vacío si ya no existe
-    @Query("SELECT * FROM linea_comanda WHERE id = :lineaId")
-    suspend fun lineaPorId(lineaId: Long): LineaComanda?
+  // una línea por su id (para saber de qué comanda es antes de quitarla); vacío si ya no existe
+  @Query("SELECT * FROM linea_comanda WHERE id = :lineaId")
+  suspend fun lineaPorId(lineaId: Long): LineaComanda?
 }

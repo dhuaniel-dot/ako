@@ -12,64 +12,62 @@ import yunkang.ako.dominio.modelos.MesaEstado
 
 // las mesas de la rejilla (1d elegir y 6a gestionar): convierte cada MesaEstado en una casilla
 class MesaAdapter(
-    private val alTocar: (MesaEstado) -> Unit
+  private val alTocar: (MesaEstado) -> Unit
 ) : RecyclerView.Adapter<MesaAdapter.MesaViewHolder>() {
+  private var mesas: List<MesaEstado> = emptyList()
 
-    private var mesas: List<MesaEstado> = emptyList()
+  // [Claude] al nacer apunta sus colores de mesa libre (los del tema,
+  // claro u oscuro), para volver a ellos si la casilla se reutiliza para una mesa libre
+  class MesaViewHolder(val binding: ItemMesaBinding) : RecyclerView.ViewHolder(binding.root) {
+    val fondoLibre: ColorStateList = binding.tarjetaMesa.cardBackgroundColor
+    val bordeLibre: ColorStateList? = binding.tarjetaMesa.strokeColorStateList
+    val textoLibre: ColorStateList = binding.textoNumero.textColors
+  }
 
-    // [Claude] al nacer apunta sus colores de mesa libre (los del tema,
-    // claro u oscuro), para volver a ellos si la casilla se reutiliza para una mesa libre
-    class MesaViewHolder(val binding: ItemMesaBinding) : RecyclerView.ViewHolder(binding.root) {
-        val fondoLibre: ColorStateList = binding.tarjetaMesa.cardBackgroundColor
-        val bordeLibre: ColorStateList? = binding.tarjetaMesa.strokeColorStateList
-        val textoLibre: ColorStateList = binding.textoNumero.textColors
+  fun mostrar(mesas: List<MesaEstado>) {
+    this.mesas = mesas
+    notifyDataSetChanged()
+  }
+
+  override fun getItemCount(): Int = mesas.size
+
+  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MesaViewHolder {
+    val binding = ItemMesaBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+    return MesaViewHolder(binding)
+  }
+
+  override fun onBindViewHolder(holder: MesaViewHolder, position: Int) {
+    val estado = mesas[position]
+    val tarjeta = holder.binding.tarjetaMesa
+    val contexto = holder.itemView.context
+    val textoMesa = contexto.getString(R.string.comun_mesa, estado.mesa.numero)
+
+    holder.binding.textoNumero.text = contexto.getString(R.string.comun_numero, estado.mesa.numero)
+    // ocupada = tiene comanda (lo dice el comandaId)
+    if (estado.comandaId!=null) {
+      // roja (también el borde, para que no se vea), letras blancas y el total (lo suma la base de datos, nadie lo guarda)
+      val total =
+        contexto.getString(R.string.comun_precio, Formato.precio(estado.totalCentimos ?: 0))
+      val rojo = ContextCompat.getColor(contexto, R.color.mesa_ocupada)
+      val blanco = ContextCompat.getColor(contexto, R.color.sobre_mesa_ocupada)
+      tarjeta.setCardBackgroundColor(rojo)
+      tarjeta.strokeColor = rojo
+      holder.binding.textoNumero.setTextColor(blanco)
+      holder.binding.textoTotal.setTextColor(blanco)
+      holder.binding.textoTotal.text = total
+      holder.binding.textoTotal.visibility = View.VISIBLE
+      // el lector de pantalla dice «Mesa 4, 42,00 €»: el estado no depende solo del color
+      // la frase (con su coma) sale de strings.xml, como todo texto (en español y en inglés)
+      tarjeta.contentDescription = contexto.getString(R.string.mesa_ocupada_cd, textoMesa, total)
+    } else {
+      // libre: vuelve a los colores con los que nació la casilla, sin total
+      tarjeta.setCardBackgroundColor(holder.fondoLibre)
+      tarjeta.setStrokeColor(holder.bordeLibre)
+      holder.binding.textoNumero.setTextColor(holder.textoLibre)
+      holder.binding.textoTotal.visibility = View.GONE
+      tarjeta.contentDescription = textoMesa
     }
-
-    fun mostrar(mesas: List<MesaEstado>) {
-        this.mesas = mesas
-        notifyDataSetChanged()
-    }
-
-    override fun getItemCount(): Int = mesas.size
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MesaViewHolder {
-        val binding = ItemMesaBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return MesaViewHolder(binding)
-    }
-
-    override fun onBindViewHolder(holder: MesaViewHolder, position: Int) {
-        val estado = mesas[position]
-        val tarjeta = holder.binding.tarjetaMesa
-        val contexto = holder.itemView.context
-        val textoMesa = contexto.getString(R.string.comun_mesa, estado.mesa.numero)
-
-        holder.binding.textoNumero.text = contexto.getString(R.string.comun_numero, estado.mesa.numero)
-
-        // ocupada = tiene comanda (lo dice el comandaId)
-        if (estado.comandaId != null) {
-            // roja (también el borde, para que no se vea), letras blancas y el total (lo suma la base de datos, nadie lo guarda)
-            val total = contexto.getString(R.string.comun_precio, Formato.precio(estado.totalCentimos ?: 0))
-            val rojo = ContextCompat.getColor(contexto, R.color.mesa_ocupada)
-            val blanco = ContextCompat.getColor(contexto, R.color.sobre_mesa_ocupada)
-            tarjeta.setCardBackgroundColor(rojo)
-            tarjeta.strokeColor = rojo
-            holder.binding.textoNumero.setTextColor(blanco)
-            holder.binding.textoTotal.setTextColor(blanco)
-            holder.binding.textoTotal.text = total
-            holder.binding.textoTotal.visibility = View.VISIBLE
-            // el lector de pantalla dice «Mesa 4, 42,00 €»: el estado no depende solo del color
-            // la frase (con su coma) sale de strings.xml, como todo texto (en español y en inglés)
-            tarjeta.contentDescription = contexto.getString(R.string.mesa_ocupada_cd, textoMesa, total)
-        } else {
-            // libre: vuelve a los colores con los que nació la casilla, sin total
-            tarjeta.setCardBackgroundColor(holder.fondoLibre)
-            tarjeta.setStrokeColor(holder.bordeLibre)
-            holder.binding.textoNumero.setTextColor(holder.textoLibre)
-            holder.binding.textoTotal.visibility = View.GONE
-            tarjeta.contentDescription = textoMesa
-        }
-
-        // en modo elegir toda mesa se puede tocar, roja o blanca (ficha 1): el adaptador no decide nada
-        tarjeta.setOnClickListener { alTocar(estado) }
-    }
+    // en modo elegir toda mesa se puede tocar, roja o blanca (ficha 1): el adaptador no decide nada
+    tarjeta.setOnClickListener { alTocar(estado) }
+  }
 }

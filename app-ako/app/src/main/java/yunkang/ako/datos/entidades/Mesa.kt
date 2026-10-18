@@ -8,11 +8,11 @@ import androidx.room.PrimaryKey
 // no guarda si está ocupada: eso se calcula mirando si tiene una comanda pendiente
 // el número no se repite: no puede haber dos mesas 7
 @Entity(
-    tableName = "mesa",
-    indices = [Index(value = ["numero"], unique = true)]
+  tableName = "mesa",
+  indices = [Index(value = ["numero"], unique = true)]
 )
 data class Mesa(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
-    val numero: Int
+  @PrimaryKey(autoGenerate = true)
+  val id: Long = 0,
+  val numero: Int
 )

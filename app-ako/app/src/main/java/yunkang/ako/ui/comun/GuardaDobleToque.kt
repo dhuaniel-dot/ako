@@ -7,15 +7,14 @@ import android.os.SystemClock
 // dos veces la misma pantalla o la misma caja. una por pantalla, compartida por todos sus botones
 // receta: https://stackoverflow.com/questions/5608720/android-preventing-double-click-on-a-button
 class GuardaDobleToque(private val esperaMs: Long = 500L) {
+  // milisegundos desde que se encendió el móvil (no cambia si se ajusta la hora del reloj)
+  private var ultimoToque = 0L
 
-    // milisegundos desde que se encendió el móvil (no cambia si se ajusta la hora del reloj)
-    private var ultimoToque = 0L
-
-    // true = adelante; false = es un rebote del toque anterior y no se hace nada
-    fun permite(): Boolean {
-        val ahora = SystemClock.elapsedRealtime()
-        if (ahora - ultimoToque < esperaMs) return false
-        ultimoToque = ahora
-        return true
-    }
+  // true = adelante; false = es un rebote del toque anterior y no se hace nada
+  fun permite(): Boolean {
+    val ahora = SystemClock.elapsedRealtime()
+    if (ahora-ultimoToque<esperaMs) return false
+    ultimoToque = ahora
+    return true
+  }
 }

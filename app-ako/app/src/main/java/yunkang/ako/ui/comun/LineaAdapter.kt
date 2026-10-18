@@ -14,53 +14,52 @@ import yunkang.ako.dominio.Comprobacion
 // carrito − + Quitar · comanda solo Quitar · recibo ninguna (y entonces se esconde la fila de botones entera)
 // sencillo, como FilaPlatoAdapter
 class LineaAdapter(
-    // null = ese botón no sale
-    private val alMenos: ((LineaVista) -> Unit)?,
-    private val alMas: ((LineaVista) -> Unit)?,
-    private val alQuitar: ((LineaVista) -> Unit)?
+  // null = ese botón no sale
+  private val alMenos: ((LineaVista) -> Unit)?,
+  private val alMas: ((LineaVista) -> Unit)?,
+  private val alQuitar: ((LineaVista) -> Unit)?
 ) : RecyclerView.Adapter<LineaAdapter.LineaViewHolder>() {
+  private var lineas: List<LineaVista> = emptyList()
 
-    private var lineas: List<LineaVista> = emptyList()
+  class LineaViewHolder(val binding: ItemLineaBinding) : RecyclerView.ViewHolder(binding.root)
 
-    class LineaViewHolder(val binding: ItemLineaBinding) : RecyclerView.ViewHolder(binding.root)
+  fun mostrar(lineas: List<LineaVista>) {
+    this.lineas = lineas
+    notifyDataSetChanged()
+  }
 
-    fun mostrar(lineas: List<LineaVista>) {
-        this.lineas = lineas
-        notifyDataSetChanged()
-    }
+  override fun getItemCount(): Int = lineas.size
 
-    override fun getItemCount(): Int = lineas.size
+  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LineaViewHolder {
+    val binding = ItemLineaBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+    return LineaViewHolder(binding)
+  }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LineaViewHolder {
-        val binding = ItemLineaBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return LineaViewHolder(binding)
-    }
-
-    override fun onBindViewHolder(holder: LineaViewHolder, position: Int) {
-        val linea = lineas[position]
-        val contexto = holder.itemView.context
-
-        // «2 × Entrecot» y su importe (precio × cantidad, calculado)
-        holder.binding.textoLinea.text = contexto.getString(R.string.comun_linea, linea.cantidad, linea.nombre)
-        holder.binding.textoImporte.text =
-            contexto.getString(R.string.comun_precio, Formato.precio(linea.importeCentimos))
-
-        // cada botón sale solo si le dieron qué hacer; sin ninguno, fuera la fila entera (el recibo)
-        holder.binding.botonMenos.isVisible = alMenos != null
-        holder.binding.botonMas.isVisible = alMas != null
-        holder.binding.botonQuitar.isVisible = alQuitar != null
-        holder.binding.filaBotones.isVisible = alMenos != null || alMas != null || alQuitar != null
-
-        // − apagado en 1 y + apagado en 99; Quitar quita la línea entera
-        holder.binding.botonMenos.isEnabled = linea.cantidad > 1
-        holder.binding.botonMas.isEnabled = linea.cantidad < Comprobacion.MAXIMO_POR_PLATO
-        holder.binding.botonMenos.setOnClickListener { alMenos?.invoke(linea) }
-        holder.binding.botonMas.setOnClickListener { alMas?.invoke(linea) }
-        holder.binding.botonQuitar.setOnClickListener { alQuitar?.invoke(linea) }
-
-        // el lector de pantalla dice de qué plato es cada botón («Quitar uno de Entrecot»)
-        holder.binding.botonMenos.contentDescription = contexto.getString(R.string.linea_menos_cd, linea.nombre)
-        holder.binding.botonMas.contentDescription = contexto.getString(R.string.linea_mas_cd, linea.nombre)
-        holder.binding.botonQuitar.contentDescription = contexto.getString(R.string.linea_quitar_cd, linea.nombre)
-    }
+  override fun onBindViewHolder(holder: LineaViewHolder, position: Int) {
+    val linea = lineas[position]
+    val contexto = holder.itemView.context
+    // «2 × Entrecot» y su importe (precio × cantidad, calculado)
+    holder.binding.textoLinea.text =
+      contexto.getString(R.string.comun_linea, linea.cantidad, linea.nombre)
+    holder.binding.textoImporte.text =
+      contexto.getString(R.string.comun_precio, Formato.precio(linea.importeCentimos))
+    // cada botón sale solo si le dieron qué hacer; sin ninguno, fuera la fila entera (el recibo)
+    holder.binding.botonMenos.isVisible = alMenos!=null
+    holder.binding.botonMas.isVisible = alMas!=null
+    holder.binding.botonQuitar.isVisible = alQuitar!=null
+    holder.binding.filaBotones.isVisible = alMenos!=null||alMas!=null||alQuitar!=null
+    // − apagado en 1 y + apagado en 99; Quitar quita la línea entera
+    holder.binding.botonMenos.isEnabled = linea.cantidad>1
+    holder.binding.botonMas.isEnabled = linea.cantidad<Comprobacion.MAXIMO_POR_PLATO
+    holder.binding.botonMenos.setOnClickListener { alMenos?.invoke(linea) }
+    holder.binding.botonMas.setOnClickListener { alMas?.invoke(linea) }
+    holder.binding.botonQuitar.setOnClickListener { alQuitar?.invoke(linea) }
+    // el lector de pantalla dice de qué plato es cada botón («Quitar uno de Entrecot»)
+    holder.binding.botonMenos.contentDescription =
+      contexto.getString(R.string.linea_menos_cd, linea.nombre)
+    holder.binding.botonMas.contentDescription =
+      contexto.getString(R.string.linea_mas_cd, linea.nombre)
+    holder.binding.botonQuitar.contentDescription =
+      contexto.getString(R.string.linea_quitar_cd, linea.nombre)
+  }
 }

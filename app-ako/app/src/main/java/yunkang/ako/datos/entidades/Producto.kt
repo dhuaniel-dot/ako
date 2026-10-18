@@ -14,34 +14,30 @@ import androidx.room.PrimaryKey
 // precioCentimos: 1,50 € se guarda como 150
 // activo: false = eliminado (no se borra nunca)
 @Entity(
-    tableName = "producto",
-    foreignKeys = [
-        ForeignKey(
-            entity = Categoria::class,
-            parentColumns = ["id"],
-            childColumns = ["categoria_id"],
-            onDelete = ForeignKey.RESTRICT
-        )
-    ],
-    indices = [
-        Index(value = ["numero"], unique = true),
-        Index(value = ["categoria_id"])
-    ]
+  tableName = "producto",
+  foreignKeys = [
+    ForeignKey(
+      entity = Categoria::class,
+      parentColumns = ["id"],
+      childColumns = ["categoria_id"],
+      onDelete = ForeignKey.RESTRICT
+    )
+  ],
+  indices = [
+    Index(value = ["numero"], unique = true),
+    Index(value = ["categoria_id"])
+  ]
 )
 data class Producto(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
-
-    @ColumnInfo(name = "categoria_id")
-    val categoriaId: Long,
-
-    val numero: Int,
-    val nombre: String,
-    val descripcion: String?,
-
-    @ColumnInfo(name = "precio_centimos")
-    val precioCentimos: Int,
-
-    val imagen: String?,
-    val activo: Boolean
+  @PrimaryKey(autoGenerate = true)
+  val id: Long = 0,
+  @ColumnInfo(name = "categoria_id")
+  val categoriaId: Long,
+  val numero: Int,
+  val nombre: String,
+  val descripcion: String?,
+  @ColumnInfo(name = "precio_centimos")
+  val precioCentimos: Int,
+  val imagen: String?,
+  val activo: Boolean
 )

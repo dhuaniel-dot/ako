@@ -11,29 +11,25 @@ import androidx.room.PrimaryKey
 // fechaCreacion: cuándo se envió el primer pedido (instante en milisegundos)
 // fechaCierre: cuándo se cobró o se anuló; vacío mientras está pendiente
 @Entity(
-    tableName = "comanda",
-    foreignKeys = [
-        ForeignKey(
-            entity = Mesa::class,
-            parentColumns = ["id"],
-            childColumns = ["mesa_id"],
-            onDelete = ForeignKey.RESTRICT
-        )
-    ],
-    indices = [Index(value = ["mesa_id"])]
+  tableName = "comanda",
+  foreignKeys = [
+    ForeignKey(
+      entity = Mesa::class,
+      parentColumns = ["id"],
+      childColumns = ["mesa_id"],
+      onDelete = ForeignKey.RESTRICT
+    )
+  ],
+  indices = [Index(value = ["mesa_id"])]
 )
 data class Comanda(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
-
-    @ColumnInfo(name = "mesa_id")
-    val mesaId: Long,
-
-    val estado: EstadoComanda,
-
-    @ColumnInfo(name = "fecha_creacion")
-    val fechaCreacion: Long,
-
-    @ColumnInfo(name = "fecha_cierre")
-    val fechaCierre: Long?
+  @PrimaryKey(autoGenerate = true)
+  val id: Long = 0,
+  @ColumnInfo(name = "mesa_id")
+  val mesaId: Long,
+  val estado: EstadoComanda,
+  @ColumnInfo(name = "fecha_creacion")
+  val fechaCreacion: Long,
+  @ColumnInfo(name = "fecha_cierre")
+  val fechaCierre: Long?
 )

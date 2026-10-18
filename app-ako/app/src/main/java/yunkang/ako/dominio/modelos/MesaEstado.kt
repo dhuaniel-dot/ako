@@ -6,7 +6,7 @@ import yunkang.ako.datos.entidades.Mesa
 // juntando cada mesa con su MesaConTotal, si la tiene
 // sin comanda: comandaId y totalCentimos vacíos (mesa libre)
 data class MesaEstado(
-    val mesa: Mesa,
-    val comandaId: Long?,
-    val totalCentimos: Int?
+  val mesa: Mesa,
+  val comandaId: Long?,
+  val totalCentimos: Int?
 )

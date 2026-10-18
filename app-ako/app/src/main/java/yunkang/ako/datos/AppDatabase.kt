@@ -18,24 +18,23 @@ import yunkang.ako.datos.dao.ComandaDao
 // la base de datos de Ako: el archivador con sus 7 cajones
 // la única instancia la guarda EntradaAko
 @Database(
-    entities = [
-        Categoria::class,
-        Producto::class,
-        Alergeno::class,
-        ProductoAlergeno::class,
-        Mesa::class,
-        Comanda::class,
-        LineaComanda::class
-    ],
-    version = 1,
-    exportSchema = false
+  entities = [
+    Categoria::class,
+    Producto::class,
+    Alergeno::class,
+    ProductoAlergeno::class,
+    Mesa::class,
+    Comanda::class,
+    LineaComanda::class
+  ],
+  version = 1,
+  exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
-
-    // los mostradores del archivero; Room escribe su código al compilar
-    abstract fun categoriaDao(): CategoriaDao
-    abstract fun productoDao(): ProductoDao
-    abstract fun mesaDao(): MesaDao
-    abstract fun precargadosDao(): PrecargadosDao
-    abstract fun comandaDao(): ComandaDao
+  // los mostradores del archivero; Room escribe su código al compilar
+  abstract fun categoriaDao(): CategoriaDao
+  abstract fun productoDao(): ProductoDao
+  abstract fun mesaDao(): MesaDao
+  abstract fun precargadosDao(): PrecargadosDao
+  abstract fun comandaDao(): ComandaDao
 }

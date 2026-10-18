@@ -5,8 +5,8 @@ package yunkang.ako.dominio.modelos
 // NombreRepetido: sin mirar mayúsculas
 // CategoriaEliminada: la categoría elegida está eliminada; la pantalla abre la cadena 3e
 enum class ResultadoGuardado {
-    Ok,
-    NumeroRepetido,
-    NombreRepetido,
-    CategoriaEliminada
+  Ok,
+  NumeroRepetido,
+  NombreRepetido,
+  CategoriaEliminada
 }

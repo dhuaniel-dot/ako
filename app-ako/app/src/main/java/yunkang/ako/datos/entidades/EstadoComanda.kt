@@ -5,7 +5,7 @@ package yunkang.ako.datos.entidades
 // pagada: cobrada, cuenta en el Resumen de ingresos
 // anulada: cancelada, no se cobra
 enum class EstadoComanda {
-    PENDIENTE,
-    PAGADA,
-    ANULADA
+  PENDIENTE,
+  PAGADA,
+  ANULADA
 }

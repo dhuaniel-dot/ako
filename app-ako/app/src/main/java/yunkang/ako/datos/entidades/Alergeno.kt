@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 // se crean en la precarga y no se editan
 @Entity(tableName = "alergeno")
 data class Alergeno(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
-    val nombre: String
+  @PrimaryKey(autoGenerate = true)
+  val id: Long = 0,
+  val nombre: String
 )
